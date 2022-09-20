@@ -4,23 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColGeom
-import OCP.NCollection
-import OCP.BRepBuilderAPI
-import OCP.BRepTools
-import OCP.Geom
-import OCP.TColgp
-import OCP.TopoDS
-import OCP.BOPDS
-import OCP.Standard
-import OCP.LocOpe
-import OCP.TopAbs
-import OCP.TopTools
-import OCP.BOPAlgo
-import io
-import OCP.Message
-import OCP.gp
 import OCP.IntTools
+import OCP.LocOpe
+import OCP.TopTools
+import OCP.NCollection
+import OCP.BRepTools
+import io
+import OCP.Standard
+import OCP.BRepBuilderAPI
+import OCP.TopoDS
+import OCP.BOPAlgo
+import OCP.TColGeom
+import OCP.TColgp
+import OCP.gp
+import OCP.BOPDS
+import OCP.Geom
+import OCP.TopAbs
+import OCP.Message
 __all__  = [
 "BRepFeat",
 "BRepFeat_Builder",
@@ -150,14 +150,14 @@ class BRepFeat_Builder(OCP.BOPAlgo.BOPAlgo_BOP, OCP.BOPAlgo.BOPAlgo_ToolsProvide
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : OCP.BOPAlgo.BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : OCP.BOPAlgo.BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -257,14 +257,14 @@ class BRepFeat_Builder(OCP.BOPAlgo.BOPAlgo_BOP, OCP.BOPAlgo.BOPAlgo_ToolsProvide
         Returns the map of images.
         """
     @overload
-    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape,theTool : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
-        Initialyzes the object of local boolean operation.
+        Initializes the object of local boolean operation.
 
-        Initialyzes the arguments of local boolean operation.
+        Initializes the arguments of local boolean operation.
         """
     @overload
-    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Init(self,theShape : OCP.TopoDS.TopoDS_Shape,theTool : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def IsDeleted(self,theS : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns true if the shape theS has been deleted. In this case the shape will have no Modified elements, but can have Generated elements.
@@ -275,7 +275,7 @@ class BRepFeat_Builder(OCP.BOPAlgo.BOPAlgo_BOP, OCP.BOPAlgo.BOPAlgo_ToolsProvide
         """
     def KeepParts(self,theIm : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
-        Initialyzes parts of the tool for second step of algorithm. Collects shapes and all sub-shapes into myShapes map.
+        Initializes parts of the tool for second step of algorithm. Collects shapes and all sub-shapes into myShapes map.
         """
     def Modified(self,theS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
@@ -305,15 +305,15 @@ class BRepFeat_Builder(OCP.BOPAlgo.BOPAlgo_BOP, OCP.BOPAlgo.BOPAlgo_ToolsProvide
         """
         Collects parts of the tool.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
-    def PerformResult(self) -> None: 
+    def PerformResult(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Main function to build the result of the local operation required.
         """
-    def PerformWithFiller(self,theFiller : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : OCP.BOPAlgo.BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -350,22 +350,18 @@ class BRepFeat_Builder(OCP.BOPAlgo.BOPAlgo_BOP, OCP.BOPAlgo.BOPAlgo_ToolsProvide
         Sets the flag that defines the mode of treatment. In non-destructive mode the argument shapes are not modified. Instead a copy of a sub-shape is created in the result if it is needed to be updated. This flag is taken into account if internal PaveFiller is used only. In the case of calling PerformWithFiller the corresponding flag of that PaveFiller is in force.
         """
     @overload
-    def SetOperation(self,theFuse : int) -> None: 
+    def SetOperation(self,theFuse : int,theFlag : bool) -> None: 
         """
         Sets the operation of local boolean operation. If theFuse = 0 than the operation is CUT, otherwise FUSE.
 
         Sets the operation of local boolean operation. If theFlag = TRUE it means that no selection of parts of the tool is needed, t.e. no second part. In that case if theFuse = 0 than operation is COMMON, otherwise CUT21. If theFlag = FALSE SetOperation(theFuse) function is called.
         """
     @overload
-    def SetOperation(self,theFuse : int,theFlag : bool) -> None: ...
+    def SetOperation(self,theFuse : int) -> None: ...
     @staticmethod
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -415,7 +411,7 @@ class BRepFeat_Form(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilder
 
         Initializes the topological construction if the basis shape is present.
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -527,7 +523,7 @@ class BRepFeat_Gluer(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilde
         """
     @overload
     def Bind(self,Enew : OCP.TopoDS.TopoDS_Edge,Ebase : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -574,9 +570,9 @@ class BRepFeat_Gluer(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilde
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Snew : OCP.TopoDS.TopoDS_Shape,Sbase : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepFeat_MakeCylindricalHole(BRepFeat_Builder, OCP.BOPAlgo.BOPAlgo_BOP, OCP.BOPAlgo.BOPAlgo_ToolsProvider, OCP.BOPAlgo.BOPAlgo_Builder, OCP.BOPAlgo.BOPAlgo_BuilderShape, OCP.BOPAlgo.BOPAlgo_Algo, OCP.BOPAlgo.BOPAlgo_Options):
     """
@@ -611,14 +607,14 @@ class BRepFeat_MakeCylindricalHole(BRepFeat_Builder, OCP.BOPAlgo.BOPAlgo_BOP, OC
         Builds the resulting shape (redefined from MakeShape). Invalidates the given parts of tools if any, and performs the result of the local operation.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : OCP.BOPAlgo.BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : OCP.BOPAlgo.BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -740,7 +736,7 @@ class BRepFeat_MakeCylindricalHole(BRepFeat_Builder, OCP.BOPAlgo.BOPAlgo_BOP, OC
         """
     def KeepParts(self,theIm : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
-        Initialyzes parts of the tool for second step of algorithm. Collects shapes and all sub-shapes into myShapes map.
+        Initializes parts of the tool for second step of algorithm. Collects shapes and all sub-shapes into myShapes map.
         """
     def Modified(self,theS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
@@ -771,19 +767,19 @@ class BRepFeat_MakeCylindricalHole(BRepFeat_Builder, OCP.BOPAlgo.BOPAlgo_BOP, OC
         Collects parts of the tool.
         """
     @overload
-    def Perform(self,Radius : float,PFrom : float,PTo : float,WithControl : bool=True) -> None: 
+    def Perform(self,Radius : float) -> None: 
         """
         Performs every holes of radius <Radius>. This command has the same effect as a cut operation with an infinite cylinder defined by the given axis and <Radius>.
 
         Performs evry hole of radius <Radius> located between PFrom and PTo on the given axis. If <WithControl> is set to Standard_False no control are done on the resulting shape after the operation is performed.
         """
     @overload
-    def Perform(self,Radius : float) -> None: ...
+    def Perform(self,Radius : float,PFrom : float,PTo : float,WithControl : bool=True) -> None: ...
     def PerformBlind(self,Radius : float,Length : float,WithControl : bool=True) -> None: 
         """
         Performs a blind hole of radius <Radius> and length <Length>. The length is measured from the origin of the given axis. If <WithControl> is set to Standard_False no control are done after the operation is performed.
         """
-    def PerformResult(self) -> None: 
+    def PerformResult(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Main function to build the result of the local operation required.
         """
@@ -795,7 +791,7 @@ class BRepFeat_MakeCylindricalHole(BRepFeat_Builder, OCP.BOPAlgo.BOPAlgo_BOP, OC
         """
         Performs evry holes of radius <Radius> located after the origin of the given axis. If <WithControl> is set to Standard_False no control are done on the resulting shape after the operation is performed.
         """
-    def PerformWithFiller(self,theFiller : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : OCP.BOPAlgo.BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -832,22 +828,18 @@ class BRepFeat_MakeCylindricalHole(BRepFeat_Builder, OCP.BOPAlgo.BOPAlgo_BOP, OC
         Sets the flag that defines the mode of treatment. In non-destructive mode the argument shapes are not modified. Instead a copy of a sub-shape is created in the result if it is needed to be updated. This flag is taken into account if internal PaveFiller is used only. In the case of calling PerformWithFiller the corresponding flag of that PaveFiller is in force.
         """
     @overload
-    def SetOperation(self,theFuse : int) -> None: 
+    def SetOperation(self,theFuse : int,theFlag : bool) -> None: 
         """
         Sets the operation of local boolean operation. If theFuse = 0 than the operation is CUT, otherwise FUSE.
 
         Sets the operation of local boolean operation. If theFlag = TRUE it means that no selection of parts of the tool is needed, t.e. no second part. In that case if theFuse = 0 than operation is COMMON, otherwise CUT21. If theFlag = FALSE SetOperation(theFuse) function is called.
         """
     @overload
-    def SetOperation(self,theFuse : int,theFlag : bool) -> None: ...
+    def SetOperation(self,theFuse : int) -> None: ...
     @staticmethod
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -911,7 +903,7 @@ class BRepFeat_MakeDPrism(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeS
         """
         Determination of TopEdges and LatEdges. sig = 1 -> TopEdges = FirstShape of the DPrism sig = 2 -> TOpEdges = LastShape of the DPrism
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -991,9 +983,9 @@ class BRepFeat_MakeDPrism(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeS
         Assigns one of the following semantics - to a height Height - to a face Until - from a face From to a height Until. Reconstructs the feature topologically according to the semantic option chosen.
         """
     @overload
-    def Perform(self,From : OCP.TopoDS.TopoDS_Shape,Until : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def Perform(self,Height : float) -> None: ...
+    @overload
+    def Perform(self,From : OCP.TopoDS.TopoDS_Shape,Until : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def PerformFromEnd(self,FUntil : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Realizes a semi-infinite prism, limited by the face Funtil.
@@ -1041,15 +1033,15 @@ class BRepFeat_MakeDPrism(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeS
         Returns the list of TopoDS Edges of the top of the boss.
         """
     @overload
-    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,Pbase : OCP.TopoDS.TopoDS_Face,Skface : OCP.TopoDS.TopoDS_Face,Angle : float,Fuse : int,Modify : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,Pbase : OCP.TopoDS.TopoDS_Face,Skface : OCP.TopoDS.TopoDS_Face,Angle : float,Fuse : int,Modify : bool) -> None: ...
     pass
 class BRepFeat_RibSlot(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
     Provides functions to build mechanical features. Mechanical features include ribs - protrusions and grooves (or slots) - depressions along planar (linear) surfaces or revolution surfaces. The semantics of mechanical features is built around giving thickness to a contour. This thickness can either be unilateral - on one side of the contour - or bilateral - on both sides. As in the semantics of form features, the thickness is defined by construction of shapes in specific contexts. The development contexts differ, however,in case of mechanical features. Here they include extrusion: - to a limiting face of the basis shape - to or from a limiting plane - to a height.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -1130,7 +1122,7 @@ class BRepFeat_MakePipe(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSha
 
         Initializes the topological construction if the basis shape is present.
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -1258,7 +1250,7 @@ class BRepFeat_MakePrism(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSh
 
         Initializes the topological construction if the basis shape is present.
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -1334,9 +1326,9 @@ class BRepFeat_MakePrism(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSh
         Assigns one of the following semantics - to a height Length - to a face Until - from a face From to a height Until. Reconstructs the feature topologically according to the semantic option chosen.
         """
     @overload
-    def Perform(self,Length : float) -> None: ...
-    @overload
     def Perform(self,Until : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def Perform(self,Length : float) -> None: ...
     def PerformFromEnd(self,FUntil : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Realizes a semi-infinite prism, limited by the face Funtil.
@@ -1402,7 +1394,7 @@ class BRepFeat_MakeRevol(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSh
 
         Initializes the topological construction if the basis shape is present.
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -1469,7 +1461,7 @@ class BRepFeat_MakeRevol(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSh
         Initializes the topological construction if the selected face is present.
         """
     @overload
-    def Perform(self,Until : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Perform(self,Angle : float) -> None: 
         """
         None
 
@@ -1478,9 +1470,9 @@ class BRepFeat_MakeRevol(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSh
         Reconstructs the feature topologically.
         """
     @overload
-    def Perform(self,From : OCP.TopoDS.TopoDS_Shape,Until : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Perform(self,Until : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def Perform(self,Angle : float) -> None: ...
+    def Perform(self,From : OCP.TopoDS.TopoDS_Shape,Until : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def PerformThruAll(self) -> None: 
         """
         Builds an infinite shell. The infinite descendants will not be kept in the result.
@@ -1516,9 +1508,9 @@ class BRepFeat_MakeRevol(BRepFeat_Form, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeSh
         Returns a list of the tangent edges among the limiting and glueing edges generated by the feature. These edges did not originally exist in the basis shape and are tangent to the face against which the feature is built. The list provides the information necessary for subsequent addition of fillets. It may be an empty list. If an edge is tangent, no fillet is possible, and the edge must subsequently be removed if you want to add a fillet.
         """
     @overload
-    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,Pbase : OCP.TopoDS.TopoDS_Shape,Skface : OCP.TopoDS.TopoDS_Face,Axis : OCP.gp.gp_Ax1,Fuse : int,Modify : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,Pbase : OCP.TopoDS.TopoDS_Shape,Skface : OCP.TopoDS.TopoDS_Face,Axis : OCP.gp.gp_Ax1,Fuse : int,Modify : bool) -> None: ...
     pass
 class BRepFeat_MakeRevolutionForm(BRepFeat_RibSlot, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -1528,7 +1520,7 @@ class BRepFeat_MakeRevolutionForm(BRepFeat_RibSlot, OCP.BRepBuilderAPI.BRepBuild
         """
         Indicates that the edge <E> will slide on the face <OnFace>. Raises ConstructionError if the face does not belong to the basis shape, or the edge to the prismed shape.
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -1603,9 +1595,9 @@ class BRepFeat_MakeRevolutionForm(BRepFeat_RibSlot, OCP.BRepBuilderAPI.BRepBuild
         Returns a list of the tangent edges among the limiting and glueing edges generated by the feature. These edges did not originally exist in the basis shape and are tangent to the face against which the feature is built. The list provides the information necessary for subsequent addition of fillets. It may be an empty list. If an edge is tangent, no fillet is possible, and the edge must subsequently be removed if you want to add a fillet.
         """
     @overload
-    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,W : OCP.TopoDS.TopoDS_Wire,Plane : OCP.Geom.Geom_Plane,Axis : OCP.gp.gp_Ax1,Height1 : float,Height2 : float,Fuse : int,Sliding : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,W : OCP.TopoDS.TopoDS_Wire,Plane : OCP.Geom.Geom_Plane,Axis : OCP.gp.gp_Ax1,Height1 : float,Height2 : float,Fuse : int,Sliding : bool) -> None: ...
     pass
 class BRepFeat_PerfSelection():
     """
@@ -1626,6 +1618,7 @@ class BRepFeat_PerfSelection():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1657,7 +1650,7 @@ class BRepFeat_MakeLinearForm(BRepFeat_RibSlot, OCP.BRepBuilderAPI.BRepBuilderAP
         """
         Indicates that the edge <E> will slide on the face <OnFace>. Raises ConstructionError if the face does not belong to the basis shape, or the edge to the prismed shape.
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -1732,18 +1725,18 @@ class BRepFeat_MakeLinearForm(BRepFeat_RibSlot, OCP.BRepBuilderAPI.BRepBuilderAP
         Returns a list of the tangent edges among the limiting and glueing edges generated by the feature. These edges did not originally exist in the basis shape and are tangent to the face against which the feature is built. The list provides the information necessary for subsequent addition of fillets. It may be an empty list. If an edge is tangent, no fillet is possible, and the edge must subsequently be removed if you want to add a fillet.
         """
     @overload
-    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,W : OCP.TopoDS.TopoDS_Wire,P : OCP.Geom.Geom_Plane,Direction : OCP.gp.gp_Vec,Direction1 : OCP.gp.gp_Vec,Fuse : int,Modify : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Sbase : OCP.TopoDS.TopoDS_Shape,W : OCP.TopoDS.TopoDS_Wire,P : OCP.Geom.Geom_Plane,Direction : OCP.gp.gp_Vec,Direction1 : OCP.gp.gp_Vec,Fuse : int,Modify : bool) -> None: ...
     pass
 class BRepFeat_SplitShape(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
     One of the most significant aspects of BRepFeat functionality is the use of local operations as opposed to global ones. In a global operation, you would first construct a form of the type you wanted in your final feature, and then remove matter so that it could fit into your initial basis object. In a local operation, however, you specify the domain of the feature construction with aspects of the shape on which the feature is being created. These semantics are expressed in terms of a member shape of the basis shape from which - or up to which - matter will be added or removed. As a result, local operations make calculations simpler and faster than global operations. In BRepFeat, the semantics of local operations define features constructed from a contour or a part of the basis shape referred to as the tool. In a SplitShape object, wires or edges of a face in the basis shape to be used as a part of the feature are cut out and projected to a plane outside or inside the basis shape. By rebuilding the initial shape incorporating the edges and the faces of the tool, protrusion or depression features can be constructed.
     """
     @overload
-    def Add(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Add(self,Comp : OCP.TopoDS.TopoDS_Compound,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
-        Add splitting edges or wires for whole initial shape withot additional specification edge->face, edge->edge This method puts edge on the corresponding faces from initial shape
+        Add splitting edges or wires for whole initial shape without additional specification edge->face, edge->edge This method puts edge on the corresponding faces from initial shape
 
         Adds the wire <W> on the face <F>. Raises NoSuchObject if <F> does not belong to the original shape.
 
@@ -1753,7 +1746,7 @@ class BRepFeat_SplitShape(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
 
         Adds the edge <E> on the existing edge <EOn>.
 
-        Add splitting edges or wires for whole initial shape withot additional specification edge->face, edge->edge This method puts edge on the corresponding faces from initial shape
+        Add splitting edges or wires for whole initial shape without additional specification edge->face, edge->edge This method puts edge on the corresponding faces from initial shape
 
         Adds the wire <W> on the face <F>. Raises NoSuchObject if <F> does not belong to the original shape.
 
@@ -1763,15 +1756,15 @@ class BRepFeat_SplitShape(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
 
         Adds the edge <E> on the existing edge <EOn>.
         """
-    @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def Add(self,E : OCP.TopoDS.TopoDS_Edge,EOn : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def Add(self,Comp : OCP.TopoDS.TopoDS_Compound,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def Add(self,theEdges : OCP.TopTools.TopTools_SequenceOfShape) -> bool: ...
-    def Build(self) -> None: 
+    @overload
+    def Add(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def Add(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Builds the cut and the resulting faces and edges as well.
         """
@@ -1843,6 +1836,7 @@ class BRepFeat_Status():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1866,7 +1860,7 @@ class BRepFeat_Status():
     pass
 class BRepFeat_StatusError():
     """
-    Discribes the error.
+    Describes the error.
 
     Members:
 
@@ -1929,6 +1923,7 @@ class BRepFeat_StatusError():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

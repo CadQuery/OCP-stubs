@@ -50,7 +50,7 @@ class BRepProj_Projection():
         Returns the complete result as compound of wires.
         """
     @overload
-    def __init__(self,Wire : OCP.TopoDS.TopoDS_Shape,Shape : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,Wire : OCP.TopoDS.TopoDS_Shape,Shape : OCP.TopoDS.TopoDS_Shape,D : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def __init__(self,Wire : OCP.TopoDS.TopoDS_Shape,Shape : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt) -> None: ...
     pass

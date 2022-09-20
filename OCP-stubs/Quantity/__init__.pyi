@@ -4,10 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import io
+import OCP.gp
 import OCP.Graphic3d
 import OCP.Standard
 import OCP.TCollection
-import io
 __all__  = [
 "Quantity_Array1OfColor",
 "Quantity_Array2OfColor",
@@ -620,7 +621,7 @@ __all__  = [
 ]
 class Quantity_Array1OfColor():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Quantity_Array1OfColor) -> Quantity_Array1OfColor: 
         """
@@ -695,13 +696,13 @@ class Quantity_Array1OfColor():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : Quantity_Color,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Quantity_Array2OfColor():
@@ -739,7 +740,7 @@ class Quantity_Array2OfColor():
         """
     def Move(self,theOther : Quantity_Array2OfColor) -> Quantity_Array2OfColor: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -775,13 +776,13 @@ class Quantity_Array2OfColor():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Quantity_Color,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Quantity_Array2OfColor) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : Quantity_Color,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Quantity_Array2OfColor) -> None: ...
     pass
 class Quantity_Color():
     """
@@ -816,7 +817,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def ColorFromName_s(theColorNameString : str,theColor : Quantity_Color) -> bool: 
+    def ColorFromName_s(theName : str,theColor : Quantity_NameOfColor) -> bool: 
         """
         Finds color from predefined names. For example, the name of the color which corresponds to "BLACK" is Quantity_NOC_BLACK. Returns FALSE if name is unknown.
 
@@ -824,50 +825,50 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def ColorFromName_s(theName : str,theColor : Quantity_NameOfColor) -> bool: ...
+    def ColorFromName_s(theColorNameString : str,theColor : Quantity_Color) -> bool: ...
     @staticmethod
     def ColorToHex_s(theColor : Quantity_Color,theToPrefixHash : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns hex sRGB string in format "#FFAAFF".
         """
     @staticmethod
-    def Convert_HLS_To_LinearRGB_s(theHls : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_HLS_To_LinearRGB_s(theHls : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts HLS components into linear RGB ones.
         """
     @staticmethod
-    def Convert_HLS_To_sRGB_s(theHls : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_HLS_To_sRGB_s(theHls : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts HLS components into RGB ones.
         """
     @staticmethod
-    def Convert_Lab_To_Lch_s(theLab : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_Lab_To_Lch_s(theLab : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts CIE Lab components into CIE Lch ones.
         """
     @staticmethod
-    def Convert_Lab_To_LinearRGB_s(theLab : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_Lab_To_LinearRGB_s(theLab : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts CIE Lab components into linear RGB ones. Note that the resulting values may be out of the valid range for RGB.
         """
     @staticmethod
-    def Convert_Lch_To_Lab_s(theLch : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_Lch_To_Lab_s(theLch : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts CIE Lch components into CIE Lab ones.
         """
     @staticmethod
-    def Convert_LinearRGB_To_HLS_s(theRgb : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_LinearRGB_To_HLS_s(theRgb : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts Linear RGB components into HLS ones.
         """
     @staticmethod
-    def Convert_LinearRGB_To_Lab_s(theRgb : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_LinearRGB_To_Lab_s(theRgb : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts linear RGB components into CIE Lab ones.
         """
     @staticmethod
     @overload
-    def Convert_LinearRGB_To_sRGB_approx22_s(theRGB : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_LinearRGB_To_sRGB_approx22_s(theRGB : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Convert linear RGB component into sRGB using approximated uniform gamma coefficient 2.2.
 
@@ -884,7 +885,7 @@ class Quantity_Color():
         Convert linear RGB component into sRGB using OpenGL specs formula (single precision), also known as gamma correction.
         """
     @staticmethod
-    def Convert_sRGB_To_HLS_s(theRgb : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Convert_sRGB_To_HLS_s(theRgb : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
         """
         Converts sRGB components into HLS ones.
         """
@@ -898,7 +899,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def Convert_sRGB_To_LinearRGB_approx22_s(theRGB : OCP.Graphic3d.Graphic3d_Vec3) -> OCP.Graphic3d.Graphic3d_Vec3: ...
+    def Convert_sRGB_To_LinearRGB_approx22_s(theRGB : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: ...
     @staticmethod
     def Convert_sRGB_To_LinearRGB_s(thesRGBValue : float) -> float: 
         """
@@ -969,7 +970,7 @@ class Quantity_Color():
         """
         Returns the Red component (quantity of red) of the color within range [0.0; 1.0].
         """
-    def Rgb(self) -> OCP.Graphic3d.Graphic3d_Vec3: 
+    def Rgb(self) -> OCP.gp.gp_Vec3f: 
         """
         Return the color as vector of 3 float elements.
         """
@@ -988,14 +989,14 @@ class Quantity_Color():
         Set the value used to compare two colors for equality.
         """
     @overload
-    def SetValues(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: 
+    def SetValues(self,theName : Quantity_NameOfColor) -> None: 
         """
         Updates the color from specified named color.
 
         Updates a color according to the mode specified by theType. Throws exception if values are out of range.
         """
     @overload
-    def SetValues(self,theName : Quantity_NameOfColor) -> None: ...
+    def SetValues(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: ...
     def SquareDistance(self,theColor : Quantity_Color) -> float: 
         """
         Returns the square of distance between two colors.
@@ -1010,13 +1011,13 @@ class Quantity_Color():
         Returns in theC1, theC2 and theC3 the components of this color according to the color system definition theType.
         """
     @overload
-    def __init__(self,theRgb : OCP.Graphic3d.Graphic3d_Vec3) -> None: ...
+    def __init__(self,theRgb : OCP.gp.gp_Vec3f) -> None: ...
     @overload
-    def __init__(self,theName : Quantity_NameOfColor) -> None: ...
+    def __init__(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: ...
+    def __init__(self,theName : Quantity_NameOfColor) -> None: ...
     pass
 class Quantity_ColorHasher():
     """
@@ -1104,15 +1105,15 @@ class Quantity_ColorRGBA():
         Assign new values to the color.
         """
     @overload
+    def __init__(self,theRgb : Quantity_Color) -> None: ...
+    @overload
     def __init__(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theRgb : Quantity_Color) -> None: ...
+    def __init__(self,theRgb : Quantity_Color,theAlpha : float) -> None: ...
     @overload
     def __init__(self,theRgba : OCP.Graphic3d.Graphic3d_Vec4) -> None: ...
-    @overload
-    def __init__(self,theRgb : Quantity_Color,theAlpha : float) -> None: ...
     pass
 class Quantity_ColorRGBAHasher():
     """
@@ -1165,7 +1166,7 @@ class Quantity_Date():
     @staticmethod
     def IsLeap_s(yy : int) -> bool: 
         """
-        Returns true if a year is a leap year. The leap years are divisable by 4 and not by 100 except the years divisable by 400.
+        Returns true if a year is a leap year. The leap years are divisible by 4 and not by 100 except the years divisible by 400.
         """
     @staticmethod
     def IsValid_s(mm : int,dd : int,yy : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> bool: 
@@ -1213,9 +1214,9 @@ class Quantity_Date():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,mm : int,dd : int,yyyy : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __sub__(self,aPeriod : Quantity_Period) -> Quantity_Date: 
         """
         None
@@ -1298,23 +1299,23 @@ class Quantity_HArray1OfColor(Quantity_Array1OfColor, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Quantity_Color: 
         """
         Returns last element
@@ -1360,9 +1361,9 @@ class Quantity_HArray1OfColor(Quantity_Array1OfColor, OCP.Standard.Standard_Tran
     @overload
     def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2426,6 +2427,7 @@ class Quantity_NameOfColor():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3010,22 +3012,22 @@ class Quantity_Period():
         Subtracts one Period from another and returns the difference.
         """
     @overload
-    def Values(self) -> Tuple[int, int]: 
+    def Values(self) -> Tuple[int, int, int, int, int, int]: 
         """
         Decomposes this period into a number of days,hours, minutes,seconds,milliseconds and microseconds Example of return values: 2 days, 15 hours, 0 minute , 0 second 0 millisecond and 0 microsecond
 
         Returns the number of seconds in Ss and the number of remainding microseconds in Mics of this period. Example of return values: 3600 seconds and 0 microseconds
         """
     @overload
-    def Values(self) -> Tuple[int, int, int, int, int, int]: ...
+    def Values(self) -> Tuple[int, int]: ...
     def __add__(self,anOther : Quantity_Period) -> Quantity_Period: 
         """
         None
         """
     @overload
-    def __init__(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
-    @overload
     def __init__(self,ss : int,mics : int=0) -> None: ...
+    @overload
+    def __init__(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
     def __sub__(self,anOther : Quantity_Period) -> Quantity_Period: 
         """
         None
@@ -3187,6 +3189,7 @@ class Quantity_PhysicalQuantity():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3292,6 +3295,7 @@ class Quantity_TypeOfColor():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

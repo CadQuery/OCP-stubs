@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Bnd
 import OCP.TopoDS
+import OCP.Bnd
 __all__  = [
 "BRepBndLib"
 ]
@@ -26,7 +26,7 @@ class BRepBndLib():
     @staticmethod
     def AddOptimal_s(S : OCP.TopoDS.TopoDS_Shape,B : OCP.Bnd.Bnd_Box,useTriangulation : bool=True,useShapeTolerance : bool=False) -> None: 
         """
-        Adds the shape S to the bounding box B. This algorith builds precise bounding box, which differs from exact geometry boundaries of shape only on shape entities tolerances Algorithm is the same as for method Add(..), but uses more precise methods for building boxes for geometry objects. If useShapeTolerance = True, bounding box is enlardged by shape tolerances and these tolerances are used for numerical methods of bounding box size calculations, otherwise bounding box is built according to sizes of uderlined geometrical entities, numerical calculation use tolerance Precision::Confusion().
+        Adds the shape S to the bounding box B. This algorithm builds precise bounding box, which differs from exact geometry boundaries of shape only on shape entities tolerances Algorithm is the same as for method Add(..), but uses more precise methods for building boxes for geometry objects. If useShapeTolerance = True, bounding box is enlardged by shape tolerances and these tolerances are used for numerical methods of bounding box size calculations, otherwise bounding box is built according to sizes of uderlined geometrical entities, numerical calculation use tolerance Precision::Confusion().
         """
     @staticmethod
     def Add_s(S : OCP.TopoDS.TopoDS_Shape,B : OCP.Bnd.Bnd_Box,useTriangulation : bool=True) -> None: 

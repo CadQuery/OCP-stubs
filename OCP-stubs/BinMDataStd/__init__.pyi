@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TColStd
-import OCP.TCollection
 import OCP.BinObjMgt
+import OCP.Standard
 import OCP.Message
 import OCP.BinMDF
-import OCP.Standard
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "BinMDataStd",
 "BinMDataStd_AsciiStringDriver",
@@ -72,23 +72,23 @@ class BinMDataStd_AsciiStringDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -98,14 +98,14 @@ class BinMDataStd_AsciiStringDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stan
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         persistent -> transient (retrieve)
 
         transient -> persistent (store)
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -154,23 +154,23 @@ class BinMDataStd_BooleanArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -180,14 +180,14 @@ class BinMDataStd_BooleanArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -236,23 +236,23 @@ class BinMDataStd_BooleanListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -262,14 +262,14 @@ class BinMDataStd_BooleanListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stan
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -318,23 +318,23 @@ class BinMDataStd_ByteArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -403,23 +403,23 @@ class BinMDataStd_ExpressionDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -488,23 +488,23 @@ class BinMDataStd_ExtStringArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -570,23 +570,23 @@ class BinMDataStd_ExtStringListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -655,23 +655,23 @@ class BinMDataStd_GenericEmptyDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -740,23 +740,23 @@ class BinMDataStd_GenericExtStringDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -766,14 +766,14 @@ class BinMDataStd_GenericExtStringDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         persistent -> transient (retrieve)
 
         transient -> persistent (store)
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -825,23 +825,23 @@ class BinMDataStd_IntPackedMapDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -851,14 +851,14 @@ class BinMDataStd_IntPackedMapDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         persistent -> transient (retrieve)
 
         transient -> persistent (store)
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -910,23 +910,23 @@ class BinMDataStd_IntegerArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -995,23 +995,23 @@ class BinMDataStd_IntegerDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1021,14 +1021,14 @@ class BinMDataStd_IntegerDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1077,23 +1077,23 @@ class BinMDataStd_IntegerListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1159,23 +1159,23 @@ class BinMDataStd_NamedDataDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1185,14 +1185,14 @@ class BinMDataStd_NamedDataDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1244,23 +1244,23 @@ class BinMDataStd_RealArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1270,14 +1270,14 @@ class BinMDataStd_RealArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1329,23 +1329,23 @@ class BinMDataStd_RealDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1411,23 +1411,23 @@ class BinMDataStd_RealListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1493,23 +1493,23 @@ class BinMDataStd_ReferenceArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1519,14 +1519,14 @@ class BinMDataStd_ReferenceArrayDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.S
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1575,23 +1575,23 @@ class BinMDataStd_ReferenceListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1601,14 +1601,14 @@ class BinMDataStd_ReferenceListDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.St
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1660,23 +1660,23 @@ class BinMDataStd_TreeNodeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1745,23 +1745,23 @@ class BinMDataStd_UAttributeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1771,14 +1771,14 @@ class BinMDataStd_UAttributeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Stand
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1830,23 +1830,23 @@ class BinMDataStd_VariableDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1856,14 +1856,14 @@ class BinMDataStd_VariableDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standar
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.

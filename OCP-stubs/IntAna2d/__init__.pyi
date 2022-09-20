@@ -9,10 +9,7 @@ __all__  = [
 "IntAna2d_AnaIntersection",
 "IntAna2d_Conic",
 "IntAna2d_IntPoint",
-"MyDirectPolynomialRoots",
-"Coord_Ancien_Repere",
-"Points_Confondus",
-"Traitement_Points_Confondus"
+"MyDirectPolynomialRoots"
 ]
 class IntAna2d_AnaIntersection():
     """
@@ -26,9 +23,9 @@ class IntAna2d_AnaIntersection():
         """
     def IsDone(self) -> bool: 
         """
-        Returns TRUE if the computation was succesfull.
+        Returns TRUE if the computation was successful.
 
-        Returns TRUE if the computation was succesfull.
+        Returns TRUE if the computation was successful.
         """
     def IsEmpty(self) -> bool: 
         """
@@ -49,7 +46,7 @@ class IntAna2d_AnaIntersection():
         For the intersection between two Lin2d or two Circ2d, the function returns TRUE if the elements are parallel. The function returns FALSE in all the other cases.
         """
     @overload
-    def Perform(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d) -> None: 
+    def Perform(self,L : OCP.gp.gp_Lin2d,C : OCP.gp.gp_Circ2d) -> None: 
         """
         Intersection between two lines.
 
@@ -70,17 +67,17 @@ class IntAna2d_AnaIntersection():
     @overload
     def Perform(self,L : OCP.gp.gp_Lin2d,C : IntAna2d_Conic) -> None: ...
     @overload
-    def Perform(self,E : OCP.gp.gp_Elips2d,C : IntAna2d_Conic) -> None: ...
+    def Perform(self,L1 : OCP.gp.gp_Lin2d,L2 : OCP.gp.gp_Lin2d) -> None: ...
     @overload
     def Perform(self,H : OCP.gp.gp_Hypr2d,C : IntAna2d_Conic) -> None: ...
     @overload
-    def Perform(self,L1 : OCP.gp.gp_Lin2d,L2 : OCP.gp.gp_Lin2d) -> None: ...
-    @overload
     def Perform(self,P : OCP.gp.gp_Parab2d,C : IntAna2d_Conic) -> None: ...
     @overload
-    def Perform(self,L : OCP.gp.gp_Lin2d,C : OCP.gp.gp_Circ2d) -> None: ...
+    def Perform(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d) -> None: ...
     @overload
     def Perform(self,C : OCP.gp.gp_Circ2d,Co : IntAna2d_Conic) -> None: ...
+    @overload
+    def Perform(self,E : OCP.gp.gp_Elips2d,C : IntAna2d_Conic) -> None: ...
     def Point(self,N : int) -> IntAna2d_IntPoint: 
         """
         returns the intersection point of range N; If (N<=0) or (N>NbPoints), an exception is raised.
@@ -88,23 +85,23 @@ class IntAna2d_AnaIntersection():
         returns the intersection point of range N; If (N<=0) or (N>NbPoints), an exception is raised.
         """
     @overload
+    def __init__(self,H : OCP.gp.gp_Hypr2d,C : IntAna2d_Conic) -> None: ...
+    @overload
+    def __init__(self,E : OCP.gp.gp_Elips2d,C : IntAna2d_Conic) -> None: ...
+    @overload
     def __init__(self,L : OCP.gp.gp_Lin2d,C : OCP.gp.gp_Circ2d) -> None: ...
     @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,C : IntAna2d_Conic) -> None: ...
+    @overload
     def __init__(self,C : OCP.gp.gp_Circ2d,Co : IntAna2d_Conic) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,L1 : OCP.gp.gp_Lin2d,L2 : OCP.gp.gp_Lin2d) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Parab2d,C : IntAna2d_Conic) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,C : IntAna2d_Conic) -> None: ...
-    @overload
-    def __init__(self,H : OCP.gp.gp_Hypr2d,C : IntAna2d_Conic) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d) -> None: ...
-    @overload
-    def __init__(self,E : OCP.gp.gp_Elips2d,C : IntAna2d_Conic) -> None: ...
     pass
 class IntAna2d_Conic():
     """
@@ -112,7 +109,7 @@ class IntAna2d_Conic():
     """
     def Coefficients(self) -> Tuple[float, float, float, float, float, float]: 
         """
-        returns the coefficients of the polynomial equation wich defines the conic: A.X**2 + B.Y**2 + 2.C.X*Y + 2.D.X + 2.E.Y + F = 0.
+        returns the coefficients of the polynomial equation which defines the conic: A.X**2 + B.Y**2 + 2.C.X*Y + 2.D.X + 2.E.Y + F = 0.
         """
     def Grad(self,X : float,Y : float) -> OCP.gp.gp_XY: 
         """
@@ -131,15 +128,15 @@ class IntAna2d_Conic():
         value of the function F at the point X,Y.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Elips2d) -> None: ...
-    @overload
     def __init__(self,C : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Hypr2d) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Parab2d) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Hypr2d) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Elips2d) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ2d) -> None: ...
     pass
 class IntAna2d_IntPoint():
     """
@@ -179,11 +176,11 @@ class IntAna2d_IntPoint():
         Returns the geometric point.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,X : float,Y : float,U1 : float) -> None: ...
     @overload
     def __init__(self,X : float,Y : float,U1 : float,U2 : float) -> None: ...
     @overload
-    def __init__(self,X : float,Y : float,U1 : float) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class MyDirectPolynomialRoots():
     """
@@ -205,20 +202,4 @@ class MyDirectPolynomialRoots():
         """
         None
         """
-    @overload
-    def __init__(self,A4 : float,A3 : float,A2 : float,A1 : float,A0 : float) -> None: ...
-    @overload
-    def __init__(self,A2 : float,A1 : float,A0 : float) -> None: ...
     pass
-def Coord_Ancien_Repere(Ancien_X : float,Ancien_Y : float,Axe_Nouveau_Repere : OCP.gp.gp_Ax2d) -> None:
-    """
-    None
-    """
-def Points_Confondus(xa : float,ya : float,xb : float,yb : float) -> bool:
-    """
-    None
-    """
-def Traitement_Points_Confondus(nb_pts : int,pts : IntAna2d_IntPoint) -> None:
-    """
-    None
-    """

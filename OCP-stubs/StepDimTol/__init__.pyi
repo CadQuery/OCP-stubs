@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.StepBasic
 import OCP.StepRepr
-import OCP.Interface
-import OCP.StepShape
+import OCP.StepBasic
 import OCP.Standard
+import OCP.StepShape
+import OCP.Interface
 import OCP.StepData
+import OCP.TCollection
 __all__  = [
 "StepDimTol_GeometricTolerance",
 "StepDimTol_AreaUnitType",
@@ -180,32 +180,32 @@ class StepDimTol_GeometricTolerance(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -227,14 +227,14 @@ class StepDimTol_GeometricTolerance(OCP.Standard.Standard_Transient):
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -270,6 +270,7 @@ class StepDimTol_AreaUnitType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -293,7 +294,7 @@ class StepDimTol_AreaUnitType():
     pass
 class StepDimTol_Array1OfDatumReference():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfDatumReference) -> StepDimTol_Array1OfDatumReference: 
         """
@@ -368,18 +369,18 @@ class StepDimTol_Array1OfDatumReference():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepDimTol_DatumReference,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumReference) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumReferenceCompartment():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> StepDimTol_Array1OfDatumReferenceCompartment: 
         """
@@ -454,18 +455,18 @@ class StepDimTol_Array1OfDatumReferenceCompartment():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepDimTol_DatumReferenceCompartment,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumReferenceElement():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> StepDimTol_Array1OfDatumReferenceElement: 
         """
@@ -542,16 +543,16 @@ class StepDimTol_Array1OfDatumReferenceElement():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> None: ...
-    @overload
     def __init__(self,theBegin : StepDimTol_DatumReferenceElement,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceElement) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumReferenceModifier():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfDatumReferenceModifier) -> StepDimTol_Array1OfDatumReferenceModifier: 
         """
@@ -626,18 +627,18 @@ class StepDimTol_Array1OfDatumReferenceModifier():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepDimTol_DatumReferenceModifier,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceModifier) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepDimTol_DatumReferenceModifier,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfDatumSystemOrReference():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfDatumSystemOrReference) -> StepDimTol_Array1OfDatumSystemOrReference: 
         """
@@ -712,18 +713,18 @@ class StepDimTol_Array1OfDatumSystemOrReference():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumSystemOrReference) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : StepDimTol_DatumSystemOrReference,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepDimTol_Array1OfDatumSystemOrReference) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfGeometricToleranceModifier():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfGeometricToleranceModifier) -> StepDimTol_Array1OfGeometricToleranceModifier: 
         """
@@ -798,18 +799,18 @@ class StepDimTol_Array1OfGeometricToleranceModifier():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepDimTol_GeometricToleranceModifier,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepDimTol_Array1OfGeometricToleranceModifier) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepDimTol_GeometricToleranceModifier,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_Array1OfToleranceZoneTarget():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepDimTol_Array1OfToleranceZoneTarget) -> StepDimTol_Array1OfToleranceZoneTarget: 
         """
@@ -884,13 +885,13 @@ class StepDimTol_Array1OfToleranceZoneTarget():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfToleranceZoneTarget) -> None: ...
     @overload
     def __init__(self,theBegin : StepDimTol_ToleranceZoneTarget,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepDimTol_GeometricToleranceWithDatumReference(StepDimTol_GeometricTolerance, OCP.Standard.Standard_Transient):
@@ -939,23 +940,23 @@ class StepDimTol_GeometricToleranceWithDatumReference(StepDimTol_GeometricTolera
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -965,14 +966,14 @@ class StepDimTol_GeometricToleranceWithDatumReference(StepDimTol_GeometricTolera
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -986,14 +987,14 @@ class StepDimTol_GeometricToleranceWithDatumReference(StepDimTol_GeometricTolera
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1060,23 +1061,23 @@ class StepDimTol_CoaxialityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -1086,14 +1087,14 @@ class StepDimTol_CoaxialityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -1107,14 +1108,14 @@ class StepDimTol_CoaxialityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1172,23 +1173,23 @@ class StepDimTol_CommonDatum(OCP.StepRepr.StepRepr_CompositeShapeAspect, OCP.Ste
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1283,23 +1284,23 @@ class StepDimTol_ConcentricityTolerance(StepDimTol_GeometricToleranceWithDatumRe
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -1309,14 +1310,14 @@ class StepDimTol_ConcentricityTolerance(StepDimTol_GeometricToleranceWithDatumRe
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -1330,14 +1331,14 @@ class StepDimTol_ConcentricityTolerance(StepDimTol_GeometricToleranceWithDatumRe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1387,32 +1388,32 @@ class StepDimTol_CylindricityTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -1434,14 +1435,14 @@ class StepDimTol_CylindricityTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1499,23 +1500,23 @@ class StepDimTol_Datum(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.Standard_
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1597,23 +1598,23 @@ class StepDimTol_DatumFeature(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.St
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1797,23 +1798,23 @@ class StepDimTol_DatumReference(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Precedence(self) -> int: 
         """
         Returns field Precedence
@@ -1887,23 +1888,23 @@ class StepDimTol_GeneralDatumReference(OCP.StepRepr.StepRepr_ShapeAspect, OCP.St
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Modifiers(self) -> StepDimTol_HArray1OfDatumReferenceModifier: 
         """
         Returns field Modifiers
@@ -2014,23 +2015,23 @@ class StepDimTol_DatumReferenceElement(StepDimTol_GeneralDatumReference, OCP.Ste
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Modifiers(self) -> StepDimTol_HArray1OfDatumReferenceModifier: 
         """
         Returns field Modifiers
@@ -2227,6 +2228,7 @@ class StepDimTol_DatumReferenceModifierType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2278,23 +2280,23 @@ class StepDimTol_DatumReferenceModifierWithValue(OCP.Standard.Standard_Transient
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ModifierType(self) -> StepDimTol_DatumReferenceModifierType: 
         """
         Returns field ModifierType
@@ -2336,14 +2338,14 @@ class StepDimTol_DatumSystem(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.Sta
         Returns field Constituents
         """
     @overload
-    def ConstituentsValue(self,num : int) -> StepDimTol_DatumReferenceCompartment: 
+    def ConstituentsValue(self,num : int,theItem : StepDimTol_DatumReferenceCompartment) -> None: 
         """
         Returns Constituents with the given number
 
         Sets Constituents with given number
         """
     @overload
-    def ConstituentsValue(self,num : int,theItem : StepDimTol_DatumReferenceCompartment) -> None: ...
+    def ConstituentsValue(self,num : int) -> StepDimTol_DatumReferenceCompartment: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2373,23 +2375,23 @@ class StepDimTol_DatumSystem(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.Sta
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2585,23 +2587,23 @@ class StepDimTol_DatumTarget(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.Sta
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2683,32 +2685,32 @@ class StepDimTol_FlatnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -2730,14 +2732,14 @@ class StepDimTol_FlatnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2799,23 +2801,23 @@ class StepDimTol_DatumReferenceCompartment(StepDimTol_GeneralDatumReference, OCP
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Modifiers(self) -> StepDimTol_HArray1OfDatumReferenceModifier: 
         """
         Returns field Modifiers
@@ -2928,23 +2930,23 @@ class StepDimTol_GeoTolAndGeoTolWthDatRef(StepDimTol_GeometricTolerance, OCP.Sta
     @overload
     def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theType : StepDimTol_GeometricToleranceType) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -2974,14 +2976,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRef(StepDimTol_GeometricTolerance, OCP.Sta
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3040,32 +3042,32 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndGeoTolWthMod(StepDimTol_GeometricTol
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWDR : StepDimTol_GeometricToleranceWithDatumReference,aGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
-        None
+        Initialize all fields (own and inherited) AP214
 
-        None
+        Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3099,14 +3101,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndGeoTolWthMod(StepDimTol_GeometricTol
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3169,32 +3171,32 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndGeoTolWthMaxTol(StepDimTol_GeoTolAnd
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theMaxTol : OCP.StepBasic.StepBasic_LengthMeasureWithUnit,theType : StepDimTol_GeometricToleranceType) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
-        None
+        Initialize all fields (own and inherited) AP214
 
-        None
+        Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWDR : StepDimTol_GeometricToleranceWithDatumReference,aGTWM : StepDimTol_GeometricToleranceWithModifiers,theMaxTol : OCP.StepBasic.StepBasic_LengthMeasureWithUnit,theType : StepDimTol_GeometricToleranceType) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3232,14 +3234,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndGeoTolWthMaxTol(StepDimTol_GeoTolAnd
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3298,32 +3300,32 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndModGeoTolAndPosTol(StepDimTol_Geomet
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWDR : StepDimTol_GeometricToleranceWithDatumReference,aMGT : StepDimTol_ModifiedGeometricTolerance) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
-        None
+        Initialize all fields (own and inherited) AP214
 
-        None
+        Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,aGTWDR : StepDimTol_GeometricToleranceWithDatumReference,aMGT : StepDimTol_ModifiedGeometricTolerance) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3357,14 +3359,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndModGeoTolAndPosTol(StepDimTol_Geomet
         None
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3423,32 +3425,32 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndUneqDisGeoTol(StepDimTol_GeoTolAndGe
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theType : StepDimTol_GeometricToleranceType,theUDGT : StepDimTol_UnequallyDisposedGeometricTolerance) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theType : StepDimTol_GeometricToleranceType) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theType : StepDimTol_GeometricToleranceType,theUDGT : StepDimTol_UnequallyDisposedGeometricTolerance) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWDR : StepDimTol_GeometricToleranceWithDatumReference,theType : StepDimTol_GeometricToleranceType) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3478,14 +3480,14 @@ class StepDimTol_GeoTolAndGeoTolWthDatRefAndUneqDisGeoTol(StepDimTol_GeoTolAndGe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def SetUnequallyDisposedGeometricTolerance(self,theUDGT : StepDimTol_UnequallyDisposedGeometricTolerance) -> None: 
         """
         None
@@ -3553,23 +3555,23 @@ class StepDimTol_GeoTolAndGeoTolWthMod(StepDimTol_GeometricTolerance, OCP.Standa
     @overload
     def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3599,14 +3601,14 @@ class StepDimTol_GeoTolAndGeoTolWthMod(StepDimTol_GeometricTolerance, OCP.Standa
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3665,32 +3667,32 @@ class StepDimTol_GeoTolAndGeoTolWthMaxTol(StepDimTol_GeoTolAndGeoTolWthMod, Step
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWM : StepDimTol_GeometricToleranceWithModifiers,theMaxTol : OCP.StepBasic.StepBasic_LengthMeasureWithUnit,theType : StepDimTol_GeometricToleranceType) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDescription : OCP.TCollection.TCollection_HAsciiString,aMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,aTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,aGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theMaxTol : OCP.StepBasic.StepBasic_LengthMeasureWithUnit,theType : StepDimTol_GeometricToleranceType) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theGTWM : StepDimTol_GeometricToleranceWithModifiers,theType : StepDimTol_GeometricToleranceType) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3724,14 +3726,14 @@ class StepDimTol_GeoTolAndGeoTolWthMaxTol(StepDimTol_GeoTolAndGeoTolWthMod, Step
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3798,23 +3800,23 @@ class StepDimTol_AngularityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -3824,14 +3826,14 @@ class StepDimTol_AngularityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -3845,14 +3847,14 @@ class StepDimTol_AngularityTolerance(StepDimTol_GeometricToleranceWithDatumRefer
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3912,6 +3914,7 @@ class StepDimTol_GeometricToleranceModifier():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3978,23 +3981,23 @@ class StepDimTol_GeometricToleranceRelationship(OCP.Standard.Standard_Transient)
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns field Name
@@ -4196,6 +4199,7 @@ class StepDimTol_GeometricToleranceType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4275,23 +4279,23 @@ class StepDimTol_CircularRunoutTolerance(StepDimTol_GeometricToleranceWithDatumR
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -4301,14 +4305,14 @@ class StepDimTol_CircularRunoutTolerance(StepDimTol_GeometricToleranceWithDatumR
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -4322,14 +4326,14 @@ class StepDimTol_CircularRunoutTolerance(StepDimTol_GeometricToleranceWithDatumR
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4379,32 +4383,32 @@ class StepDimTol_GeometricToleranceWithDefinedUnit(StepDimTol_GeometricTolerance
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -4426,14 +4430,14 @@ class StepDimTol_GeometricToleranceWithDefinedUnit(StepDimTol_GeometricTolerance
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def SetUnitSize(self,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
         """
         Set field UnitSize
@@ -4503,23 +4507,23 @@ class StepDimTol_GeometricToleranceWithDefinedAreaUnit(StepDimTol_GeometricToler
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -4553,14 +4557,14 @@ class StepDimTol_GeometricToleranceWithDefinedAreaUnit(StepDimTol_GeometricToler
         Set field SecondUnitSize
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def SetUnitSize(self,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
         """
         Set field UnitSize
@@ -4622,23 +4626,23 @@ class StepDimTol_GeometricToleranceWithModifiers(StepDimTol_GeometricTolerance, 
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -4680,14 +4684,14 @@ class StepDimTol_GeometricToleranceWithModifiers(StepDimTol_GeometricTolerance, 
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4736,28 +4740,28 @@ class StepDimTol_GeometricToleranceWithMaximumTolerance(StepDimTol_GeometricTole
         """
         Increments the reference counter of this object
         """
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theModifiers : StepDimTol_HArray1OfGeometricToleranceModifier,theUnitSize : OCP.StepBasic.StepBasic_LengthMeasureWithUnit) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theModifiers : StepDimTol_HArray1OfGeometricToleranceModifier) -> None: 
         """
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -4807,14 +4811,14 @@ class StepDimTol_GeometricToleranceWithMaximumTolerance(StepDimTol_GeometricTole
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4901,23 +4905,23 @@ class StepDimTol_HArray1OfDatumReference(StepDimTol_Array1OfDatumReference, OCP.
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_DatumReference: 
         """
         Returns last element
@@ -4959,13 +4963,13 @@ class StepDimTol_HArray1OfDatumReference(StepDimTol_Array1OfDatumReference, OCP.
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReference) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReference) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReference) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReference) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5044,23 +5048,23 @@ class StepDimTol_HArray1OfDatumReferenceCompartment(StepDimTol_Array1OfDatumRefe
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_DatumReferenceCompartment: 
         """
         Returns last element
@@ -5102,13 +5106,13 @@ class StepDimTol_HArray1OfDatumReferenceCompartment(StepDimTol_Array1OfDatumRefe
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceCompartment) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceCompartment) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5187,23 +5191,23 @@ class StepDimTol_HArray1OfDatumReferenceElement(StepDimTol_Array1OfDatumReferenc
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_DatumReferenceElement: 
         """
         Returns last element
@@ -5245,9 +5249,9 @@ class StepDimTol_HArray1OfDatumReferenceElement(StepDimTol_Array1OfDatumReferenc
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceElement) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -5330,23 +5334,23 @@ class StepDimTol_HArray1OfDatumReferenceModifier(StepDimTol_Array1OfDatumReferen
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_DatumReferenceModifier: 
         """
         Returns last element
@@ -5388,11 +5392,11 @@ class StepDimTol_HArray1OfDatumReferenceModifier(StepDimTol_Array1OfDatumReferen
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceModifier) -> None: ...
+    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceModifier) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfDatumReferenceModifier) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumReferenceModifier) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -5473,23 +5477,23 @@ class StepDimTol_HArray1OfDatumSystemOrReference(StepDimTol_Array1OfDatumSystemO
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_DatumSystemOrReference: 
         """
         Returns last element
@@ -5531,13 +5535,13 @@ class StepDimTol_HArray1OfDatumSystemOrReference(StepDimTol_Array1OfDatumSystemO
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumSystemOrReference) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfDatumSystemOrReference) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_DatumSystemOrReference) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5616,23 +5620,23 @@ class StepDimTol_HArray1OfGeometricToleranceModifier(StepDimTol_Array1OfGeometri
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_GeometricToleranceModifier: 
         """
         Returns last element
@@ -5674,13 +5678,13 @@ class StepDimTol_HArray1OfGeometricToleranceModifier(StepDimTol_Array1OfGeometri
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_GeometricToleranceModifier) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepDimTol_Array1OfGeometricToleranceModifier) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_GeometricToleranceModifier) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5759,23 +5763,23 @@ class StepDimTol_HArray1OfToleranceZoneTarget(StepDimTol_Array1OfToleranceZoneTa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepDimTol_ToleranceZoneTarget: 
         """
         Returns last element
@@ -5821,9 +5825,9 @@ class StepDimTol_HArray1OfToleranceZoneTarget(StepDimTol_Array1OfToleranceZoneTa
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepDimTol_ToleranceZoneTarget) -> None: ...
     @overload
-    def __init__(self,theOther : StepDimTol_Array1OfToleranceZoneTarget) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepDimTol_Array1OfToleranceZoneTarget) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5851,6 +5855,7 @@ class StepDimTol_LimitCondition():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -5901,32 +5906,32 @@ class StepDimTol_LineProfileTolerance(StepDimTol_GeometricTolerance, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -5948,14 +5953,14 @@ class StepDimTol_LineProfileTolerance(StepDimTol_GeometricTolerance, OCP.Standar
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6005,32 +6010,32 @@ class StepDimTol_ModifiedGeometricTolerance(StepDimTol_GeometricTolerance, OCP.S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theModifier : StepDimTol_LimitCondition) -> None: 
+    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theModifier : StepDimTol_LimitCondition) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : StepDimTol_GeometricToleranceTarget,theModifier : StepDimTol_LimitCondition) -> None: ...
+    def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theModifier : StepDimTol_LimitCondition) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -6060,14 +6065,14 @@ class StepDimTol_ModifiedGeometricTolerance(StepDimTol_GeometricTolerance, OCP.S
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6125,23 +6130,23 @@ class StepDimTol_ToleranceZoneDefinition(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbBoundaries(self) -> int: 
         """
         Returns number of Boundaries
@@ -6224,23 +6229,23 @@ class StepDimTol_ParallelismTolerance(StepDimTol_GeometricToleranceWithDatumRefe
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -6250,14 +6255,14 @@ class StepDimTol_ParallelismTolerance(StepDimTol_GeometricToleranceWithDatumRefe
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -6271,14 +6276,14 @@ class StepDimTol_ParallelismTolerance(StepDimTol_GeometricToleranceWithDatumRefe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6345,23 +6350,23 @@ class StepDimTol_PerpendicularityTolerance(StepDimTol_GeometricToleranceWithDatu
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -6371,14 +6376,14 @@ class StepDimTol_PerpendicularityTolerance(StepDimTol_GeometricToleranceWithDatu
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -6392,14 +6397,14 @@ class StepDimTol_PerpendicularityTolerance(StepDimTol_GeometricToleranceWithDatu
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6453,23 +6458,23 @@ class StepDimTol_PlacedDatumTargetFeature(StepDimTol_DatumTarget, OCP.StepRepr.S
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -6551,32 +6556,32 @@ class StepDimTol_PositionTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -6598,14 +6603,14 @@ class StepDimTol_PositionTolerance(StepDimTol_GeometricTolerance, OCP.Standard.S
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6663,23 +6668,23 @@ class StepDimTol_ProjectedZoneDefinition(StepDimTol_ToleranceZoneDefinition, OCP
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbBoundaries(self) -> int: 
         """
         Returns number of Boundaries
@@ -6761,32 +6766,32 @@ class StepDimTol_RoundnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -6808,14 +6813,14 @@ class StepDimTol_RoundnessTolerance(StepDimTol_GeometricTolerance, OCP.Standard.
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6873,23 +6878,23 @@ class StepDimTol_RunoutZoneDefinition(StepDimTol_ToleranceZoneDefinition, OCP.St
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbBoundaries(self) -> int: 
         """
         Returns number of Boundaries
@@ -6967,23 +6972,23 @@ class StepDimTol_RunoutZoneOrientation(OCP.Standard.Standard_Transient):
         Init all field own and inherited
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetAngle(self,theAngle : OCP.StepBasic.StepBasic_PlaneAngleMeasureWithUnit) -> None: 
         """
         Set field Angle
@@ -7167,6 +7172,7 @@ class StepDimTol_SimpleDatumReferenceModifier():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -7256,23 +7262,23 @@ class StepDimTol_SimpleDatumReferenceModifierMember(OCP.StepData.StepData_Select
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -7394,32 +7400,32 @@ class StepDimTol_StraightnessTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -7441,14 +7447,14 @@ class StepDimTol_StraightnessTolerance(StepDimTol_GeometricTolerance, OCP.Standa
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7498,32 +7504,32 @@ class StepDimTol_SurfaceProfileTolerance(StepDimTol_GeometricTolerance, OCP.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
         """
         Initialize all fields (own and inherited) AP214
 
         Initialize all fields (own and inherited) AP242
         """
     @overload
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theDescription : OCP.TCollection.TCollection_HAsciiString,theMagnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -7545,14 +7551,14 @@ class StepDimTol_SurfaceProfileTolerance(StepDimTol_GeometricTolerance, OCP.Stan
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7619,23 +7625,23 @@ class StepDimTol_SymmetryTolerance(StepDimTol_GeometricToleranceWithDatumReferen
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -7645,14 +7651,14 @@ class StepDimTol_SymmetryTolerance(StepDimTol_GeometricToleranceWithDatumReferen
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -7666,14 +7672,14 @@ class StepDimTol_SymmetryTolerance(StepDimTol_GeometricToleranceWithDatumReferen
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7739,23 +7745,23 @@ class StepDimTol_ToleranceZone(OCP.StepRepr.StepRepr_ShapeAspect, OCP.Standard.S
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7853,23 +7859,23 @@ class StepDimTol_NonUniformZoneDefinition(StepDimTol_ToleranceZoneDefinition, OC
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbBoundaries(self) -> int: 
         """
         Returns number of Boundaries
@@ -7935,23 +7941,23 @@ class StepDimTol_ToleranceZoneForm(OCP.Standard.Standard_Transient):
         Init all field own and inherited
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns field Name
@@ -8140,23 +8146,23 @@ class StepDimTol_TotalRunoutTolerance(StepDimTol_GeometricToleranceWithDatumRefe
     @overload
     def Init(self,theGeometricTolerance_Name : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Description : OCP.TCollection.TCollection_HAsciiString,theGeometricTolerance_Magnitude : OCP.StepBasic.StepBasic_MeasureWithUnit,theGeometricTolerance_TolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -8166,14 +8172,14 @@ class StepDimTol_TotalRunoutTolerance(StepDimTol_GeometricToleranceWithDatumRefe
         Returns field Name
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: 
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: 
         """
         Set field DatumSystem AP214
 
         Set field DatumSystem AP242
         """
     @overload
-    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumSystemOrReference) -> None: ...
+    def SetDatumSystem(self,theDatumSystem : StepDimTol_HArray1OfDatumReference) -> None: ...
     def SetDescription(self,theDescription : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Set field Description
@@ -8187,14 +8193,14 @@ class StepDimTol_TotalRunoutTolerance(StepDimTol_GeometricToleranceWithDatumRefe
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8252,23 +8258,23 @@ class StepDimTol_UnequallyDisposedGeometricTolerance(StepDimTol_GeometricToleran
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> OCP.StepBasic.StepBasic_MeasureWithUnit: 
         """
         Returns field Magnitude
@@ -8294,14 +8300,14 @@ class StepDimTol_UnequallyDisposedGeometricTolerance(StepDimTol_GeometricToleran
         Set field Name
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: 
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: 
         """
         Set field TolerancedShapeAspect AP214
 
         Set field TolerancedShapeAspect AP242
         """
     @overload
-    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : OCP.StepRepr.StepRepr_ShapeAspect) -> None: ...
+    def SetTolerancedShapeAspect(self,theTolerancedShapeAspect : StepDimTol_GeometricToleranceTarget) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

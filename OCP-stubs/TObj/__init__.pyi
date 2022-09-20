@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.TDF
 import OCP.CDF
-import OCP.TCollection
-import io
-import OCP.TColStd
-import OCP.NCollection
-import OCP.Message
-import OCP.PCDM
+import OCP.TDF
 import OCP.CDM
+import OCP.NCollection
+import OCP.TDocStd
+import OCP.PCDM
+import io
 import OCP.gp
-import OCP.Resource
 import OCP.Standard
+import OCP.TColStd
+import OCP.Message
+import OCP.TCollection
+import OCP.Resource
 __all__  = [
 "TObj_Application",
 "TObj_Assistant",
@@ -64,14 +64,14 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         None
         """
     @overload
-    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def CanRetrieve(self,theFolder : OCP.TCollection.TCollection_ExtendedString,theName : OCP.TCollection.TCollection_ExtendedString,theVersion : OCP.TCollection.TCollection_ExtendedString,theAppendMode : bool) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         None
 
         None
         """
     @overload
-    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def CanRetrieve(self,theFolder : OCP.TCollection.TCollection_ExtendedString,theName : OCP.TCollection.TCollection_ExtendedString,theAppendMode : bool) -> OCP.PCDM.PCDM_ReaderStatus: ...
     def Close(self,aDoc : OCP.TDocStd.TDocStd_Document) -> None: 
         """
         Close the given document. the document is not any more handled by the applicative session.
@@ -109,14 +109,14 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         this method is called affter the update of a document. By default, writes in MessageDriver().
         """
     @overload
-    def ErrorMessage(self,theMsg : OCP.TCollection.TCollection_ExtendedString,theLevel : OCP.Message.Message_Gravity) -> None: 
+    def ErrorMessage(self,theMsg : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         Signal error during Load or Save Default imiplementation is empty
 
         Signal error during Load or Save Default imiplementation invoke previous declaration with 0
         """
     @overload
-    def ErrorMessage(self,theMsg : OCP.TCollection.TCollection_ExtendedString) -> None: ...
+    def ErrorMessage(self,theMsg : OCP.TCollection.TCollection_ExtendedString,theLevel : OCP.Message.Message_Gravity) -> None: ...
     def Format(self,aFileName : OCP.TCollection.TCollection_ExtendedString,theFormat : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         try to retrieve a Format directly in the file or in application resource by using extension. returns True if found;
@@ -142,7 +142,7 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         """
         Increments the reference counter of this object
         """
-    def InitDocument(self,aDoc : OCP.TDocStd.TDocStd_Document) -> None: 
+    def InitDocument(self,aDoc : OCP.CDM.CDM_Document) -> None: 
         """
         Initialize the document aDoc for the applicative session. This virtual function is called by NewDocument and is to be redefined for each specific application. Modified flag (different of disk version) ============= to open/save a document =======================
         """
@@ -155,31 +155,36 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         Returns an index for the document found in the path path in this applicative session. If the returned value is 0, the document is not present in the applicative session. This method can be used for the interactive part of an application. For instance, on a call to Open, the document to be opened may already be in memory. IsInSession checks to see if this is the case. Open can be made to depend on the value of the index returned: if IsInSession returns 0, the document is opened; if it returns another value, a message is displayed asking the user if he wants to override the version of the document in memory. Example: Standard_Integer insession = A->IsInSession(aDoc); if (insession > 0) { std::cout << "document " << insession << " is already in session" << std::endl; return 0; }
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsVerbose(self) -> bool: 
         """
         Returns the verbose flag
         """
-    def LoadDocument(self,theSourceFile : OCP.TCollection.TCollection_ExtendedString,theTargetDoc : OCP.TDocStd.TDocStd_Document) -> bool: 
+    @overload
+    def LoadDocument(self,theIStream : io.BytesIO,theTargetDoc : OCP.TDocStd.TDocStd_Document) -> bool: 
         """
         Loading the OCAF document from a file
+
+        Loading the OCAF document from a stream
         """
+    @overload
+    def LoadDocument(self,theSourceFile : OCP.TCollection.TCollection_ExtendedString,theTargetDoc : OCP.TDocStd.TDocStd_Document) -> bool: ...
     @staticmethod
     def Load_s(aGUID : OCP.Standard.Standard_GUID) -> OCP.CDF.CDF_Application: 
         """
@@ -209,10 +214,15 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         """
         returns the number of documents handled by the current applicative session.
         """
-    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> Any: 
+    @overload
+    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.CDM.CDM_Document) -> Any: 
         """
         Constructs the empty new document aDoc. This document will have the format format. If InitDocument is redefined for a specific application, the new document is handled by the applicative session.
+
+        A non-virtual method taking a TDocStd_Documment object as an input. Internally it calls a virtual method NewDocument() with CDM_Document object.
         """
+    @overload
+    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> Any: ...
     def OnAbortTransaction(self,theDoc : OCP.TDocStd.TDocStd_Document) -> None: 
         """
         Notification that is fired at each AbortTransaction event.
@@ -226,17 +236,25 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,thePath : OCP.TCollection.TCollection_ExtendedString,theDoc : OCP.TDocStd.TDocStd_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
-        Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
+        Retrieves the document from specified file. In order not to override a version of the document which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
-        Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
+        Retrieves the document from specified file. In order not to override a version of the document which is already in memory, this method can be made to depend on the value returned by IsInSession.
+
+        Retrieves document from standard stream.
+
+        Retrieves document from standard stream.
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
+    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    @overload
+    def Open(self,thePath : OCP.TCollection.TCollection_ExtendedString,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    @overload
+    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Read(self,theIStream : io.BytesIO,theDocument : OCP.CDM.CDM_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Any: 
         """
-        Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
+        Reads theDocument from standard SEEKABLE stream theIStream, the stream should support SEEK functionality
         """
     def ReaderFromFormat(self,aFormat : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_Reader: 
         """
@@ -255,44 +273,49 @@ class TObj_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Application,
         Return name of resource (i.e. "TObj")
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,theDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
-        Save theDoc to standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
+        Save theDoc to standard SEEKABLE stream theOStream. the stream should support SEEK functionality
 
         Save the active document in the file <name> in the path <path> . overwrite the file if it already exist.
 
-        Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
+        Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK functionality
         """
-    @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
-    @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
     def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
-    def SaveDocument(self,theSourceDoc : OCP.TDocStd.TDocStd_Document,theTargetFile : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    @overload
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    @overload
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    @overload
+    def SaveDocument(self,theSourceDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO) -> bool: 
         """
         Saving the OCAF document to a file
+
+        Saving the OCAF document to a stream
         """
+    @overload
+    def SaveDocument(self,theSourceDoc : OCP.TDocStd.TDocStd_Document,theTargetFile : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None
@@ -398,14 +421,14 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
     This class provides consistency check of the TObj model. It collects all inconsistencies in the status bits and prepaires messages to be sent using SendStatusMessages (SendMessages) method. It supports also the fix mode, in which some inconsistencies are corrected.This class provides consistency check of the TObj model. It collects all inconsistencies in the status bits and prepaires messages to be sent using SendStatusMessages (SendMessages) method. It supports also the fix mode, in which some inconsistencies are corrected.
     """
     @overload
-    def AddStatus(self,theStatus : OCP.Message.Message_ExecStatus,theOther : OCP.Message.Message_Algorithm) -> None: 
+    def AddStatus(self,theOther : OCP.Message.Message_Algorithm) -> None: 
         """
         Add statuses to this algorithm from other algorithm (including messages)
 
         Add statuses to this algorithm from other algorithm, but only those items are moved that correspond to statuses set in theStatus
         """
     @overload
-    def AddStatus(self,theOther : OCP.Message.Message_Algorithm) -> None: ...
+    def AddStatus(self,theStatus : OCP.Message.Message_ExecStatus,theOther : OCP.Message.Message_Algorithm) -> None: ...
     def ChangeStatus(self) -> OCP.Message.Message_ExecStatus: 
         """
         Returns exec status of algorithm
@@ -461,23 +484,23 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsToFix(self) -> bool: 
         """
         Returns true if it is allowed to fix inconsistencies
@@ -510,7 +533,7 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         Sets messenger to algorithm
         """
     @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: 
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool) -> None: 
         """
         Sets status with no parameter
 
@@ -537,27 +560,27 @@ class TObj_CheckModel(OCP.Message.Message_Algorithm, OCP.Standard.Standard_Trans
         Sets status with string parameter If noRepetitions is True, the parameter will be added only if it has not been yet recorded for the same status flag
         """
     @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theInt : int) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
+    @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool) -> None: ...
     @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
     @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theMsg : OCP.Message.Message_Msg) -> None: ...
     @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HExtendedString,noRepetitions : bool=True) -> None: ...
     @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : str,noRepetitions : bool) -> None: ...
-    @overload
     def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : OCP.Message.Message_Status,theInt : int) -> None: ...
     def SetToFix(self,theToFix : bool) -> None: 
         """
         Sets flag allowing fixing inconsistencies
@@ -665,11 +688,11 @@ class TObj_DataMapOfNameLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TObj_DataMapOfNameLabel) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TObj_DataMapOfStringPointer(OCP.NCollection.NCollection_BaseMap):
@@ -759,9 +782,9 @@ class TObj_DataMapOfStringPointer(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TObj_DataMapOfStringPointer) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -781,6 +804,7 @@ class TObj_DeletingMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -811,14 +835,14 @@ class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TObj_Object) -> None: 
+    def Append(self,theSeq : TObj_SequenceOfObject) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : TObj_SequenceOfObject) -> None: ...
+    def Append(self,theItem : TObj_Object) -> None: ...
     def Assign(self,theOther : TObj_SequenceOfObject) -> TObj_SequenceOfObject: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -857,14 +881,14 @@ class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -924,9 +948,9 @@ class TObj_SequenceOfObject(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TObj_SequenceOfObject) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -950,7 +974,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         """
     def AfterRetrieval(self) -> None: 
         """
-        Preforms updating the links and dependances of the object which are not stored in persistence. Should be redefined if necessary.
+        Performs updating the links and dependances of the object which are not stored in persistence. Should be redefined if necessary.
         """
     def BeforeForgetReference(self,arg1 : OCP.TDF.TDF_Label) -> None: 
         """
@@ -958,7 +982,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         """
     def BeforeStoring(self) -> None: 
         """
-        Preforms storing the objects transient fields in OCAF document which were outside transaction mechanism. Default implementation doesnot nothing
+        Performs storing the objects transient fields in OCAF document which were outside transaction mechanism. Default implementation does nothing
         """
     def CanDetach(self,theMode : TObj_DeletingMode=TObj_DeletingMode.TObj_FreeOnly) -> bool: 
         """
@@ -978,7 +1002,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         """
     def Clone(self,theTargetLabel : OCP.TDF.TDF_Label,theRelocTable : OCP.TDF.TDF_RelocationTable) -> TObj_Object: 
         """
-        Copy me to other label theTargetLabel New object will not have all the reference that has me. Coping object with data and childs, but change name by adding string "_copy" As result return handle of new object (null handle is something wrong) NOTE: BackReferences not coping. After clonning all objects it is neccessary to call copy references with the same relocation table
+        Copy me to other label theTargetLabel New object will not have all the reference that has me. Coping object with data and childs, but change name by adding string "_copy" As result return handle of new object (null handle is something wrong) NOTE: BackReferences not coping. After cloning all objects it is necessary to call copy references with the same relocation table
         """
     def CopyChildren(self,theTargetLabel : OCP.TDF.TDF_Label,theRelocTable : OCP.TDF.TDF_RelocationTable) -> None: 
         """
@@ -1003,7 +1027,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
     @staticmethod
     def Detach_s(theLabel : OCP.TDF.TDF_Label,theMode : TObj_DeletingMode=TObj_DeletingMode.TObj_FreeOnly) -> bool: 
         """
-        Deletes the object from the label. Checks if object can be deleted. Finds object on the label and detaches it by calling previos method. Returns true if there is no object on the label after detaching
+        Deletes the object from the label. Checks if object can be deleted. Finds object on the label and detaches it by calling previous method. Returns true if there is no object on the label after detaching
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1011,7 +1035,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         """
     def GetBackReferences(self,theType : OCP.Standard.Standard_Type=None) -> TObj_ObjectIterator: 
         """
-        Returns iterator for the objects which depend on this one. These reffering objects may belong to other models. theType narrows a variety of iterated objects
+        Returns iterator for the objects which depend on this one. These referring objects may belong to other models. theType narrows a variety of iterated objects
         """
     def GetBadReference(self,theRoot : OCP.TDF.TDF_Label,theBadReference : OCP.TDF.TDF_Label) -> bool: 
         """
@@ -1059,9 +1083,9 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         Returns the Standard_True is object has name and returns name to theName
         """
     @overload
-    def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
-    @overload
     def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    @overload
+    def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
     def GetNameForClone(self,arg1 : TObj_Object) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         Returns name for copy default implementation returns the same name
@@ -1093,7 +1117,7 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         """
     def HasBackReferences(self) -> bool: 
         """
-        Returns TRUE if obejct has 1 or more back references
+        Returns TRUE if object has 1 or more back references
         """
     def HasModifications(self) -> bool: 
         """
@@ -1112,23 +1136,23 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         Checks that object alive in model Default implementation checks that object has TObject attribute at own label.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RelocateReferences(self,theFromRoot : OCP.TDF.TDF_Label,theToRoot : OCP.TDF.TDF_Label,theUpdateBackRefs : bool=True) -> bool: 
         """
         Make that each reference pointing to a descendant label of theFromRoot to point to an equivalent label under theToRoot. Return False if a resulting reference does not point to an TObj_Object Example: a referred object label = 0:3:24:7:2:7 theFromRoot = 0:3:24 theToRoot = 0:2 a new referred label = 0:2:7:2:7
@@ -1167,9 +1191,9 @@ class TObj_Object(OCP.Standard.Standard_Transient):
         Sets name of the object. Returns False if theName is not unique.
         """
     @overload
-    def SetName(self,theName : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
-    @overload
     def SetName(self,name : str) -> bool: ...
+    @overload
+    def SetName(self,theName : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
     def SetOrder(self,theIndx : int) -> bool: 
         """
         sets order of object
@@ -1228,23 +1252,23 @@ class TObj_ObjectIterator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def More(self) -> bool: 
         """
         Returns True if iteration is not finished and method Current() will give the object. Default implementation returns False
@@ -1387,23 +1411,23 @@ class TObj_Model(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsModified(self) -> bool: 
         """
         Modification status
@@ -1412,10 +1436,15 @@ class TObj_Model(OCP.Standard.Standard_Transient):
         """
         Returns True is name is registered in the names map The input argument may be NULL handle, then model check in own global container
         """
-    def Load(self,theFile : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    @overload
+    def Load(self,theIStream : io.BytesIO) -> bool: 
         """
         Load the OCAF model from a file. If the filename is empty or file does not exists, it just initializes model by empty data.
+
+        Load the OCAF model from a stream. If case of failure, it initializes the model by empty data.
         """
+    @overload
+    def Load(self,theFile : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def Messenger(self) -> OCP.Message.Message_Messenger: 
         """
         Get messenger used for messages output (by default, the messenger from application is used)
@@ -1440,10 +1469,15 @@ class TObj_Model(OCP.Standard.Standard_Transient):
         """
         Save the model to the same file
         """
+    @overload
     def SaveAs(self,theFile : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
         Save the model to a file
+
+        Save the model to a stream
         """
+    @overload
+    def SaveAs(self,theOStream : io.BytesIO) -> bool: ...
     def SetLabel(self,theLabel : OCP.TDF.TDF_Label) -> None: 
         """
         Sets OCAF label on which model data are stored. Used by persistence mechanism.
@@ -1509,23 +1543,23 @@ class TObj_ModelIterator(TObj_ObjectIterator, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def More(self) -> bool: 
         """
         Returns True if iteration is not finished and method Value() will give the object
@@ -1556,7 +1590,7 @@ class TObj_ModelIterator(TObj_ObjectIterator, OCP.Standard.Standard_Transient):
     pass
 class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
     """
-    This class privides tool handling one of partitions (the set of homogenious elements) in the OCAF based model`s data structureThis class privides tool handling one of partitions (the set of homogenious elements) in the OCAF based model`s data structure
+    This class provides tool handling one of partitions (the set of homogeneous elements) in the OCAF based model`s data structureThis class provides tool handling one of partitions (the set of homogeneous elements) in the OCAF based model`s data structure
     """
     class ObjectState_e():
         pass
@@ -1568,7 +1602,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
     def AfterRetrieval(self) -> None: 
         """
-        Preforms updating the links and dependances of the object which are not stored in persistence. Does not register the partition name
+        Performs updating the links and dependencies of the object which are not stored in persistence. Does not register the partition name
         """
     def BeforeForgetReference(self,arg1 : OCP.TDF.TDF_Label) -> None: 
         """
@@ -1576,7 +1610,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
     def BeforeStoring(self) -> None: 
         """
-        Preforms storing the objects transient fields in OCAF document which were outside transaction mechanism. Default implementation doesnot nothing
+        Performs storing the objects transient fields in OCAF document which were outside transaction mechanism. Default implementation does nothing
         """
     def CanDetach(self,theMode : TObj_DeletingMode=TObj_DeletingMode.TObj_FreeOnly) -> bool: 
         """
@@ -1596,7 +1630,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
     def Clone(self,theTargetLabel : OCP.TDF.TDF_Label,theRelocTable : OCP.TDF.TDF_RelocationTable) -> TObj_Object: 
         """
-        Copy me to other label theTargetLabel New object will not have all the reference that has me. Coping object with data and childs, but change name by adding string "_copy" As result return handle of new object (null handle is something wrong) NOTE: BackReferences not coping. After clonning all objects it is neccessary to call copy references with the same relocation table
+        Copy me to other label theTargetLabel New object will not have all the reference that has me. Coping object with data and childs, but change name by adding string "_copy" As result return handle of new object (null handle is something wrong) NOTE: BackReferences not coping. After cloning all objects it is necessary to call copy references with the same relocation table
         """
     def CopyChildren(self,theTargetLabel : OCP.TDF.TDF_Label,theRelocTable : OCP.TDF.TDF_RelocationTable) -> None: 
         """
@@ -1626,7 +1660,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
     @staticmethod
     def Detach_s(theLabel : OCP.TDF.TDF_Label,theMode : TObj_DeletingMode=TObj_DeletingMode.TObj_FreeOnly) -> bool: 
         """
-        Deletes the object from the label. Checks if object can be deleted. Finds object on the label and detaches it by calling previos method. Returns true if there is no object on the label after detaching
+        Deletes the object from the label. Checks if object can be deleted. Finds object on the label and detaches it by calling previous method. Returns true if there is no object on the label after detaching
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1634,7 +1668,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
     def GetBackReferences(self,theType : OCP.Standard.Standard_Type=None) -> TObj_ObjectIterator: 
         """
-        Returns iterator for the objects which depend on this one. These reffering objects may belong to other models. theType narrows a variety of iterated objects
+        Returns iterator for the objects which depend on this one. These referring objects may belong to other models. theType narrows a variety of iterated objects
         """
     def GetBadReference(self,theRoot : OCP.TDF.TDF_Label,theBadReference : OCP.TDF.TDF_Label) -> bool: 
         """
@@ -1686,9 +1720,9 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         Returns the Standard_True is object has name and returns name to theName
         """
     @overload
-    def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
-    @overload
     def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    @overload
+    def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
     def GetNameForClone(self,arg1 : TObj_Object) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         Returns name for copy default implementation returns the same name
@@ -1699,7 +1733,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
     def GetNewName(self,theIsToChangeCount : bool=True) -> OCP.TCollection.TCollection_HExtendedString: 
         """
-        Generates and returns name for new object in partition. if theIsToChangeCount is true partition icrease own counter to generate new name next time starting from new counter value
+        Generates and returns name for new object in partition. if theIsToChangeCount is true partition increase own counter to generate new name next time starting from new counter value
         """
     @staticmethod
     def GetObj_s(theLabel : OCP.TDF.TDF_Label,theResult : TObj_Object,isSuper : bool=False) -> bool: 
@@ -1733,7 +1767,7 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         """
     def HasBackReferences(self) -> bool: 
         """
-        Returns TRUE if obejct has 1 or more back references
+        Returns TRUE if object has 1 or more back references
         """
     def HasModifications(self) -> bool: 
         """
@@ -1752,23 +1786,23 @@ class TObj_Partition(TObj_Object, OCP.Standard.Standard_Transient):
         Checks that object alive in model Default implementation checks that object has TObject attribute at own label.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewLabel(self) -> OCP.TDF.TDF_Label: 
         """
         Creates and Returns label for new object in partition.
@@ -1875,23 +1909,23 @@ class TObj_LabelIterator(TObj_ObjectIterator, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LabelValue(self) -> OCP.TDF.TDF_Label: 
         """
         Returns the label of the current item
@@ -1949,23 +1983,23 @@ class TObj_OcafObjectIterator(TObj_LabelIterator, TObj_ObjectIterator, OCP.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LabelValue(self) -> OCP.TDF.TDF_Label: 
         """
         Returns the label of the current item
@@ -2021,6 +2055,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -2055,6 +2090,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -2080,7 +2116,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
     def AfterRetrieval(self) -> None: 
         """
-        Preforms updating the links and dependances of the object which are not stored in persistence. Does not register the partition name
+        Performs updating the links and dependencies of the object which are not stored in persistence. Does not register the partition name
         """
     def BeforeForgetReference(self,arg1 : OCP.TDF.TDF_Label) -> None: 
         """
@@ -2088,7 +2124,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
     def BeforeStoring(self) -> None: 
         """
-        Preforms storing the objects transient fields in OCAF document which were outside transaction mechanism. Default implementation doesnot nothing
+        Performs storing the objects transient fields in OCAF document which were outside transaction mechanism. Default implementation does nothing
         """
     def CanDetach(self,theMode : TObj_DeletingMode=TObj_DeletingMode.TObj_FreeOnly) -> bool: 
         """
@@ -2108,7 +2144,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
     def Clone(self,theTargetLabel : OCP.TDF.TDF_Label,theRelocTable : OCP.TDF.TDF_RelocationTable) -> TObj_Object: 
         """
-        Copy me to other label theTargetLabel New object will not have all the reference that has me. Coping object with data and childs, but change name by adding string "_copy" As result return handle of new object (null handle is something wrong) NOTE: BackReferences not coping. After clonning all objects it is neccessary to call copy references with the same relocation table
+        Copy me to other label theTargetLabel New object will not have all the reference that has me. Coping object with data and childs, but change name by adding string "_copy" As result return handle of new object (null handle is something wrong) NOTE: BackReferences not coping. After cloning all objects it is necessary to call copy references with the same relocation table
         """
     def CopyChildren(self,theTargetLabel : OCP.TDF.TDF_Label,theRelocTable : OCP.TDF.TDF_RelocationTable) -> None: 
         """
@@ -2138,7 +2174,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
     @staticmethod
     def Detach_s(theLabel : OCP.TDF.TDF_Label,theMode : TObj_DeletingMode=TObj_DeletingMode.TObj_FreeOnly) -> bool: 
         """
-        Deletes the object from the label. Checks if object can be deleted. Finds object on the label and detaches it by calling previos method. Returns true if there is no object on the label after detaching
+        Deletes the object from the label. Checks if object can be deleted. Finds object on the label and detaches it by calling previous method. Returns true if there is no object on the label after detaching
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -2146,7 +2182,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
     def GetBackReferences(self,theType : OCP.Standard.Standard_Type=None) -> TObj_ObjectIterator: 
         """
-        Returns iterator for the objects which depend on this one. These reffering objects may belong to other models. theType narrows a variety of iterated objects
+        Returns iterator for the objects which depend on this one. These referring objects may belong to other models. theType narrows a variety of iterated objects
         """
     def GetBadReference(self,theRoot : OCP.TDF.TDF_Label,theBadReference : OCP.TDF.TDF_Label) -> bool: 
         """
@@ -2198,9 +2234,9 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         Returns the Standard_True is object has name and returns name to theName
         """
     @overload
-    def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
-    @overload
     def GetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    @overload
+    def GetName(self) -> OCP.TCollection.TCollection_HExtendedString: ...
     def GetNameForClone(self,arg1 : TObj_Object) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         Returns name for copy default implementation returns the same name
@@ -2211,7 +2247,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
     def GetNewName(self,theIsToChangeCount : bool=True) -> OCP.TCollection.TCollection_HExtendedString: 
         """
-        Generates and returns name for new object in partition. if theIsToChangeCount is true partition icrease own counter to generate new name next time starting from new counter value
+        Generates and returns name for new object in partition. if theIsToChangeCount is true partition increase own counter to generate new name next time starting from new counter value
         """
     @staticmethod
     def GetObj_s(theLabel : OCP.TDF.TDF_Label,theResult : TObj_Object,isSuper : bool=False) -> bool: 
@@ -2245,7 +2281,7 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         """
     def HasBackReferences(self) -> bool: 
         """
-        Returns TRUE if obejct has 1 or more back references
+        Returns TRUE if object has 1 or more back references
         """
     def HasModifications(self) -> bool: 
         """
@@ -2264,23 +2300,23 @@ class TObj_HiddenPartition(TObj_Partition, TObj_Object, OCP.Standard.Standard_Tr
         Checks that object alive in model Default implementation checks that object has TObject attribute at own label.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewLabel(self) -> OCP.TDF.TDF_Label: 
         """
         Creates and Returns label for new object in partition.
@@ -2403,23 +2439,23 @@ class TObj_ReferenceIterator(TObj_LabelIterator, TObj_ObjectIterator, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LabelValue(self) -> OCP.TDF.TDF_Label: 
         """
         Returns the label of the current item
@@ -2477,23 +2513,23 @@ class TObj_SequenceIterator(TObj_ObjectIterator, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def More(self) -> bool: 
         """
         Returns True if there is a current Item in the iteration.
@@ -2602,23 +2638,23 @@ class TObj_SequenceOfIterator(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TObj_SequenceOfIterator) -> None: 
+    def Prepend(self,theItem : TObj_ObjectIterator) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : TObj_ObjectIterator) -> None: ...
+    def Prepend(self,theSeq : TObj_SequenceOfIterator) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2644,11 +2680,11 @@ class TObj_SequenceOfIterator(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : TObj_SequenceOfIterator) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TObj_SequenceOfIterator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2732,36 +2768,36 @@ class TObj_HSequenceOfObject(TObj_SequenceOfObject, OCP.NCollection.NCollection_
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TObj_Object) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TObj_SequenceOfObject) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> TObj_Object: 
         """
         Last item access
@@ -2955,11 +2991,11 @@ class TObj_TIntSparseArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -3003,23 +3039,23 @@ class TObj_TIntSparseArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3057,14 +3093,14 @@ class TObj_TIntSparseArray(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transien
         Sets the flag pointing to the necessity to maintain a modification delta. It is called by the retrieval driver
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetValue(self,theId : int,theValue : int) -> None: 
         """
         Sets the value with the given ID. Raises an exception if theId is not positive
@@ -3289,11 +3325,11 @@ class TObj_TModel(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -3329,23 +3365,23 @@ class TObj_TModel(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3384,17 +3420,17 @@ class TObj_TModel(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def Set(self,theModel : TObj_Model) -> None: 
         """
-        Sets the the Model object
+        Sets the Model object
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3532,11 +3568,11 @@ class TObj_TNameContainer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def Get(self) -> TObj_DataMapOfNameLabel: 
         """
@@ -3576,23 +3612,23 @@ class TObj_TNameContainer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3642,14 +3678,14 @@ class TObj_TNameContainer(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Sets the TObj_DataMapOfNameLabel object
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(theLabel : OCP.TDF.TDF_Label) -> TObj_TNameContainer: 
         """
@@ -3788,11 +3824,11 @@ class TObj_TObject(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def Get(self) -> TObj_Object: 
         """
@@ -3832,23 +3868,23 @@ class TObj_TObject(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3886,14 +3922,14 @@ class TObj_TObject(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets the TObj_Object object
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(theLabel : OCP.TDF.TDF_Label,theElem : TObj_Object) -> TObj_TObject: 
         """
@@ -4032,11 +4068,11 @@ class TObj_TReference(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def Get(self) -> TObj_Object: 
         """
@@ -4084,23 +4120,23 @@ class TObj_TReference(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -4143,14 +4179,14 @@ class TObj_TReference(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     @overload
     def Set(self,theLabel : OCP.TDF.TDF_Label,theMasterLabel : OCP.TDF.TDF_Label) -> None: ...
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(theLabel : OCP.TDF.TDF_Label,theObject : TObj_Object,theMaster : TObj_Object) -> TObj_TReference: 
         """
@@ -4286,11 +4322,11 @@ class TObj_TXYZ(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def Get(self) -> OCP.gp.gp_XYZ: 
         """
@@ -4330,23 +4366,23 @@ class TObj_TXYZ(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -4384,14 +4420,14 @@ class TObj_TXYZ(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Sets the XYZ
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(theLabel : OCP.TDF.TDF_Label,theXYZ : OCP.gp.gp_XYZ) -> TObj_TXYZ: 
         """

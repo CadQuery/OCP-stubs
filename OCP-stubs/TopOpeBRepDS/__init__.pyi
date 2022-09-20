@@ -5,17 +5,17 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopTools
+import OCP.NCollection
+import io
+import OCP.TopOpeBRepTool
+import OCP.Geom2d
+import OCP.gp
+import OCP.TopAbs
+import OCP.Standard
+import OCP.Geom
+import OCP.TopoDS
 import OCP.TCollection
 import OCP.TColStd
-import io
-import OCP.NCollection
-import OCP.gp
-import OCP.Geom
-import OCP.TopOpeBRepTool
-import OCP.TopoDS
-import OCP.Geom2d
-import OCP.Standard
-import OCP.TopAbs
 __all__  = [
 "TopOpeBRepDS",
 "TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference",
@@ -206,7 +206,7 @@ class TopOpeBRepDS():
         """
     @staticmethod
     @overload
-    def Print_s(S : OCP.TopAbs.TopAbs_State,OS : io.BytesIO) -> io.BytesIO: 
+    def Print_s(C : TopOpeBRepDS_Config,S : io.BytesIO) -> io.BytesIO: 
         """
         None
 
@@ -223,16 +223,16 @@ class TopOpeBRepDS():
     def Print_s(K : TopOpeBRepDS_Kind,S : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
-    def Print_s(C : TopOpeBRepDS_Config,S : io.BytesIO) -> io.BytesIO: ...
-    @staticmethod
-    @overload
-    def Print_s(K : TopOpeBRepDS_Kind,I : int,S : io.BytesIO,B : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,A : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> io.BytesIO: ...
+    def Print_s(S : OCP.TopAbs.TopAbs_State,OS : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
     def Print_s(T : OCP.TopAbs.TopAbs_ShapeEnum,I : int,S : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
-    def SPrint_s(T : OCP.TopAbs.TopAbs_ShapeEnum,I : int) -> OCP.TCollection.TCollection_AsciiString: 
+    def Print_s(K : TopOpeBRepDS_Kind,I : int,S : io.BytesIO,B : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,A : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> io.BytesIO: ...
+    @staticmethod
+    @overload
+    def SPrint_s(S : OCP.TopAbs.TopAbs_State) -> OCP.TCollection.TCollection_AsciiString: 
         """
         IN OU ON UN
 
@@ -248,22 +248,22 @@ class TopOpeBRepDS():
         """
     @staticmethod
     @overload
-    def SPrint_s(K : TopOpeBRepDS_Kind,I : int,B : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,A : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
-    @staticmethod
-    @overload
     def SPrint_s(O : OCP.TopAbs.TopAbs_Orientation) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     @overload
-    def SPrint_s(C : TopOpeBRepDS_Config) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SPrint_s(K : TopOpeBRepDS_Kind) -> OCP.TCollection.TCollection_AsciiString: ...
+    @staticmethod
+    @overload
+    def SPrint_s(K : TopOpeBRepDS_Kind,I : int,B : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,A : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     @overload
     def SPrint_s(T : OCP.TopAbs.TopAbs_ShapeEnum) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     @overload
-    def SPrint_s(S : OCP.TopAbs.TopAbs_State) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SPrint_s(T : OCP.TopAbs.TopAbs_ShapeEnum,I : int) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     @overload
-    def SPrint_s(K : TopOpeBRepDS_Kind) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SPrint_s(C : TopOpeBRepDS_Config) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     def ShapeToKind_s(S : OCP.TopAbs.TopAbs_ShapeEnum) -> TopOpeBRepDS_Kind: 
         """
@@ -273,7 +273,7 @@ class TopOpeBRepDS():
     pass
 class TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference) -> TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference: 
         """
@@ -348,11 +348,11 @@ class TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : TopOpeBRepDS_DataMapOfIntegerListOfInterference,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : TopOpeBRepDS_DataMapOfIntegerListOfInterference,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -400,23 +400,23 @@ class TopOpeBRepDS_Association(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -503,7 +503,7 @@ class TopOpeBRepDS_BuildTool():
         None
         """
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape,C : TopOpeBRepDS_Curve,DS : TopOpeBRepDS_DataStructure) -> None: 
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape,C : TopOpeBRepDS_Curve) -> None: 
         """
         None
 
@@ -514,11 +514,11 @@ class TopOpeBRepDS_BuildTool():
         None
         """
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape,C : TopOpeBRepDS_Curve) -> None: ...
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape,C : TopOpeBRepDS_Curve,DS : TopOpeBRepDS_DataStructure) -> None: ...
     @overload
     def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape,C : OCP.Geom.Geom_Curve,Tol : float) -> None: ...
+    @overload
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def MakeFace(self,F : OCP.TopoDS.TopoDS_Shape,S : TopOpeBRepDS_Surface) -> None: 
         """
         None
@@ -588,14 +588,14 @@ class TopOpeBRepDS_BuildTool():
         None
         """
     @overload
-    def Translate(self) -> bool: 
+    def Translate(self,T : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Translate(self,T : bool) -> None: ...
+    def Translate(self) -> bool: ...
     def UpdateEdge(self,Ein : OCP.TopoDS.TopoDS_Shape,Eou : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Sets the range of edge <Eou> from <Ein> only when <Ein> has a closed geometry.
@@ -605,14 +605,14 @@ class TopOpeBRepDS_BuildTool():
         None
         """
     @overload
-    def UpdateSurface(self,E : OCP.TopoDS.TopoDS_Shape,oldF : OCP.TopoDS.TopoDS_Shape,newF : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def UpdateSurface(self,F : OCP.TopoDS.TopoDS_Shape,SU : OCP.Geom.Geom_Surface) -> None: 
         """
         None
 
         None
         """
     @overload
-    def UpdateSurface(self,F : OCP.TopoDS.TopoDS_Shape,SU : OCP.Geom.Geom_Surface) -> None: ...
+    def UpdateSurface(self,E : OCP.TopoDS.TopoDS_Shape,oldF : OCP.TopoDS.TopoDS_Shape,newF : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self,GT : OCP.TopOpeBRepTool.TopOpeBRepTool_GeomTool) -> None: ...
     @overload
@@ -673,23 +673,23 @@ class TopOpeBRepDS_Check(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def OneVertexOnPnt(self) -> bool: 
         """
         Verifie que les Vertex non SameDomain sont bien nonSameDomain, que les vertex sameDomain sont bien SameDomain, que les Points sont non confondus ni entre eux, ni avec des Vertex.
@@ -743,6 +743,7 @@ class TopOpeBRepDS_CheckStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -778,6 +779,7 @@ class TopOpeBRepDS_Config():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -832,14 +834,14 @@ class TopOpeBRepDS_Curve():
         None
         """
     @overload
-    def Curve(self,C3D : OCP.Geom.Geom_Curve,Tol : float) -> None: 
+    def Curve(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve(self,C3D : OCP.Geom.Geom_Curve,Tol : float) -> None: ...
     @overload
     def Curve1(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
@@ -919,14 +921,14 @@ class TopOpeBRepDS_Curve():
         None
         """
     @overload
-    def Tolerance(self) -> float: 
+    def Tolerance(self,tol : float) -> None: 
         """
         Update the tolerance
 
         None
         """
     @overload
-    def Tolerance(self,tol : float) -> None: ...
+    def Tolerance(self) -> float: ...
     @overload
     def __init__(self,P : OCP.Geom.Geom_Curve,T : float,IsWalk : bool=False) -> None: ...
     @overload
@@ -953,9 +955,9 @@ class TopOpeBRepDS_GeometryData():
         None
         """
     @overload
-    def __init__(self,Other : TopOpeBRepDS_GeometryData) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Other : TopOpeBRepDS_GeometryData) -> None: ...
     pass
 class TopOpeBRepDS_CurveExplorer():
     """
@@ -1081,23 +1083,23 @@ class TopOpeBRepDS_Interference(OCP.Standard.Standard_Transient):
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1115,23 +1117,23 @@ class TopOpeBRepDS_Interference(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetGeometry(self,GI : int) -> None: 
         """
         None
@@ -1159,14 +1161,14 @@ class TopOpeBRepDS_Interference(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     @overload
     def __init__(self,Transition : TopOpeBRepDS_Transition,SupportType : TopOpeBRepDS_Kind,Support : int,GeometryType : TopOpeBRepDS_Kind,Geometry : int) -> None: ...
     @overload
@@ -1271,11 +1273,11 @@ class TopOpeBRepDS_DataMapOfCheckStatus(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepDS_DataMapOfCheckStatus) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepDS_DataMapOfIntegerListOfInterference(OCP.NCollection.NCollection_BaseMap):
@@ -1324,14 +1326,14 @@ class TopOpeBRepDS_DataMapOfIntegerListOfInterference(OCP.NCollection.NCollectio
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> TopOpeBRepDS_ListOfInterference: 
+    def Find(self,theKey : int,theValue : TopOpeBRepDS_ListOfInterference) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : TopOpeBRepDS_ListOfInterference) -> bool: ...
+    def Find(self,theKey : int) -> TopOpeBRepDS_ListOfInterference: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -1401,14 +1403,14 @@ class TopOpeBRepDS_DataMapOfInterferenceListOfInterference(OCP.NCollection.NColl
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TopOpeBRepDS_DataMapOfInterferenceListOfInterference) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1553,9 +1555,9 @@ class TopOpeBRepDS_DataMapOfInterferenceShape(OCP.NCollection.NCollection_BaseMa
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepDS_DataMapOfInterferenceShape) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1606,14 +1608,14 @@ class TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State(OCP.NCollection.NCollection
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ListOfShapeOn1State: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepDS_ListOfShapeOn1State) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepDS_ListOfShapeOn1State) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ListOfShapeOn1State: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -1647,11 +1649,11 @@ class TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State(OCP.NCollection.NCollection
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepDS_DataMapOfShapeState(OCP.NCollection.NCollection_BaseMap):
@@ -1683,14 +1685,14 @@ class TopOpeBRepDS_DataMapOfShapeState(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TopOpeBRepDS_DataMapOfShapeState) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1741,9 +1743,9 @@ class TopOpeBRepDS_DataMapOfShapeState(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TopOpeBRepDS_DataMapOfShapeState) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRepDS_DataMapOfShapeState) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1769,14 +1771,14 @@ class TopOpeBRepDS_DataStructure():
         None
         """
     @overload
-    def AddShape(self,S : OCP.TopoDS.TopoDS_Shape,I : int) -> int: 
+    def AddShape(self,S : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         Insert a shape S. Returns the index.
 
         Insert a shape S which ancestor is I = 1 or 2. Returns the index.
         """
     @overload
-    def AddShape(self,S : OCP.TopoDS.TopoDS_Shape) -> int: ...
+    def AddShape(self,S : OCP.TopoDS.TopoDS_Shape,I : int) -> int: ...
     def AddShapeInterference(self,S : OCP.TopoDS.TopoDS_Shape,I : TopOpeBRepDS_Interference) -> None: 
         """
         None
@@ -1790,7 +1792,7 @@ class TopOpeBRepDS_DataStructure():
         Insert a new surface. Returns the index.
         """
     @overload
-    def AncestorRank(self,S : OCP.TopoDS.TopoDS_Shape) -> int: 
+    def AncestorRank(self,I : int) -> int: 
         """
         None
 
@@ -1800,12 +1802,12 @@ class TopOpeBRepDS_DataStructure():
 
         None
         """
-    @overload
-    def AncestorRank(self,I : int) -> int: ...
     @overload
     def AncestorRank(self,I : int,Ianc : int) -> None: ...
     @overload
     def AncestorRank(self,S : OCP.TopoDS.TopoDS_Shape,Ianc : int) -> None: ...
+    @overload
+    def AncestorRank(self,S : OCP.TopoDS.TopoDS_Shape) -> int: ...
     def ChangeCurve(self,I : int) -> TopOpeBRepDS_Curve: 
         """
         Returns the Curve of index <I>.
@@ -1815,14 +1817,14 @@ class TopOpeBRepDS_DataStructure():
         None
         """
     @overload
-    def ChangeKeepCurve(self,C : TopOpeBRepDS_Curve,FindKeep : bool) -> None: 
+    def ChangeKeepCurve(self,I : int,FindKeep : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ChangeKeepCurve(self,I : int,FindKeep : bool) -> None: ...
+    def ChangeKeepCurve(self,C : TopOpeBRepDS_Curve,FindKeep : bool) -> None: ...
     @overload
     def ChangeKeepPoint(self,P : TopOpeBRepDS_Point,FindKeep : bool) -> None: 
         """
@@ -1883,14 +1885,14 @@ class TopOpeBRepDS_DataStructure():
         None
         """
     @overload
-    def ChangeShapeInterferences(self,I : int) -> TopOpeBRepDS_ListOfInterference: 
+    def ChangeShapeInterferences(self,S : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ListOfInterference: 
         """
         None
 
         None
         """
     @overload
-    def ChangeShapeInterferences(self,S : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ListOfInterference: ...
+    def ChangeShapeInterferences(self,I : int) -> TopOpeBRepDS_ListOfInterference: ...
     @overload
     def ChangeShapeSameDomain(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
@@ -1921,14 +1923,14 @@ class TopOpeBRepDS_DataStructure():
         None
         """
     @overload
-    def FillShapesSameDomain(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,c1 : TopOpeBRepDS_Config,c2 : TopOpeBRepDS_Config,refFirst : bool=True) -> None: 
+    def FillShapesSameDomain(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,refFirst : bool=True) -> None: 
         """
         None
 
         None
         """
     @overload
-    def FillShapesSameDomain(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,refFirst : bool=True) -> None: ...
+    def FillShapesSameDomain(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,c1 : TopOpeBRepDS_Config,c2 : TopOpeBRepDS_Config,refFirst : bool=True) -> None: ...
     def GetShapeWithState(self,aShape : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ShapeWithState: 
         """
         None
@@ -1976,14 +1978,14 @@ class TopOpeBRepDS_DataStructure():
     @overload
     def KeepCurve(self,C : TopOpeBRepDS_Curve) -> bool: ...
     @overload
-    def KeepPoint(self,P : TopOpeBRepDS_Point) -> bool: 
+    def KeepPoint(self,I : int) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def KeepPoint(self,I : int) -> bool: ...
+    def KeepPoint(self,P : TopOpeBRepDS_Point) -> bool: ...
     @overload
     def KeepShape(self,I : int,FindKeep : bool=True) -> bool: 
         """
@@ -2055,7 +2057,7 @@ class TopOpeBRepDS_DataStructure():
         None
         """
     @overload
-    def SameDomainInd(self,I : int,Ind : int) -> None: 
+    def SameDomainInd(self,I : int) -> int: 
         """
         None
 
@@ -2065,14 +2067,14 @@ class TopOpeBRepDS_DataStructure():
 
         None
         """
+    @overload
+    def SameDomainInd(self,I : int,Ind : int) -> None: ...
     @overload
     def SameDomainInd(self,S : OCP.TopoDS.TopoDS_Shape,Ind : int) -> None: ...
     @overload
     def SameDomainInd(self,S : OCP.TopoDS.TopoDS_Shape) -> int: ...
     @overload
-    def SameDomainInd(self,I : int) -> int: ...
-    @overload
-    def SameDomainOri(self,I : int,Ori : TopOpeBRepDS_Config) -> None: 
+    def SameDomainOri(self,S : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_Config: 
         """
         None
 
@@ -2083,13 +2085,13 @@ class TopOpeBRepDS_DataStructure():
         None
         """
     @overload
-    def SameDomainOri(self,S : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_Config: ...
+    def SameDomainOri(self,I : int,Ori : TopOpeBRepDS_Config) -> None: ...
     @overload
     def SameDomainOri(self,I : int) -> TopOpeBRepDS_Config: ...
     @overload
     def SameDomainOri(self,S : OCP.TopoDS.TopoDS_Shape,Ori : TopOpeBRepDS_Config) -> None: ...
     @overload
-    def SameDomainRef(self,I : int,Ref : int) -> None: 
+    def SameDomainRef(self,I : int) -> int: 
         """
         None
 
@@ -2099,12 +2101,12 @@ class TopOpeBRepDS_DataStructure():
 
         None
         """
-    @overload
-    def SameDomainRef(self,I : int) -> int: ...
     @overload
     def SameDomainRef(self,S : OCP.TopoDS.TopoDS_Shape) -> int: ...
     @overload
     def SameDomainRef(self,S : OCP.TopoDS.TopoDS_Shape,Ref : int) -> None: ...
+    @overload
+    def SameDomainRef(self,I : int,Ref : int) -> None: ...
     @overload
     def SectionEdge(self,E : OCP.TopoDS.TopoDS_Edge,FindKeep : bool=True) -> int: 
         """
@@ -2137,14 +2139,14 @@ class TopOpeBRepDS_DataStructure():
     @overload
     def ShapeInterferences(self,S : OCP.TopoDS.TopoDS_Shape,FindKeep : bool=True) -> TopOpeBRepDS_ListOfInterference: ...
     @overload
-    def ShapeSameDomain(self,I : int) -> OCP.TopTools.TopTools_ListOfShape: 
+    def ShapeSameDomain(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         None
 
         None
         """
     @overload
-    def ShapeSameDomain(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: ...
+    def ShapeSameDomain(self,I : int) -> OCP.TopTools.TopTools_ListOfShape: ...
     def Surface(self,I : int) -> TopOpeBRepDS_Surface: 
         """
         Returns the surface of index <I>.
@@ -2180,14 +2182,14 @@ class TopOpeBRepDS_DoubleMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
         Bind
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TopOpeBRepDS_DoubleMapOfIntegerShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -2206,14 +2208,14 @@ class TopOpeBRepDS_DoubleMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
     @overload
     def Find1(self,theKey1 : int) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def Find2(self,theKey2 : OCP.TopoDS.TopoDS_Shape,theKey1 : int) -> bool: 
+    def Find2(self,theKey2 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         Find the Key2 and return Key1 value. Raises an exception if Key2 was not bound.
 
         Find the Key2 and return Key1 value (by copying its value).
         """
     @overload
-    def Find2(self,theKey2 : OCP.TopoDS.TopoDS_Shape) -> int: ...
+    def Find2(self,theKey2 : OCP.TopoDS.TopoDS_Shape,theKey1 : int) -> bool: ...
     def IsBound1(self,theKey1 : int) -> bool: 
         """
         IsBound1
@@ -2259,34 +2261,34 @@ class TopOpeBRepDS_DoubleMapOfIntegerShape(OCP.NCollection.NCollection_BaseMap):
         UnBind2
         """
     @overload
+    def __init__(self,theOther : TopOpeBRepDS_DoubleMapOfIntegerShape) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TopOpeBRepDS_DoubleMapOfIntegerShape) -> None: ...
     pass
 class TopOpeBRepDS_Dumper():
     """
     None
     """
     @overload
-    def SDumpRefOri(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TCollection.TCollection_AsciiString: 
+    def SDumpRefOri(self,K : TopOpeBRepDS_Kind,I : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         None
         """
     @overload
-    def SDumpRefOri(self,K : TopOpeBRepDS_Kind,I : int) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SDumpRefOri(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
-    def SPrintShape(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TCollection.TCollection_AsciiString: 
+    def SPrintShape(self,I : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         None
         """
     @overload
-    def SPrintShape(self,I : int) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SPrintShape(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
     def SPrintShapeRefOri(self,S : OCP.TopoDS.TopoDS_Shape,B : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -2340,14 +2342,14 @@ class TopOpeBRepDS_EdgeInterferenceTool():
     a tool computing complex transition on Edge.
     """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Shape,P : TopOpeBRepDS_Point,I : TopOpeBRepDS_Interference) -> None: 
+    def Add(self,E : OCP.TopoDS.TopoDS_Shape,V : OCP.TopoDS.TopoDS_Shape,I : TopOpeBRepDS_Interference) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Shape,V : OCP.TopoDS.TopoDS_Shape,I : TopOpeBRepDS_Interference) -> None: ...
+    def Add(self,E : OCP.TopoDS.TopoDS_Shape,P : TopOpeBRepDS_Point,I : TopOpeBRepDS_Interference) -> None: ...
     def Init(self,E : OCP.TopoDS.TopoDS_Shape,I : TopOpeBRepDS_Interference) -> None: 
         """
         None
@@ -2391,23 +2393,23 @@ class TopOpeBRepDS_ShapeShapeInterference(TopOpeBRepDS_Interference, OCP.Standar
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2425,23 +2427,23 @@ class TopOpeBRepDS_ShapeShapeInterference(TopOpeBRepDS_Interference, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetGBound(self,b : bool) -> None: 
         """
         None
@@ -2473,14 +2475,14 @@ class TopOpeBRepDS_ShapeShapeInterference(TopOpeBRepDS_Interference, OCP.Standar
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     def __init__(self,T : TopOpeBRepDS_Transition,ST : TopOpeBRepDS_Kind,S : int,GT : TopOpeBRepDS_Kind,G : int,GBound : bool,C : TopOpeBRepDS_Config) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2543,14 +2545,14 @@ class TopOpeBRepDS_FIR():
     FaceInterferenceReducer
     """
     @overload
-    def ProcessFaceInterferences(self,I : int,M : TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State) -> None: 
+    def ProcessFaceInterferences(self,M : TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ProcessFaceInterferences(self,M : TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State) -> None: ...
+    def ProcessFaceInterferences(self,I : int,M : TopOpeBRepDS_DataMapOfShapeListOfShapeOn1State) -> None: ...
     def __init__(self,HDS : TopOpeBRepDS_HDataStructure) -> None: ...
     pass
 class TopOpeBRepDS_FaceEdgeInterference(TopOpeBRepDS_ShapeShapeInterference, TopOpeBRepDS_Interference, OCP.Standard.Standard_Transient):
@@ -2586,23 +2588,23 @@ class TopOpeBRepDS_FaceEdgeInterference(TopOpeBRepDS_ShapeShapeInterference, Top
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -2620,23 +2622,23 @@ class TopOpeBRepDS_FaceEdgeInterference(TopOpeBRepDS_ShapeShapeInterference, Top
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetGBound(self,b : bool) -> None: 
         """
         None
@@ -2668,14 +2670,14 @@ class TopOpeBRepDS_FaceEdgeInterference(TopOpeBRepDS_ShapeShapeInterference, Top
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     def __init__(self,T : TopOpeBRepDS_Transition,S : int,G : int,GIsBound : bool,C : TopOpeBRepDS_Config) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2727,14 +2729,14 @@ class TopOpeBRepDS_Filter():
     None
     """
     @overload
-    def ProcessCurveInterferences(self) -> None: 
+    def ProcessCurveInterferences(self,I : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ProcessCurveInterferences(self,I : int) -> None: ...
+    def ProcessCurveInterferences(self) -> None: ...
     @overload
     def ProcessEdgeInterferences(self,I : int) -> None: 
         """
@@ -2858,23 +2860,23 @@ class TopOpeBRepDS_GapTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ParameterOnEdge(self,I : TopOpeBRepDS_Interference,E : OCP.TopoDS.TopoDS_Shape,U : float) -> bool: 
         """
         None
@@ -2896,9 +2898,9 @@ class TopOpeBRepDS_GapTool(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,HDS : TopOpeBRepDS_HDataStructure) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2931,9 +2933,9 @@ class TopOpeBRepDS_CurveData(TopOpeBRepDS_GeometryData):
         None
         """
     @overload
-    def __init__(self,C : TopOpeBRepDS_Curve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : TopOpeBRepDS_Curve) -> None: ...
     pass
 class TopOpeBRepDS_HArray1OfDataMapOfIntegerListOfInterference(TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference, OCP.Standard.Standard_Transient):
     def Array1(self) -> TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference: 
@@ -3001,23 +3003,23 @@ class TopOpeBRepDS_HArray1OfDataMapOfIntegerListOfInterference(TopOpeBRepDS_Arra
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> TopOpeBRepDS_DataMapOfIntegerListOfInterference: 
         """
         Returns last element
@@ -3059,13 +3061,13 @@ class TopOpeBRepDS_HArray1OfDataMapOfIntegerListOfInterference(TopOpeBRepDS_Arra
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRepDS_DataMapOfIntegerListOfInterference) -> None: ...
-    @overload
-    def __init__(self,theOther : TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRepDS_DataMapOfIntegerListOfInterference) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRepDS_Array1OfDataMapOfIntegerListOfInterference) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3101,14 +3103,14 @@ class TopOpeBRepDS_HDataStructure(OCP.Standard.Standard_Transient):
         Check the integrity of the DS
         """
     @overload
-    def ClearStoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,IS : int,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
+    def ClearStoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,S : OCP.TopoDS.TopoDS_Shape,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ClearStoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,S : OCP.TopoDS.TopoDS_Shape,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def ClearStoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,IS : int,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     def Curve(self,I : int) -> TopOpeBRepDS_Curve: 
         """
         Returns the Curve of index <I>.
@@ -3142,14 +3144,14 @@ class TopOpeBRepDS_HDataStructure(OCP.Standard.Standard_Transient):
         returns True if all the edges stored as shapes in the DS are SameParameter, otherwise False.
         """
     @overload
-    def FaceCurves(self,F : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_CurveIterator: 
+    def FaceCurves(self,I : int) -> TopOpeBRepDS_CurveIterator: 
         """
         Returns an iterator on the curves attached to the face <F>.
 
         Returns an iterator on the curves attached to the face <I>.
         """
     @overload
-    def FaceCurves(self,I : int) -> TopOpeBRepDS_CurveIterator: ...
+    def FaceCurves(self,F : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_CurveIterator: ...
     def GetGeometry(self,IT : Any,PDS : TopOpeBRepDS_Point,G : int,K : TopOpeBRepDS_Kind) -> bool: 
         """
         Get the geometry of a DS point <PDS>. Search for it with ScanInterfList (previous method). if found, set <G,K> to the geometry,kind of the interference found. returns the value of ScanInterfList().
@@ -3175,23 +3177,23 @@ class TopOpeBRepDS_HDataStructure(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MakeCurve(self,C1 : TopOpeBRepDS_Curve,C2 : TopOpeBRepDS_Curve) -> int: 
         """
         None
@@ -3221,14 +3223,14 @@ class TopOpeBRepDS_HDataStructure(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def NbTopology(self,K : TopOpeBRepDS_Kind) -> int: 
+    def NbTopology(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def NbTopology(self) -> int: ...
+    def NbTopology(self,K : TopOpeBRepDS_Kind) -> int: ...
     def Point(self,I : int) -> TopOpeBRepDS_Point: 
         """
         Returns the point of index <I>.
@@ -3263,23 +3265,23 @@ class TopOpeBRepDS_HDataStructure(OCP.Standard.Standard_Transient):
     @overload
     def Shape(self,S : OCP.TopoDS.TopoDS_Shape,FindKeep : bool=True) -> int: ...
     @overload
-    def SolidSurfaces(self,S : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_SurfaceIterator: 
+    def SolidSurfaces(self,I : int) -> TopOpeBRepDS_SurfaceIterator: 
         """
         Returns an iterator on the surfaces attached to the solid <S>.
 
         Returns an iterator on the surfaces attached to the solid <I>.
         """
     @overload
-    def SolidSurfaces(self,I : int) -> TopOpeBRepDS_SurfaceIterator: ...
+    def SolidSurfaces(self,S : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_SurfaceIterator: ...
     @overload
-    def SortOnParameter(self,L1 : TopOpeBRepDS_ListOfInterference,L2 : TopOpeBRepDS_ListOfInterference) -> None: 
+    def SortOnParameter(self,L : TopOpeBRepDS_ListOfInterference) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SortOnParameter(self,L : TopOpeBRepDS_ListOfInterference) -> None: ...
+    def SortOnParameter(self,L1 : TopOpeBRepDS_ListOfInterference,L2 : TopOpeBRepDS_ListOfInterference) -> None: ...
     @overload
     def StoreInterference(self,I : TopOpeBRepDS_Interference,LI : TopOpeBRepDS_ListOfInterference,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -3294,14 +3296,14 @@ class TopOpeBRepDS_HDataStructure(OCP.Standard.Standard_Transient):
     @overload
     def StoreInterference(self,I : TopOpeBRepDS_Interference,S : OCP.TopoDS.TopoDS_Shape,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def StoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,IS : int,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
+    def StoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,S : OCP.TopoDS.TopoDS_Shape,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
 
         None
         """
     @overload
-    def StoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,S : OCP.TopoDS.TopoDS_Shape,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def StoreInterferences(self,LI : TopOpeBRepDS_ListOfInterference,IS : int,str : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     def Surface(self,I : int) -> TopOpeBRepDS_Surface: 
         """
         Returns the surface of index <I>.
@@ -3380,14 +3382,14 @@ class TopOpeBRepDS_IndexedDataMapOfShapeWithState(OCP.NCollection.NCollection_Ba
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ShapeWithState: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepDS_ShapeWithState) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepDS_ShapeWithState) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepDS_ShapeWithState: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -3477,14 +3479,14 @@ class TopOpeBRepDS_IndexedDataMapOfVertexPoint(OCP.NCollection.NCollection_BaseM
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -3563,11 +3565,11 @@ class TopOpeBRepDS_IndexedDataMapOfVertexPoint(OCP.NCollection.NCollection_BaseM
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TopOpeBRepDS_IndexedDataMapOfVertexPoint) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : TopOpeBRepDS_IndexedDataMapOfVertexPoint) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepDS_CurvePointInterference(TopOpeBRepDS_Interference, OCP.Standard.Standard_Transient):
@@ -3595,23 +3597,23 @@ class TopOpeBRepDS_CurvePointInterference(TopOpeBRepDS_Interference, OCP.Standar
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -3629,32 +3631,32 @@ class TopOpeBRepDS_CurvePointInterference(TopOpeBRepDS_Interference, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Parameter(self,P : float) -> None: 
+    def Parameter(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Parameter(self) -> float: ...
+    def Parameter(self,P : float) -> None: ...
     def SetGeometry(self,GI : int) -> None: 
         """
         None
@@ -3682,14 +3684,14 @@ class TopOpeBRepDS_CurvePointInterference(TopOpeBRepDS_Interference, OCP.Standar
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     def __init__(self,T : TopOpeBRepDS_Transition,ST : TopOpeBRepDS_Kind,S : int,GT : TopOpeBRepDS_Kind,G : int,P : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3805,7 +3807,7 @@ class TopOpeBRepDS_InterferenceTool():
         """
     @staticmethod
     @overload
-    def Parameter_s(CPI : TopOpeBRepDS_Interference) -> float: 
+    def Parameter_s(CPI : TopOpeBRepDS_Interference,Par : float) -> None: 
         """
         None
 
@@ -3813,7 +3815,7 @@ class TopOpeBRepDS_InterferenceTool():
         """
     @staticmethod
     @overload
-    def Parameter_s(CPI : TopOpeBRepDS_Interference,Par : float) -> None: ...
+    def Parameter_s(CPI : TopOpeBRepDS_Interference) -> float: ...
     def __init__(self) -> None: ...
     pass
 class TopOpeBRepDS_Kind():
@@ -3849,6 +3851,7 @@ class TopOpeBRepDS_Kind():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3888,7 +3891,7 @@ class TopOpeBRepDS_ListOfInterference(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TopOpeBRepDS_Interference,theIter : Any) -> None: 
+    def Append(self,theItem : TopOpeBRepDS_Interference) -> TopOpeBRepDS_Interference: 
         """
         Append one item at the end
 
@@ -3899,7 +3902,7 @@ class TopOpeBRepDS_ListOfInterference(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theOther : TopOpeBRepDS_ListOfInterference) -> None: ...
     @overload
-    def Append(self,theItem : TopOpeBRepDS_Interference) -> TopOpeBRepDS_Interference: ...
+    def Append(self,theItem : TopOpeBRepDS_Interference,theIter : Any) -> None: ...
     def Assign(self,theOther : TopOpeBRepDS_ListOfInterference) -> TopOpeBRepDS_ListOfInterference: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3919,14 +3922,14 @@ class TopOpeBRepDS_ListOfInterference(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : TopOpeBRepDS_Interference,theIter : Any) -> TopOpeBRepDS_Interference: 
+    def InsertAfter(self,theOther : TopOpeBRepDS_ListOfInterference,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TopOpeBRepDS_ListOfInterference,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : TopOpeBRepDS_Interference,theIter : Any) -> TopOpeBRepDS_Interference: ...
     @overload
     def InsertBefore(self,theItem : TopOpeBRepDS_Interference,theIter : Any) -> TopOpeBRepDS_Interference: 
         """
@@ -3972,9 +3975,9 @@ class TopOpeBRepDS_ListOfInterference(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRepDS_ListOfInterference) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -4034,14 +4037,14 @@ class TopOpeBRepDS_MapOfCurve(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TopOpeBRepDS_MapOfCurve) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -4051,14 +4054,14 @@ class TopOpeBRepDS_MapOfCurve(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> TopOpeBRepDS_CurveData: 
+    def Find(self,theKey : int,theValue : TopOpeBRepDS_CurveData) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : TopOpeBRepDS_CurveData) -> bool: ...
+    def Find(self,theKey : int) -> TopOpeBRepDS_CurveData: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -4145,14 +4148,14 @@ class TopOpeBRepDS_MapOfIntegerShapeData(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int) -> TopOpeBRepDS_ShapeData: 
+    def Find(self,theKey : int,theValue : TopOpeBRepDS_ShapeData) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int,theValue : TopOpeBRepDS_ShapeData) -> bool: ...
+    def Find(self,theKey : int) -> TopOpeBRepDS_ShapeData: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -4186,11 +4189,11 @@ class TopOpeBRepDS_MapOfIntegerShapeData(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepDS_MapOfIntegerShapeData) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepDS_MapOfPoint(OCP.NCollection.NCollection_BaseMap):
@@ -4280,11 +4283,11 @@ class TopOpeBRepDS_MapOfPoint(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TopOpeBRepDS_MapOfPoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRepDS_MapOfPoint) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepDS_MapOfShapeData(OCP.NCollection.NCollection_BaseMap):
@@ -4316,14 +4319,14 @@ class TopOpeBRepDS_MapOfShapeData(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -4455,14 +4458,14 @@ class TopOpeBRepDS_MapOfSurface(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : TopOpeBRepDS_SurfaceData) -> bool: 
+    def Find(self,theKey : int) -> TopOpeBRepDS_SurfaceData: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> TopOpeBRepDS_SurfaceData: ...
+    def Find(self,theKey : int,theValue : TopOpeBRepDS_SurfaceData) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -4533,36 +4536,36 @@ class TopOpeBRepDS_Marker(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Reset(self) -> None: 
         """
         None
         """
     @overload
-    def Set(self,i : int,b : bool) -> None: 
+    def Set(self,b : bool,n : int,a : capsule) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,b : bool,n : int,a : capsule) -> None: ...
+    def Set(self,i : int,b : bool) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -4613,11 +4616,11 @@ class TopOpeBRepDS_Point():
     @overload
     def Tolerance(self) -> float: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,T : float) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class TopOpeBRepDS_PointData(TopOpeBRepDS_GeometryData):
     """
@@ -4648,9 +4651,9 @@ class TopOpeBRepDS_PointData(TopOpeBRepDS_GeometryData):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : TopOpeBRepDS_Point) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P : TopOpeBRepDS_Point,I1 : int,I2 : int) -> None: ...
     pass
@@ -4696,9 +4699,9 @@ class TopOpeBRepDS_PointExplorer():
     @overload
     def Point(self) -> TopOpeBRepDS_Point: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,DS : TopOpeBRepDS_DataStructure,FindOnlyKeep : bool=True) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TopOpeBRepDS_PointIterator(TopOpeBRepDS_InterferenceIterator):
     """
@@ -4847,23 +4850,23 @@ class TopOpeBRepDS_EdgeVertexInterference(TopOpeBRepDS_ShapeShapeInterference, T
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -4881,32 +4884,32 @@ class TopOpeBRepDS_EdgeVertexInterference(TopOpeBRepDS_ShapeShapeInterference, T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Parameter(self,P : float) -> None: 
+    def Parameter(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Parameter(self) -> float: ...
+    def Parameter(self,P : float) -> None: ...
     def SetGBound(self,b : bool) -> None: 
         """
         None
@@ -4938,18 +4941,18 @@ class TopOpeBRepDS_EdgeVertexInterference(TopOpeBRepDS_ShapeShapeInterference, T
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
-    @overload
-    def __init__(self,T : TopOpeBRepDS_Transition,ST : TopOpeBRepDS_Kind,S : int,G : int,GIsBound : bool,C : TopOpeBRepDS_Config,P : float) -> None: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     @overload
     def __init__(self,T : TopOpeBRepDS_Transition,S : int,G : int,GIsBound : bool,C : TopOpeBRepDS_Config,P : float) -> None: ...
+    @overload
+    def __init__(self,T : TopOpeBRepDS_Transition,ST : TopOpeBRepDS_Kind,S : int,G : int,GIsBound : bool,C : TopOpeBRepDS_Config,P : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5020,23 +5023,23 @@ class TopOpeBRepDS_SolidSurfaceInterference(TopOpeBRepDS_Interference, OCP.Stand
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -5054,23 +5057,23 @@ class TopOpeBRepDS_SolidSurfaceInterference(TopOpeBRepDS_Interference, OCP.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetGeometry(self,GI : int) -> None: 
         """
         None
@@ -5098,14 +5101,14 @@ class TopOpeBRepDS_SolidSurfaceInterference(TopOpeBRepDS_Interference, OCP.Stand
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     def __init__(self,Transition : TopOpeBRepDS_Transition,SupportType : TopOpeBRepDS_Kind,Support : int,GeometryType : TopOpeBRepDS_Kind,Geometry : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5139,20 +5142,20 @@ class TopOpeBRepDS_Surface():
         None
         """
     @overload
-    def Tolerance(self,theTol : float) -> None: 
+    def Tolerance(self) -> float: 
         """
         None
 
         Update the tolerance
         """
     @overload
-    def Tolerance(self) -> float: ...
+    def Tolerance(self,theTol : float) -> None: ...
     @overload
-    def __init__(self,Other : TopOpeBRepDS_Surface) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.Geom.Geom_Surface,T : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Other : TopOpeBRepDS_Surface) -> None: ...
     pass
 class TopOpeBRepDS_SurfaceCurveInterference(TopOpeBRepDS_Interference, OCP.Standard.Standard_Transient):
     """
@@ -5179,23 +5182,23 @@ class TopOpeBRepDS_SurfaceCurveInterference(TopOpeBRepDS_Interference, OCP.Stand
         return GeometryType + Geometry + SupportType + Support
         """
     @overload
-    def Geometry(self) -> int: 
+    def Geometry(self,G : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Geometry(self,G : int) -> None: ...
+    def Geometry(self) -> int: ...
     @overload
-    def GeometryType(self) -> TopOpeBRepDS_Kind: 
+    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometryType(self,GT : TopOpeBRepDS_Kind) -> None: ...
+    def GeometryType(self) -> TopOpeBRepDS_Kind: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -5213,32 +5216,32 @@ class TopOpeBRepDS_SurfaceCurveInterference(TopOpeBRepDS_Interference, OCP.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
+    def PCurve(self,PC : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self,PC : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
     def SetGeometry(self,GI : int) -> None: 
         """
         None
@@ -5266,20 +5269,20 @@ class TopOpeBRepDS_SurfaceCurveInterference(TopOpeBRepDS_Interference, OCP.Stand
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transition(self,T : TopOpeBRepDS_Transition) -> None: 
+    def Transition(self) -> TopOpeBRepDS_Transition: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> TopOpeBRepDS_Transition: ...
+    def Transition(self,T : TopOpeBRepDS_Transition) -> None: ...
     @overload
     def __init__(self,I : TopOpeBRepDS_Interference) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Transition : TopOpeBRepDS_Transition,SupportType : TopOpeBRepDS_Kind,Support : int,GeometryType : TopOpeBRepDS_Kind,Geometry : int,PC : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5312,9 +5315,9 @@ class TopOpeBRepDS_SurfaceData(TopOpeBRepDS_GeometryData):
         None
         """
     @overload
-    def __init__(self,S : TopOpeBRepDS_Surface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : TopOpeBRepDS_Surface) -> None: ...
     pass
 class TopOpeBRepDS_SurfaceExplorer():
     """
@@ -5349,14 +5352,14 @@ class TopOpeBRepDS_SurfaceExplorer():
         None
         """
     @overload
-    def Surface(self,I : int) -> TopOpeBRepDS_Surface: 
+    def Surface(self) -> TopOpeBRepDS_Surface: 
         """
         None
 
         None
         """
     @overload
-    def Surface(self) -> TopOpeBRepDS_Surface: ...
+    def Surface(self,I : int) -> TopOpeBRepDS_Surface: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -5554,14 +5557,14 @@ class TopOpeBRepDS_Transition():
     @overload
     def Index(self) -> int: ...
     @overload
-    def IndexAfter(self) -> int: 
+    def IndexAfter(self,I : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def IndexAfter(self,I : int) -> None: ...
+    def IndexAfter(self) -> int: ...
     @overload
     def IndexBefore(self) -> int: 
         """
@@ -5588,23 +5591,23 @@ class TopOpeBRepDS_Transition():
         returns the orientation corresponding to state <S>
         """
     @overload
-    def Set(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Set(self,StateBefore : OCP.TopAbs.TopAbs_State,StateAfter : OCP.TopAbs.TopAbs_State,ShapeBefore : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE,ShapeAfter : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE) -> None: 
         """
         None
 
         set the transition corresponding to orientation <O>
         """
     @overload
-    def Set(self,StateBefore : OCP.TopAbs.TopAbs_State,StateAfter : OCP.TopAbs.TopAbs_State,ShapeBefore : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE,ShapeAfter : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE) -> None: ...
+    def Set(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
-    def ShapeAfter(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
+    def ShapeAfter(self,SE : OCP.TopAbs.TopAbs_ShapeEnum) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ShapeAfter(self,SE : OCP.TopAbs.TopAbs_ShapeEnum) -> None: ...
+    def ShapeAfter(self) -> OCP.TopAbs.TopAbs_ShapeEnum: ...
     @overload
     def ShapeBefore(self,SE : OCP.TopAbs.TopAbs_ShapeEnum) -> None: 
         """
@@ -5623,21 +5626,21 @@ class TopOpeBRepDS_Transition():
         None
         """
     @overload
+    def __init__(self,StateBefore : OCP.TopAbs.TopAbs_State,StateAfter : OCP.TopAbs.TopAbs_State,ShapeBefore : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE,ShapeAfter : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
-    @overload
-    def __init__(self,StateBefore : OCP.TopAbs.TopAbs_State,StateAfter : OCP.TopAbs.TopAbs_State,ShapeBefore : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE,ShapeAfter : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_FACE) -> None: ...
     pass
 @overload
-def FDSCNX_Dump(HDS : TopOpeBRepDS_HDataStructure) -> None:
+def FDSCNX_Dump(HDS : TopOpeBRepDS_HDataStructure,I : int) -> None:
     """
     None
 
     None
     """
 @overload
-def FDSCNX_Dump(HDS : TopOpeBRepDS_HDataStructure,I : int) -> None:
+def FDSCNX_Dump(HDS : TopOpeBRepDS_HDataStructure) -> None:
     pass
 def FDSCNX_DumpIndex(HDS : TopOpeBRepDS_HDataStructure,I : int) -> None:
     """
@@ -5718,14 +5721,14 @@ def FDS_LOIinfsup(BDS : TopOpeBRepDS_DataStructure,E : OCP.TopoDS.TopoDS_Edge,pE
     None
     """
 @overload
-def FDS_Parameter(I : TopOpeBRepDS_Interference) -> float:
+def FDS_Parameter(I : TopOpeBRepDS_Interference,par : float) -> bool:
     """
     None
 
     None
     """
 @overload
-def FDS_Parameter(I : TopOpeBRepDS_Interference,par : float) -> bool:
+def FDS_Parameter(I : TopOpeBRepDS_Interference) -> float:
     pass
 def FDS_SIisGIofIofSBAofTofI(BDS : TopOpeBRepDS_DataStructure,SI : int,I : TopOpeBRepDS_Interference) -> bool:
     """
@@ -5760,24 +5763,24 @@ def FDS_assign(LI : OCP.TopTools.TopTools_ListOfShape,LII : OCP.TopTools.TopTool
 def FDS_assign(LI : TopOpeBRepDS_ListOfInterference,LII : TopOpeBRepDS_ListOfInterference) -> None:
     pass
 @overload
-def FDS_copy(LI : OCP.TopTools.TopTools_ListOfShape,LII : OCP.TopTools.TopTools_ListOfShape) -> None:
+def FDS_copy(LI : TopOpeBRepDS_ListOfInterference,LII : TopOpeBRepDS_ListOfInterference) -> None:
     """
     None
 
     None
     """
 @overload
-def FDS_copy(LI : TopOpeBRepDS_ListOfInterference,LII : TopOpeBRepDS_ListOfInterference) -> None:
+def FDS_copy(LI : OCP.TopTools.TopTools_ListOfShape,LII : OCP.TopTools.TopTools_ListOfShape) -> None:
     pass
 @overload
-def FDS_data(it : Any,I : TopOpeBRepDS_Interference,GT1 : TopOpeBRepDS_Kind,G1 : int,ST1 : TopOpeBRepDS_Kind,S1 : int) -> bool:
+def FDS_data(I : TopOpeBRepDS_Interference,GT1 : TopOpeBRepDS_Kind,G1 : int,ST1 : TopOpeBRepDS_Kind,S1 : int) -> None:
     """
     None
 
     None
     """
 @overload
-def FDS_data(I : TopOpeBRepDS_Interference,GT1 : TopOpeBRepDS_Kind,G1 : int,ST1 : TopOpeBRepDS_Kind,S1 : int) -> None:
+def FDS_data(it : Any,I : TopOpeBRepDS_Interference,GT1 : TopOpeBRepDS_Kind,G1 : int,ST1 : TopOpeBRepDS_Kind,S1 : int) -> bool:
     pass
 def FDS_getupperlower(HDS : TopOpeBRepDS_HDataStructure,edgeIndex : int,paredge : float,p1 : float,p2 : float) -> None:
     """

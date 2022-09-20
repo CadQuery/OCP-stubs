@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
-import OCP.TopTools
 import OCP.TopoDS
+import OCP.TopTools
 __all__  = [
 "ChFi2d",
 "ChFi2d_AnaFilletAlgo",
@@ -41,14 +41,14 @@ class ChFi2d_AnaFilletAlgo():
     An analytical algorithm for calculation of the fillets. It is implemented for segments and arcs of circle only.
     """
     @overload
-    def Init(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: 
+    def Init(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: 
         """
         Initializes the class by a wire consisting of two edges.
 
         Initializes the class by two edges.
         """
     @overload
-    def Init(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: ...
+    def Init(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
     def Perform(self,radius : float) -> bool: 
         """
         Calculates a fillet.
@@ -58,11 +58,11 @@ class ChFi2d_AnaFilletAlgo():
         Retrieves a result (fillet and shrinked neighbours).
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class ChFi2d_Builder():
     """
@@ -125,14 +125,14 @@ class ChFi2d_Builder():
         None
         """
     @overload
-    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E : OCP.TopoDS.TopoDS_Edge,D : float,Ang : float) -> OCP.TopoDS.TopoDS_Edge: 
+    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,D1 : float,D2 : float) -> OCP.TopoDS.TopoDS_Edge: 
         """
         modify the chamfer <Chamfer> and returns the new chamfer edge. This edge as sense only if the status <status> is <IsDone>.
 
         modify the chamfer <Chamfer> and returns the new chamfer edge. This edge as sense only if the status <status> is <IsDone>. Warning: The value of <Ang> must be expressed in Radian.
         """
     @overload
-    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,D1 : float,D2 : float) -> OCP.TopoDS.TopoDS_Edge: ...
+    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E : OCP.TopoDS.TopoDS_Edge,D : float,Ang : float) -> OCP.TopoDS.TopoDS_Edge: ...
     def ModifyFillet(self,Fillet : OCP.TopoDS.TopoDS_Edge,Radius : float) -> OCP.TopoDS.TopoDS_Edge: 
         """
         modify the fillet radius and return the new fillet edge. this edge has sense only if the status <status> is <IsDone>.
@@ -170,9 +170,9 @@ class ChFi2d_Builder():
         None
         """
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class ChFi2d_ChamferAPI():
     """
@@ -196,15 +196,15 @@ class ChFi2d_ChamferAPI():
         None
         """
     @overload
-    def __init__(self,theWire : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theWire : OCP.TopoDS.TopoDS_Wire) -> None: ...
     pass
 class ChFi2d_ConstructionError():
     """
-    error that can occur during the fillet construction on planar wire//! the face is not planar//! the face is null//! the two faces used for the initialisation are uncompatible.//! the parameters as distances or angle for chamfer are less or equal to zero.//! the initialization has been succesfull.//! the algorithm could not find a solution.//! the vertex given to locate the fillet or the chamfer is not connected to 2 edges.//! the two edges connected to the vertex are tangent.//! the first edge is degenerated.//! the last edge is degenerated.//! the two edges are degenerated.//! One or the two edges connected to the vertex is a fillet or a chamfer One or the two edges connected to the vertex is not a line or a circle
+    Error that can occur during the fillet construction on planar wire.
 
     Members:
 
@@ -237,6 +237,7 @@ class ChFi2d_ConstructionError():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -273,14 +274,14 @@ class ChFi2d_FilletAPI():
     An interface class for 2D fillets. Open CASCADE provides two algorithms for 2D fillets: ChFi2d_Builder - it constructs a fillet or chamfer for linear and circular edges of a face. ChFi2d_FilletAPI - it encapsulates two algorithms: ChFi2d_AnaFilletAlgo - analytical constructor of the fillet. It works only for linear and circular edges, having a common point. ChFi2d_FilletAlgo - iteration recursive method constructing the fillet edge for any type of edges including ellipses and b-splines. The edges may even have no common point.
     """
     @overload
-    def Init(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: 
+    def Init(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: 
         """
         Initializes a fillet algorithm: accepts a wire consisting of two edges in a plane.
 
         Initializes a fillet algorithm: accepts two edges in a plane.
         """
     @overload
-    def Init(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: ...
+    def Init(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
     def NbResults(self,thePoint : OCP.gp.gp_Pnt) -> int: 
         """
         Returns number of possible solutions. <thePoint> chooses a particular fillet in case of several fillets may be constructed (for example, a circle intersecting a segment in 2 points). Put the intersecting (or common) point of the edges.
@@ -294,11 +295,11 @@ class ChFi2d_FilletAPI():
         Returns result (fillet edge, modified edge1, modified edge2), nearest to the given point <thePoint> if iSolution == -1 <thePoint> chooses a particular fillet in case of several fillets may be constructed (for example, a circle intersecting a segment in 2 points). Put the intersecting (or common) point of the edges.
         """
     @overload
-    def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
     pass
 class ChFi2d_FilletAlgo():
     """
@@ -323,39 +324,22 @@ class ChFi2d_FilletAlgo():
         """
     def Result(self,thePoint : OCP.gp.gp_Pnt,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,iSolution : int=-1) -> OCP.TopoDS.TopoDS_Edge: 
         """
-        Returns result (fillet edge, modified edge1, modified edge2), neares to the given point <thePoint> if iSolution == -1. <thePoint> chooses a particular fillet in case of several fillets may be constructed (for example, a circle intersecting a segment in 2 points). Put the intersecting (or common) point of the edges.
+        Returns result (fillet edge, modified edge1, modified edge2), nearest to the given point <thePoint> if iSolution == -1. <thePoint> chooses a particular fillet in case of several fillets may be constructed (for example, a circle intersecting a segment in 2 points). Put the intersecting (or common) point of the edges.
         """
+    @overload
+    def __init__(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self,theEdge1 : OCP.TopoDS.TopoDS_Edge,theEdge2 : OCP.TopoDS.TopoDS_Edge,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theWire : OCP.TopoDS.TopoDS_Wire,thePlane : OCP.gp.gp_Pln) -> None: ...
     pass
 class FilletPoint():
     """
     Private class. Corresponds to the point on the first curve, computed fillet function and derivative on it.Private class. Corresponds to the point on the first curve, computed fillet function and derivative on it.
     """
-    def Copy(self) -> FilletPoint: 
-        """
-        Returns a pointer to created copy of the point warning: this is not the full copy! Copies only: myParam, myV, myD, myValid
-        """
-    def FilterPoints(self,arg1 : FilletPoint) -> None: 
-        """
-        Filters out the values and leaves the most optimal one.
-        """
     def LowerValue(self) -> float: 
         """
         For debug only
-        """
-    def __init__(self,theParam : float) -> None: ...
-    def appendValue(self,theValue : float,theValid : bool) -> None: 
-        """
-        Appends value of the function.
-        """
-    def calculateDiff(self,arg1 : FilletPoint) -> bool: 
-        """
-        Computes difference between this point and the given. Stores difference in myD.
         """
     def getCenter(self) -> OCP.gp.gp_Pnt2d: 
         """
@@ -385,17 +369,9 @@ class FilletPoint():
         """
         Returns value of function in this point.
         """
-    def hasSolution(self,theRadius : float) -> int: 
-        """
-        Returns the index of the solution or zero if there is no solution
-        """
     def isValid(self,theIndex : int) -> bool: 
         """
         Returns true if function is valid (rediuses vectors of fillet do not intersect any curve).
-        """
-    def remove(self,theIndex : int) -> None: 
-        """
-        Removes the found value by the given index.
         """
     def setCenter(self,thePoint : OCP.gp.gp_Pnt2d) -> None: 
         """

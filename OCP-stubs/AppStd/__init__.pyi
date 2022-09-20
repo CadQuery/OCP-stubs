@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.TColStd
 import OCP.CDF
-import io
-import OCP.TCollection
-import OCP.Message
-import OCP.PCDM
 import OCP.CDM
-import OCP.Resource
+import OCP.TDocStd
+import OCP.PCDM
+import io
 import OCP.Standard
+import OCP.TColStd
+import OCP.Message
+import OCP.TCollection
+import OCP.Resource
 __all__  = [
 "AppStd_Application"
 ]
@@ -30,14 +30,14 @@ class AppStd_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicatio
         None
         """
     @overload
-    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def CanRetrieve(self,theFolder : OCP.TCollection.TCollection_ExtendedString,theName : OCP.TCollection.TCollection_ExtendedString,theVersion : OCP.TCollection.TCollection_ExtendedString,theAppendMode : bool) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         None
 
         None
         """
     @overload
-    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def CanRetrieve(self,theFolder : OCP.TCollection.TCollection_ExtendedString,theName : OCP.TCollection.TCollection_ExtendedString,theAppendMode : bool) -> OCP.PCDM.PCDM_ReaderStatus: ...
     def Close(self,aDoc : OCP.TDocStd.TDocStd_Document) -> None: 
         """
         Close the given document. the document is not any more handled by the applicative session.
@@ -90,7 +90,7 @@ class AppStd_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicatio
         """
         Increments the reference counter of this object
         """
-    def InitDocument(self,aDoc : OCP.TDocStd.TDocStd_Document) -> None: 
+    def InitDocument(self,aDoc : OCP.CDM.CDM_Document) -> None: 
         """
         Initialize the document aDoc for the applicative session. This virtual function is called by NewDocument and is to be redefined for each specific application. Modified flag (different of disk version) ============= to open/save a document =======================
         """
@@ -103,23 +103,23 @@ class AppStd_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicatio
         Returns an index for the document found in the path path in this applicative session. If the returned value is 0, the document is not present in the applicative session. This method can be used for the interactive part of an application. For instance, on a call to Open, the document to be opened may already be in memory. IsInSession checks to see if this is the case. Open can be made to depend on the value of the index returned: if IsInSession returns 0, the document is opened; if it returns another value, a message is displayed asking the user if he wants to override the version of the document in memory. Example: Standard_Integer insession = A->IsInSession(aDoc); if (insession > 0) { std::cout << "document " << insession << " is already in session" << std::endl; return 0; }
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def Load_s(aGUID : OCP.Standard.Standard_GUID) -> OCP.CDF.CDF_Application: 
         """
@@ -145,10 +145,15 @@ class AppStd_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicatio
         """
         returns the number of documents handled by the current applicative session.
         """
-    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> Any: 
+    @overload
+    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.CDM.CDM_Document) -> Any: 
         """
         Constructs the empty new document aDoc. This document will have the format format. If InitDocument is redefined for a specific application, the new document is handled by the applicative session.
+
+        A non-virtual method taking a TDocStd_Documment object as an input. Internally it calls a virtual method NewDocument() with CDM_Document object.
         """
+    @overload
+    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document) -> Any: ...
     def OnAbortTransaction(self,theDoc : OCP.TDocStd.TDocStd_Document) -> None: 
         """
         Notification that is fired at each AbortTransaction event.
@@ -162,17 +167,25 @@ class AppStd_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicatio
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,thePath : OCP.TCollection.TCollection_ExtendedString,theDoc : OCP.TDocStd.TDocStd_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
-        Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
+        Retrieves the document from specified file. In order not to override a version of the document which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
-        Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
+        Retrieves the document from specified file. In order not to override a version of the document which is already in memory, this method can be made to depend on the value returned by IsInSession.
+
+        Retrieves document from standard stream.
+
+        Retrieves document from standard stream.
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
+    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    @overload
+    def Open(self,thePath : OCP.TCollection.TCollection_ExtendedString,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    @overload
+    def Open(self,theIStream : io.BytesIO,theDoc : OCP.TDocStd.TDocStd_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def Read(self,theIStream : io.BytesIO,theDocument : OCP.CDM.CDM_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Any: 
         """
-        Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
+        Reads theDocument from standard SEEKABLE stream theIStream, the stream should support SEEK functionality
         """
     def ReaderFromFormat(self,aFormat : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_Reader: 
         """
@@ -191,40 +204,40 @@ class AppStd_Application(OCP.TDocStd.TDocStd_Application, OCP.CDF.CDF_Applicatio
         returns the file name which contains application resources
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,theDoc : OCP.TDocStd.TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,theDoc : OCP.TDocStd.TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
-    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
-        Save theDoc to standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
+        Save theDoc to standard SEEKABLE stream theOStream. the stream should support SEEK functionality
 
         Save the active document in the file <name> in the path <path> . overwrite the file if it already exist.
 
-        Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
+        Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK functionality
         """
     @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
-    @overload
-    def SaveAs(self,aDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
-    @overload
     def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    @overload
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    @overload
+    def SaveAs(self,theDoc : OCP.TDocStd.TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None

@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.StepAP214
+import OCP.Standard
+import OCP.Interface
+import OCP.StepData
 import OCP.TCollection
 import OCP.TColStd
-import OCP.Interface
-import OCP.Standard
-import OCP.StepAP214
-import OCP.StepData
 __all__  = [
 "RWStepAP214",
 "RWStepAP214_GeneralModule",
@@ -105,23 +105,23 @@ class RWStepAP214_GeneralModule(OCP.StepData.StepData_GeneralModule, OCP.Interfa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ListImplied(self,model : OCP.Interface.Interface_InterfaceModel,CN : int,ent : OCP.Standard.Standard_Transient,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         List the Implied References of <ent> considered in the context of a Model <model> : i.e. the Entities which are Referenced while not considered as Shared (not copied if <ent> is, references not renewed by CopyCase but by ImpliedCase, only if referenced Entities have been Copied too) FillShared + ListImplied give the complete list of References Default calls ListImpliedCase (i.e. ignores the model) Can be redefined to use the model for working
@@ -647,14 +647,14 @@ class RWStepAP214_ReadWriteModule(OCP.StepData.StepData_ReadWriteModule, OCP.Int
         Translate the Type of record <num> in <data> to a positive Case Number, or 0 if failed. Works with a StepReaderData, in which the Type of an Entity is defined as a String : Reads the RecordType <num> then calls CaseNum (this type) Warning : The methods CaseStep, StepType and Recognize, must be in phase (triplets CaseNum-StepType-Type of Object)
         """
     @overload
-    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: 
+    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: 
         """
         associates a positive Case Number to each type of StepAP214 entity, given as a String defined in the EXPRESS form
 
         associates a positive Case Number to each type of StepAP214 Complex entity, given as a String defined in the EXPRESS form
         """
     @overload
-    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: ...
+    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: ...
     def ComplexType(self,CN : int,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> bool: 
         """
         None
@@ -684,23 +684,23 @@ class RWStepAP214_ReadWriteModule(OCP.StepData.StepData_ReadWriteModule, OCP.Int
         returns True if the Case Number corresponds to a Complex Type
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewRead(self,casenum : int,data : OCP.Interface.Interface_FileReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.Standard.Standard_Transient) -> bool: 
         """
         Specific operator (create+read) defaulted to do nothing. It can be redefined when it is not possible to work in two steps (NewVoid then Read). This occurs when no default constructor is defined : hence the result <ent> must be created with an effective definition from the reader. Remark : if NewRead is defined, Copy has nothing to do.

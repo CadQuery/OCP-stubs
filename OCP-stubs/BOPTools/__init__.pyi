@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.TColStd
-import io
-import OCP.NCollection
 import OCP.IntTools
-import OCP.gp
-import OCP.Geom
-import OCP.TopoDS
+import OCP.TopTools
+import OCP.NCollection
 import OCP.BRepAdaptor
-import OCP.Graphic3d
+import OCP.gp
 import OCP.Geom2d
-import OCP.SelectMgr
+import OCP.Graphic3d
 import OCP.TopAbs
+import OCP.Geom
+import OCP.SelectMgr
+import io
+import OCP.TopoDS
+import OCP.TColStd
 __all__  = [
 "BOPTools_AlgoTools",
 "BOPTools_AlgoTools2D",
@@ -50,7 +50,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def ComputeState_s(thePoint : OCP.gp.gp_Pnt,theSolid : OCP.TopoDS.TopoDS_Solid,theTol : float,theContext : OCP.IntTools.IntTools_Context) -> OCP.TopAbs.TopAbs_State: 
+    def ComputeState_s(theFace : OCP.TopoDS.TopoDS_Face,theSolid : OCP.TopoDS.TopoDS_Solid,theTol : float,theBounds : OCP.TopTools.TopTools_IndexedMapOfShape,theContext : OCP.IntTools.IntTools_Context) -> OCP.TopAbs.TopAbs_State: 
         """
         Computes the 3-D state of the point thePoint toward solid theSolid. theTol - value of precision of computation theContext- cahed geometrical tools Returns 3-D state.
 
@@ -62,13 +62,13 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def ComputeState_s(theFace : OCP.TopoDS.TopoDS_Face,theSolid : OCP.TopoDS.TopoDS_Solid,theTol : float,theBounds : OCP.TopTools.TopTools_IndexedMapOfShape,theContext : OCP.IntTools.IntTools_Context) -> OCP.TopAbs.TopAbs_State: ...
-    @staticmethod
-    @overload
     def ComputeState_s(theEdge : OCP.TopoDS.TopoDS_Edge,theSolid : OCP.TopoDS.TopoDS_Solid,theTol : float,theContext : OCP.IntTools.IntTools_Context) -> OCP.TopAbs.TopAbs_State: ...
     @staticmethod
     @overload
     def ComputeState_s(theVertex : OCP.TopoDS.TopoDS_Vertex,theSolid : OCP.TopoDS.TopoDS_Solid,theTol : float,theContext : OCP.IntTools.IntTools_Context) -> OCP.TopAbs.TopAbs_State: ...
+    @staticmethod
+    @overload
+    def ComputeState_s(thePoint : OCP.gp.gp_Pnt,theSolid : OCP.TopoDS.TopoDS_Solid,theTol : float,theContext : OCP.IntTools.IntTools_Context) -> OCP.TopAbs.TopAbs_State: ...
     @staticmethod
     def ComputeTolerance_s(theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge,theMaxDist : float,theMaxPar : float) -> bool: 
         """
@@ -76,7 +76,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def ComputeVV_s(theV1 : OCP.TopoDS.TopoDS_Vertex,theV2 : OCP.TopoDS.TopoDS_Vertex,theFuzz : float=1e-07) -> int: 
+    def ComputeVV_s(theV : OCP.TopoDS.TopoDS_Vertex,theP : OCP.gp.gp_Pnt,theTolP : float) -> int: 
         """
         Intersects the vertex <theV1> with the point <theP> with tolerance <theTolP>. Returns the error status: - 0 - no error, meaning that the vertex intersects the point; - 1 - the distance between vertex and point is grater than the sum of tolerances.
 
@@ -84,7 +84,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def ComputeVV_s(theV : OCP.TopoDS.TopoDS_Vertex,theP : OCP.gp.gp_Pnt,theTolP : float) -> int: ...
+    def ComputeVV_s(theV1 : OCP.TopoDS.TopoDS_Vertex,theV2 : OCP.TopoDS.TopoDS_Vertex,theFuzz : float=1e-07) -> int: ...
     @staticmethod
     def CopyEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge) -> OCP.TopoDS.TopoDS_Edge: 
         """
@@ -163,7 +163,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def IsInternalFace_s(theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge,theLF : OCP.TopTools.TopTools_ListOfShape,theContext : OCP.IntTools.IntTools_Context) -> int: 
+    def IsInternalFace_s(theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge,theFace1 : OCP.TopoDS.TopoDS_Face,theFace2 : OCP.TopoDS.TopoDS_Face,theContext : OCP.IntTools.IntTools_Context) -> int: 
         """
         Returns True if the face theFace is inside of the couple of faces theFace1, theFace2. The faces theFace, theFace1, theFace2 must share the edge theEdge Return values: * 0 state is not IN * 1 state is IN * 2 state can not be found by the method of angles
 
@@ -173,10 +173,10 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def IsInternalFace_s(theFace : OCP.TopoDS.TopoDS_Face,theSolid : OCP.TopoDS.TopoDS_Solid,theMEF : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theTol : float,theContext : OCP.IntTools.IntTools_Context) -> bool: ...
+    def IsInternalFace_s(theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge,theLF : OCP.TopTools.TopTools_ListOfShape,theContext : OCP.IntTools.IntTools_Context) -> int: ...
     @staticmethod
     @overload
-    def IsInternalFace_s(theFace : OCP.TopoDS.TopoDS_Face,theEdge : OCP.TopoDS.TopoDS_Edge,theFace1 : OCP.TopoDS.TopoDS_Face,theFace2 : OCP.TopoDS.TopoDS_Face,theContext : OCP.IntTools.IntTools_Context) -> int: ...
+    def IsInternalFace_s(theFace : OCP.TopoDS.TopoDS_Face,theSolid : OCP.TopoDS.TopoDS_Solid,theMEF : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theTol : float,theContext : OCP.IntTools.IntTools_Context) -> bool: ...
     @staticmethod
     def IsInvertedSolid_s(theSolid : OCP.TopoDS.TopoDS_Solid) -> bool: 
         """
@@ -199,7 +199,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def IsSplitToReverse_s(theSplit : OCP.TopoDS.TopoDS_Edge,theShape : OCP.TopoDS.TopoDS_Edge,theContext : OCP.IntTools.IntTools_Context,theError : int=None) -> bool: 
+    def IsSplitToReverse_s(theSplit : OCP.TopoDS.TopoDS_Shape,theShape : OCP.TopoDS.TopoDS_Shape,theContext : OCP.IntTools.IntTools_Context,theError : int=None) -> bool: 
         """
         Checks if the direction of the split shape is opposite to the direction of the original shape. The method is an overload for (Edge,Edge) and (Face,Face) corresponding methods and checks only these types of shapes. For faces the method checks if normal directions are opposite. For edges the method checks if tangent vectors are opposite.
 
@@ -209,10 +209,10 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def IsSplitToReverse_s(theSplit : OCP.TopoDS.TopoDS_Face,theShape : OCP.TopoDS.TopoDS_Face,theContext : OCP.IntTools.IntTools_Context,theError : int=None) -> bool: ...
+    def IsSplitToReverse_s(theSplit : OCP.TopoDS.TopoDS_Edge,theShape : OCP.TopoDS.TopoDS_Edge,theContext : OCP.IntTools.IntTools_Context,theError : int=None) -> bool: ...
     @staticmethod
     @overload
-    def IsSplitToReverse_s(theSplit : OCP.TopoDS.TopoDS_Shape,theShape : OCP.TopoDS.TopoDS_Shape,theContext : OCP.IntTools.IntTools_Context,theError : int=None) -> bool: ...
+    def IsSplitToReverse_s(theSplit : OCP.TopoDS.TopoDS_Face,theShape : OCP.TopoDS.TopoDS_Face,theContext : OCP.IntTools.IntTools_Context,theError : int=None) -> bool: ...
     @staticmethod
     def MakeConnexityBlock_s(theLS : OCP.TopTools.TopTools_ListOfShape,theMapAvoid : OCP.TopTools.TopTools_IndexedMapOfShape,theLSCB : OCP.TopTools.TopTools_ListOfShape,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -220,7 +220,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def MakeConnexityBlocks_s(theS : OCP.TopoDS.TopoDS_Shape,theConnectionType : OCP.TopAbs.TopAbs_ShapeEnum,theElementType : OCP.TopAbs.TopAbs_ShapeEnum,theLCB : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def MakeConnexityBlocks_s(theS : OCP.TopoDS.TopoDS_Shape,theConnectionType : OCP.TopAbs.TopAbs_ShapeEnum,theElementType : OCP.TopAbs.TopAbs_ShapeEnum,theLCB : OCP.TopTools.TopTools_ListOfListOfShape,theConnectionMap : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape) -> None: 
         """
         For the compound <theS> builds the blocks (compounds) of elements of type <theElementType> connected through the shapes of the type <theConnectionType>. The blocks are stored into the list <theLCB>.
 
@@ -230,7 +230,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def MakeConnexityBlocks_s(theS : OCP.TopoDS.TopoDS_Shape,theConnectionType : OCP.TopAbs.TopAbs_ShapeEnum,theElementType : OCP.TopAbs.TopAbs_ShapeEnum,theLCB : OCP.TopTools.TopTools_ListOfListOfShape,theConnectionMap : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape) -> None: ...
+    def MakeConnexityBlocks_s(theS : OCP.TopoDS.TopoDS_Shape,theConnectionType : OCP.TopAbs.TopAbs_ShapeEnum,theElementType : OCP.TopAbs.TopAbs_ShapeEnum,theLCB : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     @staticmethod
     @overload
     def MakeConnexityBlocks_s(theLS : OCP.TopTools.TopTools_ListOfShape,theConnectionType : OCP.TopAbs.TopAbs_ShapeEnum,theElementType : OCP.TopAbs.TopAbs_ShapeEnum,theLCB : BOPTools_ListOfConnexityBlock) -> None: ...
@@ -246,7 +246,7 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def MakeNewVertex_s(aP1 : OCP.gp.gp_Pnt,aTol : float,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def MakeNewVertex_s(aE1 : OCP.TopoDS.TopoDS_Edge,aP1 : float,aF2 : OCP.TopoDS.TopoDS_Face,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Make a vertex using 3D-point <aP1> and 3D-tolerance value <aTol>
 
@@ -258,13 +258,13 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def MakeNewVertex_s(aE1 : OCP.TopoDS.TopoDS_Edge,aP1 : float,aF2 : OCP.TopoDS.TopoDS_Face,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def MakeNewVertex_s(aV1 : OCP.TopoDS.TopoDS_Vertex,aV2 : OCP.TopoDS.TopoDS_Vertex,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @staticmethod
+    @overload
+    def MakeNewVertex_s(aP1 : OCP.gp.gp_Pnt,aTol : float,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @staticmethod
     @overload
     def MakeNewVertex_s(aE1 : OCP.TopoDS.TopoDS_Edge,aP1 : float,aE2 : OCP.TopoDS.TopoDS_Edge,aP2 : float,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @staticmethod
-    @overload
-    def MakeNewVertex_s(aV1 : OCP.TopoDS.TopoDS_Vertex,aV2 : OCP.TopoDS.TopoDS_Vertex,aNewVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @staticmethod
     def MakePCurve_s(theE : OCP.TopoDS.TopoDS_Edge,theF1 : OCP.TopoDS.TopoDS_Face,theF2 : OCP.TopoDS.TopoDS_Face,theCurve : OCP.IntTools.IntTools_Curve,thePC1 : bool,thePC2 : bool,theContext : OCP.IntTools.IntTools_Context=None) -> None: 
         """
@@ -322,10 +322,10 @@ class BOPTools_AlgoTools():
         """
     @staticmethod
     @overload
-    def UpdateVertex_s(aE : OCP.TopoDS.TopoDS_Edge,aT : float,aV : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def UpdateVertex_s(aVF : OCP.TopoDS.TopoDS_Vertex,aVN : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @staticmethod
     @overload
-    def UpdateVertex_s(aVF : OCP.TopoDS.TopoDS_Vertex,aVN : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def UpdateVertex_s(aE : OCP.TopoDS.TopoDS_Edge,aT : float,aV : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def __init__(self) -> None: ...
     pass
 class BOPTools_AlgoTools2D():
@@ -334,7 +334,7 @@ class BOPTools_AlgoTools2D():
     """
     @staticmethod
     @overload
-    def AdjustPCurveOnFace_s(theF : OCP.TopoDS.TopoDS_Face,theFirst : float,theLast : float,theC2D : OCP.Geom2d.Geom2d_Curve,theC2DA : OCP.Geom2d.Geom2d_Curve,theContext : OCP.IntTools.IntTools_Context=None) -> None: 
+    def AdjustPCurveOnFace_s(theF : OCP.TopoDS.TopoDS_Face,theC3D : OCP.Geom.Geom_Curve,theC2D : OCP.Geom2d.Geom2d_Curve,theC2DA : OCP.Geom2d.Geom2d_Curve,theContext : OCP.IntTools.IntTools_Context=None) -> None: 
         """
         Adjust P-Curve <theC2D> (3D-curve <theC3D>) on surface of the face <theF>. <theContext> - storage for caching the geometrical tools
 
@@ -342,7 +342,7 @@ class BOPTools_AlgoTools2D():
         """
     @staticmethod
     @overload
-    def AdjustPCurveOnFace_s(theF : OCP.TopoDS.TopoDS_Face,theC3D : OCP.Geom.Geom_Curve,theC2D : OCP.Geom2d.Geom2d_Curve,theC2DA : OCP.Geom2d.Geom2d_Curve,theContext : OCP.IntTools.IntTools_Context=None) -> None: ...
+    def AdjustPCurveOnFace_s(theF : OCP.TopoDS.TopoDS_Face,theFirst : float,theLast : float,theC2D : OCP.Geom2d.Geom2d_Curve,theC2DA : OCP.Geom2d.Geom2d_Curve,theContext : OCP.IntTools.IntTools_Context=None) -> None: ...
     @staticmethod
     def AdjustPCurveOnSurf_s(aF : OCP.BRepAdaptor.BRepAdaptor_Surface,aT1 : float,aT2 : float,aC2D : OCP.Geom2d.Geom2d_Curve,aC2DA : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
@@ -376,7 +376,7 @@ class BOPTools_AlgoTools2D():
         """
     @staticmethod
     @overload
-    def HasCurveOnSurface_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face) -> bool: 
+    def HasCurveOnSurface_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aC : OCP.Geom2d.Geom2d_Curve,aFirst : float,aLast : float,aToler : float) -> bool: 
         """
         Returns TRUE if the edge <aE> has P-Curve <aC> on surface <aF> . [aFirst, aLast] - range of the P-Curve [aToler] - reached tolerance If the P-Curve does not exist, aC.IsNull()=TRUE.
 
@@ -384,10 +384,10 @@ class BOPTools_AlgoTools2D():
         """
     @staticmethod
     @overload
-    def HasCurveOnSurface_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aC : OCP.Geom2d.Geom2d_Curve,aFirst : float,aLast : float,aToler : float) -> bool: ...
+    def HasCurveOnSurface_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face) -> bool: ...
     @staticmethod
     @overload
-    def IntermediatePoint_s(anE : OCP.TopoDS.TopoDS_Edge) -> float: 
+    def IntermediatePoint_s(aFirst : float,aLast : float) -> float: 
         """
         Compute intermediate value in between [aFirst, aLast] .
 
@@ -395,11 +395,11 @@ class BOPTools_AlgoTools2D():
         """
     @staticmethod
     @overload
-    def IntermediatePoint_s(aFirst : float,aLast : float) -> float: ...
+    def IntermediatePoint_s(anE : OCP.TopoDS.TopoDS_Edge) -> float: ...
     @staticmethod
     def IsEdgeIsoline_s(theE : OCP.TopoDS.TopoDS_Edge,theF : OCP.TopoDS.TopoDS_Face) -> Tuple[bool, bool]: 
         """
-        Checks if CurveOnSurface of theE on theF matches with isoline of theF surface. Sets corresponding values for isTheUIso and isTheVIso variables. ATTENTION!!! This method is based on comparation between direction of surface (which theF is based on) iso-lines and the direction of the edge p-curve (on theF) in middle-point of the p-curve. This method should be used carefully (e.g. BRep_Tool::IsClosed(...) together) in order to avoid false classification some p-curves as isoline (e.g. circle on a plane).
+        Checks if CurveOnSurface of theE on theF matches with isoline of theF surface. Sets corresponding values for isTheUIso and isTheVIso variables.
         """
     @staticmethod
     def Make2D_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aC : OCP.Geom2d.Geom2d_Curve,theContext : OCP.IntTools.IntTools_Context=None) -> Tuple[float, float, float]: 
@@ -441,7 +441,7 @@ class BOPTools_AlgoTools3D():
     def DoSplitSEAMOnFace_s(theEOrigin : OCP.TopoDS.TopoDS_Edge,theESplit : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face) -> bool: ...
     @staticmethod
     @overload
-    def GetApproxNormalToFaceOnEdge_s(theE : OCP.TopoDS.TopoDS_Edge,theF : OCP.TopoDS.TopoDS_Face,aT : float,aP : OCP.gp.gp_Pnt,aDNF : OCP.gp.gp_Dir,aDt2D : float) -> bool: 
+    def GetApproxNormalToFaceOnEdge_s(theE : OCP.TopoDS.TopoDS_Edge,theF : OCP.TopoDS.TopoDS_Face,aT : float,aDt2D : float,aP : OCP.gp.gp_Pnt,aDNF : OCP.gp.gp_Dir,theContext : OCP.IntTools.IntTools_Context) -> bool: 
         """
         Computes normal to the face <aF> for the 3D-point that belongs to the edge <aE> at parameter <aT>. Output: aPx - the 3D-point where the normal computed aD - the normal; Warning: The normal is computed not exactly in the point on the edge, but in point that is near to the edge towards to the face material (so, we'll have approx. normal); The point is computed using PointNearEdge function, with the shifting value BOPTools_AlgoTools3D::MinStepIn2d(), from the edge, but if this value is too big, the point will be computed using Hatcher (PointInFace function). Returns TRUE in case of success.
 
@@ -451,10 +451,10 @@ class BOPTools_AlgoTools3D():
         """
     @staticmethod
     @overload
-    def GetApproxNormalToFaceOnEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aPx : OCP.gp.gp_Pnt,aD : OCP.gp.gp_Dir,theContext : OCP.IntTools.IntTools_Context) -> bool: ...
+    def GetApproxNormalToFaceOnEdge_s(theE : OCP.TopoDS.TopoDS_Edge,theF : OCP.TopoDS.TopoDS_Face,aT : float,aP : OCP.gp.gp_Pnt,aDNF : OCP.gp.gp_Dir,aDt2D : float) -> bool: ...
     @staticmethod
     @overload
-    def GetApproxNormalToFaceOnEdge_s(theE : OCP.TopoDS.TopoDS_Edge,theF : OCP.TopoDS.TopoDS_Face,aT : float,aDt2D : float,aP : OCP.gp.gp_Pnt,aDNF : OCP.gp.gp_Dir,theContext : OCP.IntTools.IntTools_Context) -> bool: ...
+    def GetApproxNormalToFaceOnEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aPx : OCP.gp.gp_Pnt,aD : OCP.gp.gp_Dir,theContext : OCP.IntTools.IntTools_Context) -> bool: ...
     @staticmethod
     @overload
     def GetNormalToFaceOnEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aD : OCP.gp.gp_Dir,theContext : OCP.IntTools.IntTools_Context=None) -> None: 
@@ -488,7 +488,7 @@ class BOPTools_AlgoTools3D():
         """
     @staticmethod
     @overload
-    def PointInFace_s(theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theP2D : OCP.gp.gp_Pnt2d,theContext : OCP.IntTools.IntTools_Context) -> int: 
+    def PointInFace_s(theF : OCP.TopoDS.TopoDS_Face,theL : OCP.Geom2d.Geom2d_Curve,theP : OCP.gp.gp_Pnt,theP2D : OCP.gp.gp_Pnt2d,theContext : OCP.IntTools.IntTools_Context,theDt2D : float=0.0) -> int: 
         """
         Computes arbitrary point <theP> inside the face <theF>. <theP2D> - 2D representation of <theP> on the surface of <theF> Returns 0 in case of success.
 
@@ -498,10 +498,10 @@ class BOPTools_AlgoTools3D():
         """
     @staticmethod
     @overload
-    def PointInFace_s(theF : OCP.TopoDS.TopoDS_Face,theE : OCP.TopoDS.TopoDS_Edge,theT : float,theDt2D : float,theP : OCP.gp.gp_Pnt,theP2D : OCP.gp.gp_Pnt2d,theContext : OCP.IntTools.IntTools_Context) -> int: ...
+    def PointInFace_s(theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theP2D : OCP.gp.gp_Pnt2d,theContext : OCP.IntTools.IntTools_Context) -> int: ...
     @staticmethod
     @overload
-    def PointInFace_s(theF : OCP.TopoDS.TopoDS_Face,theL : OCP.Geom2d.Geom2d_Curve,theP : OCP.gp.gp_Pnt,theP2D : OCP.gp.gp_Pnt2d,theContext : OCP.IntTools.IntTools_Context,theDt2D : float=0.0) -> int: ...
+    def PointInFace_s(theF : OCP.TopoDS.TopoDS_Face,theE : OCP.TopoDS.TopoDS_Edge,theT : float,theDt2D : float,theP : OCP.gp.gp_Pnt,theP2D : OCP.gp.gp_Pnt2d,theContext : OCP.IntTools.IntTools_Context) -> int: ...
     @staticmethod
     @overload
     def PointNearEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aP2D : OCP.gp.gp_Pnt2d,aPx : OCP.gp.gp_Pnt,theContext : OCP.IntTools.IntTools_Context) -> int: 
@@ -516,10 +516,10 @@ class BOPTools_AlgoTools3D():
         """
     @staticmethod
     @overload
-    def PointNearEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aDt2D : float,aP2D : OCP.gp.gp_Pnt2d,aPx : OCP.gp.gp_Pnt) -> int: ...
+    def PointNearEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aDt2D : float,aP2D : OCP.gp.gp_Pnt2d,aPx : OCP.gp.gp_Pnt,theContext : OCP.IntTools.IntTools_Context) -> int: ...
     @staticmethod
     @overload
-    def PointNearEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aDt2D : float,aP2D : OCP.gp.gp_Pnt2d,aPx : OCP.gp.gp_Pnt,theContext : OCP.IntTools.IntTools_Context) -> int: ...
+    def PointNearEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aT : float,aDt2D : float,aP2D : OCP.gp.gp_Pnt2d,aPx : OCP.gp.gp_Pnt) -> int: ...
     @staticmethod
     @overload
     def PointNearEdge_s(aE : OCP.TopoDS.TopoDS_Edge,aF : OCP.TopoDS.TopoDS_Face,aP2D : OCP.gp.gp_Pnt2d,aPx : OCP.gp.gp_Pnt,theContext : OCP.IntTools.IntTools_Context) -> int: ...
@@ -688,14 +688,14 @@ class BOPTools_IndexedDataMapOfSetShape(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : BOPTools_Set) -> bool: 
         """
         Contains
@@ -713,14 +713,14 @@ class BOPTools_IndexedDataMapOfSetShape(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : BOPTools_Set) -> OCP.TopoDS.TopoDS_Shape: 
+    def FindFromKey(self,theKey1 : BOPTools_Set,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : BOPTools_Set,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def FindFromKey(self,theKey1 : BOPTools_Set) -> OCP.TopoDS.TopoDS_Shape: ...
     def FindIndex(self,theKey1 : BOPTools_Set) -> int: 
         """
         FindIndex
@@ -774,11 +774,11 @@ class BOPTools_IndexedDataMapOfSetShape(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self,theOther : BOPTools_IndexedDataMapOfSetShape) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : BOPTools_IndexedDataMapOfSetShape) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BOPTools_ListOfConnexityBlock(OCP.NCollection.NCollection_BaseList):
@@ -799,9 +799,9 @@ class BOPTools_ListOfConnexityBlock(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BOPTools_ConnexityBlock) -> BOPTools_ConnexityBlock: ...
-    @overload
     def Append(self,theOther : BOPTools_ListOfConnexityBlock) -> None: ...
+    @overload
+    def Append(self,theItem : BOPTools_ConnexityBlock) -> BOPTools_ConnexityBlock: ...
     def Assign(self,theOther : BOPTools_ListOfConnexityBlock) -> BOPTools_ListOfConnexityBlock: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -849,14 +849,14 @@ class BOPTools_ListOfConnexityBlock(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : BOPTools_ListOfConnexityBlock) -> None: 
+    def Prepend(self,theItem : BOPTools_ConnexityBlock) -> BOPTools_ConnexityBlock: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : BOPTools_ConnexityBlock) -> BOPTools_ConnexityBlock: ...
+    def Prepend(self,theOther : BOPTools_ListOfConnexityBlock) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -874,11 +874,11 @@ class BOPTools_ListOfConnexityBlock(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : BOPTools_ListOfConnexityBlock) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BOPTools_ListOfCoupleOfShape(OCP.NCollection.NCollection_BaseList):
@@ -890,7 +890,7 @@ class BOPTools_ListOfCoupleOfShape(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BOPTools_CoupleOfShape) -> BOPTools_CoupleOfShape: 
+    def Append(self,theItem : BOPTools_CoupleOfShape,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -901,7 +901,7 @@ class BOPTools_ListOfCoupleOfShape(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theOther : BOPTools_ListOfCoupleOfShape) -> None: ...
     @overload
-    def Append(self,theItem : BOPTools_CoupleOfShape,theIter : Any) -> None: ...
+    def Append(self,theItem : BOPTools_CoupleOfShape) -> BOPTools_CoupleOfShape: ...
     def Assign(self,theOther : BOPTools_ListOfCoupleOfShape) -> BOPTools_ListOfCoupleOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -949,14 +949,14 @@ class BOPTools_ListOfCoupleOfShape(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : BOPTools_CoupleOfShape) -> BOPTools_CoupleOfShape: 
+    def Prepend(self,theOther : BOPTools_ListOfCoupleOfShape) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : BOPTools_ListOfCoupleOfShape) -> None: ...
+    def Prepend(self,theItem : BOPTools_CoupleOfShape) -> BOPTools_CoupleOfShape: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -974,11 +974,11 @@ class BOPTools_ListOfCoupleOfShape(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : BOPTools_ListOfCoupleOfShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : BOPTools_ListOfCoupleOfShape) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BOPTools_MapOfSet(OCP.NCollection.NCollection_BaseMap):
@@ -1092,11 +1092,11 @@ class BOPTools_MapOfSet(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : BOPTools_MapOfSet) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class BOPTools_Parallel():
     """
@@ -1133,9 +1133,9 @@ class BOPTools_Set():
         None
         """
     @overload
-    def __init__(self,theOther : BOPTools_Set) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BOPTools_Set) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass

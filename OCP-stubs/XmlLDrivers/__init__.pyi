@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.TCollection
-import io
-import OCP.XmlMDF
-import OCP.NCollection
-import OCP.Message
 import OCP.CDM
+import OCP.NCollection
+import OCP.TDocStd
 import OCP.PCDM
+import io
 import OCP.Storage
 import OCP.Standard
+import OCP.Message
+import OCP.TCollection
+import OCP.XmlMDF
 __all__  = [
 "XmlLDrivers",
 "XmlLDrivers_DocumentRetrievalDriver",
@@ -45,19 +45,10 @@ class XmlLDrivers():
         """
         None
         """
-    @staticmethod
-    def StorageVersion_s() -> int: 
-        """
-        None
-        """
     def __init__(self) -> None: ...
     pass
 class XmlLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCDM.PCDM_Reader, OCP.Standard.Standard_Transient):
     def AttributeDrivers(self,theMsgDriver : OCP.Message.Message_Messenger) -> OCP.XmlMDF.XmlMDF_ADriverTable: 
-        """
-        None
-        """
-    def CreateDocument(self) -> OCP.CDM.CDM_Document: 
         """
         None
         """
@@ -97,32 +88,32 @@ class XmlLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCD
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -186,32 +177,32 @@ class XmlLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -262,9 +253,9 @@ class XmlLDrivers_NamespaceDef():
         None
         """
     @overload
-    def __init__(self,thePrefix : OCP.TCollection.TCollection_AsciiString,theURI : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePrefix : OCP.TCollection.TCollection_AsciiString,theURI : OCP.TCollection.TCollection_AsciiString) -> None: ...
     pass
 class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -346,23 +337,23 @@ class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : XmlLDrivers_NamespaceDef) -> None: 
+    def Prepend(self,theSeq : XmlLDrivers_SequenceOfNamespaceDef) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : XmlLDrivers_SequenceOfNamespaceDef) -> None: ...
+    def Prepend(self,theItem : XmlLDrivers_NamespaceDef) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -388,11 +379,11 @@ class XmlLDrivers_SequenceOfNamespaceDef(OCP.NCollection.NCollection_BaseSequenc
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : XmlLDrivers_SequenceOfNamespaceDef) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : XmlLDrivers_SequenceOfNamespaceDef) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

@@ -4,20 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
 import OCP.IGESSolid
-import OCP.IGESGeom
 import OCP.Transfer
-import OCP.Message
 import OCP.IGESData
-import OCP.gp
-import OCP.Geom
-import OCP.IGESBasic
-import OCP.TopoDS
 import OCP.Interface
 import OCP.Geom2d
+import OCP.gp
 import OCP.Standard
 import OCP.ShapeExtend
+import OCP.IGESGeom
+import OCP.IGESBasic
+import OCP.Geom
+import OCP.TopoDS
+import OCP.Message
+import OCP.TColStd
 __all__  = [
 "IGESToBRep",
 "IGESToBRep_Actor",
@@ -54,32 +54,32 @@ class IGESToBRep():
     @staticmethod
     def IsBRepEntity_s(start : OCP.IGESData.IGESData_IGESEntity) -> bool: 
         """
-        Return True if the IGESEntity can be transfered by TransferBRepEntity. ex: VertexList, EdgeList, Loop, Face, Shell, Manifold Solid BRep Object from IGESSolid : 502, 504, 508, 510, 514, 186.
+        Return True if the IGESEntity can be transferred by TransferBRepEntity. ex: VertexList, EdgeList, Loop, Face, Shell, Manifold Solid BRep Object from IGESSolid : 502, 504, 508, 510, 514, 186.
         """
     @staticmethod
     def IsBasicCurve_s(start : OCP.IGESData.IGESData_IGESEntity) -> bool: 
         """
-        Return True if the IGESEntity can be transfered by TransferBasicCurve. ex: CircularArc, ConicArc, Line, CopiousData, BSplineCurve, SplineCurve... from IGESGeom : 104,110,112,126
+        Return True if the IGESEntity can be transferred by TransferBasicCurve. ex: CircularArc, ConicArc, Line, CopiousData, BSplineCurve, SplineCurve... from IGESGeom : 104,110,112,126
         """
     @staticmethod
     def IsBasicSurface_s(start : OCP.IGESData.IGESData_IGESEntity) -> bool: 
         """
-        Return True if the IGESEntity can be transfered by TransferBasicSurface. ex: BSplineSurface, SplineSurface... from IGESGeom : 114,128
+        Return True if the IGESEntity can be transferred by TransferBasicSurface. ex: BSplineSurface, SplineSurface... from IGESGeom : 114,128
         """
     @staticmethod
     def IsCurveAndSurface_s(start : OCP.IGESData.IGESData_IGESEntity) -> bool: 
         """
-        Return True if the IGESEntity can be transfered by TransferCurveAndSurface. ex: All IGESEntity from IGESGeom
+        Return True if the IGESEntity can be transferred by TransferCurveAndSurface. ex: All IGESEntity from IGESGeom
         """
     @staticmethod
     def IsTopoCurve_s(start : OCP.IGESData.IGESData_IGESEntity) -> bool: 
         """
-        Return True if the IGESEntity can be transfered by TransferTopoCurve. ex: all Curves from IGESGeom : all basic curves,102,130,142,144
+        Return True if the IGESEntity can be transferred by TransferTopoCurve. ex: all Curves from IGESGeom : all basic curves,102,130,142,144
         """
     @staticmethod
     def IsTopoSurface_s(start : OCP.IGESData.IGESData_IGESEntity) -> bool: 
         """
-        Return True if the IGESEntity can be transfered by TransferTopoSurface. ex: All Surfaces from IGESGeom : all basic surfaces,108,118,120,122,141,143
+        Return True if the IGESEntity can be transferred by TransferTopoSurface. ex: All Surfaces from IGESGeom : all basic surfaces,108,118,120,122,141,143
         """
     @staticmethod
     def SetAlgoContainer_s(aContainer : IGESToBRep_AlgoContainer) -> None: 
@@ -122,23 +122,23 @@ class IGESToBRep_Actor(OCP.Transfer.Transfer_ActorOfTransientProcess, OCP.Transf
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -229,23 +229,23 @@ class IGESToBRep_AlgoContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetToolContainer(self,TC : IGESToBRep_ToolContainer) -> None: 
         """
         Sets ToolContainer
@@ -782,11 +782,11 @@ class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass
 class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
     """
@@ -999,11 +999,11 @@ class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
         """
     def TransferBSplineSurface(self,start : OCP.IGESGeom.IGESGeom_BSplineSurface) -> OCP.Geom.Geom_BSplineSurface: 
         """
-        Returns BSplineSurface from Geom if the transfer has succeded.
+        Returns BSplineSurface from Geom if the transfer has succeeded.
         """
     def TransferBasicSurface(self,start : OCP.IGESData.IGESData_IGESEntity) -> OCP.Geom.Geom_Surface: 
         """
-        Returns Surface from Geom if the last transfer has succeded.
+        Returns Surface from Geom if the last transfer has succeeded.
         """
     def TransferCurveAndSurface(self,start : OCP.IGESData.IGESData_IGESEntity,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -1015,38 +1015,38 @@ class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
         """
     def TransferPlaneSurface(self,start : OCP.IGESSolid.IGESSolid_PlaneSurface) -> OCP.Geom.Geom_Plane: 
         """
-        Returns Plane from Geom if the transfer has succeded.
+        Returns Plane from Geom if the transfer has succeeded.
         """
     def TransferRigthConicalSurface(self,start : OCP.IGESSolid.IGESSolid_ConicalSurface) -> OCP.Geom.Geom_ConicalSurface: 
         """
-        Returns ConicalSurface from Geom if the transfer has succeded.
+        Returns ConicalSurface from Geom if the transfer has succeeded.
         """
     def TransferRigthCylindricalSurface(self,start : OCP.IGESSolid.IGESSolid_CylindricalSurface) -> OCP.Geom.Geom_CylindricalSurface: 
         """
-        Returns CylindricalSurface from Geom if the transfer has succeded.
+        Returns CylindricalSurface from Geom if the transfer has succeeded.
         """
     def TransferSphericalSurface(self,start : OCP.IGESSolid.IGESSolid_SphericalSurface) -> OCP.Geom.Geom_SphericalSurface: 
         """
-        Returns SphericalSurface from Geom if the transfer has succeded.
+        Returns SphericalSurface from Geom if the transfer has succeeded.
         """
     def TransferSplineSurface(self,start : OCP.IGESGeom.IGESGeom_SplineSurface) -> OCP.Geom.Geom_BSplineSurface: 
         """
-        Returns BSplineSurface from Geom if the transfer has succeded.
+        Returns BSplineSurface from Geom if the transfer has succeeded.
         """
     def TransferToroidalSurface(self,start : OCP.IGESSolid.IGESSolid_ToroidalSurface) -> OCP.Geom.Geom_ToroidalSurface: 
         """
-        Returns SphericalSurface from Geom if the transfer has succeded.
+        Returns SphericalSurface from Geom if the transfer has succeeded.
         """
     def UpdateMinMaxTol(self) -> None: 
         """
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
-    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass
 class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
     """
@@ -1337,36 +1337,36 @@ class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
         Inits the object with parameters common for all types of IGES boundaries. <CS>: object to be used for retrieving translation parameters and sending messages, <entity>: boundary entity to be processed, <face>, <trans>, <uFact>: as for IGESToBRep_TopoCurve <filepreference>: preferred representation (2 or 3) given in the IGES file
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.ShapeExtend.ShapeExtend_WireData,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,toreverse2d : bool,number : int,lsewd : OCP.ShapeExtend.ShapeExtend_WireData) -> bool: 
+    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.IGESData.IGESData_IGESEntity,toreverse3d : bool,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,number : int) -> bool: 
         """
         Translates 141 and 142 entities. Returns True if the curve has been successfully translated, otherwise returns False. <okCurve..>: flags that indicate whether corresponding representation has been successfully translated (must be set to True before first call), <curve3d>: model space curve for 142 and current model space curve for 141, <toreverse3d>: False for 142 and current orientation flag for 141, <curves2d>: 1 parameter space curve for 142 or list of them for current model space curves for 141, <number>: 1 for 142 and rank number of model space curve for 141.
 
         Translates 508 entity. Returns True if the curve has been successfully translated, otherwise returns False. Input object IGESBoundary must be created and initialized before. <okCurve..>: flags that indicate whether corresponding representation has been successfully translated (must be set to True before first call), <curve3d>: result of translation of current edge, <curves2d>: list of parameter space curves for edge, <toreverse2d>: orientation flag of current edge in respect to its model space curve, <number>: rank number of edge, <lsewd>: returns the result of translation of current edge.
         """
     @overload
-    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.IGESData.IGESData_IGESEntity,toreverse3d : bool,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,number : int) -> bool: ...
+    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.ShapeExtend.ShapeExtend_WireData,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,toreverse2d : bool,number : int,lsewd : OCP.ShapeExtend.ShapeExtend_WireData) -> bool: ...
     def WireData(self) -> OCP.ShapeExtend.ShapeExtend_WireData: 
         """
         Returns the resulting wire
@@ -1375,9 +1375,9 @@ class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
         """
     def WireData2d(self) -> OCP.ShapeExtend.ShapeExtend_WireData: 
         """
-        Returns the the wire from 2D curves (edges contain pcurves only)
+        Returns the wire from 2D curves (edges contain pcurves only)
 
-        Returns the the wire from 2D curves (edges contain pcurves only)
+        Returns the wire from 2D curves (edges contain pcurves only)
         """
     def WireData3d(self) -> OCP.ShapeExtend.ShapeExtend_WireData: 
         """
@@ -1386,9 +1386,9 @@ class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
         Returns the wire from 3D curves (edges contain 3D curves and may contain pcurves)
         """
     @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1492,23 +1492,23 @@ class IGESToBRep_ToolContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1835,13 +1835,13 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
-    @overload
-    def __init__(self,CS : IGESToBRep_TopoCurve) -> None: ...
-    @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    @overload
+    def __init__(self,CS : IGESToBRep_TopoCurve) -> None: ...
     pass
 class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
     """
@@ -2109,9 +2109,9 @@ class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass

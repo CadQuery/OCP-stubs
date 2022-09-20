@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
-import OCP.GccEnt
 import OCP.GccInt
+import OCP.GccEnt
 __all__  = [
 "GccAna_Circ2d2TanOn",
 "GccAna_Circ2d2TanRad",
@@ -31,7 +31,7 @@ class GccAna_Circ2d2TanOn():
     """
     def CenterOn3(self,Index : int,PntArg : OCP.gp.gp_Pnt2d) -> Tuple[float]: 
         """
-        Returns the informations about the center (on the curv) of the result number Index and the third argument. ParArg is the intrinsic parameter of the point PntArg on the third argument. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
+        Returns the information about the center (on the curv) of the result number Index and the third argument. ParArg is the intrinsic parameter of the point PntArg on the third argument. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     def IsDone(self) -> bool: 
         """
@@ -51,11 +51,11 @@ class GccAna_Circ2d2TanOn():
         """
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns the informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution ParArg is the intrinsic parameter of the point PntSol on the first argument. Raises OutOfRange if Index is greater than the number of solutions and NotDone if IsDone returns false.
+        Returns the information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution ParArg is the intrinsic parameter of the point PntSol on the first argument. Raises OutOfRange if Index is greater than the number of solutions and NotDone if IsDone returns false.
         """
     def Tangency2(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns the informations about the tangency point between the result number Index and the second argument. ParSol is the intrinsic parameter of the point PntSol on the solution. ParArg is the intrinsic parameter of the point PntSol on the second argument. Raises OutOfRange if Index is greater than the number of solutions and NotDone if IsDone returns false.
+        Returns the information about the tangency point between the result number Index and the second argument. ParSol is the intrinsic parameter of the point PntSol on the solution. ParArg is the intrinsic parameter of the point PntSol on the second argument. Raises OutOfRange if Index is greater than the number of solutions and NotDone if IsDone returns false.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Circ2d: 
         """
@@ -66,29 +66,29 @@ class GccAna_Circ2d2TanOn():
         Returns the qualifiers Qualif1 and Qualif2 of the tangency arguments for the solution of index Index computed by this algorithm. The returned qualifiers are: - those specified at the start of construction when the solutions are defined as enclosed, enclosing or outside with respect to the arguments, or - those computed during construction (i.e. enclosed, enclosing or outside) when the solutions are defined as unqualified with respect to the arguments, or - GccEnt_noqualifier if the tangency argument is a point. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
+    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Point2 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Point2 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCirc : OCP.gp.gp_Circ2d,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,OnLine : OCP.gp.gp_Lin2d,Tolerance : float) -> None: ...
     pass
 class GccAna_Circ2d2TanRad():
     """
@@ -127,21 +127,21 @@ class GccAna_Circ2d2TanRad():
         Returns the information about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computedin case of unqualified).
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,Radius : float,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Point2 : OCP.gp.gp_Pnt2d,Radius : float,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Radius : float,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,Radius : float,Tolerance : float) -> None: ...
     @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,Radius : float,Tolerance : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Radius : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Radius : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Point2 : OCP.gp.gp_Pnt2d,Radius : float,Tolerance : float) -> None: ...
     pass
 class GccAna_Circ2d3Tan():
     """
-    This class implements the algorithms used to create 2d circles tangent to 3 points/lines/circles. The arguments of all construction methods are : - The three qualified elements for the tangency constraints (QualifiedCirc, QualifiedLine, Points). - A real Tolerance. Tolerance is only used in the limit cases. For example : We want to create a circle tangent to an UnqualifiedCirc C1 and an UnqualifiedCirc C2 and an UnqualifiedCirc C3 with a tolerance Tolerance. If we do not use Tolerance it is impossible to find a solution in the following case : C2 is inside C1 and there is no intersection point between the two circles, and C3 is completly outside C1. With Tolerance we will find a solution if the lowest distance between C1 and C2 is lower than or equal Tolerance.
+    This class implements the algorithms used to create 2d circles tangent to 3 points/lines/circles. The arguments of all construction methods are : - The three qualified elements for the tangency constraints (QualifiedCirc, QualifiedLine, Points). - A real Tolerance. Tolerance is only used in the limit cases. For example : We want to create a circle tangent to an UnqualifiedCirc C1 and an UnqualifiedCirc C2 and an UnqualifiedCirc C3 with a tolerance Tolerance. If we do not use Tolerance it is impossible to find a solution in the following case : C2 is inside C1 and there is no intersection point between the two circles, and C3 is completely outside C1. With Tolerance we will find a solution if the lowest distance between C1 and C2 is lower than or equal Tolerance.
     """
     def IsDone(self) -> bool: 
         """
@@ -165,15 +165,15 @@ class GccAna_Circ2d3Tan():
         """
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntArg on the argument curv. Raises OutOfRange if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntArg on the argument curv. Raises OutOfRange if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
         """
     def Tangency2(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point Pntsol on the argument curv. Raises OutOfRange if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point Pntsol on the argument curv. Raises OutOfRange if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
         """
     def Tangency3(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point Pntsol on the argument curv. Raises OutOfRange if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point Pntsol on the argument curv. Raises OutOfRange if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Circ2d: 
         """
@@ -181,28 +181,28 @@ class GccAna_Circ2d3Tan():
         """
     def WhichQualifier(self,Index : int,Qualif1 : OCP.GccEnt.GccEnt_Position,Qualif2 : OCP.GccEnt.GccEnt_Position,Qualif3 : OCP.GccEnt.GccEnt_Position) -> None: 
         """
-        Returns the informations about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computedin case of unqualified).
+        Returns the information about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computedin case of unqualified).
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified3 : OCP.GccEnt.GccEnt_QualifiedCirc,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : OCP.GccEnt.GccEnt_QualifiedLin,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified3 : OCP.GccEnt.GccEnt_QualifiedLin,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : OCP.GccEnt.GccEnt_QualifiedLin,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : OCP.GccEnt.GccEnt_QualifiedLin,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
     @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Point2 : OCP.gp.gp_Pnt2d,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Qualified3 : OCP.GccEnt.GccEnt_QualifiedLin,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified3 : OCP.GccEnt.GccEnt_QualifiedCirc,Tolerance : float) -> None: ...
+    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,Point2 : OCP.gp.gp_Pnt2d,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Point2 : OCP.gp.gp_Pnt2d,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
-    @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedLin,Point3 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
     pass
 class GccAna_Circ2dBisec():
     """
@@ -224,7 +224,7 @@ class GccAna_Circ2dBisec():
     pass
 class GccAna_Circ2dTanCen():
     """
-    This class implements the algorithms used to create 2d circles tangent to an entity and centered on a point. The arguments of all construction methods are : - The qualified element for the tangency constrains (QualifiedCirc, Line, Point). - The center point Pcenter. - A real Tolerance. Tolerance is only used in the limits cases. For example : We want to create a circle tangent to an EnclosedCirc C1 with a tolerance Tolerance. If we did not used Tolerance it is impossible to find a solution in the the following case : Pcenter is outside C1. With Tolerance we will give a solution if the distance between C1 and Pcenter is lower than or equal Tolerance.
+    This class implements the algorithms used to create 2d circles tangent to an entity and centered on a point. The arguments of all construction methods are : - The qualified element for the tangency constrains (QualifiedCirc, Line, Point). - The center point Pcenter. - A real Tolerance. Tolerance is only used in the limits cases. For example : We want to create a circle tangent to an EnclosedCirc C1 with a tolerance Tolerance. If we did not used Tolerance it is impossible to find a solution in the following case : Pcenter is outside C1. With Tolerance we will give a solution if the distance between C1 and Pcenter is lower than or equal Tolerance.
     """
     def IsDone(self) -> bool: 
         """
@@ -240,30 +240,30 @@ class GccAna_Circ2dTanCen():
         """
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntArg on the argument curv. It raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions or less than zero.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntArg on the argument curv. It raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions or less than zero.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Circ2d: 
         """
-        Returns the circle, representing the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Be carefull: the Index is only a way to get all the solutions, but is not associated to theses outside the context of the algorithm-object. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions or less than zer
+        Returns the circle, representing the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Be careful: the Index is only a way to get all the solutions, but is not associated to these outside the context of the algorithm-object. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions or less than zer
         """
     def WhichQualifier(self,Index : int,Qualif1 : OCP.GccEnt.GccEnt_Position) -> None: 
         """
         Returns the qualifier Qualif1 of the tangency argument for the solution of index Index computed by this algorithm. The returned qualifier is: - that specified at the start of construction when the solutions are defined as enclosed, enclosing or It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computedin case of unqualified).
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Pcenter : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Linetan : OCP.gp.gp_Lin2d,Pcenter : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Pcenter : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Point1 : OCP.gp.gp_Pnt2d,Pcenter : OCP.gp.gp_Pnt2d) -> None: ...
     pass
 class GccAna_Circ2dTanOnRad():
     """
-    This class implements the algorithms used to create a 2d circle tangent to a 2d entity, centered on a curv and with a given radius. The arguments of all construction methods are : - The qualified element for the tangency constrains (QualifiedCirc, QualifiedLin, Points). - The Center element (circle, line). - A real Tolerance. Tolerance is only used in the limits cases. For example : We want to create a circle tangent to an OutsideCirc C1 centered on a line OnLine with a radius Radius and with a tolerance Tolerance. If we did not use Tolerance it is impossible to find a solution in the the following case : OnLine is outside C1. There is no intersection point between C1 and OnLine. The distance between the line and the circle is greater than Radius. With Tolerance we will give a solution if the distance between C1 and OnLine is lower than or equal Tolerance.
+    This class implements the algorithms used to create a 2d circle tangent to a 2d entity, centered on a curv and with a given radius. The arguments of all construction methods are : - The qualified element for the tangency constrains (QualifiedCirc, QualifiedLin, Points). - The Center element (circle, line). - A real Tolerance. Tolerance is only used in the limits cases. For example : We want to create a circle tangent to an OutsideCirc C1 centered on a line OnLine with a radius Radius and with a tolerance Tolerance. If we did not use Tolerance it is impossible to find a solution in the following case : OnLine is outside C1. There is no intersection point between C1 and OnLine. The distance between the line and the circle is greater than Radius. With Tolerance we will give a solution if the distance between C1 and OnLine is lower than or equal Tolerance.
     """
     def CenterOn3(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float]: 
         """
-        Returns informations about the center (on the curv) of the result. ParArg is the intrinsic parameter of the point on the argument curv. PntSol is the center point of the solution curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the center (on the curv) of the result. ParArg is the intrinsic parameter of the point on the argument curv. PntSol is the center point of the solution curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def IsDone(self) -> bool: 
         """
@@ -279,28 +279,28 @@ class GccAna_Circ2dTanOnRad():
         """
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. PntSol is the tangency point on the solution curv. PntArg is the tangency point on the argument curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. PntSol is the tangency point on the solution curv. PntArg is the tangency point on the argument curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Circ2d: 
         """
-        Returns the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Be careful: the Index is only a way to get all the solutions, but is not associated to theses outside the context of the algorithm-object. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions
+        Returns the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Be careful: the Index is only a way to get all the solutions, but is not associated to these outside the context of the algorithm-object. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions
         """
     def WhichQualifier(self,Index : int,Qualif1 : OCP.GccEnt.GccEnt_Position) -> None: 
         """
         Returns the qualifier Qualif1 of the tangency argument for the solution of index Index computed by this algorithm. The returned qualifier is: - that specified at the start of construction when the solutions are defined as enclosed, enclosing or outside with respect to the argument, or - that computed during construction (i.e. enclosed, enclosing or outside) when the solutions are defined as unqualified with respect to the argument, or - GccEnt_noqualifier if the tangency argument is a point. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
-    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,OnLine : OCP.gp.gp_Lin2d,Radius : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,OnLine : OCP.gp.gp_Lin2d,Radius : float,Tolerance : float) -> None: ...
+    def __init__(self,Point1 : OCP.gp.gp_Pnt2d,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedLin,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Point1 : OCP.gp.gp_Pnt2d,OnLine : OCP.gp.gp_Lin2d,Radius : float,Tolerance : float) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,OnCirc : OCP.gp.gp_Circ2d,Radius : float,Tolerance : float) -> None: ...
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,OnLine : OCP.gp.gp_Lin2d,Radius : float,Tolerance : float) -> None: ...
     pass
 class GccAna_CircLin2dBisec():
     """
@@ -337,9 +337,9 @@ class GccAna_CircPnt2dBisec():
         Returns the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm.
         """
     @overload
-    def __init__(self,Circle1 : OCP.gp.gp_Circ2d,Point2 : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
     def __init__(self,Circle1 : OCP.gp.gp_Circ2d,Point2 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Circle1 : OCP.gp.gp_Circ2d,Point2 : OCP.gp.gp_Pnt2d) -> None: ...
     pass
 class GccAna_Lin2d2Tan():
     """
@@ -355,26 +355,26 @@ class GccAna_Lin2d2Tan():
         """
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntSol on the argument curv. Raises OutOfRange is raised if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point PntSol on the solution curv. ParArg is the intrinsic parameter of the point PntSol on the argument curv. Raises OutOfRange is raised if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
         """
     def Tangency2(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the second argument. ParSol is the intrinsic parameter of the point ParSol on the solution curv. ParArg is the intrinsic parameter of the point PntSol on the argument curv. Raises OutOfRange is raised if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
+        Returns information about the tangency point between the result number Index and the second argument. ParSol is the intrinsic parameter of the point ParSol on the solution curv. ParArg is the intrinsic parameter of the point PntSol on the argument curv. Raises OutOfRange is raised if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Lin2d: 
         """
-        Returns the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Be carefull: the Index is only a way to get all the solutions, but is not associated to theses outside the context of the algorithm-object. Raises OutOfRange is raised if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
+        Returns the solution number Index and raises OutOfRange exception if Index is greater than the number of solutions. Be careful: the Index is only a way to get all the solutions, but is not associated to these outside the context of the algorithm-object. Raises OutOfRange is raised if Index is greater than the number of solutions. It raises NotDone if the algorithm failed.
         """
     def WhichQualifier(self,Index : int,Qualif1 : OCP.GccEnt.GccEnt_Position,Qualif2 : OCP.GccEnt.GccEnt_Position) -> None: 
         """
         Returns the qualifiers Qualif1 and Qualif2 of the tangency arguments for the solution of index Index computed by this algorithm. The returned qualifiers are: - those specified at the start of construction when the solutions are defined as enclosing or outside with respect to the arguments, or - those computed during construction (i.e. enclosing or outside) when the solutions are defined as unqualified with respect to the arguments, or - GccEnt_noqualifier if the tangency argument is a point. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,ThePoint1 : OCP.gp.gp_Pnt2d,ThePoint2 : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,ThePoint : OCP.gp.gp_Pnt2d,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Qualified2 : OCP.GccEnt.GccEnt_QualifiedCirc,Tolerance : float) -> None: ...
     pass
 class GccAna_Lin2dBisec():
     """
@@ -382,15 +382,15 @@ class GccAna_Lin2dBisec():
     """
     def Intersection1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the intersection point between the result number Index and the first argument. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the intersection point between the result number Index and the first argument. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def Intersection2(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the intersection point between the result number Index and the second argument. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the intersection point between the result number Index and the second argument. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def IsDone(self) -> bool: 
         """
-        Returns True when the algorithm succeded.
+        Returns True when the algorithm succeeded.
         """
     def NbSolutions(self) -> int: 
         """
@@ -408,7 +408,7 @@ class GccAna_Lin2dTanObl():
     """
     def Intersection2(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the intersection between the result number Index and the third argument. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the intersection between the result number Index and the third argument. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def IsDone(self) -> bool: 
         """
@@ -420,20 +420,20 @@ class GccAna_Lin2dTanObl():
         """
     def Tangency1(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point ParSol on the solution curv. ParArg is the intrinsic parameter of the point ParArg on the argument curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point ParSol on the solution curv. ParArg is the intrinsic parameter of the point ParArg on the argument curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Lin2d: 
         """
-        Returns the solution number Index. Be careful: the Index is only a way to get all the solutions, but is not associated to theses outside the context of the algorithm-object. raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns the solution number Index. Be careful: the Index is only a way to get all the solutions, but is not associated to these outside the context of the algorithm-object. raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def WhichQualifier(self,Index : int,Qualif1 : OCP.GccEnt.GccEnt_Position) -> None: 
         """
         Returns the qualifier Qualif1 of the tangency argument for the solution of index Index computed by this algorithm. The returned qualifier is: - that specified at the start of construction when the solutions are defined as enclosing or outside with respect to the argument, or - that computed during construction (i.e. enclosing or outside) when the solutions are defined as unqualified with respect to the argument, or - GccEnt_noqualifier if the tangency argument is a point. Exceptions Standard_OutOfRange if Index is less than zero or greater than the number of solutions computed by this algorithm. StdFail_NotDone if the construction fails.
         """
     @overload
-    def __init__(self,ThePoint : OCP.gp.gp_Pnt2d,TheLine : OCP.gp.gp_Lin2d,TheAngle : float) -> None: ...
-    @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,TheLine : OCP.gp.gp_Lin2d,TheAngle : float) -> None: ...
+    @overload
+    def __init__(self,ThePoint : OCP.gp.gp_Pnt2d,TheLine : OCP.gp.gp_Lin2d,TheAngle : float) -> None: ...
     pass
 class GccAna_Lin2dTanPar():
     """
@@ -449,7 +449,7 @@ class GccAna_Lin2dTanPar():
         """
     def Tangency1(self,Index : int,Pnt : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. ParArg is equal 0 when the solution is passing thrue a point. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. ParArg is equal 0 when the solution is passing through a point. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Lin2d: 
         """
@@ -457,12 +457,12 @@ class GccAna_Lin2dTanPar():
         """
     def WhichQualifier(self,Index : int,Qualif1 : OCP.GccEnt.GccEnt_Position) -> None: 
         """
-        Returns the informations about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computed in case of unqualified). Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns the information about the qualifiers of the tangency arguments concerning the solution number Index. It returns the real qualifiers (the qualifiers given to the constructor method in case of enclosed, enclosing and outside and the qualifiers computed in case of unqualified). Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Lin1 : OCP.gp.gp_Lin2d) -> None: ...
-    @overload
     def __init__(self,ThePoint : OCP.gp.gp_Pnt2d,Lin1 : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,Lin1 : OCP.gp.gp_Lin2d) -> None: ...
     pass
 class GccAna_Lin2dTanPer():
     """
@@ -470,7 +470,7 @@ class GccAna_Lin2dTanPer():
     """
     def Intersection2(self,Index : int,PntSol : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the intersection between the solution number Index and the second argument. It returns the first intersection in a case of Lin2dTanPer which is perpendicular to a circle . ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the intersection between the solution number Index and the second argument. It returns the first intersection in a case of Lin2dTanPer which is perpendicular to a circle . ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. Raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def IsDone(self) -> bool: 
         """
@@ -482,7 +482,7 @@ class GccAna_Lin2dTanPer():
         """
     def Tangency1(self,Index : int,Pnt : OCP.gp.gp_Pnt2d) -> Tuple[float, float]: 
         """
-        Returns informations about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. If the first argument is a point ParArg is equal zero. raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
+        Returns information about the tangency point between the result number Index and the first argument. ParSol is the intrinsic parameter of the point on the solution curv. ParArg is the intrinsic parameter of the point on the argument curv. If the first argument is a point ParArg is equal zero. raises NotDone if the construction algorithm didn't succeed. It raises OutOfRange if Index is greater than the number of solutions.
         """
     def ThisSolution(self,Index : int) -> OCP.gp.gp_Lin2d: 
         """
@@ -495,11 +495,11 @@ class GccAna_Lin2dTanPer():
     @overload
     def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,TheLin : OCP.gp.gp_Lin2d) -> None: ...
     @overload
-    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,TheCircle : OCP.gp.gp_Circ2d) -> None: ...
-    @overload
     def __init__(self,ThePnt : OCP.gp.gp_Pnt2d,TheCircle : OCP.gp.gp_Circ2d) -> None: ...
     @overload
     def __init__(self,ThePnt : OCP.gp.gp_Pnt2d,TheLin : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
+    def __init__(self,Qualified1 : OCP.GccEnt.GccEnt_QualifiedCirc,TheCircle : OCP.gp.gp_Circ2d) -> None: ...
     pass
 class GccAna_LinPnt2dBisec():
     """

@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.GeomAbs
-import OCP.gp
 import OCP.Geom
+import OCP.gp
 __all__  = [
 "GeomLProp",
 "GeomLProp_CLProps",
@@ -20,15 +20,15 @@ class GeomLProp():
     """
     @staticmethod
     @overload
-    def Continuity_s(C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve,u1 : float,u2 : float,r1 : bool,r2 : bool,tl : float,ta : float) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve,u1 : float,u2 : float,r1 : bool,r2 : bool) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         Computes the regularity at the junction between C1 and C2. The booleans r1 and r2 are true if the curves must be taken reversed. The point u1 on C1 and the point u2 on C2 must be confused. tl and ta are the linear and angular tolerance used two compare the derivative.
 
-        The same as preciding but using the standard tolerances from package Precision.
+        The same as preceding but using the standard tolerances from package Precision.
         """
     @staticmethod
     @overload
-    def Continuity_s(C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve,u1 : float,u2 : float,r1 : bool,r2 : bool) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity_s(C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve,u1 : float,u2 : float,r1 : bool,r2 : bool,tl : float,ta : float) -> OCP.GeomAbs.GeomAbs_Shape: ...
     def __init__(self) -> None: ...
     pass
 class GeomLProp_CLProps():
@@ -80,9 +80,9 @@ class GeomLProp_CLProps():
         Returns the Point.
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Curve,U : float,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Curve,U : float,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,C : OCP.Geom.Geom_Curve,N : int,Resolution : float) -> None: ...
     pass
@@ -216,11 +216,11 @@ class GeomLProp_SLProps():
         Returns the point.
         """
     @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
+    @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,S : OCP.Geom.Geom_Surface,N : int,Resolution : float) -> None: ...
-    @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
     pass
 class GeomLProp_SurfaceTool():
     """

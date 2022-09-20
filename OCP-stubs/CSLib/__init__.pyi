@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
+import OCP.math
 import OCP.TColgp
 import OCP.TColStd
-import OCP.math
 __all__  = [
 "CSLib",
 "CSLib_Class2d",
@@ -37,7 +37,7 @@ class CSLib():
     """
     @staticmethod
     @overload
-    def DNNUV_s(Nu : int,Nv : int,DerSurf : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: 
+    def DNNUV_s(Nu : int,Nv : int,DerSurf1 : OCP.TColgp.TColgp_Array2OfVec,DerSurf2 : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: 
         """
         -- Computes the derivative of order Nu in the -- direction U and Nv in the direction V of the not -- normalized normal vector at the point P(U,V) The array DerSurf contain the derivative (i,j) of the surface for i=0,Nu+1 ; j=0,Nv+1
 
@@ -45,7 +45,7 @@ class CSLib():
         """
     @staticmethod
     @overload
-    def DNNUV_s(Nu : int,Nv : int,DerSurf1 : OCP.TColgp.TColgp_Array2OfVec,DerSurf2 : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: ...
+    def DNNUV_s(Nu : int,Nv : int,DerSurf : OCP.TColgp.TColgp_Array2OfVec) -> OCP.gp.gp_Vec: ...
     @staticmethod
     def DNNormal_s(Nu : int,Nv : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,Iduref : int=0,Idvref : int=0) -> OCP.gp.gp_Vec: 
         """
@@ -53,22 +53,22 @@ class CSLib():
         """
     @staticmethod
     @overload
-    def Normal_s(MaxOrder : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,MagTol : float,U : float,V : float,Umin : float,Umax : float,Vmin : float,Vmax : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[int, int]: 
+    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[bool]: 
         """
         The following functions computes the normal to a surface inherits FunctionWithDerivative from math
 
         Computes the normal direction of a surface as the cross product between D1U and D1V.
 
-        If there is a singularity on the surface the previous method cannot compute the local normal. This method computes an approched normal direction of a surface. It does a limited development and needs the second derivatives on the surface as input data. It computes the normal as follow : N(u, v) = D1U ^ D1V N(u0+du,v0+dv) = N0 + DN/du(u0,v0) * du + DN/dv(u0,v0) * dv + Eps with Eps->0 so we can have the equivalence N ~ dN/du + dN/dv. DNu = ||DN/du|| and DNv = ||DN/dv||
+        If there is a singularity on the surface the previous method cannot compute the local normal. This method computes an approached normal direction of a surface. It does a limited development and needs the second derivatives on the surface as input data. It computes the normal as follow : N(u, v) = D1U ^ D1V N(u0+du,v0+dv) = N0 + DN/du(u0,v0) * du + DN/dv(u0,v0) * dv + Eps with Eps->0 so we can have the equivalence N ~ dN/du + dN/dv. DNu = ||DN/du|| and DNv = ||DN/dv||
 
         find the first order k0 of deriviative of NUV where: foreach order < k0 all the derivatives of NUV are null all the derivatives of NUV corresponding to the order k0 are collinear and have the same sens. In this case, normal at U,V is unique.
         """
     @staticmethod
     @overload
-    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,MagTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> None: ...
+    def Normal_s(MaxOrder : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,MagTol : float,U : float,V : float,Umin : float,Umax : float,Vmin : float,Vmax : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[int, int]: ...
     @staticmethod
     @overload
-    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[bool]: ...
+    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,MagTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> None: ...
     @staticmethod
     @overload
     def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_DerivativeStatus,Normal : OCP.gp.gp_Dir) -> None: ...
@@ -95,9 +95,9 @@ class CSLib_Class2d():
         None
         """
     @overload
-    def __init__(self,thePnts2d : OCP.TColgp.TColgp_Array1OfPnt2d,theTolU : float,theTolV : float,theUMin : float,theVMin : float,theUMax : float,theVMax : float) -> None: ...
-    @overload
     def __init__(self,thePnts2d : OCP.TColgp.TColgp_SequenceOfPnt2d,theTolU : float,theTolV : float,theUMin : float,theVMin : float,theUMax : float,theVMax : float) -> None: ...
+    @overload
+    def __init__(self,thePnts2d : OCP.TColgp.TColgp_Array1OfPnt2d,theTolU : float,theTolV : float,theUMin : float,theVMin : float,theUMax : float,theVMax : float) -> None: ...
     pass
 class CSLib_DerivativeStatus():
     """
@@ -122,6 +122,7 @@ class CSLib_DerivativeStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -196,6 +197,7 @@ class CSLib_NormalStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

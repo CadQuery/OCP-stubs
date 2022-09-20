@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopTools
-import OCP.BRepSweep
-import OCP.BRepBuilderAPI
+import OCP.BRepPrim
 import OCP.gp
 import OCP.Geom
+import OCP.BRepBuilderAPI
+import OCP.BRepSweep
 import OCP.TopoDS
-import OCP.BRepPrim
 __all__  = [
 "BRepPrimAPI_MakeBox",
 "BRepPrimAPI_MakeOneAxis",
@@ -37,7 +37,7 @@ class BRepPrimAPI_MakeBox(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
         """
         Returns ZMin face
         """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -65,11 +65,11 @@ class BRepPrimAPI_MakeBox(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
         Init a box with Ax2 (the left corner and the theAxes) and size theDX, theDY, theDZ.
         """
     @overload
-    def Init(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt) -> None: ...
+    def Init(self,theDX : float,theDY : float,theDZ : float) -> None: ...
     @overload
     def Init(self,theAxes : OCP.gp.gp_Ax2,theDX : float,theDY : float,theDZ : float) -> None: ...
     @overload
-    def Init(self,theDX : float,theDY : float,theDZ : float) -> None: ...
+    def Init(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt) -> None: ...
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns true if the shape S has been deleted.
@@ -111,11 +111,11 @@ class BRepPrimAPI_MakeBox(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
         Returns the internal algorithm.
         """
     @overload
+    def __init__(self,dx : float,dy : float,dz : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,dx : float,dy : float,dz : float) -> None: ...
-    @overload
-    def __init__(self,dx : float,dy : float,dz : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
     @overload
@@ -125,7 +125,7 @@ class BRepPrimAPI_MakeOneAxis(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.B
     """
     The abstract class MakeOneAxis is the root class of algorithms used to construct rotational primitives.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -174,7 +174,7 @@ class BRepPrimAPI_MakeCylinder(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepB
     """
     Describes functions to build cylinders or portions of cylinders. A MakeCylinder object provides a framework for: - defining the construction of a cylinder, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -223,11 +223,11 @@ class BRepPrimAPI_MakeCylinder(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepB
         Returns the constructed rotational primitive as a solid.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R : float,H : float,Angle : float) -> None: ...
+    def __init__(self,R : float,H : float) -> None: ...
     @overload
     def __init__(self,R : float,H : float,Angle : float) -> None: ...
     @overload
-    def __init__(self,R : float,H : float) -> None: ...
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R : float,H : float,Angle : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R : float,H : float) -> None: ...
     pass
@@ -235,7 +235,7 @@ class BRepPrimAPI_MakeHalfSpace(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP
     """
     Describes functions to build half-spaces. A half-space is an infinite solid, limited by a surface. It is built from a face or a shell, which bounds it, and with a reference point, which specifies the side of the surface where the matter of the half-space is located. A half-space is a tool commonly used in topological operations to cut another shape. A MakeHalfSpace object provides a framework for: - defining and implementing the construction of a half-space, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -276,7 +276,7 @@ class BRepPrimAPI_MakeCone(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuild
     """
     Describes functions to build cones or portions of cones. A MakeCone object provides a framework for: - defining the construction of a cone, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -325,11 +325,11 @@ class BRepPrimAPI_MakeCone(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuild
         Returns the constructed rotational primitive as a solid.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float,angle : float) -> None: ...
-    @overload
     def __init__(self,R1 : float,R2 : float,H : float,angle : float) -> None: ...
     @overload
     def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float,angle : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float) -> None: ...
     pass
@@ -337,7 +337,7 @@ class BRepPrimAPI_MakeSweep(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRe
     """
     The abstract class MakeSweep is the root class of swept primitives. Sweeps are objects you obtain by sweeping a profile along a path. The profile can be any topology and the path is usually a curve or a wire. The profile generates objects according to the following rules: - Vertices generate Edges - Edges generate Faces. - Wires generate Shells. - Faces generate Solids. - Shells generate Composite Solids. You are not allowed to sweep Solids and Composite Solids. Two kinds of sweeps are implemented in the BRepPrimAPI package: - The linear sweep called a Prism - The rotational sweep called a Revol Swept constructions along complex profiles such as BSpline curves are also available in the BRepOffsetAPI package..
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         This is called by Shape(). It does nothing but may be redefined.
         """
@@ -378,7 +378,7 @@ class BRepPrimAPI_MakeRevol(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilde
     """
     Class to make revolved sweep topologies.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Builds the resulting shape (redefined from MakeShape).
         """
@@ -416,14 +416,14 @@ class BRepPrimAPI_MakeRevol(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilde
         None
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape of the end of the revol.
 
         Returns the TopoDS Shape of the end of the revolution, generated with theShape (subShape of the generating shape).
         """
     @overload
-    def LastShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def Modified(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns the list of shapes modified from the shape <S>.
@@ -445,7 +445,7 @@ class BRepPrimAPI_MakeRevolution(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRe
     """
     Describes functions to build revolved shapes. A MakeRevolution object provides a framework for: - defining the construction of a revolved shape, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -494,27 +494,27 @@ class BRepPrimAPI_MakeRevolution(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRe
         Returns the constructed rotational primitive as a solid.
         """
     @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
+    @overload
     def __init__(self,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float) -> None: ...
-    @overload
-    def __init__(self,Meridian : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def __init__(self,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
     @overload
     def __init__(self,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float,angle : float) -> None: ...
     @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def __init__(self,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float) -> None: ...
+    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float,angle : float) -> None: ...
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
+    def __init__(self,Meridian : OCP.Geom.Geom_Curve) -> None: ...
     pass
 class BRepPrimAPI_MakeSphere(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
     Describes functions to build spheres or portions of spheres. A MakeSphere object provides a framework for: - defining the construction of a sphere, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -563,35 +563,35 @@ class BRepPrimAPI_MakeSphere(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBui
         Returns the algorithm.
         """
     @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float) -> None: ...
-    @overload
-    def __init__(self,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
-    @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
+    def __init__(self,R : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,R : float) -> None: ...
     @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
+    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float) -> None: ...
     @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float) -> None: ...
+    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle : float) -> None: ...
     @overload
-    def __init__(self,R : float,angle : float) -> None: ...
+    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
     @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float) -> None: ...
+    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
     @overload
-    def __init__(self,R : float) -> None: ...
+    def __init__(self,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
     @overload
     def __init__(self,R : float,angle1 : float,angle2 : float) -> None: ...
+    @overload
+    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float) -> None: ...
+    @overload
+    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float) -> None: ...
+    @overload
+    def __init__(self,R : float,angle : float) -> None: ...
     pass
 class BRepPrimAPI_MakePrism(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
     Describes functions to build linear swept topologies, called prisms. A prism is defined by: - a basis shape, which is swept, and - a sweeping direction, which is: - a vector for finite prisms, or - a direction for infinite or semi-infinite prisms. The basis shape must not contain any solids. The profile generates objects according to the following rules: - Vertices generate Edges - Edges generate Faces. - Wires generate Shells. - Faces generate Solids. - Shells generate Composite Solids A MakePrism object provides a framework for: - defining the construction of a prism, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Builds the resulting shape (redefined from MakeShape).
         """
@@ -650,7 +650,7 @@ class BRepPrimAPI_MakeTorus(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuil
     """
     Describes functions to build tori or portions of tori. A MakeTorus object provides a framework for: - defining the construction of a torus, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -699,27 +699,27 @@ class BRepPrimAPI_MakeTorus(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuil
         Returns the algorithm.
         """
     @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle : float) -> None: ...
+    @overload
     def __init__(self,R1 : float,R2 : float,angle1 : float,angle2 : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle1 : float,angle2 : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float) -> None: ...
     @overload
     def __init__(self,R1 : float,R2 : float,angle : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle1 : float,angle2 : float,angle : float) -> None: ...
     @overload
-    def __init__(self,R1 : float,R2 : float) -> None: ...
-    @overload
     def __init__(self,R1 : float,R2 : float,angle1 : float,angle2 : float,angle : float) -> None: ...
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle : float) -> None: ...
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float) -> None: ...
+    @overload
+    def __init__(self,R1 : float,R2 : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle1 : float,angle2 : float) -> None: ...
     pass
 class BRepPrimAPI_MakeWedge(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
     Describes functions to build wedges, i.e. boxes with inclined faces. A MakeWedge object provides a framework for: - defining the construction of a wedge, - implementing the construction algorithm, and - consulting the result.
     """
-    def Build(self) -> None: 
+    def Build(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Stores the solid in myShape.
         """
@@ -760,11 +760,11 @@ class BRepPrimAPI_MakeWedge(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRe
         Returns the internal algorithm.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
-    @overload
     def __init__(self,dx : float,dy : float,dz : float,xmin : float,zmin : float,xmax : float,zmax : float) -> None: ...
     @overload
     def __init__(self,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,xmin : float,zmin : float,xmax : float,zmax : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     pass

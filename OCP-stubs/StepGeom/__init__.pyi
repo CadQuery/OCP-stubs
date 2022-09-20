@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
-import OCP.StepBasic
 import OCP.StepRepr
-import OCP.Interface
+import OCP.StepBasic
 import OCP.Standard
+import OCP.Interface
 import OCP.StepData
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "StepGeom_Array1OfBoundaryCurve",
 "StepGeom_Array1OfCartesianPoint",
@@ -105,6 +105,7 @@ __all__  = [
 "StepGeom_ReparametrisedCompositeCurveSegment",
 "StepGeom_SeamCurve",
 "StepGeom_SphericalSurface",
+"StepGeom_SuParameters",
 "StepGeom_BSplineSurfaceWithKnotsAndRationalBSplineSurface",
 "StepGeom_SurfaceBoundary",
 "StepGeom_IntersectionCurve",
@@ -160,7 +161,7 @@ __all__  = [
 ]
 class StepGeom_Array1OfBoundaryCurve():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfBoundaryCurve) -> StepGeom_Array1OfBoundaryCurve: 
         """
@@ -235,18 +236,18 @@ class StepGeom_Array1OfBoundaryCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : StepGeom_BoundaryCurve,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfBoundaryCurve) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_BoundaryCurve,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfCartesianPoint():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfCartesianPoint) -> StepGeom_Array1OfCartesianPoint: 
         """
@@ -321,18 +322,18 @@ class StepGeom_Array1OfCartesianPoint():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : StepGeom_Array1OfCartesianPoint) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : StepGeom_CartesianPoint,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepGeom_Array1OfCartesianPoint) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfCompositeCurveSegment():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfCompositeCurveSegment) -> StepGeom_Array1OfCompositeCurveSegment: 
         """
@@ -407,18 +408,18 @@ class StepGeom_Array1OfCompositeCurveSegment():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : StepGeom_CompositeCurveSegment,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfCompositeCurveSegment) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_CompositeCurveSegment,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfCurve():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfCurve) -> StepGeom_Array1OfCurve: 
         """
@@ -497,14 +498,14 @@ class StepGeom_Array1OfCurve():
     @overload
     def __init__(self,theBegin : StepGeom_Curve,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfPcurveOrSurface():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfPcurveOrSurface) -> StepGeom_Array1OfPcurveOrSurface: 
         """
@@ -579,18 +580,18 @@ class StepGeom_Array1OfPcurveOrSurface():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepGeom_Array1OfPcurveOrSurface) -> None: ...
     @overload
     def __init__(self,theBegin : StepGeom_PcurveOrSurface,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfSurfaceBoundary():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfSurfaceBoundary) -> StepGeom_Array1OfSurfaceBoundary: 
         """
@@ -665,18 +666,18 @@ class StepGeom_Array1OfSurfaceBoundary():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepGeom_SurfaceBoundary,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfSurfaceBoundary) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepGeom_SurfaceBoundary,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array1OfTrimmingSelect():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : StepGeom_Array1OfTrimmingSelect) -> StepGeom_Array1OfTrimmingSelect: 
         """
@@ -751,13 +752,13 @@ class StepGeom_Array1OfTrimmingSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
+    def __init__(self,theBegin : StepGeom_TrimmingSelect,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_TrimmingSelect,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepGeom_Array2OfCartesianPoint():
@@ -795,7 +796,7 @@ class StepGeom_Array2OfCartesianPoint():
         """
     def Move(self,theOther : StepGeom_Array2OfCartesianPoint) -> StepGeom_Array2OfCartesianPoint: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -831,11 +832,11 @@ class StepGeom_Array2OfCartesianPoint():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
+    def __init__(self,theBegin : StepGeom_CartesianPoint,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : StepGeom_CartesianPoint,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
@@ -874,7 +875,7 @@ class StepGeom_Array2OfSurfacePatch():
         """
     def Move(self,theOther : StepGeom_Array2OfSurfacePatch) -> StepGeom_Array2OfSurfacePatch: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -910,13 +911,13 @@ class StepGeom_Array2OfSurfacePatch():
         Constant value access
         """
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : StepGeom_Array2OfSurfacePatch) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
     def __init__(self,theBegin : StepGeom_SurfacePatch,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepGeom_Array2OfSurfacePatch) -> None: ...
     pass
 class StepGeom_GeometricRepresentationItem(OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -944,23 +945,23 @@ class StepGeom_GeometricRepresentationItem(OCP.StepRepr.StepRepr_RepresentationI
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1121,23 +1122,23 @@ class StepGeom_Placement(StepGeom_GeometricRepresentationItem, OCP.StepRepr.Step
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Location(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -1208,23 +1209,23 @@ class StepGeom_Axis2Placement3d(StepGeom_Placement, StepGeom_GeometricRepresenta
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Location(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -1303,23 +1304,23 @@ class StepGeom_Curve(StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1365,6 +1366,7 @@ class StepGeom_BSplineCurveForm():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1415,23 +1417,23 @@ class StepGeom_BoundedCurve(StepGeom_Curve, StepGeom_GeometricRepresentationItem
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1502,23 +1504,23 @@ class StepGeom_BSplineCurve(StepGeom_BoundedCurve, StepGeom_Curve, StepGeom_Geom
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1597,23 +1599,23 @@ class StepGeom_Surface(StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRe
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1669,6 +1671,7 @@ class StepGeom_BSplineSurfaceForm():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1724,23 +1727,23 @@ class StepGeom_BoundedSurface(StepGeom_Surface, StepGeom_GeometricRepresentation
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1799,23 +1802,23 @@ class StepGeom_BSplineSurface(StepGeom_BoundedSurface, StepGeom_Surface, StepGeo
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -1946,23 +1949,23 @@ class StepGeom_BezierCurve(StepGeom_BSplineCurve, StepGeom_BoundedCurve, StepGeo
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2060,33 +2063,28 @@ class StepGeom_BezierCurveAndRationalBSplineCurve(StepGeom_BSplineCurve, StepGeo
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBezierCurve : StepGeom_BezierCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2201,23 +2199,23 @@ class StepGeom_BezierSurface(StepGeom_BSplineSurface, StepGeom_BoundedSurface, S
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2335,33 +2333,28 @@ class StepGeom_BezierSurfaceAndRationalBSplineSurface(StepGeom_BSplineSurface, S
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBezierSurface : StepGeom_BezierSurface,aRationalBSplineSurface : StepGeom_RationalBSplineSurface) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2504,23 +2497,23 @@ class StepGeom_CompositeCurve(StepGeom_BoundedCurve, StepGeom_Curve, StepGeom_Ge
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -2610,28 +2603,28 @@ class StepGeom_BSplineCurveWithKnots(StepGeom_BSplineCurve, StepGeom_BoundedCurv
         """
         Increments the reference counter of this object
         """
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aKnotMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical) -> None: 
         """
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def KnotMultiplicities(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
         """
         None
@@ -2753,28 +2746,28 @@ class StepGeom_BSplineSurfaceWithKnots(StepGeom_BSplineSurface, StepGeom_Bounded
         """
         Increments the reference counter of this object
         """
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aUMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aVMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aUKnots : OCP.TColStd.TColStd_HArray1OfReal,aVKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical) -> None: 
         """
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def KnotSpec(self) -> StepGeom_KnotType: 
         """
         None
@@ -2957,23 +2950,23 @@ class StepGeom_Point(StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3044,23 +3037,23 @@ class StepGeom_CartesianTransformationOperator(StepGeom_GeometricRepresentationI
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LocalOrigin(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -3170,23 +3163,23 @@ class StepGeom_CartesianTransformationOperator2d(StepGeom_CartesianTransformatio
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LocalOrigin(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -3301,23 +3294,23 @@ class StepGeom_CartesianTransformationOperator3d(StepGeom_CartesianTransformatio
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LocalOrigin(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -3412,23 +3405,23 @@ class StepGeom_Conic(StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.S
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3487,23 +3480,23 @@ class StepGeom_CompositeCurveOnSurface(StepGeom_CompositeCurve, StepGeom_Bounded
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3578,23 +3571,23 @@ class StepGeom_BoundaryCurve(StepGeom_CompositeCurveOnSurface, StepGeom_Composit
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3669,23 +3662,23 @@ class StepGeom_CompositeCurveSegment(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ParentCurve(self) -> StepGeom_Curve: 
         """
         None
@@ -3752,23 +3745,23 @@ class StepGeom_Circle(StepGeom_Conic, StepGeom_Curve, StepGeom_GeometricRepresen
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3835,23 +3828,23 @@ class StepGeom_ElementarySurface(StepGeom_Surface, StepGeom_GeometricRepresentat
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3929,33 +3922,28 @@ class StepGeom_BSplineCurveWithKnotsAndRationalBSplineCurve(StepGeom_BSplineCurv
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aKnotMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBSplineCurveWithKnots : StepGeom_BSplineCurveWithKnots,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def KnotMultiplicities(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
         """
         None
@@ -4117,23 +4105,23 @@ class StepGeom_CurveBoundedSurface(StepGeom_BoundedSurface, StepGeom_Surface, St
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4310,23 +4298,23 @@ class StepGeom_CurveReplica(StepGeom_Curve, StepGeom_GeometricRepresentationItem
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4393,23 +4381,23 @@ class StepGeom_CylindricalSurface(StepGeom_ElementarySurface, StepGeom_Surface, 
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4480,23 +4468,23 @@ class StepGeom_DegeneratePcurve(StepGeom_Point, StepGeom_GeometricRepresentation
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4559,23 +4547,23 @@ class StepGeom_ToroidalSurface(StepGeom_ElementarySurface, StepGeom_Surface, Ste
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MajorRadius(self) -> float: 
         """
         None
@@ -4658,23 +4646,23 @@ class StepGeom_Direction(StepGeom_GeometricRepresentationItem, OCP.StepRepr.Step
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4733,23 +4721,23 @@ class StepGeom_ConicalSurface(StepGeom_ElementarySurface, StepGeom_Surface, Step
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4824,23 +4812,23 @@ class StepGeom_Ellipse(StepGeom_Conic, StepGeom_Curve, StepGeom_GeometricReprese
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4923,23 +4911,23 @@ class StepGeom_EvaluatedDegeneratePcurve(StepGeom_DegeneratePcurve, StepGeom_Poi
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -5025,33 +5013,28 @@ class StepGeom_GeomRepContextAndGlobUnitAssCtxAndGlobUncertaintyAssCtx(OCP.StepR
         """
         Increments the reference counter of this object
         """
-    @overload
     def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int,aUnits : OCP.StepBasic.StepBasic_HArray1OfNamedUnit,anUncertainty : OCP.StepBasic.StepBasic_HArray1OfUncertaintyMeasureWithUnit) -> None: 
         """
         None
-
-        None
         """
     @overload
-    def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aGeometricRepresentationCtx : StepGeom_GeometricRepresentationContext,aGlobalUnitAssignedCtx : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext,aGlobalUncertaintyAssignedCtx : OCP.StepRepr.StepRepr_GlobalUncertaintyAssignedContext) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbUncertainty(self) -> int: 
         """
         None
@@ -5162,23 +5145,23 @@ class StepGeom_GeometricRepresentationContext(OCP.StepRepr.StepRepr_Representati
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetContextIdentifier(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
@@ -5258,23 +5241,23 @@ class StepGeom_GeometricRepresentationContextAndGlobalUnitAssignedContext(OCP.St
     @overload
     def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int,aUnits : OCP.StepBasic.StepBasic_HArray1OfNamedUnit) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbUnits(self) -> int: 
         """
         None
@@ -5374,23 +5357,23 @@ class StepGeom_GeometricRepresentationContextAndParametricRepresentationContext(
     @overload
     def Init(self,aContextIdentifier : OCP.TCollection.TCollection_HAsciiString,aContextType : OCP.TCollection.TCollection_HAsciiString,aCoordinateSpaceDimension : int) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ParametricRepresentationContext(self) -> OCP.StepRepr.StepRepr_ParametricRepresentationContext: 
         """
         None
@@ -5465,23 +5448,23 @@ class StepGeom_Axis1Placement(StepGeom_Placement, StepGeom_GeometricRepresentati
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Location(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -5588,23 +5571,23 @@ class StepGeom_HArray1OfBoundaryCurve(StepGeom_Array1OfBoundaryCurve, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_BoundaryCurve: 
         """
         Returns last element
@@ -5646,13 +5629,13 @@ class StepGeom_HArray1OfBoundaryCurve(StepGeom_Array1OfBoundaryCurve, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_BoundaryCurve) -> None: ...
+    def __init__(self,theOther : StepGeom_Array1OfBoundaryCurve) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfBoundaryCurve) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_BoundaryCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5731,23 +5714,23 @@ class StepGeom_HArray1OfCartesianPoint(StepGeom_Array1OfCartesianPoint, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_CartesianPoint: 
         """
         Returns last element
@@ -5791,11 +5774,11 @@ class StepGeom_HArray1OfCartesianPoint(StepGeom_Array1OfCartesianPoint, OCP.Stan
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepGeom_Array1OfCartesianPoint) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_CartesianPoint) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5874,23 +5857,23 @@ class StepGeom_HArray1OfCompositeCurveSegment(StepGeom_Array1OfCompositeCurveSeg
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_CompositeCurveSegment: 
         """
         Returns last element
@@ -5932,11 +5915,11 @@ class StepGeom_HArray1OfCompositeCurveSegment(StepGeom_Array1OfCompositeCurveSeg
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_CompositeCurveSegment) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfCompositeCurveSegment) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -6017,23 +6000,23 @@ class StepGeom_HArray1OfCurve(StepGeom_Array1OfCurve, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_Curve: 
         """
         Returns last element
@@ -6077,11 +6060,11 @@ class StepGeom_HArray1OfCurve(StepGeom_Array1OfCurve, OCP.Standard.Standard_Tran
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_Curve) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array1OfCurve) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_Curve) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6160,23 +6143,23 @@ class StepGeom_HArray1OfPcurveOrSurface(StepGeom_Array1OfPcurveOrSurface, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_PcurveOrSurface: 
         """
         Returns last element
@@ -6218,13 +6201,13 @@ class StepGeom_HArray1OfPcurveOrSurface(StepGeom_Array1OfPcurveOrSurface, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepGeom_Array1OfPcurveOrSurface) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_PcurveOrSurface) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepGeom_Array1OfPcurveOrSurface) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_PcurveOrSurface) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6303,23 +6286,23 @@ class StepGeom_HArray1OfSurfaceBoundary(StepGeom_Array1OfSurfaceBoundary, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_SurfaceBoundary: 
         """
         Returns last element
@@ -6361,9 +6344,9 @@ class StepGeom_HArray1OfSurfaceBoundary(StepGeom_Array1OfSurfaceBoundary, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_SurfaceBoundary) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -6446,23 +6429,23 @@ class StepGeom_HArray1OfTrimmingSelect(StepGeom_Array1OfTrimmingSelect, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> StepGeom_TrimmingSelect: 
         """
         Returns last element
@@ -6504,13 +6487,13 @@ class StepGeom_HArray1OfTrimmingSelect(StepGeom_Array1OfTrimmingSelect, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_TrimmingSelect) -> None: ...
-    @overload
-    def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepGeom_TrimmingSelect) -> None: ...
+    @overload
+    def __init__(self,theOther : StepGeom_Array1OfTrimmingSelect) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6573,23 +6556,23 @@ class StepGeom_HArray2OfCartesianPoint(StepGeom_Array2OfCartesianPoint, OCP.Stan
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -6601,7 +6584,7 @@ class StepGeom_HArray2OfCartesianPoint(StepGeom_Array2OfCartesianPoint, OCP.Stan
         """
     def Move(self,theOther : StepGeom_Array2OfCartesianPoint) -> StepGeom_Array2OfCartesianPoint: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -6641,9 +6624,9 @@ class StepGeom_HArray2OfCartesianPoint(StepGeom_Array2OfCartesianPoint, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepGeom_CartesianPoint) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepGeom_CartesianPoint) -> None: ...
     @overload
     def __init__(self,theOther : StepGeom_Array2OfCartesianPoint) -> None: ...
     @staticmethod
@@ -6707,23 +6690,23 @@ class StepGeom_HArray2OfSurfacePatch(StepGeom_Array2OfSurfacePatch, OCP.Standard
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -6735,7 +6718,7 @@ class StepGeom_HArray2OfSurfacePatch(StepGeom_Array2OfSurfacePatch, OCP.Standard
         """
     def Move(self,theOther : StepGeom_Array2OfSurfacePatch) -> StepGeom_Array2OfSurfacePatch: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -6777,9 +6760,9 @@ class StepGeom_HArray2OfSurfacePatch(StepGeom_Array2OfSurfacePatch, OCP.Standard
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : StepGeom_SurfacePatch) -> None: ...
     @overload
-    def __init__(self,theOther : StepGeom_Array2OfSurfacePatch) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepGeom_Array2OfSurfacePatch) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6817,23 +6800,23 @@ class StepGeom_Hyperbola(StepGeom_Conic, StepGeom_Curve, StepGeom_GeometricRepre
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -6920,23 +6903,23 @@ class StepGeom_SurfaceCurve(StepGeom_Curve, StepGeom_GeometricRepresentationItem
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MasterRepresentation(self) -> StepGeom_PreferredSurfaceCurveRepresentation: 
         """
         None
@@ -6998,6 +6981,7 @@ class StepGeom_KnotType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -7050,23 +7034,23 @@ class StepGeom_Line(StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.St
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7137,23 +7121,23 @@ class StepGeom_OffsetCurve3d(StepGeom_Curve, StepGeom_GeometricRepresentationIte
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7236,23 +7220,23 @@ class StepGeom_OffsetSurface(StepGeom_Surface, StepGeom_GeometricRepresentationI
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7322,23 +7306,23 @@ class StepGeom_OrientedSurface(StepGeom_Surface, StepGeom_GeometricRepresentatio
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7397,23 +7381,23 @@ class StepGeom_OuterBoundaryCurve(StepGeom_BoundaryCurve, StepGeom_CompositeCurv
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7492,23 +7476,23 @@ class StepGeom_Parabola(StepGeom_Conic, StepGeom_Curve, StepGeom_GeometricRepres
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7575,23 +7559,23 @@ class StepGeom_Pcurve(StepGeom_Curve, StepGeom_GeometricRepresentationItem, OCP.
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7768,23 +7752,23 @@ class StepGeom_Axis2Placement2d(StepGeom_Placement, StepGeom_GeometricRepresenta
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Location(self) -> StepGeom_CartesianPoint: 
         """
         None
@@ -7855,23 +7839,23 @@ class StepGeom_Plane(StepGeom_ElementarySurface, StepGeom_Surface, StepGeom_Geom
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -7946,23 +7930,23 @@ class StepGeom_CartesianPoint(StepGeom_Point, StepGeom_GeometricRepresentationIt
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8025,23 +8009,23 @@ class StepGeom_PointOnCurve(StepGeom_Point, StepGeom_GeometricRepresentationItem
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8108,23 +8092,23 @@ class StepGeom_PointOnSurface(StepGeom_Point, StepGeom_GeometricRepresentationIt
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8195,23 +8179,23 @@ class StepGeom_PointReplica(StepGeom_Point, StepGeom_GeometricRepresentationItem
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8278,23 +8262,23 @@ class StepGeom_Polyline(StepGeom_BoundedCurve, StepGeom_Curve, StepGeom_Geometri
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8350,6 +8334,7 @@ class StepGeom_PreferredSurfaceCurveRepresentation():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -8417,23 +8402,23 @@ class StepGeom_QuasiUniformCurve(StepGeom_BSplineCurve, StepGeom_BoundedCurve, S
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8527,33 +8512,28 @@ class StepGeom_QuasiUniformCurveAndRationalBSplineCurve(StepGeom_BSplineCurve, S
         """
         Increments the reference counter of this object
         """
-    @overload
     def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         None
-
-        None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aQuasiUniformCurve : StepGeom_QuasiUniformCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8672,23 +8652,23 @@ class StepGeom_QuasiUniformSurface(StepGeom_BSplineSurface, StepGeom_BoundedSurf
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8802,33 +8782,28 @@ class StepGeom_QuasiUniformSurfaceAndRationalBSplineSurface(StepGeom_BSplineSurf
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aQuasiUniformSurface : StepGeom_QuasiUniformSurface,aRationalBSplineSurface : StepGeom_RationalBSplineSurface) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -8995,23 +8970,23 @@ class StepGeom_RationalBSplineCurve(StepGeom_BSplineCurve, StepGeom_BoundedCurve
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9114,23 +9089,23 @@ class StepGeom_RationalBSplineSurface(StepGeom_BSplineSurface, StepGeom_BoundedS
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9261,23 +9236,23 @@ class StepGeom_RectangularCompositeSurface(StepGeom_BoundedSurface, StepGeom_Sur
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9352,23 +9327,23 @@ class StepGeom_RectangularTrimmedSurface(StepGeom_BoundedSurface, StepGeom_Surfa
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9471,23 +9446,23 @@ class StepGeom_ReparametrisedCompositeCurveSegment(StepGeom_CompositeCurveSegmen
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ParamLength(self) -> float: 
         """
         None
@@ -9574,23 +9549,23 @@ class StepGeom_SeamCurve(StepGeom_SurfaceCurve, StepGeom_Curve, StepGeom_Geometr
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MasterRepresentation(self) -> StepGeom_PreferredSurfaceCurveRepresentation: 
         """
         None
@@ -9661,23 +9636,23 @@ class StepGeom_SphericalSurface(StepGeom_ElementarySurface, StepGeom_Surface, St
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9699,6 +9674,124 @@ class StepGeom_SphericalSurface(StepGeom_ElementarySurface, StepGeom_Surface, St
         None
         """
     def SetRadius(self,aRadius : float) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepGeom_SuParameters(StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity SuParametersRepresentation of STEP entity SuParameters
+    """
+    def A(self) -> float: 
+        """
+        Returns field A
+        """
+    def Alpha(self) -> float: 
+        """
+        Returns field Alpha
+        """
+    def B(self) -> float: 
+        """
+        Returns field B
+        """
+    def Beta(self) -> float: 
+        """
+        Returns field Beta
+        """
+    def C(self) -> float: 
+        """
+        Returns field C
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def Gamma(self) -> float: 
+        """
+        Returns field Gamma
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theA : float,theAlpha : float,theB : float,theBeta : float,theC : float,theGamma : float) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def SetA(self,theA : float) -> None: 
+        """
+        Sets field A
+        """
+    def SetAlpha(self,theAlpha : float) -> None: 
+        """
+        Sets field Alpha
+        """
+    def SetB(self,theB : float) -> None: 
+        """
+        Sets field B
+        """
+    def SetBeta(self,theBeta : float) -> None: 
+        """
+        Sets field Beta
+        """
+    def SetC(self,theC : float) -> None: 
+        """
+        Sets field C
+        """
+    def SetGamma(self,theGamma : float) -> None: 
+        """
+        Sets field Gamma
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
         """
@@ -9751,33 +9844,28 @@ class StepGeom_BSplineSurfaceWithKnotsAndRationalBSplineSurface(StepGeom_BSpline
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aUMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aVMultiplicities : OCP.TColStd.TColStd_HArray1OfInteger,aUKnots : OCP.TColStd.TColStd_HArray1OfReal,aVKnots : OCP.TColStd.TColStd_HArray1OfReal,aKnotSpec : StepGeom_KnotType,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aBSplineSurfaceWithKnots : StepGeom_BSplineSurfaceWithKnots,aRationalBSplineSurface : StepGeom_RationalBSplineSurface) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def KnotSpec(self) -> StepGeom_KnotType: 
         """
         None
@@ -10114,23 +10202,23 @@ class StepGeom_IntersectionCurve(StepGeom_SurfaceCurve, StepGeom_Curve, StepGeom
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MasterRepresentation(self) -> StepGeom_PreferredSurfaceCurveRepresentation: 
         """
         None
@@ -10220,23 +10308,23 @@ class StepGeom_SurfaceCurveAndBoundedCurve(StepGeom_SurfaceCurve, StepGeom_Curve
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MasterRepresentation(self) -> StepGeom_PreferredSurfaceCurveRepresentation: 
         """
         None
@@ -10307,23 +10395,23 @@ class StepGeom_SweptSurface(StepGeom_Surface, StepGeom_GeometricRepresentationIt
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10386,23 +10474,23 @@ class StepGeom_SurfaceOfRevolution(StepGeom_SweptSurface, StepGeom_Surface, Step
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10465,23 +10553,23 @@ class StepGeom_SurfacePatch(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ParentSurface(self) -> StepGeom_BoundedSurface: 
         """
         None
@@ -10564,23 +10652,23 @@ class StepGeom_SurfaceReplica(StepGeom_Surface, StepGeom_GeometricRepresentation
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10651,23 +10739,23 @@ class StepGeom_SurfaceOfLinearExtrusion(StepGeom_SweptSurface, StepGeom_Surface,
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10730,23 +10818,23 @@ class StepGeom_DegenerateToroidalSurface(StepGeom_ToroidalSurface, StepGeom_Elem
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MajorRadius(self) -> float: 
         """
         None
@@ -10820,6 +10908,7 @@ class StepGeom_TransitionCode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -10872,23 +10961,23 @@ class StepGeom_TrimmedCurve(StepGeom_BoundedCurve, StepGeom_Curve, StepGeom_Geom
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MasterRepresentation(self) -> StepGeom_TrimmingPreference: 
         """
         None
@@ -11014,23 +11103,23 @@ class StepGeom_TrimmingMember(OCP.StepData.StepData_SelectReal, OCP.StepData.Ste
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -11130,6 +11219,7 @@ class StepGeom_TrimmingPreference():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -11311,23 +11401,23 @@ class StepGeom_UniformCurve(StepGeom_BSplineCurve, StepGeom_BoundedCurve, StepGe
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -11421,33 +11511,28 @@ class StepGeom_UniformCurveAndRationalBSplineCurve(StepGeom_BSplineCurve, StepGe
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aUniformCurve : StepGeom_UniformCurve,aRationalBSplineCurve : StepGeom_RationalBSplineCurve) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aDegree : int,aControlPointsList : StepGeom_HArray1OfCartesianPoint,aCurveForm : StepGeom_BSplineCurveForm,aClosedCurve : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -11566,23 +11651,23 @@ class StepGeom_UniformSurface(StepGeom_BSplineSurface, StepGeom_BoundedSurface, 
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -11696,33 +11781,28 @@ class StepGeom_UniformSurfaceAndRationalBSplineSurface(StepGeom_BSplineSurface, 
         """
         Increments the reference counter of this object
         """
-    @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aUniformSurface : StepGeom_UniformSurface,aRationalBSplineSurface : StepGeom_RationalBSplineSurface) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
         """
-        None
-
         None
         """
     @overload
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aUDegree : int,aVDegree : int,aControlPointsList : StepGeom_HArray2OfCartesianPoint,aSurfaceForm : StepGeom_BSplineSurfaceForm,aUClosed : OCP.StepData.StepData_Logical,aVClosed : OCP.StepData.StepData_Logical,aSelfIntersect : OCP.StepData.StepData_Logical,aWeightsData : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -11869,23 +11949,23 @@ class StepGeom_Vector(StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRep
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Magnitude(self) -> float: 
         """
         None

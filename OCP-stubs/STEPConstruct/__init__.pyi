@@ -4,23 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Transfer
-import OCP.StepBasic
-import OCP.StepAP203
 import OCP.StepRepr
+import OCP.StepAP203
 import OCP.StepVisual
-import OCP.TopoDS
-import OCP.StepGeom
 import OCP.Standard
+import OCP.StepData
+import OCP.TopoDS
+import OCP.StepBasic
 import OCP.Quantity
+import OCP.Transfer
+import OCP.TopLoc
+import OCP.gp
+import OCP.StepShape
+import OCP.Interface
+import OCP.XSControl
+import OCP.StepGeom
 import OCP.TCollection
 import OCP.TColStd
-import OCP.gp
-import OCP.Interface
-import OCP.StepShape
-import OCP.XSControl
-import OCP.TopLoc
-import OCP.StepData
 __all__  = [
 "STEPConstruct",
 "STEPConstruct_AP203Context",
@@ -45,7 +45,7 @@ class STEPConstruct():
         """
     @staticmethod
     @overload
-    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape) -> OCP.StepRepr.StepRepr_RepresentationItem: 
+    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape,Loc : OCP.TopLoc.TopLoc_Location) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         Returns STEP entity of the (sub)type of RepresentationItem which is a result of the tranalation of the Shape, or Null if no result is recorded
 
@@ -53,7 +53,7 @@ class STEPConstruct():
         """
     @staticmethod
     @overload
-    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape,Loc : OCP.TopLoc.TopLoc_Location) -> OCP.StepRepr.StepRepr_RepresentationItem: ...
+    def FindEntity_s(FinderProcess : OCP.Transfer.Transfer_FinderProcess,Shape : OCP.TopoDS.TopoDS_Shape) -> OCP.StepRepr.StepRepr_RepresentationItem: ...
     @staticmethod
     def FindShape_s(TransientProcess : OCP.Transfer.Transfer_TransientProcess,item : OCP.StepRepr.StepRepr_RepresentationItem) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -130,7 +130,7 @@ class STEPConstruct_AP203Context():
         None
         """
     @overload
-    def Init(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation) -> None: 
+    def Init(self,SDRTool : STEPConstruct_Part) -> None: 
         """
         Takes SDR (part) which brings all standard data around part (common for AP203 and AP214) and creates all the additional entities required for AP203
 
@@ -139,9 +139,9 @@ class STEPConstruct_AP203Context():
         Takes NAUO which describes assembly link to component and creates the security_classification entity associated to it as required by the AP203
         """
     @overload
-    def Init(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence) -> None: ...
+    def Init(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation) -> None: ...
     @overload
-    def Init(self,SDRTool : STEPConstruct_Part) -> None: ...
+    def Init(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence) -> None: ...
     def InitApprovalRequisites(self) -> None: 
         """
         Initializes Approver and ApprovalDateTime entities according to Approval entity
@@ -396,7 +396,7 @@ class STEPConstruct_Tool():
     pass
 class STEPConstruct_Part():
     """
-    Provides tools for creating STEP structures associated with part (SDR), such as PRODUCT, PDF etc., as requied by current schema Also allows to investigate and modify this data
+    Provides tools for creating STEP structures associated with part (SDR), such as PRODUCT, PDF etc., as required by current schema Also allows to investigate and modify this data
     """
     def AC(self) -> OCP.StepBasic.StepBasic_ApplicationContext: 
         """
@@ -593,7 +593,7 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
     Provides a mechanism for reading and writing shape styles (such as color) to and from the STEP file This tool maintains a list of styles, either taking them from STEP model (reading), or filling it by calls to AddStyle or directly (writing). Some methods deal with general structures of styles and presentations in STEP, but there are methods which deal with particular implementation of colors (as described in RP)
     """
     @overload
-    def AddStyle(self,item : OCP.StepRepr.StepRepr_RepresentationItem,PSA : OCP.StepVisual.StepVisual_PresentationStyleAssignment,Override : OCP.StepVisual.StepVisual_StyledItem) -> OCP.StepVisual.StepVisual_StyledItem: 
+    def AddStyle(self,style : OCP.StepVisual.StepVisual_StyledItem) -> None: 
         """
         Adds a style to a sequence
 
@@ -604,7 +604,7 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
     @overload
     def AddStyle(self,Shape : OCP.TopoDS.TopoDS_Shape,PSA : OCP.StepVisual.StepVisual_PresentationStyleAssignment,Override : OCP.StepVisual.StepVisual_StyledItem) -> OCP.StepVisual.StepVisual_StyledItem: ...
     @overload
-    def AddStyle(self,style : OCP.StepVisual.StepVisual_StyledItem) -> None: ...
+    def AddStyle(self,item : OCP.StepRepr.StepRepr_RepresentationItem,PSA : OCP.StepVisual.StepVisual_PresentationStyleAssignment,Override : OCP.StepVisual.StepVisual_StyledItem) -> OCP.StepVisual.StepVisual_StyledItem: ...
     def ClearStyles(self) -> None: 
         """
         Clears all defined styles and PSA sequence
@@ -623,16 +623,10 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
         Decodes STEP color and fills the Quantity_Color. Returns True if OK or False if color is not recognized
         """
     @staticmethod
-    @overload
-    def EncodeColor_s(Col : OCP.Quantity.Quantity_Color,DPDCs : Any,ColRGBs : Any) -> OCP.StepVisual.StepVisual_Colour: 
+    def EncodeColor_s(Col : OCP.Quantity.Quantity_Color) -> OCP.StepVisual.StepVisual_Colour: 
         """
         Create STEP color entity by given Quantity_Color The analysis is performed for whether the color corresponds to one of standard colors predefined in STEP. In that case, PredefinedColour entity is created instead of RGBColour
-
-        Create STEP color entity by given Quantity_Color The analysis is performed for whether the color corresponds to one of standard colors predefined in STEP. In that case, PredefinedColour entity is created instead of RGBColour
         """
-    @staticmethod
-    @overload
-    def EncodeColor_s(Col : OCP.Quantity.Quantity_Color) -> OCP.StepVisual.StepVisual_Colour: ...
     def FindContext(self,Shape : OCP.TopoDS.TopoDS_Shape) -> OCP.StepRepr.StepRepr_RepresentationContext: 
         """
         Searches the STEP model for the RepresentationContext in which given shape is defined. This context (if found) can be used then in call to CreateMDGPR()
@@ -666,7 +660,7 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
         """
     def LoadInvisStyles(self,InvSyles : OCP.TColStd.TColStd_HSequenceOfTransient) -> bool: 
         """
-        Searches the STEP model for the INISIBILITY enteties (which bring styles) and fills out sequence of styles
+        Searches the STEP model for the INISIBILITY entities (which bring styles) and fills out sequence of styles
         """
     def LoadStyles(self) -> bool: 
         """
@@ -811,14 +805,14 @@ class STEPConstruct_UnitContext():
         Returns the areaFactor
         """
     @overload
-    def ComputeFactors(self,aContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> int: 
+    def ComputeFactors(self,aUnit : OCP.StepBasic.StepBasic_NamedUnit) -> int: 
         """
         Computes the length, plane angle and solid angle conversion factor . Returns a status, 0 if OK
 
         None
         """
     @overload
-    def ComputeFactors(self,aUnit : OCP.StepBasic.StepBasic_NamedUnit) -> int: ...
+    def ComputeFactors(self,aContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> int: ...
     def ComputeTolerance(self,aContext : OCP.StepRepr.StepRepr_GlobalUncertaintyAssignedContext) -> int: 
         """
         Computes the uncertainty value (for length)
@@ -826,7 +820,7 @@ class STEPConstruct_UnitContext():
     @staticmethod
     def ConvertSiPrefix_s(aPrefix : OCP.StepBasic.StepBasic_SiPrefix) -> float: 
         """
-        Convert SI prefix defined by enumertaion to corresponding real factor (e.g. 1e6 for mega)
+        Convert SI prefix defined by enumeration to corresponding real factor (e.g. 1e6 for mega)
         """
     def HasUncertainty(self) -> bool: 
         """
@@ -899,14 +893,14 @@ class STEPConstruct_ValidationProps(STEPConstruct_Tool):
         Adds centroid property for given shape (already mapped). Returns True if success, False in case of fail If instance is True, then centroid is assigned to an instance of component in assembly
         """
     @overload
-    def AddProp(self,target : OCP.StepRepr.StepRepr_CharacterizedDefinition,Context : OCP.StepRepr.StepRepr_RepresentationContext,Prop : OCP.StepRepr.StepRepr_RepresentationItem,Descr : str) -> bool: 
+    def AddProp(self,Shape : OCP.TopoDS.TopoDS_Shape,Prop : OCP.StepRepr.StepRepr_RepresentationItem,Descr : str,instance : bool=False) -> bool: 
         """
         General method for adding (writing) a validation property for shape which should be already mapped on writing itself. It uses FindTarget() to find target STEP entity resulting from given shape, and associated context Returns True if success, False in case of fail
 
         General method for adding (writing) a validation property for shape which should be already mapped on writing itself. It takes target and Context entities which correspond to shape Returns True if success, False in case of fail
         """
     @overload
-    def AddProp(self,Shape : OCP.TopoDS.TopoDS_Shape,Prop : OCP.StepRepr.StepRepr_RepresentationItem,Descr : str,instance : bool=False) -> bool: ...
+    def AddProp(self,target : OCP.StepRepr.StepRepr_CharacterizedDefinition,Context : OCP.StepRepr.StepRepr_RepresentationContext,Prop : OCP.StepRepr.StepRepr_RepresentationItem,Descr : str) -> bool: ...
     def AddVolume(self,Shape : OCP.TopoDS.TopoDS_Shape,Vol : float) -> bool: 
         """
         Adds volume property for given shape (already mapped). Returns True if success, False in case of fail
@@ -938,14 +932,14 @@ class STEPConstruct_ValidationProps(STEPConstruct_Tool):
         Returns value of Real-Valued property (Area or Volume) If Property is neither Area nor Volume, returns False Else returns True and isArea indicates whether property is area or volume
         """
     @overload
-    def GetPropShape(self,PD : OCP.StepRepr.StepRepr_PropertyDefinition) -> OCP.TopoDS.TopoDS_Shape: 
+    def GetPropShape(self,ProdDef : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns Shape associated with given SDR or Null Shape if not found
 
         Returns Shape associated with given PpD or Null Shape if not found
         """
     @overload
-    def GetPropShape(self,ProdDef : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.TopoDS.TopoDS_Shape: ...
+    def GetPropShape(self,PD : OCP.StepRepr.StepRepr_PropertyDefinition) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def Graph(self,recompute : bool) -> OCP.Interface.Interface_Graph: 
         """

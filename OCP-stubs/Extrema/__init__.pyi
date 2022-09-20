@@ -5,18 +5,18 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.GeomAdaptor
+import OCP.Adaptor2d
+import OCP.GeomAbs
 import OCP.math
 import OCP.NCollection
-import io
-import OCP.Adaptor2d
-import OCP.gp
-import OCP.GeomAbs
-import OCP.Geom
 import OCP.Bnd
+import io
 import OCP.Geom2d
+import OCP.gp
+import OCP.Geom
+import OCP.GeomAdaptor
 import OCP.Standard
+import OCP.TColStd
 __all__  = [
 "Extrema_Array1OfPOnCurv",
 "Extrema_Array1OfPOnCurv2d",
@@ -78,7 +78,6 @@ __all__  = [
 "Extrema_HArray2OfPOnCurv",
 "Extrema_HArray2OfPOnCurv2d",
 "Extrema_HArray2OfPOnSurf",
-"Extrema_HArray2OfPOnSurfParams",
 "Extrema_LocECC",
 "Extrema_LocECC2d",
 "Extrema_LocEPCOfLocateExtPC",
@@ -114,7 +113,7 @@ __all__  = [
 ]
 class Extrema_Array1OfPOnCurv():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Extrema_Array1OfPOnCurv) -> Extrema_Array1OfPOnCurv: 
         """
@@ -189,18 +188,18 @@ class Extrema_Array1OfPOnCurv():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Extrema_POnCurv,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Extrema_Array1OfPOnCurv) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Extrema_Array1OfPOnCurv) -> None: ...
+    def __init__(self,theBegin : Extrema_POnCurv,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Extrema_Array1OfPOnCurv2d():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Extrema_Array1OfPOnCurv2d) -> Extrema_Array1OfPOnCurv2d: 
         """
@@ -275,18 +274,18 @@ class Extrema_Array1OfPOnCurv2d():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Extrema_Array1OfPOnCurv2d) -> None: ...
     @overload
     def __init__(self,theBegin : Extrema_POnCurv2d,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Extrema_Array1OfPOnSurf():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Extrema_Array1OfPOnSurf) -> Extrema_Array1OfPOnSurf: 
         """
@@ -361,13 +360,13 @@ class Extrema_Array1OfPOnSurf():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Extrema_Array1OfPOnSurf) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : Extrema_POnSurf,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : Extrema_Array1OfPOnSurf) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : Extrema_POnSurf,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Extrema_Array2OfPOnCurv():
@@ -405,7 +404,7 @@ class Extrema_Array2OfPOnCurv():
         """
     def Move(self,theOther : Extrema_Array2OfPOnCurv) -> Extrema_Array2OfPOnCurv: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -441,13 +440,13 @@ class Extrema_Array2OfPOnCurv():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : Extrema_POnCurv,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Extrema_Array2OfPOnCurv) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Extrema_Array2OfPOnCurv) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class Extrema_Array2OfPOnCurv2d():
     """
@@ -484,7 +483,7 @@ class Extrema_Array2OfPOnCurv2d():
         """
     def Move(self,theOther : Extrema_Array2OfPOnCurv2d) -> Extrema_Array2OfPOnCurv2d: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -520,11 +519,11 @@ class Extrema_Array2OfPOnCurv2d():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : Extrema_POnCurv2d,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Extrema_Array2OfPOnCurv2d) -> None: ...
     pass
@@ -563,7 +562,7 @@ class Extrema_Array2OfPOnSurf():
         """
     def Move(self,theOther : Extrema_Array2OfPOnSurf) -> Extrema_Array2OfPOnSurf: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -601,11 +600,11 @@ class Extrema_Array2OfPOnSurf():
     @overload
     def __init__(self,theBegin : Extrema_POnSurf,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Extrema_Array2OfPOnSurf) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_Array2OfPOnSurfParams():
     """
@@ -642,7 +641,7 @@ class Extrema_Array2OfPOnSurfParams():
         """
     def Move(self,theOther : Extrema_Array2OfPOnSurfParams) -> Extrema_Array2OfPOnSurfParams: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -678,13 +677,13 @@ class Extrema_Array2OfPOnSurfParams():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theBegin : Extrema_POnSurfParams,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Extrema_Array2OfPOnSurfParams) -> None: ...
     @overload
-    def __init__(self,theBegin : Extrema_POnSurfParams,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_CCLocFOfLocECC(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -751,9 +750,9 @@ class Extrema_CCLocFOfLocECC(OCP.math.math_FunctionSetWithDerivatives, OCP.math.
         Calculate Fi(U,V) and Fi'(U,V).
         """
     @overload
-    def __init__(self,thetol : float=1e-10) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,thetol : float=1e-10) -> None: ...
+    @overload
+    def __init__(self,thetol : float=1e-10) -> None: ...
     pass
 class Extrema_CCLocFOfLocECC2d(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -820,9 +819,9 @@ class Extrema_CCLocFOfLocECC2d(OCP.math.math_FunctionSetWithDerivatives, OCP.mat
         Calculate Fi(U,V) and Fi'(U,V).
         """
     @overload
-    def __init__(self,thetol : float=1e-10) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,thetol : float=1e-10) -> None: ...
+    @overload
+    def __init__(self,thetol : float=1e-10) -> None: ...
     pass
 class Extrema_Curve2dTool():
     """
@@ -1156,11 +1155,11 @@ class Extrema_ECC():
         Returns the value of the Nth square extremum distance.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,Uinf : float,Usup : float,Vinf : float,Vsup : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class Extrema_ECC2d():
     """
@@ -1207,11 +1206,11 @@ class Extrema_ECC2d():
         Returns the value of the Nth square extremum distance.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,Uinf : float,Usup : float,Vinf : float,Vsup : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,Uinf : float,Usup : float,Vinf : float,Vsup : float) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class Extrema_ELPCOfLocateExtPC():
     """
@@ -1250,9 +1249,9 @@ class Extrema_ELPCOfLocateExtPC():
         if the curve is a trimmed curve, dist1 is a square distance between <P> and the point of parameter FirstParameter <P1> and dist2 is a square distance between <P> and the point of parameter LastParameter <P2>.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,TolF : float=1e-10) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,TolF : float=1e-10) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,Uinf : float,Usup : float,TolF : float=1e-10) -> None: ...
     pass
@@ -1304,7 +1303,7 @@ class Extrema_EPCOfELPCOfLocateExtPC():
     None
     """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
+    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: 
         """
         sets the fields of the algorithm.
 
@@ -1314,10 +1313,10 @@ class Extrema_EPCOfELPCOfLocateExtPC():
 
         sets the fields of the algorithm.
         """
+    @overload
+    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     @overload
     def Initialize(self,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
-    @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: ...
     @overload
     def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     def IsDone(self) -> bool: 
@@ -1345,18 +1344,18 @@ class Extrema_EPCOfELPCOfLocateExtPC():
         Returns the value of the Nth extremum square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: ...
     pass
 class Extrema_EPCOfELPCOfLocateExtPC2d():
     """
     None
     """
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,TolU : float,TolF : float) -> None: 
+    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         sets the fields of the algorithm.
 
@@ -1366,10 +1365,10 @@ class Extrema_EPCOfELPCOfLocateExtPC2d():
 
         sets the fields of the algorithm.
         """
-    @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
     def Initialize(self,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
+    @overload
+    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,TolU : float,TolF : float) -> None: ...
     @overload
     def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     def IsDone(self) -> bool: 
@@ -1399,16 +1398,16 @@ class Extrema_EPCOfELPCOfLocateExtPC2d():
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,TolU : float,TolF : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_EPCOfExtPC():
     """
     None
     """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: 
+    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         sets the fields of the algorithm.
 
@@ -1418,12 +1417,12 @@ class Extrema_EPCOfExtPC():
 
         sets the fields of the algorithm.
         """
+    @overload
+    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     @overload
     def Initialize(self,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
-    @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
+    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         True if the distances are found.
@@ -1449,18 +1448,18 @@ class Extrema_EPCOfExtPC():
         Returns the value of the Nth extremum square distance.
         """
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,TolU : float,TolF : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     pass
 class Extrema_EPCOfExtPC2d():
     """
     None
     """
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: 
+    def Initialize(self,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: 
         """
         sets the fields of the algorithm.
 
@@ -1471,11 +1470,11 @@ class Extrema_EPCOfExtPC2d():
         sets the fields of the algorithm.
         """
     @overload
-    def Initialize(self,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
-    @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     @overload
     def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,TolU : float,TolF : float) -> None: ...
+    @overload
+    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     def IsDone(self) -> bool: 
         """
         True if the distances are found.
@@ -1501,11 +1500,11 @@ class Extrema_EPCOfExtPC2d():
         Returns the value of the Nth extremum square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,TolU : float,TolF : float) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,TolU : float,TolF : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,TolU : float,TolF : float) -> None: ...
     pass
 class Extrema_ElementType():
     """
@@ -1524,6 +1523,7 @@ class Extrema_ElementType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1559,6 +1559,7 @@ class Extrema_ExtAlgo():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1587,6 +1588,15 @@ class Extrema_ExtCC():
         """
         Get flag for single extrema computation. Works on parametric solver only.
         """
+    @overload
+    def Initialize(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: 
+        """
+        Initializes but does not perform algorithm.
+
+        Initializes but does not perform algorithm.
+        """
+    @overload
+    def Initialize(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,V1 : float,V2 : float,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns True if the distances are found.
@@ -1608,14 +1618,14 @@ class Extrema_ExtCC():
         Returns the points of the Nth extremum distance. P1 is on the first curve, P2 on the second one.
         """
     @overload
-    def SetCurve(self,theRank : int,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
+    def SetCurve(self,theRank : int,C : OCP.Adaptor3d.Adaptor3d_Curve,Uinf : float,Usup : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetCurve(self,theRank : int,C : OCP.Adaptor3d.Adaptor3d_Curve,Uinf : float,Usup : float) -> None: ...
+    def SetCurve(self,theRank : int,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     def SetRange(self,theRank : int,Uinf : float,Usup : float) -> None: 
         """
         None
@@ -1637,11 +1647,11 @@ class Extrema_ExtCC():
         if the curve is a trimmed curve, dist11 is a square distance between the point on C1 of parameter FirstParameter and the point of parameter FirstParameter on C2.
         """
     @overload
-    def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
-    @overload
     def __init__(self,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,V1 : float,V2 : float,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
     pass
 class Extrema_ExtCC2d():
     """
@@ -1688,20 +1698,25 @@ class Extrema_ExtCC2d():
         if the curve is a trimmed curve, dist11 is a square distance between the point on C1 of parameter FirstParameter and the point of parameter FirstParameter on C2.
         """
     @overload
-    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
+    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,V1 : float,V2 : float,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,V1 : float,V2 : float,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
+    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolC1 : float=1e-10,TolC2 : float=1e-10) -> None: ...
     pass
 class Extrema_ExtCS():
     """
     It calculates all the extremum distances between a curve and a surface. These distances can be minimum or maximum.
     """
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,Uinf : float,Usup : float,Vinf : float,Vsup : float,TolC : float,TolS : float) -> None: 
+    @overload
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,TolC : float,TolS : float) -> None: 
         """
         Initializes the fields of the algorithm.
+
+        Initializes the fields of the algorithm.
         """
+    @overload
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,Uinf : float,Usup : float,Vinf : float,Vsup : float,TolC : float,TolS : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns True if the distances are found.
@@ -1727,11 +1742,11 @@ class Extrema_ExtCS():
         Returns the value of the Nth resulting square distance.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,TolC : float,TolS : float) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,UCinf : float,UCsup : float,Uinf : float,Usup : float,Vinf : float,Vsup : float,TolC : float,TolS : float) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,TolC : float,TolS : float) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class Extrema_ExtElC():
     """
@@ -1760,17 +1775,17 @@ class Extrema_ExtElC():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Parab) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.gp.gp_Circ,C2 : OCP.gp.gp_Circ) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Circ,Tol : float) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Hypr) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Parab) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Lin,AngTol : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Elips) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.gp.gp_Lin,C2 : OCP.gp.gp_Hypr) -> None: ...
     pass
 class Extrema_ExtElC2d():
     """
@@ -1797,23 +1812,23 @@ class Extrema_ExtElC2d():
         Returns the value of the Nth extremum square distance.
         """
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Parab2d) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Parab2d) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Hypr2d) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Circ2d) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Elips2d) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Lin2d,AngTol : float) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Hypr2d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Lin2d,AngTol : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Hypr2d) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Circ2d,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,C2 : OCP.gp.gp_Parab2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,C1 : OCP.gp.gp_Lin2d,C2 : OCP.gp.gp_Elips2d) -> None: ...
     pass
@@ -1834,7 +1849,7 @@ class Extrema_ExtElCS():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Pln) -> None: 
+    def Perform(self,C : OCP.gp.gp_Hypr,S : OCP.gp.gp_Pln) -> None: 
         """
         None
 
@@ -1858,26 +1873,26 @@ class Extrema_ExtElCS():
 
         None
         """
-    @overload
-    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
     def Perform(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
+    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cone) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Pln) -> None: ...
+    @overload
     def Perform(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Cylinder) -> None: ...
     @overload
-    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cone) -> None: ...
+    def Perform(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Torus) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Sphere) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Torus) -> None: ...
     @overload
     def Perform(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Pln) -> None: ...
     @overload
     def Perform(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Cone) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Torus) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Hypr,S : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Torus) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cylinder) -> None: ...
     def Points(self,N : int,P1 : Extrema_POnCurv,P2 : Extrema_POnSurf) -> None: 
         """
         Returns the points of the Nth extremum distance. P1 is on the curve, P2 on the surface.
@@ -1887,29 +1902,29 @@ class Extrema_ExtElCS():
         Returns the value of the Nth extremum square distance.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Torus) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Torus) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Pln) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cone) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Hypr,S : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cylinder) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Cone) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Cylinder) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Torus) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Cone) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cone) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Sphere) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ,S : OCP.gp.gp_Torus) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Hypr,S : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Lin,S : OCP.gp.gp_Pln) -> None: ...
     pass
 class Extrema_ExtElSS():
     """
@@ -1928,7 +1943,7 @@ class Extrema_ExtElSS():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Cylinder) -> None: 
+    def Perform(self,S1 : OCP.gp.gp_Pln,S2 : OCP.gp.gp_Sphere) -> None: 
         """
         None
 
@@ -1942,16 +1957,16 @@ class Extrema_ExtElSS():
 
         None
         """
-    @overload
-    def Perform(self,S1 : OCP.gp.gp_Pln,S2 : OCP.gp.gp_Sphere) -> None: ...
-    @overload
-    def Perform(self,S1 : OCP.gp.gp_Pln,S2 : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def Perform(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Torus) -> None: ...
     @overload
     def Perform(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Cone) -> None: ...
     @overload
+    def Perform(self,S1 : OCP.gp.gp_Pln,S2 : OCP.gp.gp_Pln) -> None: ...
+    @overload
     def Perform(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Sphere) -> None: ...
+    @overload
+    def Perform(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
+    def Perform(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Torus) -> None: ...
     def Points(self,N : int,P1 : Extrema_POnSurf,P2 : Extrema_POnSurf) -> None: 
         """
         Returns the points for the Nth resulting distance. P1 is on the first surface, P2 on the second one.
@@ -1961,19 +1976,19 @@ class Extrema_ExtElSS():
         Returns the value of the Nth extremum square distance.
         """
     @overload
-    def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Torus) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S1 : OCP.gp.gp_Pln,S2 : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Cone) -> None: ...
-    @overload
-    def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Sphere) -> None: ...
     @overload
     def __init__(self,S1 : OCP.gp.gp_Pln,S2 : OCP.gp.gp_Sphere) -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Torus) -> None: ...
+    @overload
     def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Cylinder) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Sphere) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.gp.gp_Sphere,S2 : OCP.gp.gp_Cone) -> None: ...
     pass
 class Extrema_ExtFlag():
     """
@@ -1990,6 +2005,7 @@ class Extrema_ExtFlag():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2048,11 +2064,11 @@ class Extrema_ExtPC():
         if the curve is a trimmed curve, dist1 is a square distance between <P> and the point of parameter FirstParameter <P1> and dist2 is a square distance between <P> and the point of parameter LastParameter <P2>.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,Uinf : float,Usup : float,TolF : float=1e-10) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,TolF : float=1e-10) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class Extrema_ExtPC2d():
     """
@@ -2091,11 +2107,11 @@ class Extrema_ExtPC2d():
         if the curve is a trimmed curve, dist1 is a square distance between <P> and the point of parameter FirstParameter <P1> and dist2 is a square distance between <P> and the point of parameter LastParameter <P2>.
         """
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Uinf : float,Usup : float,TolF : float=1e-10) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,TolF : float=1e-10) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Uinf : float,Usup : float,TolF : float=1e-10) -> None: ...
     pass
 class Extrema_ExtPElC():
     """
@@ -2114,7 +2130,7 @@ class Extrema_ExtPElC():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Parab,Tol : float,Uinf : float,Usup : float) -> None: 
+    def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Circ,Tol : float,Uinf : float,Usup : float) -> None: 
         """
         None
 
@@ -2126,14 +2142,14 @@ class Extrema_ExtPElC():
 
         None
         """
+    @overload
+    def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Lin,Tol : float,Uinf : float,Usup : float) -> None: ...
+    @overload
+    def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Parab,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
     def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Hypr,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Circ,Tol : float,Uinf : float,Usup : float) -> None: ...
-    @overload
     def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Elips,Tol : float,Uinf : float,Usup : float) -> None: ...
-    @overload
-    def Perform(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Lin,Tol : float,Uinf : float,Usup : float) -> None: ...
     def Point(self,N : int) -> Extrema_POnCurv: 
         """
         Returns the point of the Nth extremum distance.
@@ -2143,15 +2159,15 @@ class Extrema_ExtPElC():
         Returns the value of the Nth extremum square distance.
         """
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Circ,Tol : float,Uinf : float,Usup : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Lin,Tol : float,Uinf : float,Usup : float) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Elips,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Hypr,Tol : float,Uinf : float,Usup : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Lin,Tol : float,Uinf : float,Usup : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Circ,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.gp.gp_Parab,Tol : float,Uinf : float,Usup : float) -> None: ...
     pass
@@ -2172,7 +2188,7 @@ class Extrema_ExtPElC2d():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Elips2d,Tol : float,Uinf : float,Usup : float) -> None: 
+    def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Hypr2d,Tol : float,Uinf : float,Usup : float) -> None: 
         """
         None
 
@@ -2187,11 +2203,11 @@ class Extrema_ExtPElC2d():
     @overload
     def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Circ2d,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Hypr2d,Tol : float,Uinf : float,Usup : float) -> None: ...
+    def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Parab2d,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
     def Perform(self,P : OCP.gp.gp_Pnt2d,L : OCP.gp.gp_Lin2d,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Parab2d,Tol : float,Uinf : float,Usup : float) -> None: ...
+    def Perform(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Elips2d,Tol : float,Uinf : float,Usup : float) -> None: ...
     def Point(self,N : int) -> Extrema_POnCurv2d: 
         """
         Returns the point of the Nth extremum distance.
@@ -2201,17 +2217,17 @@ class Extrema_ExtPElC2d():
         Returns the value of the Nth extremum square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Parab2d,Tol : float,Uinf : float,Usup : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Lin2d,Tol : float,Uinf : float,Usup : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Hypr2d,Tol : float,Uinf : float,Usup : float) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Circ2d,Tol : float,Uinf : float,Usup : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Elips2d,Tol : float,Uinf : float,Usup : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Lin2d,Tol : float,Uinf : float,Usup : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Parab2d,Tol : float,Uinf : float,Usup : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.gp.gp_Hypr2d,Tol : float,Uinf : float,Usup : float) -> None: ...
     pass
 class Extrema_ExtPElS():
     """
@@ -2226,7 +2242,7 @@ class Extrema_ExtPElS():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cylinder,Tol : float) -> None: 
+    def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Sphere,Tol : float) -> None: 
         """
         None
 
@@ -2239,13 +2255,13 @@ class Extrema_ExtPElS():
         None
         """
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Sphere,Tol : float) -> None: ...
+    def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cylinder,Tol : float) -> None: ...
     @overload
     def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Torus,Tol : float) -> None: ...
     @overload
-    def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cone,Tol : float) -> None: ...
-    @overload
     def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Pln,Tol : float) -> None: ...
+    @overload
+    def Perform(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cone,Tol : float) -> None: ...
     def Point(self,N : int) -> Extrema_POnSurf: 
         """
         Returns the point of the Nth resulting distance.
@@ -2255,21 +2271,21 @@ class Extrema_ExtPElS():
         Returns the value of the Nth resulting square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cone,Tol : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Torus,Tol : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Sphere,Tol : float) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cylinder,Tol : float) -> None: ...
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Torus,Tol : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Cone,Tol : float) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Pln,Tol : float) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.gp.gp_Sphere,Tol : float) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class Extrema_ExtPExtS(OCP.Standard.Standard_Transient):
     """
-    It calculates all the extremum (minimum and maximum) distances between a point and a linear extrusion surface.It calculates all the extremum (minimum and maximum) distances between a point and a linear extrusion surface.It calculates all the extremum (minimum and maximum) distances between a point and a linear extrusion surface.
+    It calculates all the extremum (minimum and maximum) distances between a point and a linear extrusion surface.It calculates all the extremum (minimum and maximum) distances between a point and a linear extrusion surface.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2291,7 +2307,7 @@ class Extrema_ExtPExtS(OCP.Standard.Standard_Transient):
         """
         Increments the reference counter of this object
         """
-    def Initialize(self,S : OCP.GeomAdaptor.GeomAdaptor_HSurfaceOfLinearExtrusion,Uinf : float,Usup : float,Vinf : float,Vsup : float,TolU : float,TolV : float) -> None: 
+    def Initialize(self,S : OCP.GeomAdaptor.GeomAdaptor_SurfaceOfLinearExtrusion,Uinf : float,Usup : float,Vinf : float,Vsup : float,TolU : float,TolV : float) -> None: 
         """
         Initializes the fields of the algorithm.
         """
@@ -2300,23 +2316,23 @@ class Extrema_ExtPExtS(OCP.Standard.Standard_Transient):
         Returns True if the distances are found.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbExt(self) -> int: 
         """
         Returns the number of extremum distances.
@@ -2338,11 +2354,11 @@ class Extrema_ExtPExtS(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_SurfaceOfLinearExtrusion,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_SurfaceOfLinearExtrusion,TolU : float,TolV : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_HSurfaceOfLinearExtrusion,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_HSurfaceOfLinearExtrusion,TolU : float,TolV : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2356,7 +2372,7 @@ class Extrema_ExtPExtS(OCP.Standard.Standard_Transient):
     pass
 class Extrema_ExtPRevS(OCP.Standard.Standard_Transient):
     """
-    It calculates all the extremum (minimum and maximum) distances between a point and a surface of revolution.It calculates all the extremum (minimum and maximum) distances between a point and a surface of revolution.It calculates all the extremum (minimum and maximum) distances between a point and a surface of revolution.
+    It calculates all the extremum (minimum and maximum) distances between a point and a surface of revolution.It calculates all the extremum (minimum and maximum) distances between a point and a surface of revolution.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2378,7 +2394,7 @@ class Extrema_ExtPRevS(OCP.Standard.Standard_Transient):
         """
         Increments the reference counter of this object
         """
-    def Initialize(self,S : OCP.GeomAdaptor.GeomAdaptor_HSurfaceOfRevolution,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: 
+    def Initialize(self,S : OCP.GeomAdaptor.GeomAdaptor_SurfaceOfRevolution,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: 
         """
         None
         """
@@ -2387,23 +2403,23 @@ class Extrema_ExtPRevS(OCP.Standard.Standard_Transient):
         Returns True if the distances are found.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbExt(self) -> int: 
         """
         Returns the number of extremum distances.
@@ -2425,9 +2441,9 @@ class Extrema_ExtPRevS(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_HSurfaceOfRevolution,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_SurfaceOfRevolution,TolU : float,TolV : float) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_HSurfaceOfRevolution,TolU : float,TolV : float) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.GeomAdaptor.GeomAdaptor_SurfaceOfRevolution,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @staticmethod
@@ -2482,11 +2498,11 @@ class Extrema_ExtPS():
         if the surface is a trimmed surface, dUfVf is a square distance between <P> and the point of parameter FirstUParameter and FirstVParameter <PUfVf>. dUfVl is a square distance between <P> and the point of parameter FirstUParameter and LastVParameter <PUfVl>. dUlVf is a square distance between <P> and the point of parameter LastUParameter and FirstVParameter <PUlVf>. dUlVl is a square distance between <P> and the point of parameter LastUParameter and LastVParameter <PUlVl>.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.Adaptor3d.Adaptor3d_Surface,TolU : float,TolV : float,F : Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.Adaptor3d.Adaptor3d_Surface,Uinf : float,Usup : float,Vinf : float,Vsup : float,TolU : float,TolV : float,F : Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,S : OCP.Adaptor3d.Adaptor3d_Surface,TolU : float,TolV : float,F : Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class Extrema_ExtSS():
     """
@@ -2502,7 +2518,7 @@ class Extrema_ExtSS():
         """
     def IsParallel(self) -> bool: 
         """
-        Returns True if the curve is on a parallel surface.
+        Returns True if the surfaces are parallel
         """
     def NbExt(self) -> int: 
         """
@@ -2563,9 +2579,21 @@ class Extrema_FuncExtCS(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_
         """
         Return the Nth extremum on S.
         """
+    def PointsOnCurve(self) -> Extrema_SequenceOfPOnCurv: 
+        """
+        Change Sequence of PointOnCurv
+        """
+    def PointsOnSurf(self) -> Extrema_SequenceOfPOnSurf: 
+        """
+        Change Sequence of PointOnSurf
+        """
     def SquareDistance(self,N : int) -> float: 
         """
         Return the value of the Nth distance.
+        """
+    def SquareDistances(self) -> OCP.TColStd.TColStd_SequenceOfReal: 
+        """
+        Change Sequence of SquareDistance
         """
     def Value(self,UV : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
@@ -2576,9 +2604,9 @@ class Extrema_FuncExtCS(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_
         Calculation of Fi(U,V) and Fi'(U,V).
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     pass
 class Extrema_FuncExtSS(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2717,14 +2745,14 @@ class Extrema_GenExtCS():
     It calculates all the extremum distances between acurve and a surface. These distances can be minimum or maximum.
     """
     @overload
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Umin : float,Usup : float,Vmin : float,Vsup : float,Tol2 : float) -> None: 
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Tol2 : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Tol2 : float) -> None: ...
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Umin : float,Usup : float,Vmin : float,Vsup : float,Tol2 : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns True if the distances are found.
@@ -2734,14 +2762,14 @@ class Extrema_GenExtCS():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbT : int,tmin : float,tsup : float,Tol1 : float) -> None: 
+    def Perform(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbT : int,Tol1 : float) -> None: 
         """
         the algorithm is done with S An exception is raised if the fields have not been initialized.
 
         the algorithm is done with C An exception is raised if the fields have not been initialized.
         """
     @overload
-    def Perform(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbT : int,Tol1 : float) -> None: ...
+    def Perform(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbT : int,tmin : float,tsup : float,Tol1 : float) -> None: ...
     def PointOnCurve(self,N : int) -> Extrema_POnCurv: 
         """
         Returns the point of the Nth resulting distance.
@@ -2755,25 +2783,25 @@ class Extrema_GenExtCS():
         Returns the value of the Nth resulting square distance.
         """
     @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,NbT : int,NbU : int,NbV : int,Tol1 : float,Tol2 : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,NbT : int,NbU : int,NbV : int,tmin : float,tsup : float,Umin : float,Usup : float,Vmin : float,Vsup : float,Tol1 : float,Tol2 : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,NbT : int,NbU : int,NbV : int,Tol1 : float,Tol2 : float) -> None: ...
     pass
 class Extrema_GenExtPS():
     """
     It calculates all the extremum distances between a point and a surface. These distances can be minimum or maximum.
     """
     @overload
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,TolU : float,TolV : float) -> None: 
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Umin : float,Usup : float,Vmin : float,Vsup : float,TolU : float,TolV : float) -> None: ...
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,TolU : float,TolV : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns True if the distances are found.
@@ -2831,14 +2859,14 @@ class Extrema_GenExtSS():
         Returns the number of extremum distances.
         """
     @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,Tol1 : float) -> None: 
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,U1min : float,U1sup : float,V1min : float,V1sup : float,Tol1 : float) -> None: 
         """
         the algorithm is done with S1 An exception is raised if the fields have not been initialized.
 
         the algorithm is done withS1 An exception is raised if the fields have not been initialized.
         """
     @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,U1min : float,U1sup : float,V1min : float,V1sup : float,Tol1 : float) -> None: ...
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,Tol1 : float) -> None: ...
     def PointOnS1(self,N : int) -> Extrema_POnSurf: 
         """
         Returns the point of the Nth resulting distance.
@@ -2852,11 +2880,11 @@ class Extrema_GenExtSS():
         Returns the value of the Nth resulting square distance.
         """
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,U1min : float,U1sup : float,V1min : float,V1sup : float,U2min : float,U2sup : float,V2min : float,V2sup : float,Tol1 : float,Tol2 : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,Tol1 : float,Tol2 : float) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,NbU : int,NbV : int,U1min : float,U1sup : float,V1min : float,V1sup : float,U2min : float,U2sup : float,V2min : float,V2sup : float,Tol1 : float,Tol2 : float) -> None: ...
     pass
 class Extrema_GenLocateExtCS():
     """
@@ -2883,9 +2911,9 @@ class Extrema_GenLocateExtCS():
         Returns the value of the extremum square distance.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,T : float,U : float,V : float,Tol1 : float,Tol2 : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_GenLocateExtPS():
     """
@@ -2894,6 +2922,11 @@ class Extrema_GenLocateExtPS():
     def IsDone(self) -> bool: 
         """
         Returns True if the distance is found.
+        """
+    @staticmethod
+    def IsMinDist_s(theP : OCP.gp.gp_Pnt,theS : OCP.Adaptor3d.Adaptor3d_Surface,theU0 : float,theV0 : float) -> bool: 
+        """
+        Returns True if UV point theU0, theV0 is point of local minimum of square distance between point theP and points theS(U, V), U, V are in small area around theU0, theV0
         """
     def Perform(self,theP : OCP.gp.gp_Pnt,theU0 : float,theV0 : float,isDistanceCriteria : bool=False) -> None: 
         """
@@ -2955,9 +2988,9 @@ class Extrema_GlobOptFuncCCC0(OCP.math.math_MultipleVarFunction):
         None
         """
     @overload
-    def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class Extrema_GlobOptFuncCCC1(OCP.math.math_MultipleVarFunctionWithGradient, OCP.math.math_MultipleVarFunction):
     """
@@ -3009,14 +3042,14 @@ class Extrema_GlobOptFuncCCC2(OCP.math.math_MultipleVarFunctionWithHessian, OCP.
         None
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,F : float,G : OCP.math.math_Vector) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,F : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,F : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,F : float,G : OCP.math.math_Vector) -> bool: ...
     @overload
     def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     @overload
@@ -3047,11 +3080,11 @@ class Extrema_GlobOptFuncCQuadric(OCP.math.math_MultipleVarFunction):
         None
         """
     @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
+    @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,theTf : float,theTl : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     pass
 class Extrema_GlobOptFuncCS(OCP.math.math_MultipleVarFunctionWithHessian, OCP.math.math_MultipleVarFunctionWithGradient, OCP.math.math_MultipleVarFunction):
     """
@@ -3074,14 +3107,14 @@ class Extrema_GlobOptFuncCS(OCP.math.math_MultipleVarFunctionWithHessian, OCP.ma
         None
         """
     @overload
-    def Values(self,theX : OCP.math.math_Vector,theF : float,theG : OCP.math.math_Vector,theH : OCP.math.math_Matrix) -> bool: 
+    def Values(self,theX : OCP.math.math_Vector,theF : float,theG : OCP.math.math_Vector) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Values(self,theX : OCP.math.math_Vector,theF : float,theG : OCP.math.math_Vector) -> bool: ...
+    def Values(self,theX : OCP.math.math_Vector,theF : float,theG : OCP.math.math_Vector,theH : OCP.math.math_Matrix) -> bool: ...
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     pass
 class Extrema_GlobOptFuncConicS(OCP.math.math_MultipleVarFunction):
@@ -3109,11 +3142,11 @@ class Extrema_GlobOptFuncConicS(OCP.math.math_MultipleVarFunction):
         None
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
-    @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,theUf : float,theUl : float,theVf : float,theVl : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     pass
 class Extrema_HArray1OfPOnCurv(Extrema_Array1OfPOnCurv, OCP.Standard.Standard_Transient):
     def Array1(self) -> Extrema_Array1OfPOnCurv: 
@@ -3181,23 +3214,23 @@ class Extrema_HArray1OfPOnCurv(Extrema_Array1OfPOnCurv, OCP.Standard.Standard_Tr
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Extrema_POnCurv: 
         """
         Returns last element
@@ -3241,11 +3274,11 @@ class Extrema_HArray1OfPOnCurv(Extrema_Array1OfPOnCurv, OCP.Standard.Standard_Tr
     @overload
     def __init__(self,theOther : Extrema_Array1OfPOnCurv) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Extrema_POnCurv) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3324,23 +3357,23 @@ class Extrema_HArray1OfPOnCurv2d(Extrema_Array1OfPOnCurv2d, OCP.Standard.Standar
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Extrema_POnCurv2d: 
         """
         Returns last element
@@ -3382,13 +3415,13 @@ class Extrema_HArray1OfPOnCurv2d(Extrema_Array1OfPOnCurv2d, OCP.Standard.Standar
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Extrema_Array1OfPOnCurv2d) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Extrema_POnCurv2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3467,23 +3500,23 @@ class Extrema_HArray1OfPOnSurf(Extrema_Array1OfPOnSurf, OCP.Standard.Standard_Tr
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Extrema_POnSurf: 
         """
         Returns last element
@@ -3527,11 +3560,11 @@ class Extrema_HArray1OfPOnSurf(Extrema_Array1OfPOnSurf, OCP.Standard.Standard_Tr
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Extrema_Array1OfPOnSurf) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : Extrema_POnSurf) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Extrema_POnSurf) -> None: ...
+    def __init__(self,theOther : Extrema_Array1OfPOnSurf) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3594,23 +3627,23 @@ class Extrema_HArray2OfPOnCurv(Extrema_Array2OfPOnCurv, OCP.Standard.Standard_Tr
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -3622,7 +3655,7 @@ class Extrema_HArray2OfPOnCurv(Extrema_Array2OfPOnCurv, OCP.Standard.Standard_Tr
         """
     def Move(self,theOther : Extrema_Array2OfPOnCurv) -> Extrema_Array2OfPOnCurv: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -3662,11 +3695,11 @@ class Extrema_HArray2OfPOnCurv(Extrema_Array2OfPOnCurv, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
     def __init__(self,theOther : Extrema_Array2OfPOnCurv) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : Extrema_POnCurv) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3728,23 +3761,23 @@ class Extrema_HArray2OfPOnCurv2d(Extrema_Array2OfPOnCurv2d, OCP.Standard.Standar
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -3756,7 +3789,7 @@ class Extrema_HArray2OfPOnCurv2d(Extrema_Array2OfPOnCurv2d, OCP.Standard.Standar
         """
     def Move(self,theOther : Extrema_Array2OfPOnCurv2d) -> Extrema_Array2OfPOnCurv2d: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -3796,11 +3829,11 @@ class Extrema_HArray2OfPOnCurv2d(Extrema_Array2OfPOnCurv2d, OCP.Standard.Standar
         Constant value access
         """
     @overload
+    def __init__(self,theOther : Extrema_Array2OfPOnCurv2d) -> None: ...
+    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : Extrema_POnCurv2d) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
-    @overload
-    def __init__(self,theOther : Extrema_Array2OfPOnCurv2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3862,23 +3895,23 @@ class Extrema_HArray2OfPOnSurf(Extrema_Array2OfPOnSurf, OCP.Standard.Standard_Tr
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -3890,7 +3923,7 @@ class Extrema_HArray2OfPOnSurf(Extrema_Array2OfPOnSurf, OCP.Standard.Standard_Tr
         """
     def Move(self,theOther : Extrema_Array2OfPOnSurf) -> Extrema_Array2OfPOnSurf: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -3930,145 +3963,11 @@ class Extrema_HArray2OfPOnSurf(Extrema_Array2OfPOnSurf, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Extrema_Array2OfPOnSurf) -> None: ...
-    @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : Extrema_POnSurf) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class Extrema_HArray2OfPOnSurfParams(Extrema_Array2OfPOnSurfParams, OCP.Standard.Standard_Transient):
-    def Array2(self) -> Extrema_Array2OfPOnSurfParams: 
-        """
-        None
-        """
-    def Assign(self,theOther : Extrema_Array2OfPOnSurfParams) -> Extrema_Array2OfPOnSurfParams: 
-        """
-        Assignment
-        """
-    def ChangeArray2(self) -> Extrema_Array2OfPOnSurfParams: 
-        """
-        None
-        """
-    def ChangeValue(self,theRow : int,theCol : int) -> Extrema_POnSurfParams: 
-        """
-        Variable value access
-        """
-    def ColLength(self) -> int: 
-        """
-        Returns length of the column, i.e. number of rows
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def Init(self,theValue : Extrema_POnSurfParams) -> None: 
-        """
-        Initialise the values
-        """
-    def IsDeletable(self) -> bool: 
-        """
-        myDeletable flag
-        """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def Length(self) -> int: ...
-    def LowerCol(self) -> int: 
-        """
-        LowerCol
-        """
-    def LowerRow(self) -> int: 
-        """
-        LowerRow
-        """
-    def Move(self,theOther : Extrema_Array2OfPOnSurfParams) -> Extrema_Array2OfPOnSurfParams: 
-        """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
-        """
-    def NbColumns(self) -> int: 
-        """
-        Returns number of columns
-        """
-    def NbRows(self) -> int: 
-        """
-        Returns number of rows
-        """
-    def Resize(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int,theToCopyData : bool) -> None: 
-        """
-        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
-        """
-    def RowLength(self) -> int: 
-        """
-        Returns length of the row, i.e. number of columns
-        """
-    def SetValue(self,theRow : int,theCol : int,theItem : Extrema_POnSurfParams) -> None: 
-        """
-        SetValue
-        """
-    def Size(self) -> int: ...
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def UpperCol(self) -> int: 
-        """
-        UpperCol
-        """
-    def UpperRow(self) -> int: 
-        """
-        UpperRow
-        """
-    def Value(self,theRow : int,theCol : int) -> Extrema_POnSurfParams: 
-        """
-        Constant value access
-        """
-    @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : Extrema_POnSurfParams) -> None: ...
-    @overload
-    def __init__(self,theOther : Extrema_Array2OfPOnSurfParams) -> None: ...
-    @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
+    def __init__(self,theOther : Extrema_Array2OfPOnSurf) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4182,9 +4081,9 @@ class Extrema_LocEPCOfLocateExtPC2d():
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,Umin : float,Usup : float,TolU : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,TolU : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_LocateExtCC():
     """
@@ -4251,9 +4150,9 @@ class Extrema_LocateExtPC():
         Returns the value of the extremum square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,U0 : float,TolF : float) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,U0 : float,Umin : float,Usup : float,TolF : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve,U0 : float,TolF : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -4286,11 +4185,11 @@ class Extrema_LocateExtPC2d():
         Returns the value of the extremum square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,TolF : float) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,Umin : float,Usup : float,TolF : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,TolF : float) -> None: ...
     pass
 class Extrema_PCFOfEPCOfELPCOfLocateExtPC(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -4314,7 +4213,7 @@ class Extrema_PCFOfEPCOfELPCOfLocateExtPC(OCP.math.math_FunctionWithDerivative, 
         """
     def NbExt(self) -> int: 
         """
-        Return the nunber of found extrema.
+        Return the number of found extrema.
         """
     def Point(self,N : int) -> Extrema_POnCurv: 
         """
@@ -4371,7 +4270,7 @@ class Extrema_PCFOfEPCOfELPCOfLocateExtPC2d(OCP.math.math_FunctionWithDerivative
         """
     def NbExt(self) -> int: 
         """
-        Return the nunber of found extrema.
+        Return the number of found extrema.
         """
     def Point(self,N : int) -> Extrema_POnCurv2d: 
         """
@@ -4428,7 +4327,7 @@ class Extrema_PCFOfEPCOfExtPC(OCP.math.math_FunctionWithDerivative, OCP.math.mat
         """
     def NbExt(self) -> int: 
         """
-        Return the nunber of found extrema.
+        Return the number of found extrema.
         """
     def Point(self,N : int) -> Extrema_POnCurv: 
         """
@@ -4459,9 +4358,9 @@ class Extrema_PCFOfEPCOfExtPC(OCP.math.math_FunctionWithDerivative, OCP.math.mat
         Calculation of F(U) and F'(U).
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_PCFOfEPCOfExtPC2d(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -4485,7 +4384,7 @@ class Extrema_PCFOfEPCOfExtPC2d(OCP.math.math_FunctionWithDerivative, OCP.math.m
         """
     def NbExt(self) -> int: 
         """
-        Return the nunber of found extrema.
+        Return the number of found extrema.
         """
     def Point(self,N : int) -> Extrema_POnCurv2d: 
         """
@@ -4516,9 +4415,9 @@ class Extrema_PCFOfEPCOfExtPC2d(OCP.math.math_FunctionWithDerivative, OCP.math.m
         Calculation of F(U) and F'(U).
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_PCLocFOfLocEPCOfLocateExtPC(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -4542,7 +4441,7 @@ class Extrema_PCLocFOfLocEPCOfLocateExtPC(OCP.math.math_FunctionWithDerivative, 
         """
     def NbExt(self) -> int: 
         """
-        Return the nunber of found extrema.
+        Return the number of found extrema.
         """
     def Point(self,N : int) -> Extrema_POnCurv: 
         """
@@ -4573,9 +4472,9 @@ class Extrema_PCLocFOfLocEPCOfLocateExtPC(OCP.math.math_FunctionWithDerivative, 
         Calculation of F(U) and F'(U).
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_PCLocFOfLocEPCOfLocateExtPC2d(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -4599,7 +4498,7 @@ class Extrema_PCLocFOfLocEPCOfLocateExtPC2d(OCP.math.math_FunctionWithDerivative
         """
     def NbExt(self) -> int: 
         """
-        Return the nunber of found extrema.
+        Return the number of found extrema.
         """
     def Point(self,N : int) -> Extrema_POnCurv2d: 
         """
@@ -4630,9 +4529,9 @@ class Extrema_PCLocFOfLocEPCOfLocateExtPC2d(OCP.math.math_FunctionWithDerivative
         Calculation of F(U) and F'(U).
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_POnCurv():
     """
@@ -4651,9 +4550,9 @@ class Extrema_POnCurv():
         Returns the point.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,U : float,P : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Extrema_POnCurv2d():
     """
@@ -4672,9 +4571,9 @@ class Extrema_POnCurv2d():
         Returns the point.
         """
     @overload
-    def __init__(self,U : float,P : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,U : float,P : OCP.gp.gp_Pnt2d) -> None: ...
     pass
 class Extrema_POnSurf():
     """
@@ -4702,9 +4601,9 @@ class Extrema_POnSurf():
         Returns the 3d point.
         """
     @overload
-    def __init__(self,U : float,V : float,P : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,U : float,V : float,P : OCP.gp.gp_Pnt) -> None: ...
     pass
 class Extrema_POnSurfParams(Extrema_POnSurf):
     """
@@ -4781,14 +4680,14 @@ class Extrema_SequenceOfPOnCurv(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Extrema_SequenceOfPOnCurv) -> None: 
+    def Append(self,theItem : Extrema_POnCurv) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Extrema_POnCurv) -> None: ...
+    def Append(self,theSeq : Extrema_SequenceOfPOnCurv) -> None: ...
     def Assign(self,theOther : Extrema_SequenceOfPOnCurv) -> Extrema_SequenceOfPOnCurv: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4818,23 +4717,23 @@ class Extrema_SequenceOfPOnCurv(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Extrema_POnCurv) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : Extrema_POnCurv) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Extrema_POnCurv) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Extrema_POnCurv) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4861,14 +4760,14 @@ class Extrema_SequenceOfPOnCurv(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Extrema_SequenceOfPOnCurv) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4896,9 +4795,9 @@ class Extrema_SequenceOfPOnCurv(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : Extrema_SequenceOfPOnCurv) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4952,23 +4851,23 @@ class Extrema_SequenceOfPOnCurv2d(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv2d) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Extrema_POnCurv2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Extrema_POnCurv2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv2d) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Extrema_POnCurv2d) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv2d) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Extrema_SequenceOfPOnCurv2d) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Extrema_POnCurv2d) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -4986,23 +4885,23 @@ class Extrema_SequenceOfPOnCurv2d(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Extrema_POnCurv2d) -> None: 
+    def Prepend(self,theSeq : Extrema_SequenceOfPOnCurv2d) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Extrema_SequenceOfPOnCurv2d) -> None: ...
+    def Prepend(self,theItem : Extrema_POnCurv2d) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5028,11 +4927,11 @@ class Extrema_SequenceOfPOnCurv2d(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Extrema_SequenceOfPOnCurv2d) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -5049,14 +4948,14 @@ class Extrema_SequenceOfPOnSurf(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Extrema_SequenceOfPOnSurf) -> None: 
+    def Append(self,theItem : Extrema_POnSurf) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Extrema_POnSurf) -> None: ...
+    def Append(self,theSeq : Extrema_SequenceOfPOnSurf) -> None: ...
     def Assign(self,theOther : Extrema_SequenceOfPOnSurf) -> Extrema_SequenceOfPOnSurf: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5086,14 +4985,14 @@ class Extrema_SequenceOfPOnSurf(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Extrema_SequenceOfPOnSurf) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Extrema_POnSurf) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Extrema_POnSurf) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Extrema_SequenceOfPOnSurf) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Extrema_POnSurf) -> None: 
         """
@@ -5120,14 +5019,14 @@ class Extrema_SequenceOfPOnSurf(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Extrema_POnSurf) -> None: 
+    def Prepend(self,theSeq : Extrema_SequenceOfPOnSurf) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Extrema_SequenceOfPOnSurf) -> None: ...
+    def Prepend(self,theItem : Extrema_POnSurf) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -5162,11 +5061,11 @@ class Extrema_SequenceOfPOnSurf(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Extrema_SequenceOfPOnSurf) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Extrema_SequenceOfPOnSurf) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

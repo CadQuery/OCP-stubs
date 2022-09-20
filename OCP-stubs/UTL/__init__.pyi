@@ -5,10 +5,10 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.OSD
-import OCP.TCollection
-import OCP.Resource
 import OCP.Storage
 import OCP.Standard
+import OCP.TCollection
+import OCP.Resource
 __all__  = [
 "UTL"
 ]

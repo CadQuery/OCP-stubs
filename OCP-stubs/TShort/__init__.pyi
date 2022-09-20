@@ -16,7 +16,7 @@ __all__  = [
 ]
 class TShort_Array1OfShortReal():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : TShort_Array1OfShortReal) -> TShort_Array1OfShortReal: 
         """
@@ -91,13 +91,13 @@ class TShort_Array1OfShortReal():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : float,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TShort_Array2OfShortReal():
@@ -135,7 +135,7 @@ class TShort_Array2OfShortReal():
         """
     def Move(self,theOther : TShort_Array2OfShortReal) -> TShort_Array2OfShortReal: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -173,11 +173,11 @@ class TShort_Array2OfShortReal():
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theBegin : float,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : TShort_Array2OfShortReal) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : float,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_Transient):
     def Array1(self) -> TShort_Array1OfShortReal: 
@@ -245,23 +245,23 @@ class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> float: 
         """
         Returns last element
@@ -305,9 +305,9 @@ class TShort_HArray1OfShortReal(TShort_Array1OfShortReal, OCP.Standard.Standard_
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : float) -> None: ...
-    @overload
     def __init__(self,theOther : TShort_Array1OfShortReal) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : float) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -372,23 +372,23 @@ class TShort_HArray2OfShortReal(TShort_Array2OfShortReal, OCP.Standard.Standard_
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -400,7 +400,7 @@ class TShort_HArray2OfShortReal(TShort_Array2OfShortReal, OCP.Standard.Standard_
         """
     def Move(self,theOther : TShort_Array2OfShortReal) -> TShort_Array2OfShortReal: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -511,14 +511,14 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : float) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -536,14 +536,14 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: 
+    def Prepend(self,theItem : float) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : float) -> None: ...
+    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -578,9 +578,9 @@ class TShort_SequenceOfShortReal(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -666,36 +666,36 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
     @overload
     def InsertAfter(self,theIndex : int,theItem : float) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : float) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TShort_SequenceOfShortReal) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : float) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> float: 
         """
         Last item access
@@ -709,14 +709,14 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: 
+    def Prepend(self,theItem : float) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : float) -> None: ...
+    def Prepend(self,theSeq : TShort_SequenceOfShortReal) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -759,9 +759,9 @@ class TShort_HSequenceOfShortReal(TShort_SequenceOfShortReal, OCP.NCollection.NC
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TShort_SequenceOfShortReal) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

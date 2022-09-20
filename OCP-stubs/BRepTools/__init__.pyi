@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.BRep
-import OCP.Geom
-import OCP.TColgp
-import OCP.Bnd
-import OCP.TopoDS
-import OCP.Standard
-import OCP.TopAbs
-import OCP.Poly
 import OCP.TopTools
-import OCP.TCollection
-import io
+import OCP.BRep
 import OCP.GeomAbs
-import OCP.gp
+import OCP.Poly
+import OCP.NCollection
+import io
 import OCP.Geom2d
+import OCP.Standard
+import OCP.TopoDS
+import OCP.TColgp
 import OCP.TopLoc
+import OCP.gp
+import OCP.Geom
+import OCP.TopAbs
+import OCP.TCollection
+import OCP.Bnd
 __all__  = [
 "BRepTools",
 "BRepTools_Modification",
@@ -28,6 +28,7 @@ __all__  = [
 "BRepTools_GTrsfModification",
 "BRepTools_Modifier",
 "BRepTools_NurbsConvertModification",
+"BRepTools_PurgeLocations",
 "BRepTools_Quilt",
 "BRepTools_ReShape",
 "BRepTools_ShapeSet",
@@ -40,6 +41,11 @@ class BRepTools():
     The BRepTools package provides utilities for BRep data structures.
     """
     @staticmethod
+    def ActivateTriangulation_s(theShape : OCP.TopoDS.TopoDS_Shape,theTriangulationIdx : int,theToActivateStrictly : bool=False) -> bool: 
+        """
+        Activates triangulation data for each face of the shape from some deferred storage using specified shared input file system
+        """
+    @staticmethod
     @overload
     def AddUVBounds_s(F : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge,B : OCP.Bnd.Bnd_Box2d) -> None: 
         """
@@ -51,23 +57,28 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def AddUVBounds_s(F : OCP.TopoDS.TopoDS_Face,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    def AddUVBounds_s(F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire,B : OCP.Bnd.Bnd_Box2d) -> None: ...
     @staticmethod
     @overload
-    def AddUVBounds_s(F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    def AddUVBounds_s(F : OCP.TopoDS.TopoDS_Face,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    @staticmethod
+    def CheckLocations_s(theS : OCP.TopoDS.TopoDS_Shape,theProblemShapes : OCP.TopTools.TopTools_ListOfShape) -> None: 
+        """
+        Check all locations of shape according criterium: aTrsf.IsNegative() || (Abs(Abs(aTrsf.ScaleFactor()) - 1.) > TopLoc_Location::ScalePrec()) All sub-shapes having such locations are put in list theProblemShapes
+        """
     @staticmethod
     def CleanGeometry_s(theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Removes geometry (curves and surfaces) from all edges and faces of the shape
         """
     @staticmethod
-    def Clean_s(S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Clean_s(theShape : OCP.TopoDS.TopoDS_Shape,theForce : bool=False) -> None: 
         """
-        Removes all cashed polygonal representation of the shape, i.e. the triangulations of the faces of <S> and polygons on triangulations and polygons 3d of the edges. In case polygonal representation is the only available representation for the shape (shape does not have geometry) it is not removed.
+        Removes all cached polygonal representation of the shape, i.e. the triangulations of the faces of <S> and polygons on triangulations and polygons 3d of the edges. In case polygonal representation is the only available representation for the shape (shape does not have geometry) it is not removed.
         """
     @staticmethod
     @overload
-    def Compare_s(V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> bool: 
+    def Compare_s(E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Returns True if the distance between the two vertices is lower than their tolerance.
 
@@ -75,7 +86,7 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def Compare_s(E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> bool: ...
+    def Compare_s(V1 : OCP.TopoDS.TopoDS_Vertex,V2 : OCP.TopoDS.TopoDS_Vertex) -> bool: ...
     @staticmethod
     def DetectClosedness_s(theFace : OCP.TopoDS.TopoDS_Face) -> Tuple[bool, bool]: 
         """
@@ -97,6 +108,16 @@ class BRepTools():
         Verifies that the edge <E> is found two times on the face <F> before calling BRep_Tool::IsClosed.
         """
     @staticmethod
+    def LoadAllTriangulations_s(theShape : OCP.TopoDS.TopoDS_Shape,theFileSystem : OCP.OSD.OSD_FileSystem=None) -> bool: 
+        """
+        Loads all available triangulations for each face of the shape from some deferred storage using specified shared input file system
+        """
+    @staticmethod
+    def LoadTriangulation_s(theShape : OCP.TopoDS.TopoDS_Shape,theTriangulationIdx : int=-1,theToSetAsActive : bool=False,theFileSystem : OCP.OSD.OSD_FileSystem=None) -> bool: 
+        """
+        Loads triangulation data for each face of the shape from some deferred storage using specified shared input file system
+        """
+    @staticmethod
     def Map3DEdges_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: 
         """
         Stores in the map <M> all the 3D topology edges of <S>.
@@ -113,7 +134,7 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def Read_s(Sh : OCP.TopoDS.TopoDS_Shape,File : str,B : OCP.BRep.BRep_Builder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
+    def Read_s(Sh : OCP.TopoDS.TopoDS_Shape,S : io.BytesIO,B : OCP.BRep.BRep_Builder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads a Shape from <S> in returns it in <Sh>. <B> is used to build the shape.
 
@@ -121,7 +142,7 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def Read_s(Sh : OCP.TopoDS.TopoDS_Shape,S : io.BytesIO,B : OCP.BRep.BRep_Builder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read_s(Sh : OCP.TopoDS.TopoDS_Shape,File : str,B : OCP.BRep.BRep_Builder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     @staticmethod
     def RemoveInternals_s(theS : OCP.TopoDS.TopoDS_Shape,theForce : bool=False) -> None: 
         """
@@ -139,7 +160,7 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def UVBounds_s(F : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge) -> Tuple[float, float, float, float]: 
+    def UVBounds_s(F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire) -> Tuple[float, float, float, float]: 
         """
         Returns in UMin, UMax, VMin, VMax the bounding values in the parametric space of F.
 
@@ -149,10 +170,20 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def UVBounds_s(F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire) -> Tuple[float, float, float, float]: ...
+    def UVBounds_s(F : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge) -> Tuple[float, float, float, float]: ...
     @staticmethod
     @overload
     def UVBounds_s(F : OCP.TopoDS.TopoDS_Face) -> Tuple[float, float, float, float]: ...
+    @staticmethod
+    def UnloadAllTriangulations_s(theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        Releases all available triangulations for each face of the shape if there is deferred storage to load them later
+        """
+    @staticmethod
+    def UnloadTriangulation_s(theShape : OCP.TopoDS.TopoDS_Shape,theTriangulationIdx : int=-1) -> bool: 
+        """
+        Releases triangulation data for each face of the shape if there is deferred storage to load it later
+        """
     @staticmethod
     def UpdateFaceUVPoints_s(theF : OCP.TopoDS.TopoDS_Face) -> None: 
         """
@@ -160,7 +191,7 @@ class BRepTools():
         """
     @staticmethod
     @overload
-    def Update_s(S : OCP.TopoDS.TopoDS_Solid) -> None: 
+    def Update_s(C : OCP.TopoDS.TopoDS_Compound) -> None: 
         """
         Update a vertex (nothing is done)
 
@@ -178,20 +209,8 @@ class BRepTools():
 
         Update a compound (nothing is done)
 
-        Update a shape, call the corect update.
+        Update a shape, call the correct update.
         """
-    @staticmethod
-    @overload
-    def Update_s(F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @staticmethod
-    @overload
-    def Update_s(C : OCP.TopoDS.TopoDS_Compound) -> None: ...
-    @staticmethod
-    @overload
-    def Update_s(E : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @staticmethod
-    @overload
-    def Update_s(S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @staticmethod
     @overload
     def Update_s(V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
@@ -200,21 +219,43 @@ class BRepTools():
     def Update_s(C : OCP.TopoDS.TopoDS_CompSolid) -> None: ...
     @staticmethod
     @overload
+    def Update_s(S : OCP.TopoDS.TopoDS_Solid) -> None: ...
+    @staticmethod
+    @overload
+    def Update_s(E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @staticmethod
+    @overload
     def Update_s(W : OCP.TopoDS.TopoDS_Wire) -> None: ...
     @staticmethod
     @overload
     def Update_s(S : OCP.TopoDS.TopoDS_Shell) -> None: ...
     @staticmethod
     @overload
-    def Write_s(Sh : OCP.TopoDS.TopoDS_Shape,S : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Update_s(F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @staticmethod
+    @overload
+    def Update_s(S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @staticmethod
+    @overload
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
-        Writes <Sh> on <S> in an ASCII format.
+        Writes the shape to the stream in an ASCII format TopTools_FormatVersion_VERSION_1. This alias writes shape with triangulation data.
 
-        Writes <Sh> in <File>.
+        Writes the shape to the stream in an ASCII format of specified version.
+
+        Writes the shape to the file in an ASCII format TopTools_FormatVersion_VERSION_1. This alias writes shape with triangulation data.
+
+        Writes the shape to the file in an ASCII format of specified version.
         """
     @staticmethod
     @overload
-    def Write_s(Sh : OCP.TopoDS.TopoDS_Shape,File : str,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @staticmethod
+    @overload
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : io.BytesIO,theWithTriangles : bool,theWithNormals : bool,theVersion : OCP.TopTools.TopTools_FormatVersion,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @staticmethod
+    @overload
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theWithTriangles : bool,theWithNormals : bool,theVersion : OCP.TopTools.TopTools_FormatVersion,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     def __init__(self) -> None: ...
     pass
 class BRepTools_Modification(OCP.Standard.Standard_Transient):
@@ -246,23 +287,23 @@ class BRepTools_Modification(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Returns true if the edge, E, has been modified. If the edge has been modified: - C is the new geometry associated with the edge, - L is its new location, and - Tol is the new tolerance. If the edge has not been modified, this function returns false, and the values of C, L and Tol are not significant.
@@ -329,6 +370,7 @@ class BRepTools_History(OCP.Standard.Standard_Transient):
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -403,23 +445,23 @@ class BRepTools_History(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRemoved(self,theInitial : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns 'true' if the shape is removed.
@@ -516,14 +558,14 @@ class BRepTools_MapOfVertexPnt2d(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TColgp.TColgp_SequenceOfPnt2d) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TColgp.TColgp_SequenceOfPnt2d: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TColgp.TColgp_SequenceOfPnt2d: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TColgp.TColgp_SequenceOfPnt2d) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -559,9 +601,9 @@ class BRepTools_MapOfVertexPnt2d(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : BRepTools_MapOfVertexPnt2d) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepTools_MapOfVertexPnt2d) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepTools_GTrsfModification(BRepTools_Modification, OCP.Standard.Standard_Transient):
@@ -597,23 +639,23 @@ class BRepTools_GTrsfModification(BRepTools_Modification, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Returns Standard_True if the edge <E> has been modified. In this case, <C> is the new geometric support of the edge, <L> the new location, <Tol> the new tolerance. Otherwise, returns Standard_False, and <C>, <L>, <Tol> are not significant.
@@ -695,11 +737,11 @@ class BRepTools_Modifier():
         Sets the mutable input state If true then the input (original) shape can be modified during modification process
         """
     @overload
-    def __init__(self,theMutableInput : bool=False) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,M : BRepTools_Modification) -> None: ...
+    @overload
+    def __init__(self,theMutableInput : bool=False) -> None: ...
     pass
 class BRepTools_NurbsConvertModification(BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
@@ -734,23 +776,23 @@ class BRepTools_NurbsConvertModification(BRepTools_Modification, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Returns Standard_True if the edge <E> has been modified. In this case, <C> is the new geometric support of the edge, <L> the new location, <Tol> the new tolerance. Otherwise, returns Standard_False, and <C>, <L>, <Tol> are not significant.
@@ -799,6 +841,24 @@ class BRepTools_NurbsConvertModification(BRepTools_Modification, OCP.Standard.St
         None
         """
     pass
+class BRepTools_PurgeLocations():
+    """
+    Removes location datums, which satisfy conditions: aTrsf.IsNegative() || (Abs(Abs(aTrsf.ScaleFactor()) - 1.) > TopLoc_Location::ScalePrec()) from all locations of shape and its subshapes
+    """
+    def GetResult(self) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Returns shape with removed locations.
+        """
+    def IsDone(self) -> bool: 
+        """
+        None
+        """
+    def Perform(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
+        Removes all locations correspodingly to criterium from theShape.
+        """
+    def __init__(self) -> None: ...
+    pass
 class BRepTools_Quilt():
     """
     A Tool to glue faces at common edges and reconstruct shells.
@@ -818,7 +878,7 @@ class BRepTools_Quilt():
     def Bind(self,Vold : OCP.TopoDS.TopoDS_Vertex,Vnew : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def Copy(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        Returns the shape substitued to <S> in the Quilt.
+        Returns the shape substituted to <S> in the Quilt.
         """
     def IsCopied(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -834,7 +894,7 @@ class BRepTools_ReShape(OCP.Standard.Standard_Transient):
     """
     Rebuilds a Shape by making pre-defined substitutions on some of its componentsRebuilds a Shape by making pre-defined substitutions on some of its componentsRebuilds a Shape by making pre-defined substitutions on some of its components
     """
-    def Apply(self,shape : OCP.TopoDS.TopoDS_Shape,until : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> OCP.TopoDS.TopoDS_Shape: 
+    def Apply(self,theShape : OCP.TopoDS.TopoDS_Shape,theUntil : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Applies the substitutions requests to a shape.
         """
@@ -843,14 +903,14 @@ class BRepTools_ReShape(OCP.Standard.Standard_Transient):
         Clears all substitutions requests
         """
     @overload
-    def CopyVertex(self,theV : OCP.TopoDS.TopoDS_Vertex,theTol : float=-1.0) -> OCP.TopoDS.TopoDS_Vertex: 
+    def CopyVertex(self,theV : OCP.TopoDS.TopoDS_Vertex,theNewPos : OCP.gp.gp_Pnt,aTol : float) -> OCP.TopoDS.TopoDS_Vertex: 
         """
         None
 
         None
         """
     @overload
-    def CopyVertex(self,theV : OCP.TopoDS.TopoDS_Vertex,theNewPos : OCP.gp.gp_Pnt,aTol : float) -> OCP.TopoDS.TopoDS_Vertex: ...
+    def CopyVertex(self,theV : OCP.TopoDS.TopoDS_Vertex,theTol : float=-1.0) -> OCP.TopoDS.TopoDS_Vertex: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -876,23 +936,23 @@ class BRepTools_ReShape(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNewShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         None
@@ -970,32 +1030,32 @@ class BRepTools_ShapeSet(OCP.TopTools.TopTools_ShapeSet):
         Clears the content of the set.
         """
     @overload
-    def Dump(self,OS : io.BytesIO) -> None: 
+    def Dump(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: 
         """
         Dumps the content of me on the stream <OS>.
 
         Dumps on <OS> the shape <S>. Dumps the orientation, the index of the TShape and the index of the Location.
         """
     @overload
-    def Dump(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: ...
+    def Dump(self,OS : io.BytesIO) -> None: ...
     @overload
-    def DumpExtent(self,OS : io.BytesIO) -> io.BytesIO: 
+    def DumpExtent(self,S : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Dumps the number of objects in me on the stream <OS>. (Number of shapes of each type)
 
         Dumps the number of objects in me in the string S (Number of shapes of each type)
         """
     @overload
-    def DumpExtent(self,S : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def DumpExtent(self,OS : io.BytesIO) -> io.BytesIO: ...
     @overload
-    def DumpGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: 
+    def DumpGeometry(self,OS : io.BytesIO) -> None: 
         """
         Dumps the geometry of me on the stream <OS>.
 
         Dumps the geometry of <S> on the stream <OS>.
         """
     @overload
-    def DumpGeometry(self,OS : io.BytesIO) -> None: ...
+    def DumpGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: ...
     def DumpPolygon3D(self,OS : io.BytesIO) -> None: 
         """
         Dumps the 3d polygons on the stream <OS>.
@@ -1010,11 +1070,19 @@ class BRepTools_ShapeSet(OCP.TopTools.TopTools_ShapeSet):
         """
     def FormatNb(self) -> int: 
         """
-        two formats available for the moment: First: does not write CurveOnSurface UV Points into the file on reading calls Check() method. Second: stores CurveOnSurface UV Points. On reading format is recognized from Version string.
+        Returns the TopTools_FormatVersion
         """
     def Index(self,S : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         Returns the index of <S>.
+        """
+    def IsWithNormals(self) -> bool: 
+        """
+        Return true if shape should be stored triangulation with normals.
+        """
+    def IsWithTriangles(self) -> bool: 
+        """
+        Return true if shape should be stored with triangles.
         """
     def Locations(self) -> OCP.TopTools.TopTools_LocationSet: 
         """
@@ -1025,23 +1093,23 @@ class BRepTools_ShapeSet(OCP.TopTools.TopTools_ShapeSet):
         Returns number of shapes read from file.
         """
     @overload
-    def Read(self,S : OCP.TopoDS.TopoDS_Shape,IS : io.BytesIO) -> None: 
+    def Read(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the stream <IS>. me is first cleared.
 
         Reads from <IS> a shape and returns it in S.
         """
     @overload
-    def Read(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read(self,S : OCP.TopoDS.TopoDS_Shape,IS : io.BytesIO) -> None: ...
     @overload
-    def ReadGeometry(self,T : OCP.TopAbs.TopAbs_ShapeEnum,IS : io.BytesIO,S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def ReadGeometry(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the geometry of me from the stream <IS>.
 
         Reads the geometry of a shape of type <T> from the stream <IS> and returns it in <S>.
         """
     @overload
-    def ReadGeometry(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def ReadGeometry(self,T : OCP.TopAbs.TopAbs_ShapeEnum,IS : io.BytesIO,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def ReadPolygon3D(self,IS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the 3d polygons of me from the stream <IS>.
@@ -1056,7 +1124,15 @@ class BRepTools_ShapeSet(OCP.TopTools.TopTools_ShapeSet):
         """
     def SetFormatNb(self,theFormatNb : int) -> None: 
         """
-        None
+        Sets the TopTools_FormatVersion
+        """
+    def SetWithNormals(self,theWithNormals : bool) -> None: 
+        """
+        Define if shape will be stored triangulation with normals. Ignored (always written) if face defines only triangulation (no surface).
+        """
+    def SetWithTriangles(self,theWithTriangles : bool) -> None: 
+        """
+        Define if shape will be stored with triangles. Ignored (always written) if face defines only triangulation (no surface).
         """
     def Shape(self,I : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -1072,14 +1148,14 @@ class BRepTools_ShapeSet(OCP.TopTools.TopTools_ShapeSet):
     @overload
     def Write(self,OS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def WriteGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: 
+    def WriteGeometry(self,OS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the geometry of me on the stream <OS> in a format that can be read back by Read.
 
         Writes the geometry of <S> on the stream <OS> in a format that can be read back by Read.
         """
     @overload
-    def WriteGeometry(self,OS : io.BytesIO,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def WriteGeometry(self,S : OCP.TopoDS.TopoDS_Shape,OS : io.BytesIO) -> None: ...
     def WritePolygon3D(self,OS : io.BytesIO,Compact : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Writes the 3d polygons on the stream <OS> in a format that can be read back by Read.
@@ -1093,9 +1169,9 @@ class BRepTools_ShapeSet(OCP.TopTools.TopTools_ShapeSet):
         Writes the triangulation on the stream <OS> in a format that can be read back by Read.
         """
     @overload
-    def __init__(self,B : OCP.BRep.BRep_Builder,isWithTriangles : bool=True) -> None: ...
+    def __init__(self,theBuilder : OCP.BRep.BRep_Builder,theWithTriangles : bool=True,theWithNormals : bool=False) -> None: ...
     @overload
-    def __init__(self,isWithTriangles : bool=True) -> None: ...
+    def __init__(self,theWithTriangles : bool=True,theWithNormals : bool=False) -> None: ...
     pass
 class BRepTools_Substitution():
     """
@@ -1111,7 +1187,7 @@ class BRepTools_Substitution():
         """
     def Copy(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
-        Returns the set of shapes substitued to <S> .
+        Returns the set of shapes substituted to <S>.
         """
     def IsCopied(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -1152,23 +1228,23 @@ class BRepTools_TrsfModification(BRepTools_Modification, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Returns true if the edge E has been modified. If the edge has been modified: - C is the new geometric support of the edge, - L is the new location, and - Tol is the new tolerance. If the edge has not been modified, this function returns false, and the values of C, L and Tol are not significant.
@@ -1238,7 +1314,7 @@ class BRepTools_WireExplorer():
         Returns the vertex connecting the current edge to the previous one.
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face,UMin : float,UMax : float,VMin : float,VMax : float) -> None: 
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire) -> None: 
         """
         Initializes an exploration of the wire <W>.
 
@@ -1247,7 +1323,7 @@ class BRepTools_WireExplorer():
         Initializes an exploration of the wire <W>. F is used to select the edge connected to the previous in the parametric representation of <F>. <UMIn>, <UMax>, <VMin>, <VMax> - the UV bounds of the face <F>.
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
     @overload
     def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     def More(self) -> bool: 
@@ -1263,9 +1339,9 @@ class BRepTools_WireExplorer():
         Returns an Orientation for the current edge.
         """
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire) -> None: ...
     pass

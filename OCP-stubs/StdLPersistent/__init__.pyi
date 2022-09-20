@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TDocStd
-import OCP.TCollection
 import OCP.StdObjMgt
 import OCP.TFunction
-import OCP.TDataStd
+import OCP.TDocStd
 import OCP.Standard
+import OCP.TDataStd
+import OCP.TCollection
 __all__  = [
 "StdLPersistent",
 "StdLPersistent_Collection",
@@ -54,11 +54,11 @@ class StdLPersistent_Data(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.Stand
     """
     def AsciiString(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
-        Get referenced ASCII string (to be overriden by ASCII string class; returns a null handle by default for other classes).
+        Get referenced ASCII string (to be overridden by ASCII string class; returns a null handle by default for other classes).
         """
     def CreateAttribute(self) -> OCP.TDF.TDF_Attribute: 
         """
-        Create an empty transient attribuite (to be overriden by attribute classes; does nothing and returns a null handle by default for other classes).
+        Create an empty transient attribute (to be overridden by attribute classes; does nothing and returns a null handle by default for other classes).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -74,11 +74,11 @@ class StdLPersistent_Data(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.Stand
         """
     def ExtString(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
-        Get referenced extended string (to be overriden by extended string class; returns a null handle by default for other classes).
+        Get referenced extended string (to be overridden by extended string class; returns a null handle by default for other classes).
         """
     def GetAttribute(self) -> OCP.TDF.TDF_Attribute: 
         """
-        Get transient attribuite for the persistent data (to be overriden by attribute classes; returns a null handle by default for non-attribute classes).
+        Get transient attribute for the persistent data (to be overridden by attribute classes; returns a null handle by default for non-attribute classes).
         """
     def GetRefCount(self) -> int: 
         """
@@ -90,37 +90,37 @@ class StdLPersistent_Data(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.Stand
         """
     def ImportAttribute(self) -> None: 
         """
-        Import transient attribuite from the persistent data (to be overriden by attribute classes; does nothing by default for non-attribute classes).
+        Import transient attribute from the persistent data (to be overridden by attribute classes; does nothing by default for non-attribute classes).
         """
     def ImportDocument(self,theDocument : OCP.TDocStd.TDocStd_Document) -> None: 
         """
-        Import transient document from the persistent data (to be overriden by document class; does nothing by default for other classes).
+        Import transient document from the persistent data (to be overridden by document class; does nothing by default for other classes).
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self,theDF : OCP.TDF.TDF_Data) -> OCP.TDF.TDF_Label: 
         """
-        Get a label expressed by referenced extended string (to be overriden by extended string class; returns a null label by default for other classes).
+        Get a label expressed by referenced extended string (to be overridden by extended string class; returns a null label by default for other classes).
         """
     def PChildren(self,theChildren : Any) -> None: 
         """
@@ -135,27 +135,27 @@ class StdLPersistent_Data(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.Stand
         Read persistent data from a file.
         """
     @overload
-    def RefNum(self) -> int: 
+    def RefNum(self,theRefNum : int) -> None: 
         """
         Returns the object reference number
 
         Sets an object reference number
         """
     @overload
-    def RefNum(self,theRefNum : int) -> None: ...
+    def RefNum(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TypeNum(self,theTypeNum : int) -> None: 
+    def TypeNum(self) -> int: 
         """
         Returns the assigned persistent type number
 
         Assigns a persistent type number to the object
         """
     @overload
-    def TypeNum(self) -> int: ...
+    def TypeNum(self,theTypeNum : int) -> None: ...
     def Write(self,theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData) -> None: 
         """
         Write persistent data to a file.
@@ -184,11 +184,11 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
     """
     def AsciiString(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
-        Get referenced ASCII string (to be overriden by ASCII string class; returns a null handle by default for other classes).
+        Get referenced ASCII string (to be overridden by ASCII string class; returns a null handle by default for other classes).
         """
     def CreateAttribute(self) -> OCP.TDF.TDF_Attribute: 
         """
-        Create an empty transient attribuite (to be overriden by attribute classes; does nothing and returns a null handle by default for other classes).
+        Create an empty transient attribute (to be overridden by attribute classes; does nothing and returns a null handle by default for other classes).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -204,11 +204,11 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
         """
     def ExtString(self) -> OCP.TCollection.TCollection_HExtendedString: 
         """
-        Get referenced extended string (to be overriden by extended string class; returns a null handle by default for other classes).
+        Get referenced extended string (to be overridden by extended string class; returns a null handle by default for other classes).
         """
     def GetAttribute(self) -> OCP.TDF.TDF_Attribute: 
         """
-        Get transient attribuite for the persistent data (to be overriden by attribute classes; returns a null handle by default for non-attribute classes).
+        Get transient attribute for the persistent data (to be overridden by attribute classes; returns a null handle by default for non-attribute classes).
         """
     def GetRefCount(self) -> int: 
         """
@@ -216,7 +216,7 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
         """
     def ImportAttribute(self) -> None: 
         """
-        Import transient attribuite from the persistent data (to be overriden by attribute classes; does nothing by default for non-attribute classes).
+        Import transient attribute from the persistent data (to be overridden by attribute classes; does nothing by default for non-attribute classes).
         """
     def ImportDocument(self,theDocument : OCP.TDocStd.TDocStd_Document) -> None: 
         """
@@ -227,26 +227,26 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self,theDF : OCP.TDF.TDF_Data) -> OCP.TDF.TDF_Label: 
         """
-        Get a label expressed by referenced extended string (to be overriden by extended string class; returns a null label by default for other classes).
+        Get a label expressed by referenced extended string (to be overridden by extended string class; returns a null label by default for other classes).
         """
     def PChildren(self,arg1 : Any) -> None: 
         """
@@ -261,27 +261,27 @@ class StdLPersistent_Document(OCP.StdObjMgt.StdObjMgt_Persistent, OCP.Standard.S
         Read persistent data from a file.
         """
     @overload
-    def RefNum(self) -> int: 
+    def RefNum(self,theRefNum : int) -> None: 
         """
         Returns the object reference number
 
         Sets an object reference number
         """
     @overload
-    def RefNum(self,theRefNum : int) -> None: ...
+    def RefNum(self) -> int: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TypeNum(self,theTypeNum : int) -> None: 
+    def TypeNum(self) -> int: 
         """
         Returns the assigned persistent type number
 
         Assigns a persistent type number to the object
         """
     @overload
-    def TypeNum(self) -> int: ...
+    def TypeNum(self,theTypeNum : int) -> None: ...
     def Write(self,theWriteData : OCP.StdObjMgt.StdObjMgt_WriteData) -> None: 
         """
         Read persistent data from a file.
@@ -304,7 +304,7 @@ class StdLPersistent_Function():
     """
     def Import(self,theAttribute : OCP.TFunction.TFunction_Function) -> None: 
         """
-        Import transient attribuite from the persistent data.
+        Import transient attribute from the persistent data.
         """
     def PChildren(self,arg1 : Any) -> None: 
         """
@@ -360,33 +360,33 @@ class StdLPersistent_HArray1OfPersistent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.StdObjMgt.StdObjMgt_Persistent) -> None: ...
     @overload
     def __init__(self,theOther : Any) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @staticmethod
@@ -436,23 +436,23 @@ class StdLPersistent_HArray2OfPersistent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -484,10 +484,6 @@ class StdLPersistent_NamedData():
     """
     None
     """
-    def Import(self,theAttribute : OCP.TDataStd.TDataStd_NamedData) -> None: 
-        """
-        Import transient attribuite from the persistent data.
-        """
     def PChildren(self,arg1 : Any) -> None: 
         """
         Gets persistent child objects
@@ -512,7 +508,7 @@ class StdLPersistent_Real():
     """
     def Import(self,theAttribute : OCP.TDataStd.TDataStd_Real) -> None: 
         """
-        Import transient attribuite from the persistent data.
+        Import transient attribute from the persistent data.
         """
     def PChildren(self,arg1 : Any) -> None: 
         """
@@ -538,11 +534,11 @@ class StdLPersistent_TreeNode():
     """
     def CreateAttribute(self) -> OCP.TDF.TDF_Attribute: 
         """
-        Create an empty transient attribuite
+        Create an empty transient attribute
         """
     def ImportAttribute(self) -> None: 
         """
-        Import transient attribuite from the persistent data.
+        Import transient attribute from the persistent data.
         """
     def PChildren(self,arg1 : Any) -> None: 
         """
@@ -574,7 +570,7 @@ class StdLPersistent_Variable():
     """
     def Import(self,theAttribute : OCP.TDataStd.TDataStd_Variable) -> None: 
         """
-        Import transient attribuite from the persistent data.
+        Import transient attribute from the persistent data.
         """
     def PChildren(self,theChildren : Any) -> None: 
         """
@@ -606,7 +602,7 @@ class StdLPersistent_XLink():
     """
     def Import(self,theAttribute : OCP.TDocStd.TDocStd_XLink) -> None: 
         """
-        Import transient attribuite from the persistent data.
+        Import transient attribute from the persistent data.
         """
     def PChildren(self,theChildren : Any) -> None: 
         """

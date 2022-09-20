@@ -5,31 +5,27 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.GeomAdaptor
-import OCP.Adaptor2d
-import OCP.gp
-import OCP.GeomAbs
-import OCP.Geom
-import OCP.TopoDS
 import OCP.Geom2dAdaptor
+import OCP.Adaptor2d
+import OCP.GeomAbs
 import OCP.Geom2d
+import OCP.gp
 import OCP.Standard
+import OCP.Geom
+import OCP.GeomAdaptor
+import OCP.TopoDS
+import OCP.TColStd
 __all__  = [
 "BRepAdaptor_Array1OfCurve",
 "BRepAdaptor_CompCurve",
 "BRepAdaptor_Curve",
 "BRepAdaptor_Curve2d",
 "BRepAdaptor_HArray1OfCurve",
-"BRepAdaptor_HCompCurve",
-"BRepAdaptor_HCurve",
-"BRepAdaptor_HCurve2d",
-"BRepAdaptor_HSurface",
 "BRepAdaptor_Surface"
 ]
 class BRepAdaptor_Array1OfCurve():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : BRepAdaptor_Array1OfCurve) -> BRepAdaptor_Array1OfCurve: 
         """
@@ -113,9 +109,9 @@ class BRepAdaptor_Array1OfCurve():
     def __init__(self,theOther : BRepAdaptor_Array1OfCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
-class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
+class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Transient):
     """
-    The Curve from BRepAdaptor allows to use a Wire of the BRep topology like a 3D curve. Warning: With this class of curve, C0 and C1 continuities are not assumed. So be careful with some algorithm! Please note that BRepAdaptor_CompCurve cannot be periodic curve at all (even if it contains single periodic edge).
+    The Curve from BRepAdaptor allows to use a Wire of the BRep topology like a 3D curve. Warning: With this class of curve, C0 and C1 continuities are not assumed. So be careful with some algorithm! Please note that BRepAdaptor_CompCurve cannot be periodic curve at all (even if it contains single periodic edge).The Curve from BRepAdaptor allows to use a Wire of the BRep topology like a 3D curve. Warning: With this class of curve, C0 and C1 continuities are not assumed. So be careful with some algorithm! Please note that BRepAdaptor_CompCurve cannot be periodic curve at all (even if it contains single periodic edge).
     """
     def BSpline(self) -> OCP.Geom.Geom_BSplineCurve: 
         """
@@ -153,7 +149,19 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
     def Degree(self) -> int: 
+        """
+        None
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -169,6 +177,10 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         None
@@ -177,15 +189,19 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
     @overload
-    def Initialize(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool,First : float,Last : float,Tol : float) -> None: 
+    def Initialize(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool) -> None: 
         """
         Sets the wire <W>.
 
         Sets wire <W> and trimmed parameter.
         """
     @overload
-    def Initialize(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool) -> None: ...
+    def Initialize(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool,First : float,Last : float,Tol : float) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -194,6 +210,24 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -238,7 +272,15 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         returns the parametric resolution
         """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def ShallowCopy(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
+        """
+        Shallow copy of adaptor
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion. If <First> >= <Last>
         """
@@ -251,23 +293,33 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve):
         Returns the wire.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool,First : float,Last : float,Tol : float) -> None: ...
     @overload
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
-class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
+class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Transient):
     """
-    The Curve from BRepAdaptor allows to use an Edge of the BRep topology like a 3D curve.
+    The Curve from BRepAdaptor allows to use an Edge of the BRep topology like a 3D curve.The Curve from BRepAdaptor allows to use an Edge of the BRep topology like a 3D curve.
     """
     def BSpline(self) -> OCP.Geom.Geom_BSplineCurve: 
         """
-        Warning : This will make a copy of the BSpline Curve since it applies to it myTsrf . Be carefull when using this method
+        Warning: This will make a copy of the BSpline Curve since it applies to it myTsrf. Be careful when using this method.
         """
     def Bezier(self) -> OCP.Geom.Geom_BezierCurve: 
         """
-        Warning : This will make a copy of the Bezier Curve since it applies to it myTsrf . Be carefull when using this method
+        Warning: This will make a copy of the Bezier Curve since it applies to it myTsrf. Be careful when using this method.
         """
     def Circle(self) -> OCP.gp.gp_Circ: 
         """
@@ -305,7 +357,19 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
     def Degree(self) -> int: 
+        """
+        None
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -321,6 +385,10 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         None
@@ -329,15 +397,19 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
-    @overload
-    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def IncrementRefCounter(self) -> None: 
         """
-        Sets the Curve <me> to acces to the geometry of edge <E>.
+        Increments the reference counter of this object
+        """
+    @overload
+    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
+        """
+        Sets the Curve <me> to access the geometry of edge <E>.
 
-        Sets the Curve <me> to acces to the geometry of edge <E>. The geometry will be computed using the parametric curve of <E> on the face <F>. An Error is raised if the edge does not have a pcurve on the face.
+        Sets the Curve <me> to access the geometry of edge <E>. The geometry will be computed using the parametric curve of <E> on the face <F>. An Error is raised if the edge does not have a pcurve on the face.
         """
     @overload
-    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -354,6 +426,24 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         Returns True if the edge geometry is computed from a pcurve on a surface.
         """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -402,11 +492,19 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         returns the parametric resolution
         """
+    def ShallowCopy(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
+        """
+        Shallow copy of adaptor
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
     def Tolerance(self) -> float: 
         """
         Returns the edge tolerance.
         """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion. If <First> >= <Last>
         """
@@ -421,13 +519,23 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve):
     @overload
     def __init__(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
-class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.Adaptor2d_Curve2d):
+class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
     """
-    The Curve2d from BRepAdaptor allows to use an Edge on a Face like a 2d curve. (curve in the parametric space).
+    The Curve2d from BRepAdaptor allows to use an Edge on a Face like a 2d curve. (curve in the parametric space).The Curve2d from BRepAdaptor allows to use an Edge on a Face like a 2d curve. (curve in the parametric space).
     """
     def BSpline(self) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
@@ -447,8 +555,6 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         """
     def Curve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
-        None
-
         None
         """
     def D0(self,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
@@ -471,7 +577,19 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
     def Degree(self) -> int: 
+        """
+        None
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -490,18 +608,22 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
     def FirstParameter(self) -> float: 
         """
         None
-
-        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
         """
     def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
-        None
-
         None
         """
     def Hyperbola(self) -> OCP.gp.gp_Hypr2d: 
         """
         None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
@@ -515,6 +637,24 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         """
         None
         """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -526,26 +666,20 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
     def LastParameter(self) -> float: 
         """
         None
-
-        None
         """
     def Line(self) -> OCP.gp.gp_Lin2d: 
         """
         None
         """
     @overload
-    def Load(self,C : OCP.Geom2d.Geom2d_Curve,UFirst : float,ULast : float) -> None: 
+    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve,theUFirst : float,theULast : float) -> None: 
         """
         None
 
-        ConstructionError is raised if Ufirst>Ulast
-
-        None
-
-        ConstructionError is raised if Ufirst>Ulast
+        Standard_ConstructionError is raised if theUFirst>theULast
         """
     @overload
-    def Load(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.
@@ -578,7 +712,15 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         """
         returns the parametric resolution
         """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def ShallowCopy(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
+        """
+        Shallow copy of adaptor
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion. If <First> >= <Last>
         """
@@ -587,9 +729,19 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         Computes the point of parameter U on the curve
         """
     @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class BRepAdaptor_HArray1OfCurve(BRepAdaptor_Array1OfCurve, OCP.Standard.Standard_Transient):
     def Array1(self) -> BRepAdaptor_Array1OfCurve: 
@@ -657,23 +809,23 @@ class BRepAdaptor_HArray1OfCurve(BRepAdaptor_Array1OfCurve, OCP.Standard.Standar
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> BRepAdaptor_Curve: 
         """
         Returns last element
@@ -715,13 +867,13 @@ class BRepAdaptor_HArray1OfCurve(BRepAdaptor_Array1OfCurve, OCP.Standard.Standar
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : BRepAdaptor_Curve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : BRepAdaptor_Curve) -> None: ...
     @overload
     def __init__(self,theOther : BRepAdaptor_Array1OfCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -734,1095 +886,9 @@ class BRepAdaptor_HArray1OfCurve(BRepAdaptor_Array1OfCurve, OCP.Standard.Standar
         None
         """
     pass
-class BRepAdaptor_HCompCurve(OCP.Adaptor3d.Adaptor3d_HCurve, OCP.Standard.Standard_Transient):
-    def BSpline(self) -> OCP.Geom.Geom_BSplineCurve: 
-        """
-        None
-
-        None
-        """
-    def Bezier(self) -> OCP.Geom.Geom_BezierCurve: 
-        """
-        None
-
-        None
-        """
-    def ChangeCurve(self) -> BRepAdaptor_CompCurve: 
-        """
-        Returns the curve used to create the GenHCurve.
-        """
-    def Circle(self) -> OCP.gp.gp_Circ: 
-        """
-        None
-
-        None
-        """
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
-        """
-        None
-
-        None
-        """
-    def Curve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
-        """
-        Returns the curve used to create the GenHCurve. This is redefined from HCurve, cannot be inline.
-        """
-    def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
-        """
-        None
-
-        None
-        """
-    def D1(self,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D2(self,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D3(self,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def DN(self,U : float,N : int) -> OCP.gp.gp_Vec: 
-        """
-        None
-
-        None
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Degree(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def Ellipse(self) -> OCP.gp.gp_Elips: 
-        """
-        None
-
-        None
-        """
-    def FirstParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
-        """
-        Returns the curve used to create the GenHCurve. This is redefined from HCurve, cannot be inline.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
-        """
-        None
-
-        None
-        """
-    def Hyperbola(self) -> OCP.gp.gp_Hypr: 
-        """
-        None
-
-        None
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
-
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
-        """
-    def IsClosed(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsPeriodic(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsRational(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def LastParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Line(self) -> OCP.gp.gp_Lin: 
-        """
-        None
-
-        None
-        """
-    def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbKnots(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbPoles(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def OffsetCurve(self) -> OCP.Geom.Geom_OffsetCurve: 
-        """
-        None
-
-        None
-        """
-    def Parabola(self) -> OCP.gp.gp_Parab: 
-        """
-        None
-
-        None
-        """
-    def Period(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Resolution(self,R3d : float) -> float: 
-        """
-        None
-
-        None
-        """
-    def Set(self,C : BRepAdaptor_CompCurve) -> None: 
-        """
-        Sets the field of the GenHCurve.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
-        """
-        Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
-
-        Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
-        """
-    def Value(self,U : float) -> OCP.gp.gp_Pnt: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def __init__(self,C : BRepAdaptor_CompCurve) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class BRepAdaptor_HCurve(OCP.Adaptor3d.Adaptor3d_HCurve, OCP.Standard.Standard_Transient):
-    def BSpline(self) -> OCP.Geom.Geom_BSplineCurve: 
-        """
-        None
-
-        None
-        """
-    def Bezier(self) -> OCP.Geom.Geom_BezierCurve: 
-        """
-        None
-
-        None
-        """
-    def ChangeCurve(self) -> BRepAdaptor_Curve: 
-        """
-        Returns the curve used to create the GenHCurve.
-        """
-    def Circle(self) -> OCP.gp.gp_Circ: 
-        """
-        None
-
-        None
-        """
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
-        """
-        None
-
-        None
-        """
-    def Curve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
-        """
-        Returns the curve used to create the GenHCurve. This is redefined from HCurve, cannot be inline.
-        """
-    def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
-        """
-        None
-
-        None
-        """
-    def D1(self,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D2(self,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D3(self,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def DN(self,U : float,N : int) -> OCP.gp.gp_Vec: 
-        """
-        None
-
-        None
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Degree(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def Ellipse(self) -> OCP.gp.gp_Elips: 
-        """
-        None
-
-        None
-        """
-    def FirstParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
-        """
-        Returns the curve used to create the GenHCurve. This is redefined from HCurve, cannot be inline.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
-        """
-        None
-
-        None
-        """
-    def Hyperbola(self) -> OCP.gp.gp_Hypr: 
-        """
-        None
-
-        None
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
-
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
-        """
-    def IsClosed(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsPeriodic(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsRational(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def LastParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Line(self) -> OCP.gp.gp_Lin: 
-        """
-        None
-
-        None
-        """
-    def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbKnots(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbPoles(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def OffsetCurve(self) -> OCP.Geom.Geom_OffsetCurve: 
-        """
-        None
-
-        None
-        """
-    def Parabola(self) -> OCP.gp.gp_Parab: 
-        """
-        None
-
-        None
-        """
-    def Period(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Resolution(self,R3d : float) -> float: 
-        """
-        None
-
-        None
-        """
-    def Set(self,C : BRepAdaptor_Curve) -> None: 
-        """
-        Sets the field of the GenHCurve.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
-        """
-        Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
-
-        Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
-        """
-    def Value(self,U : float) -> OCP.gp.gp_Pnt: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def __init__(self,C : BRepAdaptor_Curve) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class BRepAdaptor_HCurve2d(OCP.Adaptor2d.Adaptor2d_HCurve2d, OCP.Standard.Standard_Transient):
-    def BSpline(self) -> OCP.Geom2d.Geom2d_BSplineCurve: 
-        """
-        None
-
-        None
-        """
-    def Bezier(self) -> OCP.Geom2d.Geom2d_BezierCurve: 
-        """
-        None
-
-        None
-        """
-    def ChangeCurve2d(self) -> BRepAdaptor_Curve2d: 
-        """
-        Returns the curve used to create the GenHCurve.
-        """
-    def Circle(self) -> OCP.gp.gp_Circ2d: 
-        """
-        None
-
-        None
-        """
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
-        """
-        None
-
-        None
-        """
-    def Curve2d(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
-        """
-        Returns the curve used to create the GenHCurve2d. This is redefined from HCurve2d, cannot be inline.
-        """
-    def D0(self,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
-        """
-        None
-
-        None
-        """
-    def D1(self,U : float,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: 
-        """
-        None
-
-        None
-        """
-    def D2(self,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
-        """
-        None
-
-        None
-        """
-    def D3(self,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: 
-        """
-        None
-
-        None
-        """
-    def DN(self,U : float,N : int) -> OCP.gp.gp_Vec2d: 
-        """
-        None
-
-        None
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Degree(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def Ellipse(self) -> OCP.gp.gp_Elips2d: 
-        """
-        None
-
-        None
-        """
-    def FirstParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
-        """
-        None
-
-        None
-        """
-    def Hyperbola(self) -> OCP.gp.gp_Hypr2d: 
-        """
-        None
-
-        None
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        None
-
-        None
-        """
-    def IsClosed(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsPeriodic(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsRational(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def LastParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Line(self) -> OCP.gp.gp_Lin2d: 
-        """
-        None
-
-        None
-        """
-    def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbKnots(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbPoles(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def Parabola(self) -> OCP.gp.gp_Parab2d: 
-        """
-        None
-
-        None
-        """
-    def Period(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Resolution(self,R3d : float) -> float: 
-        """
-        None
-
-        None
-        """
-    def Set(self,C : BRepAdaptor_Curve2d) -> None: 
-        """
-        Sets the field of the GenHCurve2d.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
-        """
-        If <First> >= <Last>
-
-        If <First> >= <Last>
-        """
-    def Value(self,U : float) -> OCP.gp.gp_Pnt2d: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C : BRepAdaptor_Curve2d) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class BRepAdaptor_HSurface(OCP.Adaptor3d.Adaptor3d_HSurface, OCP.Standard.Standard_Transient):
-    def AxeOfRevolution(self) -> OCP.gp.gp_Ax1: 
-        """
-        None
-
-        None
-        """
-    def BSpline(self) -> OCP.Geom.Geom_BSplineSurface: 
-        """
-        None
-
-        None
-        """
-    def BasisCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
-        """
-        None
-
-        None
-        """
-    def BasisSurface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
-        """
-        None
-
-        None
-        """
-    def Bezier(self) -> OCP.Geom.Geom_BezierSurface: 
-        """
-        None
-
-        None
-        """
-    def ChangeSurface(self) -> BRepAdaptor_Surface: 
-        """
-        Returns the surface used to create the GenHSurface.
-        """
-    def Cone(self) -> OCP.gp.gp_Cone: 
-        """
-        None
-
-        None
-        """
-    def Cylinder(self) -> OCP.gp.gp_Cylinder: 
-        """
-        None
-
-        None
-        """
-    def D0(self,U : float,V : float,P : OCP.gp.gp_Pnt) -> None: 
-        """
-        None
-
-        None
-        """
-    def D1(self,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D2(self,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D3(self,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,D3U : OCP.gp.gp_Vec,D3V : OCP.gp.gp_Vec,D3UUV : OCP.gp.gp_Vec,D3UVV : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def DN(self,U : float,V : float,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
-        """
-        None
-
-        None
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def Direction(self) -> OCP.gp.gp_Dir: 
-        """
-        None
-
-        None
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def FirstUParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def FirstVParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def GetType(self) -> OCP.GeomAbs.GeomAbs_SurfaceType: 
-        """
-        None
-
-        None
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsUClosed(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsUPeriodic(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsURational(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsVClosed(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsVPeriodic(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsVRational(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def LastUParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def LastVParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbUKnots(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbUPoles(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbVIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbVKnots(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbVPoles(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def OffsetValue(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Plane(self) -> OCP.gp.gp_Pln: 
-        """
-        None
-
-        None
-        """
-    def Set(self,S : BRepAdaptor_Surface) -> None: 
-        """
-        Sets the field of the GenHSurface.
-        """
-    def Sphere(self) -> OCP.gp.gp_Sphere: 
-        """
-        None
-
-        None
-        """
-    def Surface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
-        """
-        Returns a reference to the Surface inside the HSurface. This is redefined from HSurface, cannot be inline.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Torus(self) -> OCP.gp.gp_Torus: 
-        """
-        None
-
-        None
-        """
-    def UContinuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
-        """
-        None
-
-        None
-        """
-    def UDegree(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def UIntervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        None
-
-        None
-        """
-    def UPeriod(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def UResolution(self,R3d : float) -> float: 
-        """
-        None
-
-        None
-        """
-    def UTrim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
-        """
-        None
-
-        None
-        """
-    def VContinuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
-        """
-        None
-
-        None
-        """
-    def VDegree(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def VIntervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        None
-
-        None
-        """
-    def VPeriod(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def VResolution(self,R3d : float) -> float: 
-        """
-        None
-
-        None
-        """
-    def VTrim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
-        """
-        None
-
-        None
-        """
-    def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def __init__(self,S : BRepAdaptor_Surface) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
+class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface, OCP.Standard.Standard_Transient):
     """
-    The Surface from BRepAdaptor allows to use a Face of the BRep topology look like a 3D surface.
+    The Surface from BRepAdaptor allows to use a Face of the BRep topology look like a 3D surface.The Surface from BRepAdaptor allows to use a Face of the BRep topology look like a 3D surface.
     """
     def AxeOfRevolution(self) -> OCP.gp.gp_Ax1: 
         """
@@ -1830,13 +896,13 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         """
     def BSpline(self) -> OCP.Geom.Geom_BSplineSurface: 
         """
-        Warning : this will make a copy of the BSpline Surface since it applies to it the myTsrf transformation Be Carefull when using this method
+        Warning : this will make a copy of the BSpline Surface since it applies to it the myTsrf transformation Be Careful when using this method
         """
-    def BasisCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def BasisCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
-        only for SurfaceOfExtrusion and SurfaceOfRevolution Warning: this will make a copy of the underlying curve since it applies to it the transformation myTrsf. Be carefull when using this method.
+        only for SurfaceOfExtrusion and SurfaceOfRevolution Warning: this will make a copy of the underlying curve since it applies to it the transformation myTrsf. Be careful when using this method.
         """
-    def BasisSurface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def BasisSurface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         None
         """
@@ -1876,7 +942,19 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         """
         Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V). Raised if the current U interval is not not CNu and the current V interval is not CNv. Raised if Nu + Nv < 1 or Nu < 0 or Nv < 0.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
     def Direction(self) -> OCP.gp.gp_Dir: 
+        """
+        None
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -1887,107 +965,99 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     def FirstUParameter(self) -> float: 
         """
         None
-
-        None
         """
     def FirstVParameter(self) -> float: 
         """
         None
-
-        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
         """
     def GetType(self) -> OCP.GeomAbs.GeomAbs_SurfaceType: 
         """
         Returns the type of the surface : Plane, Cylinder, Cone, Sphere, Torus, BezierSurface, BSplineSurface, SurfaceOfRevolution, SurfaceOfExtrusion, OtherSurface
-
-        Returns the type of the surface : Plane, Cylinder, Cone, Sphere, Torus, BezierSurface, BSplineSurface, SurfaceOfRevolution, SurfaceOfExtrusion, OtherSurface
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     def Initialize(self,F : OCP.TopoDS.TopoDS_Face,Restriction : bool=True) -> None: 
         """
         Sets the surface to the geometry of <F>.
         """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
-        None
-
         None
         """
     def IsUPeriodic(self) -> bool: 
         """
         None
-
-        None
         """
     def IsURational(self) -> bool: 
         """
-        None
-
         None
         """
     def IsVClosed(self) -> bool: 
         """
         None
-
-        None
         """
     def IsVPeriodic(self) -> bool: 
         """
-        None
-
         None
         """
     def IsVRational(self) -> bool: 
         """
         None
-
-        None
         """
     def LastUParameter(self) -> float: 
         """
-        None
-
         None
         """
     def LastVParameter(self) -> float: 
         """
         None
-
-        None
         """
-    def NbUIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def NbUIntervals(self,theSh : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
-        If necessary, breaks the surface in U intervals of continuity <S>. And returns the number of intervals.
-
         If necessary, breaks the surface in U intervals of continuity <S>. And returns the number of intervals.
         """
     def NbUKnots(self) -> int: 
         """
         None
-
-        None
         """
     def NbUPoles(self) -> int: 
         """
         None
-
-        None
         """
-    def NbVIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def NbVIntervals(self,theSh : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
-        If necessary, breaks the surface in V intervals of continuity <S>. And returns the number of intervals.
-
         If necessary, breaks the surface in V intervals of continuity <S>. And returns the number of intervals.
         """
     def NbVKnots(self) -> int: 
         """
         None
-
-        None
         """
     def NbVPoles(self) -> int: 
         """
-        None
-
         None
         """
     def OffsetValue(self) -> float: 
@@ -1998,6 +1068,10 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
         """
         None
         """
+    def ShallowCopy(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
+        """
+        Shallow copy of adaptor
+        """
     def Sphere(self) -> OCP.gp.gp_Sphere: 
         """
         None
@@ -2005,6 +1079,10 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     def Surface(self) -> OCP.GeomAdaptor.GeomAdaptor_Surface: 
         """
         Returns the surface.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def Tolerance(self) -> float: 
         """
@@ -2021,13 +1099,9 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     def UContinuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
-
-        None
         """
     def UDegree(self) -> int: 
         """
-        None
-
         None
         """
     def UIntervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
@@ -2037,29 +1111,21 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     def UPeriod(self) -> float: 
         """
         None
-
-        None
         """
-    def UResolution(self,R3d : float) -> float: 
+    def UResolution(self,theR3d : float) -> float: 
         """
         Returns the parametric U resolution corresponding to the real space resolution <R3d>.
-
-        Returns the parametric U resolution corresponding to the real space resolution <R3d>.
         """
-    def UTrim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def UTrim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         Returns a surface trimmed in the U direction equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion. If <First> >= <Last>
         """
     def VContinuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
-
-        None
         """
     def VDegree(self) -> int: 
         """
-        None
-
         None
         """
     def VIntervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
@@ -2069,16 +1135,12 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     def VPeriod(self) -> float: 
         """
         None
-
-        None
         """
-    def VResolution(self,R3d : float) -> float: 
+    def VResolution(self,theR3d : float) -> float: 
         """
         Returns the parametric V resolution corresponding to the real space resolution <R3d>.
-
-        Returns the parametric V resolution corresponding to the real space resolution <R3d>.
         """
-    def VTrim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def VTrim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         Returns a surface trimmed in the V direction between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion. If <First> >= <Last>
         """
@@ -2090,4 +1152,14 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface):
     def __init__(self) -> None: ...
     @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,R : bool=True) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass

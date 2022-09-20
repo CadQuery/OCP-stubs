@@ -53,9 +53,9 @@ class Sweep_NumShape():
         None
         """
     @overload
-    def __init__(self,Index : int,Type : OCP.TopAbs.TopAbs_ShapeEnum,Closed : bool=False,BegInf : bool=False,EndInf : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Index : int,Type : OCP.TopAbs.TopAbs_ShapeEnum,Closed : bool=False,BegInf : bool=False,EndInf : bool=False) -> None: ...
     pass
 class Sweep_NumShapeIterator():
     """
@@ -63,7 +63,7 @@ class Sweep_NumShapeIterator():
     """
     def Init(self,aShape : Sweep_NumShape) -> None: 
         """
-        Resest the NumShapeIterator on sub-shapes of <aShape>.
+        Reset the NumShapeIterator on sub-shapes of <aShape>.
         """
     def More(self) -> bool: 
         """

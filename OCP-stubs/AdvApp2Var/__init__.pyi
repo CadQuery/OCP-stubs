@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import io
-import OCP.NCollection
-import OCP.AdvApprox
 import OCP.GeomAbs
+import OCP.TColgp
+import OCP.NCollection
+import io
 import OCP.gp
 import OCP.Geom
-import OCP.TColgp
 import OCP.Standard
+import OCP.AdvApprox
+import OCP.TColStd
 __all__  = [
 "AdvApp2Var_ApproxAFunc2Var",
 "AdvApp2Var_ApproxF2var",
@@ -61,24 +61,24 @@ __all__  = [
 ]
 class AdvApp2Var_ApproxAFunc2Var():
     """
-    Perform the approximation of <Func> F(U,V) Arguments are : Num1DSS, Num2DSS, Num3DSS :The numbers of 1,2,3 dimensional subspaces OneDTol, TwoDTol, ThreeDTol: The tolerance of approximation in each subspaces OneDTolFr, TwoDTolFr, ThreeDTolFr: The tolerance of approximation on the boundarys in each subspaces [FirstInU, LastInU]: The Bounds in U of the Approximation [FirstInV, LastInV]: The Bounds in V of the Approximation FavorIso : Give preference to extract u-iso or v-iso on F(U,V) This can be usefull to optimize the <Func> methode ContInU, ContInV : Continuity waiting in u and v PrecisCode : Precision on approximation's error mesurement 1 : Fast computation and average precision 2 : Average computation and good precision 3 : Slow computation and very good precision MaxDegInU : Maximum u-degree waiting in U MaxDegInV : Maximum u-degree waiting in V Warning: MaxDegInU (resp. MaxDegInV) must be >= 2*iu (resp. iv) + 1, where iu (resp. iv) = 0 if ContInU (resp. ContInV) = GeomAbs_C0, = 1 if = GeomAbs_C1, = 2 if = GeomAbs_C2. MaxPatch : Maximun number of Patch waiting number of Patch is number of u span * number of v span Func : The external method to evaluate F(U,V) Crit : To (re)defined condition of convergence UChoice, VChoice : To define the way in U (or V) Knot insertion Warning: for the moment, the result is a 3D Surface so Num1DSS and Num2DSS must be equals to 0 and Num3DSS must be equal to 1. Warning: the Function of type EvaluatorFunc2Var from Approx must be a subclass of AdvApp2Var_EvaluatorFunc2Var
+    Perform the approximation of <Func> F(U,V) Arguments are : Num1DSS, Num2DSS, Num3DSS :The numbers of 1,2,3 dimensional subspaces OneDTol, TwoDTol, ThreeDTol: The tolerance of approximation in each subspaces OneDTolFr, TwoDTolFr, ThreeDTolFr: The tolerance of approximation on the boundarys in each subspaces [FirstInU, LastInU]: The Bounds in U of the Approximation [FirstInV, LastInV]: The Bounds in V of the Approximation FavorIso : Give preference to extract u-iso or v-iso on F(U,V) This can be useful to optimize the <Func> method ContInU, ContInV : Continuity waiting in u and v PrecisCode : Precision on approximation's error mesurement 1 : Fast computation and average precision 2 : Average computation and good precision 3 : Slow computation and very good precision MaxDegInU : Maximum u-degree waiting in U MaxDegInV : Maximum u-degree waiting in V Warning: MaxDegInU (resp. MaxDegInV) must be >= 2*iu (resp. iv) + 1, where iu (resp. iv) = 0 if ContInU (resp. ContInV) = GeomAbs_C0, = 1 if = GeomAbs_C1, = 2 if = GeomAbs_C2. MaxPatch : Maximum number of Patch waiting number of Patch is number of u span * number of v span Func : The external method to evaluate F(U,V) Crit : To (re)defined condition of convergence UChoice, VChoice : To define the way in U (or V) Knot insertion Warning: for the moment, the result is a 3D Surface so Num1DSS and Num2DSS must be equals to 0 and Num3DSS must be equal to 1. Warning: the Function of type EvaluatorFunc2Var from Approx must be a subclass of AdvApp2Var_EvaluatorFunc2Var
     """
     @overload
-    def AverageError(self,Dimension : int,Index : int) -> float: 
+    def AverageError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         returns the average errors
 
         returns the average error of the BSplineSurface of range Index
         """
     @overload
-    def AverageError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def AverageError(self,Dimension : int,Index : int) -> float: ...
     def CritError(self,Dimension : int,Index : int) -> float: 
         """
         None
         """
     def Dump(self,o : io.BytesIO) -> None: 
         """
-        Prints on the stream o informations on the current state of the object.
+        Prints on the stream 'o' information on the current state of the object.
         """
     def HasResult(self) -> bool: 
         """
@@ -93,14 +93,14 @@ class AdvApp2Var_ApproxAFunc2Var():
         True if the approximation succeeded within the imposed tolerances and the wished continuities
         """
     @overload
-    def MaxError(self,Dimension : int,Index : int) -> float: 
+    def MaxError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         returns the errors max
 
         returns the error max of the BSplineSurface of range Index
         """
     @overload
-    def MaxError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def MaxError(self,Dimension : int,Index : int) -> float: ...
     def NumSubSpaces(self,Dimension : int) -> int: 
         """
         None
@@ -123,14 +123,14 @@ class AdvApp2Var_ApproxAFunc2Var():
         None
         """
     @overload
-    def UFrontError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def UFrontError(self,Dimension : int,Index : int) -> float: 
         """
         returns the errors max on UFrontiers Warning: Dimension must be equal to 3.
 
         returns the error max of the BSplineSurface of range Index on a UFrontier
         """
     @overload
-    def UFrontError(self,Dimension : int,Index : int) -> float: ...
+    def UFrontError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def VDegree(self) -> int: 
         """
         None
@@ -138,14 +138,14 @@ class AdvApp2Var_ApproxAFunc2Var():
         None
         """
     @overload
-    def VFrontError(self,Dimension : int,Index : int) -> float: 
+    def VFrontError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         returns the errors max on VFrontiers Warning: Dimension must be equal to 3.
 
         returns the error max of the BSplineSurface of range Index on a VFrontier
         """
     @overload
-    def VFrontError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def VFrontError(self,Dimension : int,Index : int) -> float: ...
     @overload
     def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,OneDTolFr : OCP.TColStd.TColStd_HArray2OfReal,TwoDTolFr : OCP.TColStd.TColStd_HArray2OfReal,ThreeDTolFr : OCP.TColStd.TColStd_HArray2OfReal,FirstInU : float,LastInU : float,FirstInV : float,LastInV : float,FavorIso : OCP.GeomAbs.GeomAbs_IsoType,ContInU : OCP.GeomAbs.GeomAbs_Shape,ContInV : OCP.GeomAbs.GeomAbs_Shape,PrecisCode : int,MaxDegInU : int,MaxDegInV : int,MaxPatch : int,Func : AdvApp2Var_EvaluatorFunc2Var,Crit : AdvApp2Var_Criterion,UChoice : OCP.AdvApprox.AdvApprox_Cutting,VChoice : OCP.AdvApprox.AdvApprox_Cutting) -> None: ...
     @overload
@@ -299,9 +299,9 @@ class AdvApp2Var_Context():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,ifav : int,iu : int,iv : int,nlimu : int,nlimv : int,iprecis : int,nb1Dss : int,nb2Dss : int,nb3Dss : int,tol1D : OCP.TColStd.TColStd_HArray1OfReal,tol2D : OCP.TColStd.TColStd_HArray1OfReal,tol3D : OCP.TColStd.TColStd_HArray1OfReal,tof1D : OCP.TColStd.TColStd_HArray2OfReal,tof2D : OCP.TColStd.TColStd_HArray2OfReal,tof3D : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class AdvApp2Var_Criterion():
     """
@@ -341,6 +341,7 @@ class AdvApp2Var_CriterionRepartition():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -374,6 +375,7 @@ class AdvApp2Var_CriterionType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -573,23 +575,23 @@ class AdvApp2Var_Iso(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MakeApprox(self,Conditions : AdvApp2Var_Context,a : float,b : float,c : float,d : float,func : AdvApp2Var_EvaluatorFunc2Var,NodeBegin : AdvApp2Var_Node,NodeEnd : AdvApp2Var_Node) -> None: 
         """
         None
@@ -776,7 +778,7 @@ class AdvApp2Var_MathBase():
     @staticmethod
     def mmgaus1__s(ndimf : int,bfunx : Any,k : int,xd : float,xf : float,saux1 : float,saux2 : float,somme : float,niter : int,iercod : int) -> int: 
         """
-        mmgaus1__s(ndimf: int, bfunx: int (int*, double*, double*, int*), k: int, xd: float, xf: float, saux1: float, saux2: float, somme: float, niter: int, iercod: int) -> int
+        mmgaus1__s(ndimf: int, bfunx: int __cdecl(int * __ptr64,double * __ptr64,double * __ptr64,int * __ptr64), k: int, xd: float, xf: float, saux1: float, saux2: float, somme: float, niter: int, iercod: int) -> int
 
         None
         """
@@ -935,9 +937,9 @@ class AdvApp2Var_Network():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Net : AdvApp2Var_SequenceOfPatch,TheU : OCP.TColStd.TColStd_SequenceOfReal,TheV : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class AdvApp2Var_Node(OCP.Standard.Standard_Transient):
     """
@@ -972,23 +974,23 @@ class AdvApp2Var_Node(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Point(self,iu : int,iv : int) -> OCP.gp.gp_Pnt: 
         """
         returns the value F(U,V) or its derivates on the node (U,V)
@@ -1018,9 +1020,9 @@ class AdvApp2Var_Node(OCP.Standard.Standard_Transient):
         returns the continuity order in V of the node
         """
     @overload
-    def __init__(self,UV : OCP.gp.gp_XY,iu : int,iv : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,UV : OCP.gp.gp_XY,iu : int,iv : int) -> None: ...
     @overload
     def __init__(self,iu : int,iv : int) -> None: ...
     @staticmethod
@@ -1112,23 +1114,23 @@ class AdvApp2Var_Patch(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsoErrors(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
         """
         None
@@ -1194,9 +1196,9 @@ class AdvApp2Var_Patch(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,U0 : float,U1 : float,V0 : float,V1 : float,iu : int,iv : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1254,14 +1256,14 @@ class AdvApp2Var_SequenceOfNode(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : AdvApp2Var_Node) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfNode) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfNode) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : AdvApp2Var_Node) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfNode) -> None: 
         """
@@ -1288,23 +1290,23 @@ class AdvApp2Var_SequenceOfNode(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : AdvApp2Var_SequenceOfNode) -> None: 
+    def Prepend(self,theItem : AdvApp2Var_Node) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : AdvApp2Var_Node) -> None: ...
+    def Prepend(self,theSeq : AdvApp2Var_SequenceOfNode) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1351,14 +1353,14 @@ class AdvApp2Var_SequenceOfPatch(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : AdvApp2Var_SequenceOfPatch) -> None: 
+    def Append(self,theItem : AdvApp2Var_Patch) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : AdvApp2Var_Patch) -> None: ...
+    def Append(self,theSeq : AdvApp2Var_SequenceOfPatch) -> None: ...
     def Assign(self,theOther : AdvApp2Var_SequenceOfPatch) -> AdvApp2Var_SequenceOfPatch: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1464,11 +1466,11 @@ class AdvApp2Var_SequenceOfPatch(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : AdvApp2Var_SequenceOfPatch) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1485,14 +1487,14 @@ class AdvApp2Var_SequenceOfStrip(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : AdvApp2Var_SequenceOfStrip) -> None: 
+    def Append(self,theItem : AdvApp2Var_Strip) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : AdvApp2Var_Strip) -> None: ...
+    def Append(self,theSeq : AdvApp2Var_SequenceOfStrip) -> None: ...
     def Assign(self,theOther : AdvApp2Var_SequenceOfStrip) -> AdvApp2Var_SequenceOfStrip: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1522,23 +1524,23 @@ class AdvApp2Var_SequenceOfStrip(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : AdvApp2Var_Strip) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfStrip) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfStrip) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : AdvApp2Var_Strip) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfStrip) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : AdvApp2Var_Strip) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : AdvApp2Var_Strip) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : AdvApp2Var_SequenceOfStrip) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1565,14 +1567,14 @@ class AdvApp2Var_SequenceOfStrip(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : AdvApp2Var_SequenceOfStrip) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1598,11 +1600,11 @@ class AdvApp2Var_SequenceOfStrip(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : AdvApp2Var_SequenceOfStrip) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : AdvApp2Var_SequenceOfStrip) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1699,14 +1701,14 @@ class AdvApp2Var_Strip(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : AdvApp2Var_Iso) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1734,9 +1736,9 @@ class AdvApp2Var_Strip(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : AdvApp2Var_Strip) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

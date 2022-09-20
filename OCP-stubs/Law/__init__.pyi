@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.NCollection
 import OCP.GeomAbs
 import OCP.TColgp
+import OCP.NCollection
 import OCP.Standard
+import OCP.TColStd
 __all__  = [
 "Law",
 "Law_Function",
@@ -30,7 +30,7 @@ class Law():
     """
     @staticmethod
     @overload
-    def MixBnd_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Lin : Law_Linear) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def MixBnd_s(Lin : Law_Linear) -> Law_BSpFunc: 
         """
         This algorithm searches the knot values corresponding to the splitting of a given B-spline law into several arcs with the same continuity. The continuity order is given at the construction time. Builds a 1d bspline that is near from Lin with null derivatives at the extremities.
 
@@ -38,11 +38,11 @@ class Law():
         """
     @staticmethod
     @overload
-    def MixBnd_s(Lin : Law_Linear) -> Law_BSpFunc: ...
+    def MixBnd_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Lin : Law_Linear) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     @staticmethod
     def MixTgt_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NulOnTheRight : bool,Index : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
-        Builds the poles of the 1d bspline that is null on the rigth side of Knots(Index) (on the left if NulOnTheRight is false) and that is like a t*(1-t)(1-t) curve on the left side of Knots(Index) (on the rigth if NulOnTheRight is false). The result curve is C1 with a derivative equal to 1. at first parameter (-1 at last parameter if NulOnTheRight is false). Warning: Mults(Index) must greater or equal to degree-1.
+        Builds the poles of the 1d bspline that is null on the right side of Knots(Index) (on the left if NulOnTheRight is false) and that is like a t*(1-t)(1-t) curve on the left side of Knots(Index) (on the right if NulOnTheRight is false). The result curve is C1 with a derivative equal to 1. at first parameter (-1 at last parameter if NulOnTheRight is false). Warning: Mults(Index) must greater or equal to degree-1.
         """
     @staticmethod
     def Reparametrize_s(Curve : OCP.Adaptor3d.Adaptor3d_Curve,First : float,Last : float,HasDF : bool,HasDL : bool,DFirst : float,DLast : float,Rev : bool,NbPoints : int) -> Law_BSpline: 
@@ -103,26 +103,26 @@ class Law_Function(OCP.Standard.Standard_Transient):
         """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters, i.e. T.Length() > NbIntervals()
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -219,14 +219,14 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Increase the degree to <Degree>. Nothing is done if <Degree> is lower or equal to the current degree.
         """
     @overload
-    def IncreaseMultiplicity(self,I1 : int,I2 : int,M : int) -> None: 
+    def IncreaseMultiplicity(self,Index : int,M : int) -> None: 
         """
         Increases the multiplicity of the knot <Index> to <M>.
 
         Increases the multiplicities of the knots in [I1,I2] to <M>.
         """
     @overload
-    def IncreaseMultiplicity(self,Index : int,M : int) -> None: ...
+    def IncreaseMultiplicity(self,I1 : int,I2 : int,M : int) -> None: ...
     def IncrementMultiplicity(self,I1 : int,I2 : int,M : int) -> None: 
         """
         Increment the multiplicities of the knots in [I1,I2] by <M>.
@@ -252,23 +252,23 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Returns true if the distance between the first point and the last point of the curve is lower or equal to Resolution from package gp. Warnings : The first and the last point can be different from the first pole and the last pole of the curve.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns True if the curve is periodic.
@@ -336,7 +336,7 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         """
     def MovePointAndTangent(self,U : float,NewValue : float,Derivative : float,Tolerance : float,StartingCondition : int,EndingCondition : int) -> Tuple[int]: 
         """
-        Changes the value of the Law at parameter U to NewValue. and makes its derivative at U be derivative. StartingCondition = -1 means first can move EndingCondition = -1 means last point can move StartingCondition = 0 means the first point cannot move EndingCondition = 0 means the last point cannot move StartingCondition = 1 means the first point and tangent cannot move EndingCondition = 1 means the last point and tangent cannot move and so forth ErrorStatus != 0 means that there are not enought degree of freedom with the constrain to deform the curve accordingly
+        Changes the value of the Law at parameter U to NewValue. and makes its derivative at U be derivative. StartingCondition = -1 means first can move EndingCondition = -1 means last point can move StartingCondition = 0 means the first point cannot move EndingCondition = 0 means the last point cannot move StartingCondition = 1 means the first point and tangent cannot move EndingCondition = 1 means the last point and tangent cannot move and so forth ErrorStatus != 0 means that there are not enough degree of freedom with the constrain to deform the curve accordingly
         """
     def Multiplicities(self,M : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -412,14 +412,14 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Makes a closed B-spline into a periodic curve. The curve is periodic if the knot sequence is periodic and if the curve is closed (The tolerance criterion is Resolution from gp). The period T is equal to Knot(LastUKnotIndex) - Knot(FirstUKnotIndex). A periodic B-spline can be uniform or not. Raised if the curve is not closed.
         """
     @overload
-    def SetPole(self,Index : int,P : float,Weight : float) -> None: 
+    def SetPole(self,Index : int,P : float) -> None: 
         """
         Substitutes the Pole of range Index with P.
 
         Substitutes the pole and the weight of range Index. If the curve <me> is not rational it can become rational If the curve was rational it can become non rational
         """
     @overload
-    def SetPole(self,Index : int,P : float) -> None: ...
+    def SetPole(self,Index : int,P : float,Weight : float) -> None: ...
     def SetWeight(self,Index : int,Weight : float) -> None: 
         """
         Changes the weight for the pole of range Index. If the curve was non rational it can become rational. If the curve was rational it can become non rational.
@@ -445,9 +445,9 @@ class Law_BSpline(OCP.Standard.Standard_Transient):
         Returns the weights of the B-spline curve;
         """
     @overload
-    def __init__(self,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False) -> None: ...
-    @overload
     def __init__(self,Poles : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False) -> None: ...
+    @overload
+    def __init__(self,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -527,26 +527,26 @@ class Law_Composite(Law_Function, OCP.Standard.Standard_Transient):
         """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters, i.e. T.Length() > NbIntervals()
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -572,9 +572,9 @@ class Law_Composite(Law_Function, OCP.Standard.Standard_Transient):
         Returns the value at parameter X.
         """
     @overload
-    def __init__(self,First : float,Last : float,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,First : float,Last : float,Tol : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -631,23 +631,23 @@ class Law_Constant(Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns 1
@@ -726,26 +726,26 @@ class Law_BSpFunc(Law_Function, OCP.Standard.Standard_Transient):
         """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters, i.e. T.Length() > NbIntervals()
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -767,9 +767,9 @@ class Law_BSpFunc(Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,C : Law_BSpline,First : float,Last : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : Law_BSpline,First : float,Last : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -827,26 +827,26 @@ class Law_Interpol(Law_BSpFunc, Law_Function, OCP.Standard.Standard_Transient):
         """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters, i.e. T.Length() > NbIntervals()
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -865,14 +865,14 @@ class Law_Interpol(Law_BSpFunc, Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetInRelative(self,ParAndRad : OCP.TColgp.TColgp_Array1OfPnt2d,Ud : float,Uf : float,Periodic : bool=False) -> None: 
+    def SetInRelative(self,ParAndRad : OCP.TColgp.TColgp_Array1OfPnt2d,Ud : float,Uf : float,Dd : float,Df : float,Periodic : bool=False) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetInRelative(self,ParAndRad : OCP.TColgp.TColgp_Array1OfPnt2d,Ud : float,Uf : float,Dd : float,Df : float,Periodic : bool=False) -> None: ...
+    def SetInRelative(self,ParAndRad : OCP.TColgp.TColgp_Array1OfPnt2d,Ud : float,Uf : float,Periodic : bool=False) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -910,22 +910,22 @@ class Law_Interpolate():
         None
         """
     @overload
-    def Load(self,InitialTangent : float,FinalTangent : float) -> None: 
+    def Load(self,Tangents : OCP.TColStd.TColStd_Array1OfReal,TangentFlags : OCP.TColStd.TColStd_HArray1OfBoolean) -> None: 
         """
         loads initial and final tangents if any.
 
         loads the tangents. We should have as many tangents as they are points in the array if TangentFlags.Value(i) is Standard_True use the tangent Tangents.Value(i) otherwise the tangent is not constrained.
         """
     @overload
-    def Load(self,Tangents : OCP.TColStd.TColStd_Array1OfReal,TangentFlags : OCP.TColStd.TColStd_HArray1OfBoolean) -> None: ...
+    def Load(self,InitialTangent : float,FinalTangent : float) -> None: ...
     def Perform(self) -> None: 
         """
         Makes the interpolation
         """
     @overload
-    def __init__(self,Points : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Points : OCP.TColStd.TColStd_HArray1OfReal,Parameters : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Points : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
     pass
 class Law_Laws(OCP.NCollection.NCollection_BaseList):
     """
@@ -936,7 +936,7 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Law_Function) -> Law_Function: 
+    def Append(self,theItem : Law_Function,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -945,7 +945,7 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : Law_Function,theIter : Any) -> None: ...
+    def Append(self,theItem : Law_Function) -> Law_Function: ...
     @overload
     def Append(self,theOther : Law_Laws) -> None: ...
     def Assign(self,theOther : Law_Laws) -> Law_Laws: 
@@ -967,23 +967,23 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : Law_Laws,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : Law_Function,theIter : Any) -> Law_Function: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : Law_Function,theIter : Any) -> Law_Function: ...
+    def InsertAfter(self,theOther : Law_Laws,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : Law_Function,theIter : Any) -> Law_Function: 
+    def InsertBefore(self,theOther : Law_Laws,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : Law_Laws,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : Law_Function,theIter : Any) -> Law_Function: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1020,11 +1020,11 @@ class Law_Laws(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : Law_Laws) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : Law_Laws) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Law_Linear(Law_Function, OCP.Standard.Standard_Transient):
@@ -1072,23 +1072,23 @@ class Law_Linear(Law_Function, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns 1
@@ -1167,39 +1167,39 @@ class Law_S(Law_BSpFunc, Law_Function, OCP.Standard.Standard_Transient):
         """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters, i.e. T.Length() > NbIntervals()
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
     @overload
-    def Set(self,Pdeb : float,Valdeb : float,Ddeb : float,Pfin : float,Valfin : float,Dfin : float) -> None: 
+    def Set(self,Pdeb : float,Valdeb : float,Pfin : float,Valfin : float) -> None: 
         """
         Defines this S evolution law by assigning both: - the bounds Pdeb and Pfin of the parameter, and - the values Valdeb and Valfin of the function at these two parametric bounds. The function is assumed to have the first derivatives equal to 0 at the two parameter points Pdeb and Pfin.
 
         Defines this S evolution law by assigning - the bounds Pdeb and Pfin of the parameter, - the values Valdeb and Valfin of the function at these two parametric bounds, and - the values Ddeb and Dfin of the first derivative of the function at these two parametric bounds.
         """
     @overload
-    def Set(self,Pdeb : float,Valdeb : float,Pfin : float,Valfin : float) -> None: ...
+    def Set(self,Pdeb : float,Valdeb : float,Ddeb : float,Pfin : float,Valfin : float,Dfin : float) -> None: ...
     def SetCurve(self,C : Law_BSpline) -> None: 
         """
         None

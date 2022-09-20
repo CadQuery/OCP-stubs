@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
+import OCP.GeomAbs
 import OCP.math
 import OCP.gp
-import OCP.GeomAbs
 import OCP.IntRes2d
+import OCP.TColStd
 __all__  = [
 "IntCurve_IConicTool",
 "IntCurve_IntConicConic",
@@ -18,9 +18,7 @@ __all__  = [
 "IntCurve_PConicTool",
 "IntCurve_ProjectOnPConicTool",
 "Interval",
-"PeriodicInterval",
-"Determine_Transition_LC",
-"NormalizeOnCircleDomain"
+"PeriodicInterval"
 ]
 class IntCurve_IConicTool():
     """
@@ -40,7 +38,7 @@ class IntCurve_IConicTool():
         """
     def FindParameter(self,P : OCP.gp.gp_Pnt2d) -> float: 
         """
-        Returns the parameter U of the point on the implicit curve corresponding to the point P. The correspondance between P and the point P(U) on the implicit curve must be coherent with the way of determination of the signed distance.
+        Returns the parameter U of the point on the implicit curve corresponding to the point P. The correspondence between P and the point P(U) on the implicit curve must be coherent with the way of determination of the signed distance.
         """
     def GradDistance(self,P : OCP.gp.gp_Pnt2d) -> OCP.gp.gp_Vec2d: 
         """
@@ -51,19 +49,19 @@ class IntCurve_IConicTool():
         None
         """
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips2d) -> None: ...
+    def __init__(self,IT : IntCurve_IConicTool) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Parab2d) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
-    @overload
-    def __init__(self,H : OCP.gp.gp_Hypr2d) -> None: ...
+    def __init__(self,E : OCP.gp.gp_Elips2d) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ2d) -> None: ...
     @overload
+    def __init__(self,H : OCP.gp.gp_Hypr2d) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,IT : IntCurve_IConicTool) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
     pass
 class IntCurve_IntConicConic(OCP.IntRes2d.IntRes2d_Intersection):
     """
@@ -94,7 +92,7 @@ class IntCurve_IntConicConic(OCP.IntRes2d.IntRes2d_Intersection):
         This function returns the number of intersection segments between the two curves. The exception NotDone is raised if IsDone returns FALSE.
         """
     @overload
-    def Perform(self,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
+    def Perform(self,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
         """
         Intersection between 2 lines from gp.
 
@@ -127,33 +125,33 @@ class IntCurve_IntConicConic(OCP.IntRes2d.IntRes2d_Intersection):
         Intersection between 2 hyperbolas.
         """
     @overload
-    def Perform(self,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
     def Perform(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def Perform(self,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,C1 : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.gp.gp_Circ2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,P1 : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,P2 : OCP.gp.gp_Parab2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,E1 : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,E2 : OCP.gp.gp_Elips2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,L1 : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,L2 : OCP.gp.gp_Lin2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def Perform(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def Perform(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def Perform(self,H1 : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,H2 : OCP.gp.gp_Hypr2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,P1 : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,P2 : OCP.gp.gp_Parab2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,C1 : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.gp.gp_Circ2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def Perform(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def Perform(self,L1 : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,L2 : OCP.gp.gp_Lin2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,E1 : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,E2 : OCP.gp.gp_Elips2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,H1 : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,H2 : OCP.gp.gp_Hypr2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     def Point(self,N : int) -> OCP.IntRes2d.IntRes2d_IntersectionPoint: 
         """
         This function returns the intersection point of range N; The exception NotDone is raised if IsDone returns FALSE. The exception OutOfRange is raised if (N <= 0) or (N > NbPoints).
@@ -176,37 +174,37 @@ class IntCurve_IntConicConic(OCP.IntRes2d.IntRes2d_Intersection):
     @overload
     def SetReversedParameters(self,flag : bool) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.gp.gp_Circ2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def __init__(self,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
+    def __init__(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
     def __init__(self,L1 : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,L2 : OCP.gp.gp_Lin2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
+    def __init__(self,H1 : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,H2 : OCP.gp.gp_Hypr2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
     def __init__(self,E1 : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,E2 : OCP.gp.gp_Elips2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P1 : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,P2 : OCP.gp.gp_Parab2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.gp.gp_Circ2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,H1 : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,H2 : OCP.gp.gp_Hypr2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d,DC : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
     def __init__(self,E : OCP.gp.gp_Elips2d,DE : OCP.IntRes2d.IntRes2d_Domain,H : OCP.gp.gp_Hypr2d,DH : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin2d,DL : OCP.IntRes2d.IntRes2d_Domain,P : OCP.gp.gp_Parab2d,DP : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     pass
 class IntCurve_IntImpConicParConic(OCP.IntRes2d.IntRes2d_Intersection):
     """
@@ -349,9 +347,9 @@ class IntCurve_PConic():
         The Conics are manipulated as objects which only depend on three parameters : Axis and two Real from Standards. Type Curve is used to select the correct Conic.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Parab2d) -> None: ...
+    @overload
+    def __init__(self,H : OCP.gp.gp_Hypr2d) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
     @overload
@@ -359,7 +357,7 @@ class IntCurve_PConic():
     @overload
     def __init__(self,PC : IntCurve_PConic) -> None: ...
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr2d) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Circ2d) -> None: ...
     pass
 class IntCurve_PConicTool():
     """
@@ -382,7 +380,7 @@ class IntCurve_PConicTool():
         """
     @staticmethod
     @overload
-    def NbSamples_s(C : IntCurve_PConic,U0 : float,U1 : float) -> int: 
+    def NbSamples_s(C : IntCurve_PConic) -> int: 
         """
         None
 
@@ -390,7 +388,7 @@ class IntCurve_PConicTool():
         """
     @staticmethod
     @overload
-    def NbSamples_s(C : IntCurve_PConic) -> int: ...
+    def NbSamples_s(C : IntCurve_PConic,U0 : float,U1 : float) -> int: ...
     @staticmethod
     def Value_s(C : IntCurve_PConic,X : float) -> OCP.gp.gp_Pnt2d: 
         """
@@ -404,37 +402,21 @@ class IntCurve_ProjectOnPConicTool():
     """
     @staticmethod
     @overload
-    def FindParameter_s(C : IntCurve_PConic,Pnt : OCP.gp.gp_Pnt2d,Tol : float) -> float: 
+    def FindParameter_s(C : IntCurve_PConic,Pnt : OCP.gp.gp_Pnt2d,LowParameter : float,HighParameter : float,Tol : float) -> float: 
         """
-        Returns the parameter V of the point on the parametric curve corresponding to the Point Pnt. The Correspondance between Pnt and the point P(V) on the parametric curve must be coherent with the way of determination of the signed distance between a point and the implicit curve. Tol is the tolerance on the distance between a point and the parametrised curve. In that case, no bounds are given. The research of the rigth parameter has to be made on the natural parametric domain of the curve.
+        Returns the parameter V of the point on the parametric curve corresponding to the Point Pnt. The Correspondence between Pnt and the point P(V) on the parametric curve must be coherent with the way of determination of the signed distance between a point and the implicit curve. Tol is the tolerance on the distance between a point and the parametrised curve. In that case, no bounds are given. The research of the right parameter has to be made on the natural parametric domain of the curve.
 
-        Returns the parameter V of the point on the parametric curve corresponding to the Point Pnt. The Correspondance between Pnt and the point P(V) on the parametric curve must be coherent with the way of determination of the signed distance between a point and the implicit curve. Tol is the tolerance on the distance between a point and the parametrised curve. LowParameter and HighParameter give the boundaries of the interval in wich the parameter certainly lies. These parameters are given to implement a more efficient algoritm. So, it is not necessary to check that the returned value verifies LowParameter <= Value <= HighParameter.
+        Returns the parameter V of the point on the parametric curve corresponding to the Point Pnt. The Correspondence between Pnt and the point P(V) on the parametric curve must be coherent with the way of determination of the signed distance between a point and the implicit curve. Tol is the tolerance on the distance between a point and the parametrised curve. LowParameter and HighParameter give the boundaries of the interval in which the parameter certainly lies. These parameters are given to implement a more efficient algorithm. So, it is not necessary to check that the returned value verifies LowParameter <= Value <= HighParameter.
         """
     @staticmethod
     @overload
-    def FindParameter_s(C : IntCurve_PConic,Pnt : OCP.gp.gp_Pnt2d,LowParameter : float,HighParameter : float,Tol : float) -> float: ...
+    def FindParameter_s(C : IntCurve_PConic,Pnt : OCP.gp.gp_Pnt2d,Tol : float) -> float: ...
     def __init__(self) -> None: ...
     pass
 class Interval():
     """
     None
     """
-    def IntersectionWithBounded(self,Inter : Interval) -> Interval: 
-        """
-        None
-        """
-    def Length(self) -> float: 
-        """
-        None
-        """
-    @overload
-    def __init__(self,Domain : OCP.IntRes2d.IntRes2d_Domain) -> None: ...
-    @overload
-    def __init__(self,a : float,hf : bool,b : float,hl : bool) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,a : float,b : float) -> None: ...
     @property
     def Binf(self) -> float:
         """
@@ -484,10 +466,6 @@ class PeriodicInterval():
         """
         None
         """
-    def FirstIntersection(self,I1 : PeriodicInterval) -> PeriodicInterval: 
-        """
-        None
-        """
     def IsNull(self) -> bool: 
         """
         None
@@ -500,10 +478,6 @@ class PeriodicInterval():
         """
         None
         """
-    def SecondIntersection(self,I2 : PeriodicInterval) -> PeriodicInterval: 
-        """
-        None
-        """
     def SetNull(self) -> None: 
         """
         None
@@ -513,11 +487,11 @@ class PeriodicInterval():
         None
         """
     @overload
-    def __init__(self,Domain : OCP.IntRes2d.IntRes2d_Domain) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,a : float,b : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Domain : OCP.IntRes2d.IntRes2d_Domain) -> None: ...
     @property
     def Binf(self) -> float:
         """
@@ -543,11 +517,3 @@ class PeriodicInterval():
     def isnull(self, arg0: bool) -> None:
         pass
     pass
-def Determine_Transition_LC(arg0 : OCP.IntRes2d.IntRes2d_Position,arg1 : OCP.gp.gp_Vec2d,arg2 : OCP.gp.gp_Vec2d,arg3 : OCP.IntRes2d.IntRes2d_Transition,arg4 : OCP.IntRes2d.IntRes2d_Position,arg5 : OCP.gp.gp_Vec2d,arg6 : OCP.gp.gp_Vec2d,arg7 : OCP.IntRes2d.IntRes2d_Transition,arg8 : float) -> None:
-    """
-    None
-    """
-def NormalizeOnCircleDomain(Param : float,Domain : OCP.IntRes2d.IntRes2d_Domain) -> float:
-    """
-    None
-    """

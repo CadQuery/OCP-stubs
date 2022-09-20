@@ -13,7 +13,7 @@ __all__  = [
 ]
 class AppCont_Function():
     """
-    Class describing a continous 3d and/or function f(u). This class must be provided by the user to use the approximation algorithm FittingCurve.
+    Class describing a continuous 3d and/or function f(u). This class must be provided by the user to use the approximation algorithm FittingCurve.
     """
     def D1(self,theU : float,theVec2d : OCP.TColgp.TColgp_Array1OfVec2d,theVec : OCP.TColgp.TColgp_Array1OfVec) -> bool: 
         """

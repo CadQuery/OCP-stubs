@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.StepData
 import OCP.StepRepr
 import OCP.Interface
-import OCP.StepData
 __all__  = [
 "RWStepRepr_RWAllAroundShapeAspect",
 "RWStepRepr_RWApex",
@@ -59,8 +59,10 @@ __all__  = [
 "RWStepRepr_RWReprItemAndPlaneAngleMeasureWithUnitAndQRI",
 "RWStepRepr_RWRepresentation",
 "RWStepRepr_RWRepresentationContext",
+"RWStepRepr_RWRepresentationContextReference",
 "RWStepRepr_RWRepresentationItem",
 "RWStepRepr_RWRepresentationMap",
+"RWStepRepr_RWRepresentationReference",
 "RWStepRepr_RWRepresentationRelationship",
 "RWStepRepr_RWRepresentationRelationshipWithTransformation",
 "RWStepRepr_RWShapeAspect",
@@ -956,6 +958,24 @@ class RWStepRepr_RWRepresentationContext():
         """
     def __init__(self) -> None: ...
     pass
+class RWStepRepr_RWRepresentationContextReference():
+    """
+    Read & Write tool for RepresentationContextReference
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theAch : OCP.Interface.Interface_Check,theEnt : OCP.StepRepr.StepRepr_RepresentationContextReference) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepRepr.StepRepr_RepresentationContextReference,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepRepr.StepRepr_RepresentationContextReference) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
 class RWStepRepr_RWRepresentationItem():
     """
     Read & Write Module for RepresentationItem
@@ -983,6 +1003,24 @@ class RWStepRepr_RWRepresentationMap():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepRepr.StepRepr_RepresentationMap) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepRepr_RWRepresentationReference():
+    """
+    Read & Write tool for RepresentationReference
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theAch : OCP.Interface.Interface_Check,theEnt : OCP.StepRepr.StepRepr_RepresentationReference) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepRepr.StepRepr_RepresentationReference,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepRepr.StepRepr_RepresentationReference) -> None: 
         """
         None
         """

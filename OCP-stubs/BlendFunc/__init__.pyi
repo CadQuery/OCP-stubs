@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Blend
 import OCP.Adaptor3d
-import OCP.Convert
-import OCP.TColStd
-import OCP.math
 import OCP.Law
 import OCP.Adaptor2d
-import OCP.gp
+import OCP.Convert
 import OCP.GeomAbs
 import OCP.TColgp
-import OCP.Blend
+import OCP.math
+import OCP.gp
+import OCP.TColStd
 __all__  = [
 "BlendFunc",
 "BlendFunc_CSCircular",
@@ -47,12 +47,12 @@ class BlendFunc():
     This package provides a set of generic functions, that can instantiated to compute blendings between two surfaces (Constant radius, Evolutive radius, Ruled surface).
     """
     @staticmethod
-    def ComputeDNormal_s(Surf : OCP.Adaptor3d.Adaptor3d_HSurface,p2d : OCP.gp.gp_Pnt2d,Normal : OCP.gp.gp_Vec,DNu : OCP.gp.gp_Vec,DNv : OCP.gp.gp_Vec) -> bool: 
+    def ComputeDNormal_s(Surf : OCP.Adaptor3d.Adaptor3d_Surface,p2d : OCP.gp.gp_Pnt2d,Normal : OCP.gp.gp_Vec,DNu : OCP.gp.gp_Vec,DNv : OCP.gp.gp_Vec) -> bool: 
         """
         None
         """
     @staticmethod
-    def ComputeNormal_s(Surf : OCP.Adaptor3d.Adaptor3d_HSurface,p2d : OCP.gp.gp_Pnt2d,Normal : OCP.gp.gp_Vec) -> bool: 
+    def ComputeNormal_s(Surf : OCP.Adaptor3d.Adaptor3d_Surface,p2d : OCP.gp.gp_Pnt2d,Normal : OCP.gp.gp_Vec) -> bool: 
         """
         None
         """
@@ -87,7 +87,7 @@ class BlendFunc_CSCircular(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -187,7 +187,7 @@ class BlendFunc_CSCircular(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
 
@@ -198,13 +198,13 @@ class BlendFunc_CSCircular(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         None
         """
     @overload
-    def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
-    @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,TypeSection : BlendFunc_SectionShape) -> None: 
+    def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    @overload
+    def Set(self,First : float,Last : float) -> None: 
         """
         None
 
@@ -215,11 +215,11 @@ class BlendFunc_CSCircular(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,Radius : float,Choix : int) -> None: ...
-    @overload
-    def Set(self,First : float,Last : float) -> None: ...
-    @overload
     def Set(self,Param : float) -> None: ...
+    @overload
+    def Set(self,TypeSection : BlendFunc_SectionShape) -> None: ...
+    @overload
+    def Set(self,Radius : float,Choix : int) -> None: ...
     def Tangent(self,U : float,V : float,TgS : OCP.gp.gp_Vec,NormS : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surface) at these points.
@@ -244,7 +244,7 @@ class BlendFunc_CSCircular(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve,L : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,CGuide : OCP.Adaptor3d.Adaptor3d_Curve,L : OCP.Law.Law_Function) -> None: ...
     pass
 class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -260,7 +260,7 @@ class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -293,7 +293,7 @@ class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
     def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accomodate for the parameters. i.e. T.Length() > NbIntervals() raises OutOfRange from Standard
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters. i.e. T.Length() > NbIntervals() raises OutOfRange from Standard
         """
     def IsRational(self) -> bool: 
         """
@@ -360,7 +360,7 @@ class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
 
@@ -373,11 +373,11 @@ class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def Set(self,TypeSection : BlendFunc_SectionShape) -> None: 
         """
         None
 
@@ -388,11 +388,11 @@ class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,TypeSection : BlendFunc_SectionShape) -> None: ...
+    def Set(self,Radius : float,Choix : int) -> None: ...
     @overload
     def Set(self,Param : float) -> None: ...
     @overload
-    def Set(self,Radius : float,Choix : int) -> None: ...
+    def Set(self,First : float,Last : float) -> None: ...
     def Tangent(self,U : float,V : float,TgS : OCP.gp.gp_Vec,NormS : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surface) at these points.
@@ -417,7 +417,7 @@ class BlendFunc_CSConstRad(OCP.Blend.Blend_CSFunction, OCP.Blend.Blend_AppFuncti
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,CGuide : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ChAsym(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -437,7 +437,7 @@ class BlendFunc_ChAsym(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OC
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -456,14 +456,14 @@ class BlendFunc_ChAsym(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OC
         Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: 
         """
         None
 
         Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
         """
     @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -536,13 +536,13 @@ class BlendFunc_ChAsym(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OC
         Utile pour une visu rapide et approximative de la surface.
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Lin) -> Tuple[float, float]: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: 
+    def Set(self,Dist1 : float,Angle : float,Choix : int) -> None: 
         """
         None
 
@@ -551,9 +551,9 @@ class BlendFunc_ChAsym(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OC
         Sets the distances and the angle.
         """
     @overload
-    def Set(self,Param : float) -> None: ...
+    def Set(self,First : float,Last : float) -> None: ...
     @overload
-    def Set(self,Dist1 : float,Angle : float,Choix : int) -> None: ...
+    def Set(self,Param : float) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -590,7 +590,7 @@ class BlendFunc_ChAsym(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OC
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ChAsymInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -629,7 +629,7 @@ class BlendFunc_ChAsymInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWith
         Returns 4.
         """
     @overload
-    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
@@ -645,7 +645,7 @@ class BlendFunc_ChAsymInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWith
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_GenChamfInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -680,14 +680,14 @@ class BlendFunc_GenChamfInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWi
         Returns 4.
         """
     @overload
-    def Set(self,Dist1 : float,Dist2 : float,Choix : int) -> None: 
+    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Set(self,Dist1 : float,Dist2 : float,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -696,7 +696,7 @@ class BlendFunc_GenChamfInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWi
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_GenChamfer(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -712,7 +712,7 @@ class BlendFunc_GenChamfer(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -800,7 +800,7 @@ class BlendFunc_GenChamfer(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -811,13 +811,13 @@ class BlendFunc_GenChamfer(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction
         Obsolete method
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Lin) -> Tuple[float, float]: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: 
+    def Set(self,Param : float) -> None: 
         """
         Sets the value of the parameter along the guide line. This determines the plane in which the solution has to be found.
 
@@ -826,9 +826,9 @@ class BlendFunc_GenChamfer(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction
         Sets the distances and the "quadrant".
         """
     @overload
-    def Set(self,Param : float) -> None: ...
-    @overload
     def Set(self,Dist1 : float,Dist2 : float,Choix : int) -> None: ...
+    @overload
+    def Set(self,First : float,Last : float) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -865,7 +865,7 @@ class BlendFunc_GenChamfer(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,CG : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,CG : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ConstRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -885,7 +885,7 @@ class BlendFunc_ConstRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, 
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -973,7 +973,7 @@ class BlendFunc_ConstRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, 
         None
         """
     @overload
-    def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Used for the first and last section
 
@@ -984,11 +984,11 @@ class BlendFunc_ConstRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, 
         Utile pour une visu rapide et approximative de la surface.
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    @overload
+    def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
     @overload
     def Set(self,First : float,Last : float) -> None: 
         """
@@ -1001,11 +1001,11 @@ class BlendFunc_ConstRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, 
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,Param : float) -> None: ...
-    @overload
     def Set(self,TypeSection : BlendFunc_SectionShape) -> None: ...
     @overload
     def Set(self,Radius : float,Choix : int) -> None: ...
+    @overload
+    def Set(self,Param : float) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -1042,7 +1042,7 @@ class BlendFunc_ConstRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, 
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ConstRadInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1077,14 +1077,14 @@ class BlendFunc_ConstRadInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWi
         Returns 4.
         """
     @overload
-    def Set(self,R : float,Choix : int) -> None: 
+    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Set(self,R : float,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -1093,7 +1093,7 @@ class BlendFunc_ConstRadInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWi
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ConstThroat(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1109,7 +1109,7 @@ class BlendFunc_ConstThroat(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1197,7 +1197,7 @@ class BlendFunc_ConstThroat(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -1208,20 +1208,20 @@ class BlendFunc_ConstThroat(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.
         Obsolete method
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Lin) -> Tuple[float, float]: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,aThroat : float,arg2 : float,Choix : int) -> None: 
         """
         None
 
         Sets the throat and the "quadrant".
         """
     @overload
-    def Set(self,aThroat : float,arg2 : float,Choix : int) -> None: ...
+    def Set(self,Param : float) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -1258,7 +1258,7 @@ class BlendFunc_ConstThroat(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ConstThroatInv(BlendFunc_GenChamfInv, OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1304,7 +1304,7 @@ class BlendFunc_ConstThroatInv(BlendFunc_GenChamfInv, OCP.Blend.Blend_FuncInv, O
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ConstThroatWithPenetration(BlendFunc_ConstThroat, BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1320,7 +1320,7 @@ class BlendFunc_ConstThroatWithPenetration(BlendFunc_ConstThroat, BlendFunc_GenC
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1408,7 +1408,7 @@ class BlendFunc_ConstThroatWithPenetration(BlendFunc_ConstThroat, BlendFunc_GenC
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -1419,20 +1419,20 @@ class BlendFunc_ConstThroatWithPenetration(BlendFunc_ConstThroat, BlendFunc_GenC
         Obsolete method
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Lin) -> Tuple[float, float]: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,aThroat : float,arg2 : float,Choix : int) -> None: 
         """
         None
 
         Sets the throat and the "quadrant".
         """
     @overload
-    def Set(self,aThroat : float,arg2 : float,Choix : int) -> None: ...
+    def Set(self,Param : float) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -1469,7 +1469,7 @@ class BlendFunc_ConstThroatWithPenetration(BlendFunc_ConstThroat, BlendFunc_GenC
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_ConstThroatWithPenetrationInv(BlendFunc_ConstThroatInv, BlendFunc_GenChamfInv, OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1515,7 +1515,7 @@ class BlendFunc_ConstThroatWithPenetrationInv(BlendFunc_ConstThroatInv, BlendFun
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_Corde():
     """
@@ -1569,7 +1569,7 @@ class BlendFunc_Corde():
         """
         computes the values <F> of the Function for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,CGuide : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1585,7 +1585,7 @@ class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, O
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1604,14 +1604,14 @@ class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, O
         Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: 
         """
         None
 
         Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
         """
     @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -1673,7 +1673,7 @@ class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, O
         None
         """
     @overload
-    def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -1684,13 +1684,13 @@ class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, O
         Method for graphic traces
         """
     @overload
+    def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,First : float,Last : float) -> None: 
         """
         None
 
@@ -1701,11 +1701,11 @@ class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, O
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,First : float,Last : float) -> None: ...
-    @overload
-    def Set(self,TypeSection : BlendFunc_SectionShape) -> None: ...
+    def Set(self,Param : float) -> None: ...
     @overload
     def Set(self,Choix : int) -> None: ...
+    @overload
+    def Set(self,TypeSection : BlendFunc_SectionShape) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -1742,7 +1742,7 @@ class BlendFunc_EvolRad(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, O
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,Law : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,Law : OCP.Law.Law_Function) -> None: ...
     pass
 class BlendFunc_EvolRadInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1784,7 +1784,7 @@ class BlendFunc_EvolRadInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWit
         None
         """
     @overload
-    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -1793,7 +1793,7 @@ class BlendFunc_EvolRadInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWit
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,Law : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,Law : OCP.Law.Law_Function) -> None: ...
     pass
 class BlendFunc_ChamfInv(BlendFunc_GenChamfInv, OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1839,7 +1839,7 @@ class BlendFunc_ChamfInv(BlendFunc_GenChamfInv, OCP.Blend.Blend_FuncInv, OCP.mat
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_Chamfer(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1855,7 +1855,7 @@ class BlendFunc_Chamfer(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blen
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1943,7 +1943,7 @@ class BlendFunc_Chamfer(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blen
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -1954,20 +1954,20 @@ class BlendFunc_Chamfer(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blen
         Obsolete method
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,C : OCP.gp.gp_Lin) -> Tuple[float, float]: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,Dist1 : float,Dist2 : float,Choix : int) -> None: 
         """
         None
 
         Sets the distances and the "quadrant".
         """
     @overload
-    def Set(self,Dist1 : float,Dist2 : float,Choix : int) -> None: ...
+    def Set(self,Param : float) -> None: ...
     def Tangent(self,U1 : float,V1 : float,U2 : float,V2 : float,TgFirst : OCP.gp.gp_Vec,TgLast : OCP.gp.gp_Vec,NormFirst : OCP.gp.gp_Vec,NormLast : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -2004,7 +2004,7 @@ class BlendFunc_Chamfer(BlendFunc_GenChamfer, OCP.Blend.Blend_Function, OCP.Blen
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,CG : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,CG : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_Ruled(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2024,7 +2024,7 @@ class BlendFunc_Ruled(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -2116,7 +2116,7 @@ class BlendFunc_Ruled(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Used for the first and last section
 
@@ -2127,7 +2127,7 @@ class BlendFunc_Ruled(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Set(self,Param : float) -> None: 
         """
@@ -2173,7 +2173,7 @@ class BlendFunc_Ruled(OCP.Blend.Blend_Function, OCP.Blend.Blend_AppFunction, OCP
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_RuledInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2207,7 +2207,7 @@ class BlendFunc_RuledInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithD
         """
         Returns 4.
         """
-    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Set(self,OnFirst : bool,COnSurf : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
         """
@@ -2219,7 +2219,7 @@ class BlendFunc_RuledInv(OCP.Blend.Blend_FuncInv, OCP.math.math_FunctionSetWithD
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BlendFunc_SectionShape():
     """
@@ -2238,6 +2238,7 @@ class BlendFunc_SectionShape():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

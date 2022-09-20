@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
-import io
 import OCP.NCollection
+import io
 import OCP.Standard
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "Storage",
 "Storage_ArrayOfCallBack",
@@ -74,7 +74,7 @@ class Storage():
     pass
 class Storage_ArrayOfCallBack():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Storage_ArrayOfCallBack) -> Storage_ArrayOfCallBack: 
         """
@@ -149,18 +149,18 @@ class Storage_ArrayOfCallBack():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : Storage_CallBack,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Storage_ArrayOfSchema():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Storage_ArrayOfSchema) -> Storage_ArrayOfSchema: 
         """
@@ -237,11 +237,11 @@ class Storage_ArrayOfSchema():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : Storage_Schema,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Storage_BaseDriver(OCP.Standard.Standard_Transient):
@@ -430,23 +430,23 @@ class Storage_BaseDriver(OCP.Standard.Standard_Transient):
         returns True if we are at end of the stream
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
@@ -586,19 +586,7 @@ class Storage_BaseDriver(OCP.Standard.Standard_Transient):
         """
     pass
 class Storage_BucketIterator():
-    def Init(self,arg1 : Storage_BucketOfPersistent) -> None: 
-        """
-        None
-        """
     def More(self) -> bool: 
-        """
-        None
-        """
-    def Next(self) -> None: 
-        """
-        None
-        """
-    def Reset(self) -> None: 
         """
         None
         """
@@ -606,7 +594,6 @@ class Storage_BucketIterator():
         """
         None
         """
-    def __init__(self,arg1 : Storage_BucketOfPersistent) -> None: ...
     pass
 class Storage_CallBack(OCP.Standard.Standard_Transient):
     def Add(self,aPers : OCP.Standard.Standard_Persistent,aSchema : Storage_Schema) -> None: 
@@ -634,23 +621,23 @@ class Storage_CallBack(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def New(self) -> OCP.Standard.Standard_Persistent: 
         """
         None
@@ -693,11 +680,11 @@ class Storage_Data(OCP.Standard.Standard_Transient):
     def AddRoot(self,aName : OCP.TCollection.TCollection_AsciiString,anObject : OCP.Standard.Standard_Persistent) -> None: ...
     def AddToComments(self,aComment : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
-        add <theUserInfo> to the user informations
+        add <theUserInfo> to the user information
         """
     def AddToUserInfo(self,anInfo : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
-        add <theUserInfo> to the user informations
+        add <theUserInfo> to the user information
         """
     def ApplicationName(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -717,7 +704,7 @@ class Storage_Data(OCP.Standard.Standard_Transient):
         """
     def Comments(self) -> OCP.TColStd.TColStd_SequenceOfExtendedString: 
         """
-        return the user informations
+        return the user information
         """
     def CreationDate(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -768,23 +755,23 @@ class Storage_Data(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRoot(self,aName : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         returns Standard_True if <me> contains a root named <aName>
@@ -795,7 +782,7 @@ class Storage_Data(OCP.Standard.Standard_Transient):
         """
     def NumberOfObjects(self) -> int: 
         """
-        the the number of persistent objects Return: the number of persistent objects readed
+        the number of persistent objects Return: the number of persistent objects readed
         """
     def NumberOfRoots(self) -> int: 
         """
@@ -855,7 +842,7 @@ class Storage_Data(OCP.Standard.Standard_Transient):
         """
     def UserInfo(self) -> OCP.TColStd.TColStd_SequenceOfAsciiString: 
         """
-        return the user informations
+        return the user information
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -895,23 +882,23 @@ class Storage_DefaultCallBack(Storage_CallBack, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def New(self) -> OCP.Standard.Standard_Persistent: 
         """
         None
@@ -942,7 +929,7 @@ class Storage_DefaultCallBack(Storage_CallBack, OCP.Standard.Standard_Transient)
     pass
 class Storage_Error():
     """
-    Error codes returned by the ErrorStatus function on a Storage_Data set of data during a storage or retrieval operation : - Storage_VSOk : no problem has been detected - Storage_VSOpenError : an error has occurred when opening the driver - Storage_VSModeError : the driver has not been opened in the correct mode - Storage_VSCloseError : an error has occurred when closing the driver - Storage_VSAlreadyOpen : the driver is already open - Storage_VSNotOpen : the driver is not open - Storage_VSSectionNotFound : a section has not been found in the driver - Storage_VSWriteError : an error occurred when writing the driver - Storage_VSFormatError : the file format is wrong - Storage_VSUnknownType : a type is not known from the schema - Storage_VSTypeMismatch : trying to read a wrong type - Storage_VSInternalError : an internal error has been detected - Storage_VSExtCharParityError : an error has occurred while reading 16 bit characte
+    Error codes returned by the ErrorStatus function on a Storage_Data set of data during a storage or retrieval operation : - Storage_VSOk : no problem has been detected - Storage_VSOpenError : an error has occurred when opening the driver - Storage_VSModeError : the driver has not been opened in the correct mode - Storage_VSCloseError : an error has occurred when closing the driver - Storage_VSAlreadyOpen : the driver is already open - Storage_VSNotOpen : the driver is not open - Storage_VSSectionNotFound : a section has not been found in the driver - Storage_VSWriteError : an error occurred when writing the driver - Storage_VSFormatError : the file format is wrong - Storage_VSUnknownType : a type is not known from the schema - Storage_VSTypeMismatch : trying to read a wrong type - Storage_VSInternalError : an internal error has been detected - Storage_VSExtCharParityError : an error has occurred while reading 16 bit character
 
     Members:
 
@@ -977,6 +964,7 @@ class Storage_Error():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1075,23 +1063,23 @@ class Storage_HArrayOfCallBack(Storage_ArrayOfCallBack, OCP.Standard.Standard_Tr
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Storage_CallBack: 
         """
         Returns last element
@@ -1133,13 +1121,13 @@ class Storage_HArrayOfCallBack(Storage_ArrayOfCallBack, OCP.Standard.Standard_Tr
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Storage_CallBack) -> None: ...
+    @overload
+    def __init__(self,theOther : Storage_ArrayOfCallBack) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1218,23 +1206,23 @@ class Storage_HArrayOfSchema(Storage_ArrayOfSchema, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Storage_Schema: 
         """
         Returns last element
@@ -1276,13 +1264,13 @@ class Storage_HArrayOfSchema(Storage_ArrayOfSchema, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Storage_Schema) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_ArrayOfSchema) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : Storage_Schema) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1297,7 +1285,7 @@ class Storage_HArrayOfSchema(Storage_ArrayOfSchema, OCP.Standard.Standard_Transi
     pass
 class Storage_PArray():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Storage_PArray) -> Storage_PArray: 
         """
@@ -1372,13 +1360,13 @@ class Storage_PArray():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : Storage_PArray) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.Standard.Standard_Persistent,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
@@ -1390,14 +1378,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Storage_SeqOfRoot) -> None: 
+    def Append(self,theItem : Storage_Root) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Storage_Root) -> None: ...
+    def Append(self,theSeq : Storage_SeqOfRoot) -> None: ...
     def Assign(self,theOther : Storage_SeqOfRoot) -> Storage_SeqOfRoot: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1427,14 +1415,14 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Storage_Root) -> None: 
         """
@@ -1461,23 +1449,23 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: 
+    def Prepend(self,theItem : Storage_Root) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Storage_Root) -> None: ...
+    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1505,9 +1493,9 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1518,11 +1506,11 @@ class Storage_SeqOfRoot(OCP.NCollection.NCollection_BaseSequence):
 class Storage_HeaderData(OCP.Standard.Standard_Transient):
     def AddToComments(self,aComment : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
-        add <theUserInfo> to the user informations
+        add <theUserInfo> to the user information
         """
     def AddToUserInfo(self,theUserInfo : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
-        add <theUserInfo> to the user informations
+        add <theUserInfo> to the user information
         """
     def ApplicationName(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -1538,7 +1526,7 @@ class Storage_HeaderData(OCP.Standard.Standard_Transient):
         """
     def Comments(self) -> OCP.TColStd.TColStd_SequenceOfExtendedString: 
         """
-        return the user informations
+        return the user information
         """
     def CreationDate(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -1577,26 +1565,26 @@ class Storage_HeaderData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NumberOfObjects(self) -> int: 
         """
-        the the number of persistent objects Return: the number of persistent objects readed
+        the number of persistent objects Return: the number of persistent objects readed
         """
     def Read(self,theDriver : Storage_BaseDriver) -> bool: 
         """
@@ -1638,10 +1626,15 @@ class Storage_HeaderData(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def SetStorageVersion(self,aVersion : OCP.TCollection.TCollection_AsciiString) -> None: 
+    @overload
+    def SetStorageVersion(self,theVersion : int) -> None: 
         """
         None
+
+        None
         """
+    @overload
+    def SetStorageVersion(self,aVersion : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def StorageVersion(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         return the Storage package version
@@ -1652,7 +1645,7 @@ class Storage_HeaderData(OCP.Standard.Standard_Transient):
         """
     def UserInfo(self) -> OCP.TColStd.TColStd_SequenceOfAsciiString: 
         """
-        return the user informations
+        return the user information
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -1692,23 +1685,23 @@ class Storage_InternalData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ReadArray(self) -> Storage_HPArray: 
         """
         None
@@ -1746,6 +1739,7 @@ class Storage_OpenMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1834,23 +1828,23 @@ class Storage_HPArray(Storage_PArray, OCP.Standard.Standard_Transient):
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> OCP.Standard.Standard_Persistent: 
         """
         Returns last element
@@ -1892,13 +1886,13 @@ class Storage_HPArray(Storage_PArray, OCP.Standard.Standard_Transient):
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Persistent) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Storage_PArray) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Standard.Standard_Persistent) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1940,14 +1934,14 @@ class Storage_PType(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Contains
@@ -2058,23 +2052,23 @@ class Storage_Root(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the name of this root object. The name may have been given explicitly when the root was inserted into the Storage_Data object. If not, the name is a reference number which was assigned automatically by the driver when writing the set of data into the container. When naming the roots, it is easier to retrieve objects by significant references rather than by references without any semantic values. Warning The returned string will be empty if you call this function before having named this root object, either explicitly, or when writing the set of data into the container.
@@ -2112,11 +2106,11 @@ class Storage_Root(OCP.Standard.Standard_Transient):
         Returns the name of this root type.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theRef : int,theType : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theObject : OCP.Standard.Standard_Persistent) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2170,23 +2164,23 @@ class Storage_RootData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRoot(self,aName : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         returns Standard_True if <me> contains a root named <aName>
@@ -2242,7 +2236,7 @@ class Storage_Schema(OCP.Standard.Standard_Transient):
     @staticmethod
     def CheckTypeMigration_s(theTypeName : OCP.TCollection.TCollection_AsciiString,theNewName : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
-        returns True if theType migration is identified the callback support provides a way to read a file with a incomplete schema. ex. : A file contains 3 types a,b and c. The application's schema contains only 2 type a and b. If you try to read the file in the application, you will have an error.To bypass this problem you can give to your application's schema a callback used when the schema dosent know how to handle this type.
+        returns True if theType migration is identified the callback support provides a way to read a file with a incomplete schema. ex. : A file contains 3 types a, b, and c. The application's schema contains only 2 type a and b. If you try to read the file in the application, you will have an error.To bypass this problem you can give to your application's schema a callback used when the schema doesn't know how to handle this type.
         """
     def ClearCallBackList(self) -> None: 
         """
@@ -2286,23 +2280,23 @@ class Storage_Schema(OCP.Standard.Standard_Transient):
         returns a list of type name with installed callback.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsUsingDefaultCallBack(self) -> bool: 
         """
         ask if the schema is using the default callback.
@@ -2438,14 +2432,14 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Storage_Root) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Storage_SeqOfRoot) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Storage_Root) -> None: 
         """
@@ -2460,23 +2454,23 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Storage_Root: 
         """
         Last item access
@@ -2490,23 +2484,23 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: 
+    def Prepend(self,theItem : Storage_Root) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Storage_Root) -> None: ...
+    def Prepend(self,theSeq : Storage_SeqOfRoot) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2540,9 +2534,9 @@ class Storage_HSeqOfRoot(Storage_SeqOfRoot, OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Storage_SeqOfRoot) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2575,6 +2569,7 @@ class Storage_SolveMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2682,23 +2677,23 @@ class Storage_TypeData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsType(self,aName : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         None
@@ -2770,23 +2765,23 @@ class Storage_TypedCallBack(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetCallBack(self,aCallBack : Storage_CallBack) -> None: 
         """
         None
@@ -2808,9 +2803,9 @@ class Storage_TypedCallBack(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aTypeName : OCP.TCollection.TCollection_AsciiString,aCallBack : Storage_CallBack) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
-import OCP.LDOM
 import OCP.Storage
 import OCP.TCollection
+import OCP.LDOM
 __all__  = [
 "XmlObjMgt",
 "XmlObjMgt_Array1",
@@ -79,7 +79,7 @@ class XmlObjMgt():
     pass
 class XmlObjMgt_Array1():
     """
-    The class Array1 represents unidimensionnal array of fixed size known at run time. The range of the index is user defined. Warning: Programs clients of such class must be independant of the range of the first element. Then, a C++ for loop must be written like this for (i = A->Lower(); i <= A->Upper(); i++)
+    The class Array1 represents unidimensional array of fixed size known at run time. The range of the index is user defined. Warning: Programs clients of such class must be independent of the range of the first element. Then, a C++ for loop must be written like this for (i = A->Lower(); i <= A->Upper(); i++)
     """
     def CreateArrayElement(self,theParent : OCP.LDOM.LDOM_Element,theName : LDOMString) -> None: 
         """
@@ -128,7 +128,7 @@ class XmlObjMgt_GP():
     """
     @staticmethod
     @overload
-    def Translate_s(anXYZ : OCP.gp.gp_XYZ) -> LDOMString: 
+    def Translate_s(aTrsf : OCP.gp.gp_Trsf) -> LDOMString: 
         """
         None
 
@@ -144,16 +144,16 @@ class XmlObjMgt_GP():
         """
     @staticmethod
     @overload
-    def Translate_s(aTrsf : OCP.gp.gp_Trsf) -> LDOMString: ...
+    def Translate_s(anXYZ : OCP.gp.gp_XYZ) -> LDOMString: ...
+    @staticmethod
+    @overload
+    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Mat) -> bool: ...
     @staticmethod
     @overload
     def Translate_s(aStr : LDOMString,T : OCP.gp.gp_XYZ) -> bool: ...
     @staticmethod
     @overload
     def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Trsf) -> bool: ...
-    @staticmethod
-    @overload
-    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Mat) -> bool: ...
     @staticmethod
     @overload
     def Translate_s(aMat : OCP.gp.gp_Mat) -> LDOMString: ...
@@ -188,11 +188,11 @@ class XmlObjMgt_Persistent():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theElement : OCP.LDOM.LDOM_Element) -> None: ...
     @overload
     def __init__(self,theElement : OCP.LDOM.LDOM_Element,theRef : LDOMString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class XmlObjMgt_RRelocationTable():
     """

@@ -5,10 +5,10 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TColStd
-import io
 import OCP.NCollection
+import io
 import OCP.Standard
+import OCP.TColStd
 __all__  = [
 "TFunction_Array1OfDataMapOfGUIDDriver",
 "TFunction_DataMapOfLabelListOfLabel",
@@ -31,7 +31,7 @@ __all__  = [
 ]
 class TFunction_Array1OfDataMapOfGUIDDriver():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> TFunction_Array1OfDataMapOfGUIDDriver: 
         """
@@ -106,13 +106,13 @@ class TFunction_Array1OfDataMapOfGUIDDriver():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : Any,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
@@ -144,14 +144,14 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -202,11 +202,11 @@ class TFunction_DataMapOfLabelListOfLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : TFunction_DataMapOfLabelListOfLabel) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
@@ -230,14 +230,14 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
         Bind
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : TFunction_DoubleMapOfIntegerLabel) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -309,9 +309,9 @@ class TFunction_DoubleMapOfIntegerLabel(OCP.NCollection.NCollection_BaseMap):
         UnBind2
         """
     @overload
-    def __init__(self,theOther : TFunction_DoubleMapOfIntegerLabel) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TFunction_DoubleMapOfIntegerLabel) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
@@ -352,23 +352,23 @@ class TFunction_Driver(OCP.Standard.Standard_Transient):
         Initializes the label L for this function prior to its execution.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TDF.TDF_Label: 
         """
         Returns the label of the driver for this function.
@@ -452,23 +452,23 @@ class TFunction_DriverTable(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RemoveDriver(self,guid : OCP.Standard.Standard_GUID,thread : int=0) -> bool: 
         """
         Removes a driver with the given GUID. Returns true if the driver has been removed successfully.
@@ -508,6 +508,7 @@ class TFunction_ExecutionStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -642,11 +643,11 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def GetDriverGUID(self) -> OCP.Standard.Standard_GUID: 
         """
@@ -690,23 +691,23 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -741,24 +742,24 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     def SetDriverGUID(self,guid : OCP.Standard.Standard_GUID) -> None: 
         """
-        Sets the driver for this function as that indentified by the GUID guid.
+        Sets the driver for this function as that identified by the GUID guid.
         """
     def SetFailure(self,mode : int=0) -> None: 
         """
         Sets the failed index.
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label,DriverID : OCP.Standard.Standard_GUID) -> TFunction_Function: 
+    def Set_s(L : OCP.TDF.TDF_Label) -> TFunction_Function: 
         """
         Static methods: ============== Finds or Creates a function attribute on the label <L>. Returns the function attribute.
 
@@ -766,7 +767,7 @@ class TFunction_Function(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient)
         """
     @staticmethod
     @overload
-    def Set_s(L : OCP.TDF.TDF_Label) -> TFunction_Function: ...
+    def Set_s(L : OCP.TDF.TDF_Label,DriverID : OCP.Standard.Standard_GUID) -> TFunction_Function: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -802,14 +803,14 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Adds an Attribute <other> to the label of <me>.Raises if there is already one of the same GUID fhan <other>.
         """
     @overload
-    def AddNext(self,funcID : int) -> bool: 
+    def AddNext(self,func : OCP.TDF.TDF_Label) -> bool: 
         """
         Defines a reference to the function as a next one.
 
         Defines a reference to the function as a next one.
         """
     @overload
-    def AddNext(self,func : OCP.TDF.TDF_Label) -> bool: ...
+    def AddNext(self,funcID : int) -> bool: ...
     @overload
     def AddPrevious(self,funcID : int) -> bool: 
         """
@@ -918,11 +919,11 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -970,23 +971,23 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1033,27 +1034,27 @@ class TFunction_GraphNode(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def RemoveNext(self,func : OCP.TDF.TDF_Label) -> bool: ...
     @overload
-    def RemovePrevious(self,funcID : int) -> bool: 
+    def RemovePrevious(self,func : OCP.TDF.TDF_Label) -> bool: 
         """
         Removes a reference to the function as a previous one.
 
         Removes a reference to the function as a previous one.
         """
     @overload
-    def RemovePrevious(self,func : OCP.TDF.TDF_Label) -> bool: ...
+    def RemovePrevious(self,funcID : int) -> bool: ...
     def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: 
         """
         None
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetStatus(self,status : TFunction_ExecutionStatus) -> None: 
         """
         Defines an execution status for a function. Implementation of Attribute methods ===================================
@@ -1155,23 +1156,23 @@ class TFunction_HArray1OfDataMapOfGUIDDriver(TFunction_Array1OfDataMapOfGUIDDriv
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Any: 
         """
         Returns last element
@@ -1213,13 +1214,13 @@ class TFunction_HArray1OfDataMapOfGUIDDriver(TFunction_Array1OfDataMapOfGUIDDriv
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theOther : TFunction_Array1OfDataMapOfGUIDDriver) -> None: ...
+    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Any) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1304,9 +1305,9 @@ class TFunction_IFunction():
         Updates dependencies for all functions of the scope. It returns false in case of an error. An empty constructor.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,L : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TFunction_Iterator():
     """
@@ -1353,9 +1354,9 @@ class TFunction_Iterator():
         Defines the mode of iteration - usage or not of the execution status. If the iterator takes into account the execution status, the method ::Current() returns only "not executed" functions while their status is not changed. If the iterator ignores the execution status, the method ::Current() returns the functions following their dependencies and ignoring the execution status.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Access : OCP.TDF.TDF_Label) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
@@ -1474,11 +1475,11 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -1547,23 +1548,23 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsModified(self,L : OCP.TDF.TDF_Label,WithChildren : bool=False) -> bool: 
         """
         Returns True if the label L is touched or impacted. This method is called by <TFunction_FunctionDriver::MustExecute>. If <WithChildren> is set to true, the method checks all the sublabels of <L> too.
@@ -1598,14 +1599,14 @@ class TFunction_Logbook(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def Restore(self,with_ : OCP.TDF.TDF_Attribute) -> None: ...
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def SetImpacted(self,L : OCP.TDF.TDF_Label,WithChildren : bool=False) -> None: 
         """
         Sets the label L as an impacted label in this logbook. This method is called by execution of the function driver.
@@ -1771,11 +1772,11 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def GetFreeID(self) -> int: 
         """
@@ -1841,23 +1842,23 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1908,14 +1909,14 @@ class TFunction_Scope(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(Access : OCP.TDF.TDF_Label) -> TFunction_Scope: 
         """

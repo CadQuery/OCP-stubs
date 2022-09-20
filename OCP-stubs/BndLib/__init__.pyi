@@ -7,8 +7,8 @@ _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
 import OCP.Adaptor2d
 import OCP.gp
-import OCP.Bnd
 import OCP.Geom2d
+import OCP.Bnd
 __all__  = [
 "BndLib",
 "BndLib_Add2dCurve",
@@ -21,9 +21,9 @@ class BndLib():
     """
     @staticmethod
     @overload
-    def Add_s(H : OCP.gp.gp_Hypr2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: 
+    def Add_s(S : OCP.gp.gp_Sphere,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: 
         """
-        Bounding box for a surface trimmed or not Adds the segment of the line L limited by the two parameter values P1 and P2, to the bounding box B, and then enlarges B by the tolerance value Tol. Tol is the tolerance value to enlarge the minimun and maximum dimension P1 and P2 may represent infinite values. Exceptions Standard_Failure if P1 and P2 are either two negative infinite real numbers, or two positive infinite real numbers.
+        Bounding box for a surface trimmed or not Adds the segment of the line L limited by the two parameter values P1 and P2, to the bounding box B, and then enlarges B by the tolerance value Tol. Tol is the tolerance value to enlarge the minimum and maximum dimension P1 and P2 may represent infinite values. Exceptions Standard_Failure if P1 and P2 are either two negative infinite real numbers, or two positive infinite real numbers.
 
         None
 
@@ -69,61 +69,61 @@ class BndLib():
         """
     @staticmethod
     @overload
-    def Add_s(P : OCP.gp.gp_Torus,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(P : OCP.gp.gp_Parab,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(L : OCP.gp.gp_Lin,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Elips2d,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Elips,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(P : OCP.gp.gp_Parab2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(S : OCP.gp.gp_Cone,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(S : OCP.gp.gp_Sphere,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Elips,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Circ,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Circ2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Elips2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(H : OCP.gp.gp_Hypr,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    def Add_s(S : OCP.gp.gp_Cylinder,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
     @staticmethod
     @overload
     def Add_s(S : OCP.gp.gp_Cylinder,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
     @staticmethod
     @overload
+    def Add_s(C : OCP.gp.gp_Circ2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(S : OCP.gp.gp_Sphere,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(P : OCP.gp.gp_Torus,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(C : OCP.gp.gp_Elips2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(C : OCP.gp.gp_Circ,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
     def Add_s(L : OCP.gp.gp_Lin2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(S : OCP.gp.gp_Sphere,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
-    @staticmethod
-    @overload
-    def Add_s(C : OCP.gp.gp_Circ,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
     @staticmethod
     @overload
     def Add_s(C : OCP.gp.gp_Circ2d,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
     @staticmethod
     @overload
-    def Add_s(S : OCP.gp.gp_Cylinder,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    def Add_s(H : OCP.gp.gp_Hypr2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(P : OCP.gp.gp_Parab2d,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(C : OCP.gp.gp_Elips2d,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(L : OCP.gp.gp_Lin,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(P : OCP.gp.gp_Parab,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(H : OCP.gp.gp_Hypr,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(C : OCP.gp.gp_Circ,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(C : OCP.gp.gp_Elips,P1 : float,P2 : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(S : OCP.gp.gp_Cone,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    @overload
+    def Add_s(C : OCP.gp.gp_Elips,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
     @staticmethod
     @overload
     def Add_s(S : OCP.gp.gp_Cone,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: ...
@@ -139,7 +139,7 @@ class BndLib_Add2dCurve():
     @staticmethod
     def AddOptimal_s(C : OCP.Geom2d.Geom2d_Curve,U1 : float,U2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: 
         """
-        Adds to the bounding box B the part of curve C B is then enlarged by the tolerance value Tol. U1, U2 - the parametric range to comute the bounding box; Note: depending on the type of curve, one of the following algorithms is used to include it in the bounding box B: - an exact analytical if C is built from a line, a circle or a conic curve, - numerical calculation of bounding box sizes, based on minimization algorithm, for other types of curve If Tol = < Precision::PConfusion(), Precision::PConfusion is used as tolerance for calculation
+        Adds to the bounding box B the part of curve C B is then enlarged by the tolerance value Tol. U1, U2 - the parametric range to compute the bounding box; Note: depending on the type of curve, one of the following algorithms is used to include it in the bounding box B: - an exact analytical if C is built from a line, a circle or a conic curve, - numerical calculation of bounding box sizes, based on minimization algorithm, for other types of curve If Tol = < Precision::PConfusion(), Precision::PConfusion is used as tolerance for calculation
         """
     @staticmethod
     @overload
@@ -151,14 +151,14 @@ class BndLib_Add2dCurve():
 
         Adds to the bounding box B the curve C B is then enlarged by the tolerance value Tol. Note: depending on the type of curve, one of the following representations of the curve C is used to include it in the bounding box B: - an exact representation if C is built from a line, a circle or a conic curve, - the poles of the curve if C is built from a Bezier curve or a BSpline curve, - if not, the points of an approximation of the curve C.
 
-        Adds to the bounding box B the part of curve C B is then enlarged by the tolerance value Tol. U1, U2 - the parametric range to comute the bounding box; Note: depending on the type of curve, one of the following representations of the curve C is used to include it in the bounding box B: - an exact representation if C is built from a line, a circle or a conic curve, - the poles of the curve if C is built from a Bezier curve or a BSpline curve, - if not, the points of an approximation of the curve C.
+        Adds to the bounding box B the part of curve C B is then enlarged by the tolerance value Tol. U1, U2 - the parametric range to compute the bounding box; Note: depending on the type of curve, one of the following representations of the curve C is used to include it in the bounding box B: - an exact representation if C is built from a line, a circle or a conic curve, - the poles of the curve if C is built from a Bezier curve or a BSpline curve, - if not, the points of an approximation of the curve C.
         """
     @staticmethod
     @overload
-    def Add_s(C : OCP.Geom2d.Geom2d_Curve,U1 : float,U2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    def Add_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
     @staticmethod
     @overload
-    def Add_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
+    def Add_s(C : OCP.Geom2d.Geom2d_Curve,U1 : float,U2 : float,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
     @staticmethod
     @overload
     def Add_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol : float,B : OCP.Bnd.Bnd_Box2d) -> None: ...
@@ -210,7 +210,7 @@ class BndLib_AddSurface():
     @overload
     def AddOptimal_s(S : OCP.Adaptor3d.Adaptor3d_Surface,UMin : float,UMax : float,VMin : float,VMax : float,Tol : float,B : OCP.Bnd.Bnd_Box) -> None: 
         """
-        Adds the surface S to the bounding box B. This algorith builds precise bounding box
+        Adds the surface S to the bounding box B. This algorithm builds precise bounding box
 
         None
         """

@@ -5,20 +5,20 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.NCollection
-import OCP.Font
-import OCP.Bnd
-import OCP.Standard
-import OCP.Quantity
-import OCP.TColStd
-import OCP.TCollection
 import io
-import OCP.Message
+import OCP.Standard
+import OCP.Font
+import OCP.Quantity
+import OCP.Bnd
+import OCP.TopLoc
+import OCP.Graphic3d
 import OCP.Image
 import OCP.gp
-import OCP.Graphic3d.Graphic3d_Camera
-import OCP.Graphic3d
 import OCP.Aspect
-import OCP.TopLoc
+import OCP.Message
+import OCP.Graphic3d.Graphic3d_Camera
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "NSOpenGLContext",
 "OpenGl_ArbDbg",
@@ -34,14 +34,16 @@ __all__  = [
 "OpenGl_AspectsTextureSet",
 "OpenGl_BVHTriangulation3f",
 "OpenGl_PrimitiveArray",
-"OpenGl_CappingAlgo",
 "OpenGl_Resource",
+"OpenGl_CappingAlgo",
+"OpenGl_CappingPlaneResource",
 "OpenGl_Caps",
 "OpenGl_Clipping",
 "OpenGl_ClippingIterator",
 "OpenGl_ClippingState",
 "OpenGl_ColorFormats",
 "OpenGl_Context",
+"OpenGl_NamedResource",
 "OpenGl_Aspects",
 "OpenGl_ElementNode",
 "OpenGl_ExtGS",
@@ -54,42 +56,29 @@ __all__  = [
 "OpenGl_GlCore11",
 "OpenGl_GlCore11Fwd",
 "OpenGl_GlCore12",
-"OpenGl_GlCore12Fwd",
 "OpenGl_GlCore13",
-"OpenGl_GlCore13Fwd",
 "OpenGl_GlCore14",
-"OpenGl_GlCore14Fwd",
 "OpenGl_GlCore15",
-"OpenGl_GlCore15Fwd",
 "OpenGl_GlCore20",
-"OpenGl_GlCore20Fwd",
 "OpenGl_GlCore21",
-"OpenGl_GlCore21Fwd",
 "OpenGl_GlCore30",
-"OpenGl_GlCore30Fwd",
 "OpenGl_GlCore31",
-"OpenGl_GlCore31Back",
 "OpenGl_GlCore32",
-"OpenGl_GlCore32Back",
 "OpenGl_GlCore33",
-"OpenGl_GlCore33Back",
 "OpenGl_GlCore40",
-"OpenGl_GlCore40Back",
 "OpenGl_GlCore41",
-"OpenGl_GlCore41Back",
 "OpenGl_GlCore42",
-"OpenGl_GlCore42Back",
 "OpenGl_GlCore43",
-"OpenGl_GlCore43Back",
 "OpenGl_GlCore44",
-"OpenGl_GlCore44Back",
 "OpenGl_GlCore45",
-"OpenGl_GlCore45Back",
+"OpenGl_GlCore46",
 "OpenGl_GlFunctions",
 "OpenGl_GraphicDriver",
+"OpenGl_GraphicDriverFactory",
 "OpenGl_Group",
 "OpenGl_HaltonSampler",
-"OpenGl_VertexBuffer",
+"OpenGl_Buffer",
+"OpenGl_IndexBufferCompat",
 "OpenGl_LayerFilter",
 "OpenGl_StateInterface",
 "OpenGl_LineAttributes",
@@ -99,19 +88,17 @@ __all__  = [
 "OpenGl_MaterialFlag",
 "OpenGl_MaterialPBR",
 "OpenGl_MaterialState",
-"OpenGl_Matrix",
 "OpenGl_ModelWorldState",
-"OpenGl_NamedResource",
+"OpenGl_DepthPeeling",
 "OpenGl_OitState",
 "OpenGl_PBREnvironment",
 "OpenGl_Texture",
 "OpenGl_BackgroundArray",
-"OpenGl_ProgramOptions",
 "OpenGl_ProjectionState",
 "OpenGl_RaytraceLight",
 "OpenGl_RaytraceMaterial",
 "OpenGl_RenderFilter",
-"OpenGl_CappingPlaneResource",
+"OpenGl_IndexBuffer",
 "OpenGl_Sampler",
 "OpenGl_SetOfPrograms",
 "OpenGl_SetOfShaderPrograms",
@@ -123,6 +110,8 @@ __all__  = [
 "OpenGl_ShaderProgramDumpLevel",
 "OpenGl_ShaderProgramList",
 "OpenGl_ShaderUniformLocation",
+"OpenGl_ShadowMap",
+"OpenGl_ShadowMapArray",
 "OpenGl_StateCounter",
 "OpenGl_LightSourceState",
 "OpenGl_StateVariable",
@@ -132,7 +121,7 @@ __all__  = [
 "OpenGl_Text",
 "OpenGl_TextBuilder",
 "OpenGl_PointSprite",
-"OpenGl_TextureBufferArb",
+"OpenGl_TextureBuffer",
 "OpenGl_TextureFormat",
 "OpenGl_TextureFormatSelector_GLbyte",
 "OpenGl_TextureFormatSelector_GLfloat",
@@ -145,8 +134,9 @@ __all__  = [
 "OpenGl_TextureSetPairIterator",
 "OpenGl_TileSampler",
 "OpenGl_TriangleSet",
+"OpenGl_UniformBuffer",
 "OpenGl_UniformStateType",
-"OpenGl_IndexBuffer",
+"OpenGl_VertexBuffer",
 "OpenGl_VertexBufferCompat",
 "OpenGl_View",
 "OpenGl_Window",
@@ -168,8 +158,7 @@ __all__  = [
 "OpenGl_MaterialFlag_Front",
 "OpenGl_OCCT_ALPHA_CUTOFF",
 "OpenGl_OCCT_COLOR",
-"OpenGl_OCCT_COMMON_BACK_MATERIAL",
-"OpenGl_OCCT_COMMON_FRONT_MATERIAL",
+"OpenGl_OCCT_COMMON_MATERIAL",
 "OpenGl_OCCT_DISTINGUISH_MODE",
 "OpenGl_OCCT_LINE_FEATHER",
 "OpenGl_OCCT_LINE_STIPPLE_FACTOR",
@@ -180,8 +169,7 @@ __all__  = [
 "OpenGl_OCCT_OIT_DEPTH_FACTOR",
 "OpenGl_OCCT_OIT_OUTPUT",
 "OpenGl_OCCT_ORTHO_SCALE",
-"OpenGl_OCCT_PBR_BACK_MATERIAL",
-"OpenGl_OCCT_PBR_FRONT_MATERIAL",
+"OpenGl_OCCT_PBR_MATERIAL",
 "OpenGl_OCCT_POINT_SIZE",
 "OpenGl_OCCT_QUAD_MODE_STATE",
 "OpenGl_OCCT_SILHOUETTE_THICKNESS",
@@ -193,6 +181,9 @@ __all__  = [
 "OpenGl_OCC_CLIP_PLANE_COUNT",
 "OpenGl_OCC_CLIP_PLANE_EQUATIONS",
 "OpenGl_OCC_LIGHT_AMBIENT",
+"OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES",
+"OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS",
+"OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS",
 "OpenGl_OCC_LIGHT_SOURCE_COUNT",
 "OpenGl_OCC_LIGHT_SOURCE_PARAMS",
 "OpenGl_OCC_LIGHT_SOURCE_TYPES",
@@ -208,25 +199,6 @@ __all__  = [
 "OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE",
 "OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE",
 "OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE",
-"OpenGl_PO_AlphaTest",
-"OpenGl_PO_ClipChains",
-"OpenGl_PO_ClipPlanes1",
-"OpenGl_PO_ClipPlanes2",
-"OpenGl_PO_ClipPlanesN",
-"OpenGl_PO_HasTextures",
-"OpenGl_PO_IsPoint",
-"OpenGl_PO_MeshEdges",
-"OpenGl_PO_NB",
-"OpenGl_PO_NeedsGeomShader",
-"OpenGl_PO_PointSimple",
-"OpenGl_PO_PointSprite",
-"OpenGl_PO_PointSpriteA",
-"OpenGl_PO_StippleLine",
-"OpenGl_PO_TextureEnv",
-"OpenGl_PO_TextureNormal",
-"OpenGl_PO_TextureRGB",
-"OpenGl_PO_VertColor",
-"OpenGl_PO_WriteOit",
 "OpenGl_PROJECTION_STATE",
 "OpenGl_RenderFilter_Empty",
 "OpenGl_RenderFilter_FillModeOnly",
@@ -461,7 +433,7 @@ class OpenGl_PrimitiveArray(OpenGl_Element):
         """
         Returns unique ID of primitive array.
         """
-    def IndexVbo(self) -> OpenGl_VertexBuffer: 
+    def IndexVbo(self) -> OpenGl_IndexBuffer: 
         """
         Returns index VBO.
         """
@@ -511,17 +483,6 @@ class OpenGl_PrimitiveArray(OpenGl_Element):
     def __init__(self,theDriver : OpenGl_GraphicDriver) -> None: ...
     DRAW_MODE_NONE = -1
     pass
-class OpenGl_CappingAlgo():
-    """
-    Capping surface rendering algorithm.
-    """
-    @staticmethod
-    def RenderCapping_s(theWorkspace : OpenGl_Workspace,theStructure : OpenGl_Structure) -> None: 
-        """
-        Draw capping surfaces by OpenGl for the clipping planes enabled in current context state. Depth buffer must be generated for the passed groups.
-        """
-    def __init__(self) -> None: ...
-    pass
 class OpenGl_Resource(OCP.Standard.Standard_Transient):
     """
     Interface for OpenGl resource with following meaning: - object can be constructed at any time; - should be explicitly Initialized within active OpenGL context; - should be explicitly Released within active OpenGL context (virtual Release() method); - can be destroyed at any time. Destruction of object with unreleased GPU resources will cause leaks which will be ignored in release mode and will immediately stop program execution in debug mode using assert.Interface for OpenGl resource with following meaning: - object can be constructed at any time; - should be explicitly Initialized within active OpenGL context; - should be explicitly Released within active OpenGL context (virtual Release() method); - can be destroyed at any time. Destruction of object with unreleased GPU resources will cause leaks which will be ignored in release mode and will immediately stop program execution in debug mode using assert.
@@ -555,23 +516,23 @@ class OpenGl_Resource(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Release(self,theGlCtx : OpenGl_Context) -> None: 
         """
         Release GPU resources. Notice that implementation should be SAFE for several consecutive calls (thus should invalidate internal structures / ids to avoid multiple-free errors).
@@ -581,6 +542,107 @@ class OpenGl_Resource(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class OpenGl_CappingAlgo():
+    """
+    Capping surface rendering algorithm.
+    """
+    @staticmethod
+    def RenderCapping_s(theWorkspace : OpenGl_Workspace,theStructure : OpenGl_Structure) -> None: 
+        """
+        Draw capping surfaces by OpenGl for the clipping planes enabled in current context state. Depth buffer must be generated for the passed groups.
+        """
+    def __init__(self) -> None: ...
+    pass
+class OpenGl_CappingPlaneResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
+    """
+    Container of graphical resources for rendering capping plane associated to graphical clipping plane. This resource holds data necessary for OpenGl_CappingAlgo. This object is implemented as OpenGl resource for the following reasons: - one instance should be shared between contexts. - instance associated to Graphic3d_ClipPlane data by id. - should created and released within context (owns OpenGl elements and resources).Container of graphical resources for rendering capping plane associated to graphical clipping plane. This resource holds data necessary for OpenGl_CappingAlgo. This object is implemented as OpenGl resource for the following reasons: - one instance should be shared between contexts. - instance associated to Graphic3d_ClipPlane data by id. - should created and released within context (owns OpenGl elements and resources).Container of graphical resources for rendering capping plane associated to graphical clipping plane. This resource holds data necessary for OpenGl_CappingAlgo. This object is implemented as OpenGl resource for the following reasons: - one instance should be shared between contexts. - instance associated to Graphic3d_ClipPlane data by id. - should created and released within context (owns OpenGl elements and resources).
+    """
+    def AspectFace(self) -> OpenGl_Aspects: 
+        """
+        Returns aspect face for rendering capping surface.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage - not implemented.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def Orientation(self) -> OCP.Graphic3d.Graphic3d_Mat4: 
+        """
+        Returns evaluated orientation matrix to transform infinite plane.
+        """
+    def Plane(self) -> OCP.Graphic3d.Graphic3d_ClipPlane: 
+        """
+        Return parent clipping plane structure.
+        """
+    def Primitives(self) -> OpenGl_PrimitiveArray: 
+        """
+        Returns primitive array of vertices to render infinite plane.
+        """
+    def Release(self,theContext : OpenGl_Context) -> None: 
+        """
+        Release associated OpenGl resources.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Update(self,theContext : OpenGl_Context,theObjAspect : OCP.Graphic3d.Graphic3d_Aspects) -> None: 
+        """
+        Update resource data in the passed context.
+        """
+    def __init__(self,thePlane : OCP.Graphic3d.Graphic3d_ClipPlane) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -617,23 +679,23 @@ class OpenGl_Caps(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -656,6 +718,14 @@ class OpenGl_Caps(OCP.Standard.Standard_Transient):
         """
     @buffersNoSwap.setter
     def buffersNoSwap(self, arg0: bool) -> None:
+        pass
+    @property
+    def buffersOpaqueAlpha(self) -> bool:
+        """
+        :type: bool
+        """
+    @buffersOpaqueAlpha.setter
+    def buffersOpaqueAlpha(self, arg0: bool) -> None:
         pass
     @property
     def compressedTexturesDisable(self) -> bool:
@@ -816,6 +886,14 @@ class OpenGl_Caps(OCP.Standard.Standard_Transient):
         """
     @useSystemBuffer.setter
     def useSystemBuffer(self, arg0: bool) -> None:
+        pass
+    @property
+    def useZeroToOneDepth(self) -> bool:
+        """
+        :type: bool
+        """
+    @useZeroToOneDepth.setter
+    def useZeroToOneDepth(self, arg0: bool) -> None:
         pass
     @property
     def vboDisable(self) -> bool:
@@ -1107,7 +1185,7 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def CheckIsTransparent_s(theAspect : OpenGl_Aspects,theHighlight : OCP.Graphic3d.Graphic3d_PresentationAttributes,theAlphaFront : float,theAlphaBack : float) -> bool: 
+    def CheckIsTransparent_s(theAspect : OpenGl_Aspects,theHighlight : OCP.Graphic3d.Graphic3d_PresentationAttributes) -> bool: 
         """
         Checks if transparency is required for the given aspect and highlight style.
 
@@ -1115,12 +1193,16 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def CheckIsTransparent_s(theAspect : OpenGl_Aspects,theHighlight : OCP.Graphic3d.Graphic3d_PresentationAttributes) -> bool: ...
+    def CheckIsTransparent_s(theAspect : OpenGl_Aspects,theHighlight : OCP.Graphic3d.Graphic3d_PresentationAttributes,theAlphaFront : float,theAlphaBack : float) -> bool: ...
     def Clipping(self) -> OpenGl_Clipping: 
         """
         Returns tool for management of clippings within this context.
         """
     def ColorMask(self) -> bool: 
+        """
+        Return cached flag indicating writing into color buffer is enabled or disabled (glColorMask).
+        """
+    def ColorMaskRGBA(self) -> Any: 
         """
         Return cached flag indicating writing into color buffer is enabled or disabled (glColorMask).
         """
@@ -1135,6 +1217,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DepthPeelingDepthTexUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Returns texture unit for occDepthPeelingDepth within enabled Depth Peeling.
+        """
+    def DepthPeelingFrontColorTexUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Returns texture unit for occDepthPeelingFrontColor within enabled Depth Peeling.
         """
     def DiagnosticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theFlags : OCP.Graphic3d.Graphic3d_DiagnosticInfo) -> None: 
         """
@@ -1173,6 +1263,26 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Fetch OpenGl context state. This class tracks value of several OpenGl state variables. Consulting the cached values is quicker than doing the same via OpenGl API. Call this method if any of the controlled OpenGl state variables has a possibility of being out-of-date.
         """
+    @staticmethod
+    def FormatGlEnumHex_s(theGlEnum : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format GL constant as hex value 0xABCD.
+        """
+    @staticmethod
+    def FormatGlError_s(theGlError : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return text description of GL error.
+        """
+    @staticmethod
+    def FormatPointer_s(thePtr : capsule) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format pointer as hex value 0xABCD.
+        """
+    @staticmethod
+    def FormatSize_s(theSize : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format size value.
+        """
     def FrameStats(self) -> OpenGl_FrameStats: 
         """
         Return structure holding frame statistics.
@@ -1184,6 +1294,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def GetBufferSubData(self,theTarget : int,theOffset : int,theSize : int,theData : capsule) -> bool: 
         """
         Wrapper over glGetBufferSubData(), implemented as: - OpenGL 1.5+ (desktop) via glGetBufferSubData(); - OpenGL ES 3.0+ via glMapBufferRange(); - WebGL 2.0+ via gl.getBufferSubData().
+        """
+    def GetDisplay(self) -> capsule: 
+        """
+        Return display / window device context (EGLDisplay | HDC | Display*).
         """
     @staticmethod
     def GetPowerOfTwo_s(theNumber : int,theThreshold : int) -> int: 
@@ -1243,14 +1357,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theIsCoreProfile : bool=False) -> bool: 
+    def Init(self,theSurface : capsule,theDisplay : capsule,theContext : capsule,theIsCoreProfile : bool=False) -> bool: 
         """
         Initialize class from currently bound OpenGL context. Method should be called only once.
 
-        Initialize class from specified window and rendering context. Method should be called only once.
+        Initialize class from specified surface and rendering context. Method should be called only once. The meaning of parameters is platform-specific.
         """
     @overload
-    def Init(self,theWindow : int,theDisplay : capsule,theGContext : capsule,theIsCoreProfile : bool=False) -> bool: ...
+    def Init(self,theIsCoreProfile : bool=False) -> bool: ...
     def IsCurrent(self) -> bool: 
         """
         This method uses system-dependent API to retrieve information about GL context bound to the current thread.
@@ -1276,23 +1390,23 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         Returns cached state of GL_NORMALIZE.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPolygonHatchEnabled(self) -> bool: 
         """
         Returns cached enabled state of polygon hatching rasterization.
@@ -1427,6 +1541,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Rendering scale factor (inverted value).
         """
+    def RenderingContext(self) -> capsule: 
+        """
+        Return rendering context (EGLContext | HGLRC | GLXContext | EAGLContext* | NSOpenGLContext*).
+        """
     def ResetErrors(self,theToPrintErrors : bool=False) -> bool: 
         """
         Clean up errors stack for this GL context (glGetError() in loop).
@@ -1460,6 +1578,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         Setup current color.
         """
     def SetColorMask(self,theToWriteColor : bool) -> bool: 
+        """
+        Enable/disable writing into color buffer (wrapper for glColorMask). Alpha component writes will be disabled unconditionally in case of caps->buffersOpaqueAlpha.
+        """
+    def SetColorMaskRGBA(self,theToWriteColor : Any) -> None: 
         """
         Enable/disable writing into color buffer (wrapper for glColorMask).
         """
@@ -1496,14 +1618,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         Set line feater width.
         """
     @overload
-    def SetLineStipple(self,theFactor : float,thePattern : int) -> None: 
+    def SetLineStipple(self,thePattern : int) -> None: 
         """
         Setup stipple line pattern with 1.0f factor; wrapper for glLineStipple().
 
         Setup type of line; wrapper for glLineStipple().
         """
     @overload
-    def SetLineStipple(self,thePattern : int) -> None: ...
+    def SetLineStipple(self,theFactor : float,thePattern : int) -> None: ...
     def SetLineWidth(self,theWidth : float) -> None: 
         """
         Setup width of line.
@@ -1579,6 +1701,10 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def ShaderManager(self) -> OpenGl_ShaderManager: 
         """
         Returns tool for management of shader programs within this context.
+        """
+    def ShadowMapTexUnit(self) -> OCP.Graphic3d.Graphic3d_TextureUnit: 
+        """
+        Returns texture unit where shadow map is expected to be bound, or 0 if unavailable.
         """
     def Share(self,theShareCtx : OpenGl_Context) -> None: 
         """
@@ -1656,9 +1782,9 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         Return virtual viewport definition (x, y, width, height).
         """
-    def Window(self) -> int: 
+    def Window(self) -> capsule: 
         """
-        Returns the window handle (GLXDrawable) currently bound to this OpenGL context
+        Return window handle currently bound to this OpenGL context (EGLSurface | HWND | GLXDrawable).
         """
     def __init__(self,theCaps : OpenGl_Caps=None) -> None: ...
     def forcedRelease(self) -> None: 
@@ -1675,6 +1801,22 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
         """
         None
         """
+    @property
+    def arbClipControl(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbClipControl.setter
+    def arbClipControl(self, arg0: bool) -> None:
+        pass
+    @property
+    def arbDepthClamp(self) -> bool:
+        """
+        :type: bool
+        """
+    @arbDepthClamp.setter
+    def arbDepthClamp(self, arg0: bool) -> None:
+        pass
     @property
     def arbDrawBuffers(self) -> bool:
         """
@@ -1780,6 +1922,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def hasDrawBuffers(self, arg0: OpenGl_FeatureFlag) -> None:
         pass
     @property
+    def hasFboRenderMipmap(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasFboRenderMipmap.setter
+    def hasFboRenderMipmap(self, arg0: bool) -> None:
+        pass
+    @property
     def hasFboSRGB(self) -> bool:
         """
         :type: bool
@@ -1844,6 +1994,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def hasHighp(self, arg0: bool) -> None:
         pass
     @property
+    def hasPackRowLength(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasPackRowLength.setter
+    def hasPackRowLength(self, arg0: bool) -> None:
+        pass
+    @property
     def hasSRGBControl(self) -> bool:
         """
         :type: bool
@@ -1892,6 +2050,14 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     def hasUintIndex(self, arg0: bool) -> None:
         pass
     @property
+    def hasUnpackRowLength(self) -> bool:
+        """
+        :type: bool
+        """
+    @hasUnpackRowLength.setter
+    def hasUnpackRowLength(self, arg0: bool) -> None:
+        pass
+    @property
     def nvxMem(self) -> bool:
         """
         :type: bool
@@ -1915,6 +2081,80 @@ class OpenGl_Context(OCP.Standard.Standard_Transient):
     @oesStdDerivatives.setter
     def oesStdDerivatives(self, arg0: bool) -> None:
         pass
+    pass
+class OpenGl_NamedResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
+    """
+    Named resource object.
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def Release(self,theGlCtx : OpenGl_Context) -> None: 
+        """
+        Release GPU resources. Notice that implementation should be SAFE for several consecutive calls (thus should invalidate internal structures / ids to avoid multiple-free errors).
+        """
+    def ResourceId(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return resource name.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class OpenGl_Aspects(OpenGl_Element):
     """
@@ -2024,6 +2264,7 @@ class OpenGl_FeatureFlag():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2136,23 +2377,23 @@ class OpenGl_Font(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Initialize GL resources. FreeType font instance should be already initialized!
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if font was loaded successfully.
@@ -2168,6 +2409,10 @@ class OpenGl_Font(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def ResourceKey(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns key of shared resource
+        """
+    def Texture(self) -> OpenGl_Texture: 
+        """
+        Returns first texture.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -2191,7 +2436,7 @@ class OpenGl_Font(OpenGl_Resource, OCP.Standard.Standard_Transient):
     pass
 class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
-    Class implements FrameBuffer Object (FBO) resource intended for off-screen rendering.Class implements FrameBuffer Object (FBO) resource intended for off-screen rendering.Class implements FrameBuffer Object (FBO) resource intended for off-screen rendering.
+    Class implements FrameBuffer Object (FBO) resource intended for off-screen rendering.Class implements FrameBuffer Object (FBO) resource intended for off-screen rendering.
     """
     def BindBuffer(self,theGlCtx : OpenGl_Context) -> None: 
         """
@@ -2250,6 +2495,10 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
         """
+    def GetInitVPSize(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Return viewport width x height.
+        """
     def GetInitVPSizeX(self) -> int: 
         """
         Viewport width.
@@ -2262,6 +2511,10 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Get the reference counter of this object
         """
+    def GetSize(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Return textures width x height.
+        """
     def GetSizeX(self) -> int: 
         """
         Textures width.
@@ -2269,6 +2522,10 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def GetSizeY(self) -> int: 
         """
         Textures height.
+        """
+    def GetVPSize(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Return viewport width x height.
         """
     def GetVPSizeX(self) -> int: 
         """
@@ -2291,8 +2548,14 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theSize : OCP.Graphic3d.Graphic3d_Vec2i,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: 
         """
+        Initialize FBO for rendering into single/multiple color buffer and depth textures.
+
+        Initialize FBO for rendering into textures.
+
+        Initialize FBO for rendering into single/multiple color buffer and depth textures.
+
         Initialize FBO for rendering into single/multiple color buffer and depth textures.
 
         Initialize FBO for rendering into textures.
@@ -2300,9 +2563,15 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Initialize FBO for rendering into single/multiple color buffer and depth textures.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthStencilTexture : OpenGl_Texture,theNbSamples : int=0) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theSize : OCP.Graphic3d.Graphic3d_Vec2i,theColorFormats : OpenGl_ColorFormats,theDepthStencilTexture : OpenGl_Texture,theNbSamples : int=0) -> bool: ...
     @overload
     def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    @overload
+    def Init(self,theGlCtx : OpenGl_Context,theSize : OCP.Graphic3d.Graphic3d_Vec2i,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    @overload
+    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    @overload
+    def Init(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthStencilTexture : OpenGl_Texture,theNbSamples : int=0) -> bool: ...
     @overload
     def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSizeX : int,theViewportSizeY : int,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: 
         """
@@ -2311,37 +2580,55 @@ class OpenGl_FrameBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         (Re-)initialize FBO with specified dimensions.
 
         (Re-)initialize FBO with properties taken from another FBO.
+
+        (Re-)initialize FBO with specified dimensions.
+
+        (Re-)initialize FBO with specified dimensions.
         """
     @overload
     def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSizeX : int,theViewportSizeY : int,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
     @overload
     def InitLazy(self,theGlCtx : OpenGl_Context,theFbo : OpenGl_FrameBuffer) -> bool: ...
-    def InitWithRB(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormat : int,theDepthFormat : int,theColorRBufferFromWindow : int=0) -> bool: 
+    @overload
+    def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSize : OCP.Graphic3d.Graphic3d_Vec2i,theColorFormat : int,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    @overload
+    def InitLazy(self,theGlCtx : OpenGl_Context,theViewportSize : OCP.Graphic3d.Graphic3d_Vec2i,theColorFormats : OpenGl_ColorFormats,theDepthFormat : int,theNbSamples : int=0) -> bool: ...
+    @overload
+    def InitWithRB(self,theGlCtx : OpenGl_Context,theSize : OCP.Graphic3d.Graphic3d_Vec2i,theColorFormat : int,theDepthFormat : int,theColorRBufferFromWindow : int=0) -> bool: 
         """
         (Re-)initialize FBO with specified dimensions. The Render Buffer Objects will be used for Color, Depth and Stencil attachments (as opposite to textures).
+
+        (Re-)initialize FBO with specified dimensions. The Render Buffer Objects will be used for Color, Depth and Stencil attachments (as opposite to textures).
         """
+    @overload
+    def InitWithRB(self,theGlCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theColorFormat : int,theDepthFormat : int,theColorRBufferFromWindow : int=0) -> bool: ...
+    @overload
     def InitWrapper(self,theGlCtx : OpenGl_Context) -> bool: 
         """
         Initialize class from currently bound FBO. Retrieved OpenGL objects will not be destroyed on Release.
+
+        Wrap existing color textures.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def InitWrapper(self,theGlContext : OpenGl_Context,theColorTextures : Any,theDepthTexture : OpenGl_Texture=None) -> bool: ...
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized
@@ -2423,14 +2710,14 @@ class OpenGl_FrameStats(OCP.Graphic3d.Graphic3d_FrameStats, OCP.Standard.Standar
         None
         """
     @overload
-    def FormatStats(self,theFlags : Any) -> OCP.TCollection.TCollection_AsciiString: 
+    def FormatStats(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theFlags : Any) -> None: 
         """
         Returns formatted string.
 
         Fill in the dictionary with formatted statistic info.
         """
     @overload
-    def FormatStats(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theFlags : Any) -> None: ...
+    def FormatStats(self,theFlags : Any) -> OCP.TCollection.TCollection_AsciiString: ...
     def FrameDuration(self) -> float: 
         """
         Returns duration of the last frame in seconds.
@@ -2472,23 +2759,23 @@ class OpenGl_FrameStats(OCP.Graphic3d.Graphic3d_FrameStats, OCP.Standard.Standar
         Copy stats values into another instance (create new instance, if not exists). The main use of this method is to track changes in statistics (e.g. in conjunction with IsEqual() method).
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLongLineFormat(self) -> bool: 
         """
         Prefer longer lines over more greater of lines.
@@ -2584,15 +2871,6 @@ class OpenGl_GlCore11():
     OpenGL 1.1 core. Notice that all functions within this structure are actually exported by system GL library. The main purpose for these hint - to control visibility of functions per GL version (global functions should not be used directly to achieve this effect!).
     """
     def __init__(self) -> None: ...
-    def glAccum(self,theOp : int,theValue : float) -> None: 
-        """
-        None
-        """
-    def glAreTexturesResident(self,n : int,textures : int,residences : int) -> int: 
-        """
-        None
-        """
-    def glBegin(self,theMode : int) -> None: ...
     def glBitmap(self,width : int,height : int,xorig : float,yorig : float,xmove : float,ymove : float,bitmap : int) -> None: 
         """
         None
@@ -2605,136 +2883,8 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glClearAccum(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: ...
     def glClipPlane(self,thePlane : int,theEquation : float) -> None: ...
-    def glColor3b(self,theRed : int,theGreen : int,theBlue : int) -> None: 
-        """
-        None
-        """
-    def glColor3bv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor3d(self,theRed : float,theGreen : float,theBlue : float) -> None: 
-        """
-        None
-        """
-    def glColor3dv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glColor3f(self,theRed : float,theGreen : float,theBlue : float) -> None: 
-        """
-        None
-        """
-    def glColor3fv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glColor3i(self,theRed : int,theGreen : int,theBlue : int) -> None: 
-        """
-        None
-        """
-    def glColor3iv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor3s(self,theRed : int,theGreen : int,theBlue : int) -> None: 
-        """
-        None
-        """
-    def glColor3sv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor3ub(self,theRed : int,theGreen : int,theBlue : int) -> None: 
-        """
-        None
-        """
-    def glColor3ubv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor3ui(self,theRed : int,theGreen : int,theBlue : int) -> None: 
-        """
-        None
-        """
-    def glColor3uiv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor3us(self,theRed : int,theGreen : int,theBlue : int) -> None: 
-        """
-        None
-        """
-    def glColor3usv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor4b(self,theRed : int,theGreen : int,theBlue : int,theAlpha : int) -> None: 
-        """
-        None
-        """
-    def glColor4bv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor4d(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: 
-        """
-        None
-        """
-    def glColor4dv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glColor4f(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: 
-        """
-        None
-        """
-    def glColor4fv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glColor4i(self,theRed : int,theGreen : int,theBlue : int,theAlpha : int) -> None: 
-        """
-        None
-        """
-    def glColor4iv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor4s(self,theRed : int,theGreen : int,theBlue : int,theAlpha : int) -> None: 
-        """
-        None
-        """
-    def glColor4sv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor4ub(self,theRed : int,theGreen : int,theBlue : int,theAlpha : int) -> None: 
-        """
-        None
-        """
-    def glColor4ubv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor4ui(self,theRed : int,theGreen : int,theBlue : int,theAlpha : int) -> None: 
-        """
-        None
-        """
-    def glColor4uiv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glColor4us(self,theRed : int,theGreen : int,theBlue : int,theAlpha : int) -> None: 
-        """
-        None
-        """
-    def glColor4usv(self,theVec : int) -> None: 
-        """
-        None
-        """
+    def glColor4fv(self,theVec : float) -> None: ...
     def glColorMaterial(self,face : int,mode : int) -> None: 
         """
         None
@@ -2747,29 +2897,13 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glDeleteLists(self,theList : int,theRange : int) -> None: 
-        """
-        None
-        """
+    def glDeleteLists(self,theList : int,theRange : int) -> None: ...
     def glDisableClientState(self,theCap : int) -> None: 
         """
         None
         """
     def glDrawPixels(self,width : int,height : int,format : int,type : int,pixels : capsule) -> None: ...
-    def glEdgeFlag(self,theFlag : int) -> None: ...
-    def glEdgeFlagPointer(self,theStride : int,thePtr : capsule) -> None: 
-        """
-        None
-        """
-    def glEdgeFlagv(self,theFlag : int) -> None: 
-        """
-        None
-        """
     def glEnableClientState(self,theCap : int) -> None: 
-        """
-        None
-        """
-    def glEnd(self) -> None: 
         """
         None
         """
@@ -2777,190 +2911,20 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glEvalCoord1d(self,u : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord1dv(self,u : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord1f(self,u : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord1fv(self,u : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord2d(self,u : float,v : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord2dv(self,u : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord2f(self,u : float,v : float) -> None: 
-        """
-        None
-        """
-    def glEvalCoord2fv(self,u : float) -> None: 
-        """
-        None
-        """
-    def glEvalMesh1(self,mode : int,i1 : int,i2 : int) -> None: 
-        """
-        None
-        """
-    def glEvalMesh2(self,mode : int,i1 : int,i2 : int,j1 : int,j2 : int) -> None: 
-        """
-        None
-        """
-    def glEvalPoint1(self,i : int) -> None: 
-        """
-        None
-        """
-    def glEvalPoint2(self,i : int,j : int) -> None: 
-        """
-        None
-        """
-    def glFeedbackBuffer(self,theSize : int,theType : int,theBuffer : float) -> None: ...
-    def glFogf(self,pname : int,param : float) -> None: ...
-    def glFogfv(self,pname : int,params : float) -> None: 
-        """
-        None
-        """
-    def glFogi(self,pname : int,param : int) -> None: 
-        """
-        None
-        """
-    def glFogiv(self,pname : int,params : int) -> None: 
-        """
-        None
-        """
-    def glFrustum(self,theLeft : float,theRight : float,theBottom : float,theTop : float,theNearVal : float,theFarVal : float) -> None: 
-        """
-        None
-        """
     def glGenLists(self,theRange : int) -> int: 
         """
         None
         """
-    def glGetClipPlane(self,thePlane : int,theEquation : float) -> None: 
+    def glGetTexEnviv(self,target : int,pname : int,params : int) -> None: 
         """
         None
         """
-    def glGetLightfv(self,theLight : int,pname : int,params : float) -> None: 
-        """
-        None
-        """
-    def glGetLightiv(self,theLight : int,pname : int,params : int) -> None: 
-        """
-        None
-        """
-    def glGetMapdv(self,target : int,query : int,v : float) -> None: 
-        """
-        None
-        """
-    def glGetMapfv(self,target : int,query : int,v : float) -> None: 
-        """
-        None
-        """
-    def glGetMapiv(self,target : int,query : int,v : int) -> None: 
-        """
-        None
-        """
-    def glGetMaterialfv(self,face : int,pname : int,params : float) -> None: 
-        """
-        None
-        """
-    def glGetMaterialiv(self,face : int,pname : int,params : int) -> None: 
-        """
-        None
-        """
-    def glGetPolygonStipple(self,theMask : int) -> None: 
-        """
-        None
-        """
-    def glGetTexGendv(self,coord : int,pname : int,params : float) -> None: 
-        """
-        None
-        """
-    def glGetTexGenfv(self,coord : int,pname : int,params : float) -> None: 
-        """
-        None
-        """
-    def glGetTexGeniv(self,coord : int,pname : int,params : int) -> None: 
-        """
-        None
-        """
-    def glIndexPointer(self,theType : int,theStride : int,thePtr : capsule) -> None: 
-        """
-        None
-        """
-    def glIndexd(self,c : float) -> None: 
-        """
-        None
-        """
-    def glIndexdv(self,c : float) -> None: 
-        """
-        None
-        """
-    def glIndexf(self,c : float) -> None: 
-        """
-        None
-        """
-    def glIndexfv(self,c : float) -> None: 
-        """
-        None
-        """
-    def glIndexi(self,c : int) -> None: 
-        """
-        None
-        """
-    def glIndexiv(self,c : int) -> None: 
-        """
-        None
-        """
-    def glIndexs(self,c : int) -> None: 
-        """
-        None
-        """
-    def glIndexsv(self,c : int) -> None: 
-        """
-        None
-        """
-    def glIndexub(self,c : int) -> None: 
-        """
-        None
-        """
-    def glIndexubv(self,c : int) -> None: 
-        """
-        None
-        """
-    def glInitNames(self) -> None: 
-        """
-        None
-        """
-    def glInterleavedArrays(self,theFormat : int,theStride : int,thePointer : capsule) -> None: 
-        """
-        None
-        """
-    def glIsList(self,theList : int) -> int: ...
-    def glLightModelf(self,pname : int,param : float) -> None: 
-        """
-        None
-        """
+    def glIndexPointer(self,theType : int,theStride : int,thePtr : capsule) -> None: ...
     def glLightModelfv(self,pname : int,params : float) -> None: 
         """
         None
         """
     def glLightModeli(self,pname : int,param : int) -> None: 
-        """
-        None
-        """
-    def glLightModeliv(self,pname : int,params : int) -> None: 
         """
         None
         """
@@ -2972,18 +2936,7 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glLighti(self,theLight : int,pname : int,param : int) -> None: 
-        """
-        None
-        """
-    def glLightiv(self,theLight : int,pname : int,params : int) -> None: 
-        """
-        None
-        """
-    def glLineStipple(self,theFactor : int,thePattern : int) -> None: 
-        """
-        None
-        """
+    def glLineStipple(self,theFactor : int,thePattern : int) -> None: ...
     def glListBase(self,theBase : int) -> None: 
         """
         None
@@ -2992,44 +2945,11 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glLoadMatrixd(self,theMatrix : float) -> None: 
-        """
-        None
-        """
     def glLoadMatrixf(self,theMatrix : float) -> None: 
         """
         None
         """
-    def glLoadName(self,theName : int) -> None: 
-        """
-        None
-        """
-    def glMap1d(self,target : int,u1 : float,u2 : float,stride : int,order : int,points : float) -> None: ...
-    def glMap1f(self,target : int,u1 : float,u2 : float,stride : int,order : int,points : float) -> None: 
-        """
-        None
-        """
-    def glMap2d(self,target : int,u1 : float,u2 : float,ustride : int,uorder : int,v1 : float,v2 : float,vstride : int,vorder : int,points : float) -> None: 
-        """
-        None
-        """
-    def glMap2f(self,target : int,u1 : float,u2 : float,ustride : int,uorder : int,v1 : float,v2 : float,vstride : int,vorder : int,points : float) -> None: 
-        """
-        None
-        """
-    def glMapGrid1d(self,un : int,u1 : float,u2 : float) -> None: 
-        """
-        None
-        """
-    def glMapGrid1f(self,un : int,u1 : float,u2 : float) -> None: 
-        """
-        None
-        """
-    def glMapGrid2d(self,un : int,u1 : float,u2 : float,vn : int,v1 : float,v2 : float) -> None: 
-        """
-        None
-        """
-    def glMapGrid2f(self,un : int,u1 : float,u2 : float,vn : int,v1 : float,v2 : float) -> None: 
+    def glLogicOp(self,opcode : int) -> None: 
         """
         None
         """
@@ -3041,64 +2961,8 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glMateriali(self,face : int,pname : int,param : int) -> None: 
-        """
-        None
-        """
-    def glMaterialiv(self,face : int,pname : int,params : int) -> None: 
-        """
-        None
-        """
     def glMatrixMode(self,theMode : int) -> None: ...
-    def glMultMatrixd(self,theMatrix : float) -> None: 
-        """
-        None
-        """
-    def glMultMatrixf(self,theMatrix : float) -> None: 
-        """
-        None
-        """
     def glNewList(self,theList : int,theMode : int) -> None: 
-        """
-        None
-        """
-    def glNormal3b(self,nx : int,ny : int,nz : int) -> None: 
-        """
-        None
-        """
-    def glNormal3bv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glNormal3d(self,nx : float,ny : float,nz : float) -> None: 
-        """
-        None
-        """
-    def glNormal3dv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glNormal3f(self,nx : float,ny : float,nz : float) -> None: 
-        """
-        None
-        """
-    def glNormal3fv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glNormal3i(self,nx : int,ny : int,nz : int) -> None: 
-        """
-        None
-        """
-    def glNormal3iv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glNormal3s(self,nx : int,ny : int,nz : int) -> None: 
-        """
-        None
-        """
-    def glNormal3sv(self,theVec : int) -> None: 
         """
         None
         """
@@ -3106,328 +2970,21 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glOrtho(self,theLeft : float,theRight : float,theBottom : float,theTop : float,theNearVal : float,theFarVal : float) -> None: 
-        """
-        None
-        """
-    def glPassThrough(self,token : float) -> None: 
-        """
-        None
-        """
-    def glPixelZoom(self,xfactor : float,yfactor : float) -> None: 
-        """
-        None
-        """
     def glPolygonStipple(self,theMask : int) -> None: 
         """
         None
         """
-    def glPopAttrib(self) -> None: 
-        """
-        None
-        """
-    def glPopClientAttrib(self) -> None: 
-        """
-        None
-        """
-    def glPopMatrix(self) -> None: 
-        """
-        None
-        """
-    def glPopName(self) -> None: 
-        """
-        None
-        """
-    def glPrioritizeTextures(self,n : int,textures : int,priorities : float) -> None: ...
-    def glPushAttrib(self,theMask : int) -> None: ...
-    def glPushClientAttrib(self,theMask : int) -> None: 
-        """
-        None
-        """
-    def glPushMatrix(self) -> None: 
-        """
-        None
-        """
-    def glPushName(self,theName : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos2d(self,x : float,y : float) -> None: ...
-    def glRasterPos2dv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos2f(self,x : float,y : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos2fv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos2i(self,x : int,y : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos2iv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos2s(self,x : int,y : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos2sv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos3d(self,x : float,y : float,z : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos3dv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos3f(self,x : float,y : float,z : float) -> None: 
-        """
-        None
-        """
+    def glRasterPos2i(self,x : int,y : int) -> None: ...
     def glRasterPos3fv(self,theVec : float) -> None: 
         """
         None
         """
-    def glRasterPos3i(self,x : int,y : int,z : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos3iv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos3s(self,x : int,y : int,z : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos3sv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos4d(self,x : float,y : float,z : float,w : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos4dv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos4f(self,x : float,y : float,z : float,w : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos4fv(self,theVec : float) -> None: 
-        """
-        None
-        """
-    def glRasterPos4i(self,x : int,y : int,z : int,w : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos4iv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos4s(self,x : int,y : int,z : int,w : int) -> None: 
-        """
-        None
-        """
-    def glRasterPos4sv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glRectd(self,x1 : float,y1 : float,x2 : float,y2 : float) -> None: 
-        """
-        None
-        """
-    def glRectdv(self,v1 : float,v2 : float) -> None: 
-        """
-        None
-        """
-    def glRectf(self,x1 : float,y1 : float,x2 : float,y2 : float) -> None: 
-        """
-        None
-        """
-    def glRectfv(self,v1 : float,v2 : float) -> None: 
-        """
-        None
-        """
-    def glRecti(self,x1 : int,y1 : int,x2 : int,y2 : int) -> None: 
-        """
-        None
-        """
-    def glRectiv(self,v1 : int,v2 : int) -> None: 
-        """
-        None
-        """
-    def glRects(self,x1 : int,y1 : int,x2 : int,y2 : int) -> None: 
-        """
-        None
-        """
-    def glRectsv(self,v1 : int,v2 : int) -> None: 
-        """
-        None
-        """
-    def glRotated(self,theAngleDegrees : float,theX : float,theY : float,theZ : float) -> None: 
-        """
-        None
-        """
-    def glScaled(self,theX : float,theY : float,theZ : float) -> None: 
-        """
-        None
-        """
-    def glSelectBuffer(self,theSize : int,theBuffer : int) -> None: 
-        """
-        None
-        """
     def glShadeModel(self,theMode : int) -> None: ...
-    def glTexCoord1d(self,s : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord1dv(self,theVec1 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord1f(self,s : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord1fv(self,theVec1 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord1i(self,s : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord1iv(self,theVec1 : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord1s(self,s : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord1sv(self,theVec1 : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord2d(self,s : float,t : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord2dv(self,theVec2 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord2f(self,s : float,t : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord2fv(self,theVec2 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord2i(self,s : int,t : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord2iv(self,theVec2 : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord2s(self,s : int,t : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord2sv(self,theVec : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord3d(self,s : float,t : float,r : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord3dv(self,theVec3 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord3f(self,s : float,t : float,r : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord3fv(self,theVec3 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord3i(self,s : int,t : int,r : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord3iv(self,theVec3 : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord3s(self,s : int,t : int,r : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord3sv(self,theVec3 : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord4d(self,s : float,t : float,r : float,q : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord4dv(self,theVec4 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord4f(self,s : float,t : float,r : float,q : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord4fv(self,theVec4 : float) -> None: 
-        """
-        None
-        """
-    def glTexCoord4i(self,s : int,t : int,r : int,q : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord4iv(self,theVec4 : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord4s(self,s : int,t : int,r : int,q : int) -> None: 
-        """
-        None
-        """
-    def glTexCoord4sv(self,theVec4 : int) -> None: 
-        """
-        None
-        """
     def glTexCoordPointer(self,theSize : int,theType : int,theStride : int,thePtr : capsule) -> None: 
         """
         None
         """
-    def glTexGend(self,coord : int,pname : int,param : float) -> None: ...
-    def glTexGendv(self,coord : int,pname : int,params : float) -> None: 
-        """
-        None
-        """
-    def glTexGenf(self,coord : int,pname : int,param : float) -> None: 
+    def glTexEnvi(self,target : int,pname : int,param : int) -> None: 
         """
         None
         """
@@ -3435,114 +2992,7 @@ class OpenGl_GlCore11():
         """
         None
         """
-    def glTexGeni(self,coord : int,pname : int,param : int) -> None: 
-        """
-        None
-        """
-    def glTexGeniv(self,coord : int,pname : int,params : int) -> None: 
-        """
-        None
-        """
-    def glTranslated(self,theX : float,theY : float,theZ : float) -> None: 
-        """
-        None
-        """
-    def glVertex2d(self,theX : float,theY : float) -> None: 
-        """
-        None
-        """
-    def glVertex2dv(self,theVec2 : float) -> None: 
-        """
-        None
-        """
-    def glVertex2f(self,theX : float,theY : float) -> None: 
-        """
-        None
-        """
-    def glVertex2fv(self,theVec2 : float) -> None: 
-        """
-        None
-        """
-    def glVertex2i(self,theX : int,theY : int) -> None: 
-        """
-        None
-        """
-    def glVertex2iv(self,theVec2 : int) -> None: 
-        """
-        None
-        """
-    def glVertex2s(self,theX : int,theY : int) -> None: 
-        """
-        None
-        """
-    def glVertex2sv(self,theVec2 : int) -> None: 
-        """
-        None
-        """
-    def glVertex3d(self,theX : float,theY : float,theZ : float) -> None: 
-        """
-        None
-        """
-    def glVertex3dv(self,theVec3 : float) -> None: 
-        """
-        None
-        """
-    def glVertex3f(self,theX : float,theY : float,theZ : float) -> None: 
-        """
-        None
-        """
-    def glVertex3fv(self,theVec3 : float) -> None: 
-        """
-        None
-        """
-    def glVertex3i(self,theX : int,theY : int,theZ : int) -> None: 
-        """
-        None
-        """
-    def glVertex3iv(self,theVec3 : int) -> None: 
-        """
-        None
-        """
-    def glVertex3s(self,theX : int,theY : int,theZ : int) -> None: 
-        """
-        None
-        """
-    def glVertex3sv(self,theVec3 : int) -> None: 
-        """
-        None
-        """
-    def glVertex4d(self,theX : float,theY : float,theZ : float,theW : float) -> None: 
-        """
-        None
-        """
-    def glVertex4dv(self,theVec4 : float) -> None: 
-        """
-        None
-        """
-    def glVertex4f(self,theX : float,theY : float,theZ : float,theW : float) -> None: 
-        """
-        None
-        """
-    def glVertex4fv(self,theVec4 : float) -> None: 
-        """
-        None
-        """
-    def glVertex4i(self,theX : int,theY : int,theZ : int,theW : int) -> None: 
-        """
-        None
-        """
-    def glVertex4iv(self,theVec4 : int) -> None: 
-        """
-        None
-        """
-    def glVertex4s(self,theX : int,theY : int,theZ : int,theW : int) -> None: 
-        """
-        None
-        """
-    def glVertex4sv(self,theVec4 : int) -> None: 
-        """
-        None
-        """
+    def glTexGeni(self,coord : int,pname : int,param : int) -> None: ...
     def glVertexPointer(self,theSize : int,theType : int,theStride : int,thePtr : capsule) -> None: 
         """
         None
@@ -3761,19 +3211,9 @@ class OpenGl_GlCore12():
     """
     OpenGL 1.2 core based on 1.1 version.
     """
-    pass
-class OpenGl_GlCore12Fwd():
-    """
-    OpenGL 1.2 core based on 1.1 version.
-    """
-    pass
-class OpenGl_GlCore13():
-    """
-    OpenGL 1.3 core based on 1.2 version.
-    """
     def __init__(self) -> None: ...
     pass
-class OpenGl_GlCore13Fwd():
+class OpenGl_GlCore13():
     """
     OpenGL 1.3 without deprecated entry points.
     """
@@ -3783,147 +3223,105 @@ class OpenGl_GlCore14():
     """
     OpenGL 1.4 core based on 1.3 version.
     """
-    pass
-class OpenGl_GlCore14Fwd():
-    """
-    OpenGL 1.4 core based on 1.3 version.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore15():
     """
     OpenGL 1.5 core based on 1.4 version.
     """
-    pass
-class OpenGl_GlCore15Fwd():
-    """
-    OpenGL 1.5 core based on 1.4 version.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore20():
     """
     OpenGL 2.0 core based on 1.5 version.
     """
-    pass
-class OpenGl_GlCore20Fwd():
-    """
-    OpenGL 2.0 core based on 1.5 version.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore21():
     """
     OpenGL 2.1 core based on 2.0 version.
     """
-    pass
-class OpenGl_GlCore21Fwd():
-    """
-    OpenGL 2.1 core based on 2.0 version.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore30():
     """
     OpenGL 3.0 core. This is first version with deprecation model introduced - a lot of functionality regarding to fixed pipeline were marked deprecated. Notice that nothing were actually removed in this version (unless Forward context loaded)!
     """
-    pass
-class OpenGl_GlCore30Fwd():
-    """
-    OpenGL 3.0 core. This is first version with deprecation model introduced - a lot of functionality regarding to fixed pipeline were marked deprecated. Notice that nothing were actually removed in this version (unless Forward context loaded)!
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore31():
     """
     OpenGL 3.1 definition.
     """
-    pass
-class OpenGl_GlCore31Back():
-    """
-    OpenGL 3.1 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore32():
     """
     OpenGL 3.2 definition.
     """
-    pass
-class OpenGl_GlCore32Back():
-    """
-    OpenGL 3.2 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore33():
     """
     OpenGL 3.3 definition.
     """
-    pass
-class OpenGl_GlCore33Back():
-    """
-    OpenGL 3.3 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore40():
     """
     OpenGL 4.0 definition.
     """
-    pass
-class OpenGl_GlCore40Back():
-    """
-    OpenGL 4.0 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore41():
     """
     OpenGL 4.1 definition.
     """
-    pass
-class OpenGl_GlCore41Back():
-    """
-    OpenGL 4.1 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore42():
     """
     OpenGL 4.2 definition.
     """
-    pass
-class OpenGl_GlCore42Back():
-    """
-    OpenGL 4.2 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore43():
     """
     OpenGL 4.3 definition.
     """
-    pass
-class OpenGl_GlCore43Back():
-    """
-    OpenGL 4.3 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore44():
     """
     OpenGL 4.4 definition.
     """
-    pass
-class OpenGl_GlCore44Back():
-    """
-    OpenGL 4.4 definition.
-    """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlCore45():
     """
     OpenGL 4.5 definition.
     """
+    def __init__(self) -> None: ...
     pass
-class OpenGl_GlCore45Back():
+class OpenGl_GlCore46():
     """
-    OpenGL 4.5 definition.
+    OpenGL 4.6 definition.
     """
+    def __init__(self) -> None: ...
     pass
 class OpenGl_GlFunctions():
     """
     Mega structure defines the complete list of OpenGL functions.
     """
     def __init__(self) -> None: ...
+    def debugPrintError(self,theName : str) -> bool: 
+        """
+        Check glGetError(); defined for debugging purposes.
+        """
+    def load(self,theCtx : OpenGl_Context,theIsCoreProfile : bool) -> None: 
+        """
+        Load functions.
+        """
     pass
 class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.Standard_Transient):
     """
@@ -3997,6 +3395,10 @@ class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.S
         """
         Perform initialization of default OpenGL context.
         """
+    def InitEglContext(self,theEglDisplay : capsule,theEglContext : capsule,theEglConfig : capsule) -> bool: 
+        """
+        Initialize default OpenGL context using existing one.
+        """
     def InquireLightLimit(self) -> int: 
         """
         Request maximum number of active light sources supported by driver and hardware.
@@ -4022,23 +3424,27 @@ class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.S
         Adds a layer to all views.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsVerticalSync(self) -> bool: 
+        """
+        Returns TRUE if vertical synchronization with display refresh rate (VSync) should be used; TRUE by default.
+        """
     def MemoryInfo(self,theFreeBytes : int,theInfo : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Returns information about GPU memory usage. Please read OpenGl_Context::MemoryInfo() for more description.
@@ -4075,6 +3481,10 @@ class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.S
         """
         Specify swap buffer behavior.
         """
+    def SetVerticalSync(self,theToEnable : bool) -> None: 
+        """
+        Set if vertical synchronization with display refresh rate (VSync) should be used.
+        """
     def SetZLayerSettings(self,theLayerId : int,theSettings : OCP.Graphic3d.Graphic3d_ZLayerSettings) -> None: 
         """
         Sets the settings for a single Z layer.
@@ -4100,6 +3510,18 @@ class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.S
         Returns list of Z layers defined for the graphical driver.
         """
     def __init__(self,theDisp : OCP.Aspect.Aspect_DisplayConnection,theToInitialize : bool=True) -> None: ...
+    def getRawGlConfig(self) -> capsule: 
+        """
+        None
+        """
+    def getRawGlContext(self) -> capsule: 
+        """
+        None
+        """
+    def getRawGlDisplay(self) -> capsule: 
+        """
+        None
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4113,6 +3535,100 @@ class OpenGl_GraphicDriver(OCP.Graphic3d.Graphic3d_GraphicDriver, OCP.Standard.S
     def setDeviceLost(self) -> None: 
         """
         Set device lost flag for redrawn views.
+        """
+    pass
+class OpenGl_GraphicDriverFactory(OCP.Graphic3d.Graphic3d_GraphicDriverFactory, OCP.Standard.Standard_Transient):
+    """
+    This class for creation of OpenGl_GraphicDriver.
+    """
+    def CreateDriver(self,theDisp : OCP.Aspect.Aspect_DisplayConnection) -> OCP.Graphic3d.Graphic3d_GraphicDriver: 
+        """
+        Creates new empty graphic driver.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    @staticmethod
+    def DefaultDriverFactory_s() -> OCP.Graphic3d.Graphic3d_GraphicDriverFactory: 
+        """
+        Return default driver factory or NULL if no one was registered.
+        """
+    def DefaultOptions(self) -> OpenGl_Caps: 
+        """
+        Return default driver options.
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    @staticmethod
+    def DriverFactories_s() -> OCP.Graphic3d.Graphic3d_GraphicDriverFactoryList: 
+        """
+        Return the global map of registered driver factories.
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return driver factory name.
+        """
+    @staticmethod
+    def RegisterFactory_s(theFactory : OCP.Graphic3d.Graphic3d_GraphicDriverFactory,theIsPreferred : bool=False) -> None: 
+        """
+        Registers factory.
+        """
+    def SetDefaultOptions(self,theOptions : OpenGl_Caps) -> None: 
+        """
+        Set default driver options.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    @staticmethod
+    def UnregisterFactory_s(theName : OCP.TCollection.TCollection_AsciiString) -> None: 
+        """
+        Unregisters factory.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
         """
     pass
 class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transient):
@@ -4183,6 +3699,10 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         """
         None
         """
+    def HasPersistence(self) -> bool: 
+        """
+        Return TRUE if group contains primitives with transform persistence.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -4200,31 +3720,28 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         Returns Standard_True if the group <me> is empty.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRaytracable(self) -> bool: 
         """
         Is the group ray-tracable (contains ray-tracable elements)?
         """
-    def Marker(self,thePoint : OCP.Graphic3d.Graphic3d_Vertex,theToEvalMinMax : bool=True) -> None: 
-        """
-        Creates a primitive array with single marker using AddPrimitiveArray().
-        """
+    def Marker(self,thePoint : OCP.Graphic3d.Graphic3d_Vertex,theToEvalMinMax : bool=True) -> None: ...
     def MinMaxValues(self) -> Tuple[float, float, float, float, float, float]: 
         """
         Returns the coordinates of the boundary box of the group.
@@ -4235,7 +3752,7 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         """
     def Remove(self) -> None: 
         """
-        Supress the group <me> in the structure. Warning: No more graphic operations in <me> after this call. Modifies the current modelling transform persistence (pan, zoom or rotate) Get the current modelling transform persistence (pan, zoom or rotate)
+        Suppress the group <me> in the structure. Warning: No more graphic operations in <me> after this call. Modifies the current modelling transform persistence (pan, zoom or rotate) Get the current modelling transform persistence (pan, zoom or rotate)
         """
     def Render(self,theWorkspace : OpenGl_Workspace) -> None: 
         """
@@ -4269,6 +3786,10 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         """
         Add stencil test element
         """
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+        """
+        Set transformation persistence.
+        """
     def Structure(self) -> OCP.Graphic3d.Graphic3d_Structure: 
         """
         Returns the structure containing the group <me>.
@@ -4278,7 +3799,7 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         Update presentation aspects after their modification.
         """
     @overload
-    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: 
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: 
         """
         Creates the string <AText> at position <APoint>. The 3D point of attachment is projected. The text is written in the plane of projection. The attributes are given with respect to the plane of projection. AHeight : Height of text. (Relative to the Normalized Projection Coordinates (NPC) Space). AAngle : Orientation of the text (with respect to the horizontal).
 
@@ -4293,18 +3814,22 @@ class OpenGl_Group(OCP.Graphic3d.Graphic3d_Group, OCP.Standard.Standard_Transien
         Creates the string <theText> at orientation <theOrientation> in 3D space.
         """
     @overload
-    def Text(self,AText : str,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
-    @overload
-    def Text(self,AText : str,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : OCP.Graphic3d.Graphic3d_TextPath,AHta : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,AVta : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
+    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     @overload
     def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : OCP.Graphic3d.Graphic3d_TextPath,AHta : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,AVta : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
     @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
+    def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : OCP.Graphic3d.Graphic3d_TextPath,theHTA : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,theVTA : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
+    @overload
+    def Text(self,AText : str,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
+    @overload
+    def Text(self,AText : str,APoint : OCP.Graphic3d.Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : OCP.Graphic3d.Graphic3d_TextPath,AHta : OCP.Graphic3d.Graphic3d_HorizontalTextAlignment,AVta : OCP.Graphic3d.Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TransformPersistence(self) -> OCP.Graphic3d.Graphic3d_TransformPers: 
+        """
+        Return transformation persistence.
         """
     def __init__(self,theStruct : OCP.Graphic3d.Graphic3d_Structure) -> None: ...
     @staticmethod
@@ -4333,33 +3858,17 @@ class OpenGl_HaltonSampler():
         Return the Halton sample for the given dimension (component) and index. The client must have called initFaure() at least once before. dimension must be smaller than the value returned by get_num_dimensions().
         """
     pass
-class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
+class OpenGl_Buffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
-    Vertex Buffer Object - is a general storage object for vertex attributes (position, normal, color). Notice that you should use OpenGl_IndexBuffer specialization for array of indices.Vertex Buffer Object - is a general storage object for vertex attributes (position, normal, color). Notice that you should use OpenGl_IndexBuffer specialization for array of indices.
+    Buffer Object - is a general storage object for arbitrary data (see sub-classes).Buffer Object - is a general storage object for arbitrary data (see sub-classes).
     """
     def Bind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Bind this VBO.
-        """
-    def BindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Bind all vertex attributes to active program OpenGl_Context::ActiveProgram() or for FFP. Default implementation does nothing.
-        """
-    def BindAttribute(self,theCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Bind this VBO and enable specified attribute in OpenGl_Context::ActiveProgram() or FFP.
-        """
-    def BindPositionAttribute(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Bind vertex position attribute only. Default implementation does nothing.
-        """
-    def BindVertexAttrib(self,theGlCtx : OpenGl_Context,theAttribLoc : int) -> None: 
-        """
-        Bind this VBO to active GLSL program.
+        Bind this buffer object.
         """
     def Create(self,theGlCtx : OpenGl_Context) -> bool: 
         """
-        Creates VBO name (id) if not yet generated. Data should be initialized by another method.
+        Creates buffer object name (id) if not yet generated. Data should be initialized by another method.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -4380,6 +3889,11 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
     def EstimatedDataSize(self) -> int: 
         """
         Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    @staticmethod
+    def FormatTarget_s(theTarget : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format VBO target enumeration value.
         """
     def GetComponentsNb(self) -> int: 
         """
@@ -4402,65 +3916,57 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Get the reference counter of this object
         """
     @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
         """
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
         """
     @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
     def GetTarget(self) -> int: 
         """
-        None
-        """
-    def HasColorAttribute(self) -> bool: 
-        """
-        Returns true if buffer contains per-vertex color attribute
-        """
-    def HasNormalAttribute(self) -> bool: 
-        """
-        Returns true if buffer contains per-vertex normal attribute
+        Return buffer target.
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
         """
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
 
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
 
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
 
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized
@@ -4478,44 +3984,27 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Overrides the number of vertex attributes / number of vertexes. It is up to user specifying this number correct (e.g. below initial value)!
         """
     @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
         """
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
         """
     @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def Unbind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Unbind this VBO.
-        """
-    def UnbindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Unbind all vertex attributes. Default implementation does nothing.
-        """
-    def UnbindAttribute(self,theCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Unbind this VBO and disable specified attribute in OpenGl_Context::ActiveProgram() or FFP.
-        """
-    def UnbindVertexAttrib(self,theGlCtx : OpenGl_Context,theAttribLoc : int) -> None: 
-        """
-        Unbind any VBO from active GLSL program.
+        Unbind this buffer object.
         """
     def __init__(self) -> None: ...
-    @staticmethod
-    def bindAttribute_s(theGlCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute,theNbComp : int,theDataType : int,theStride : int,theOffset : capsule) -> None: 
-        """
-        Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
-        """
     def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Read back buffer sub-range.
@@ -4531,14 +4020,14 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
         """
         Initialize buffer with new data.
 
         Initialize buffer with new data.
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: ...
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
     @staticmethod
     def sizeOfGlType_s(theType : int) -> int: 
         """
@@ -4548,10 +4037,47 @@ class OpenGl_VertexBuffer(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Update part of the buffer with new data.
         """
-    @staticmethod
-    def unbindAttribute_s(theGlCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
+    pass
+class OpenGl_IndexBufferCompat():
+    """
+    Compatibility layer for old OpenGL without VBO. Make sure to pass pointer from GetDataOffset() instead of NULL. Method GetDataOffset() returns pointer to real data in this class (while base class OpenGl_VertexBuffer always return NULL).
+    """
+    def Bind(self,arg1 : OpenGl_Context) -> None: 
         """
-        Disable GLSL array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using unbindFixed() when no program bound.
+        Bind this VBO.
+        """
+    def Create(self,theGlCtx : OpenGl_Context) -> bool: 
+        """
+        Creates VBO name (id) if not yet generated. Data should be initialized by another method.
+        """
+    def IsVirtual(self) -> bool: 
+        """
+        Return TRUE.
+        """
+    def Release(self,theGlCtx : OpenGl_Context) -> None: 
+        """
+        Destroy object - will release memory if any.
+        """
+    def Unbind(self,arg1 : OpenGl_Context) -> None: 
+        """
+        Unbind this VBO.
+        """
+    def __init__(self) -> None: ...
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
+        """
+        Initialize buffer with new data (data will be copied).
+        """
+    def initLink(self,theData : OCP.NCollection.NCollection_Buffer,theComponentsNb : int,theElemsNb : int,theDataType : int) -> bool: 
+        """
+        Initialize buffer with existing data. Data will NOT be copied by this method!
+        """
+    def subData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Update part of the buffer with new data.
         """
     pass
 class OpenGl_LayerFilter():
@@ -4571,6 +4097,7 @@ class OpenGl_LayerFilter():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4640,23 +4167,23 @@ class OpenGl_LineAttributes(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Release(self,theGlCtx : OpenGl_Context) -> None: 
         """
         Release GL resources.
@@ -4690,7 +4217,7 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : OpenGl_ListOfStructure) -> None: 
+    def Append(self,theItem : OpenGl_Structure,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -4699,7 +4226,7 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OpenGl_Structure,theIter : Any) -> None: ...
+    def Append(self,theOther : OpenGl_ListOfStructure) -> None: ...
     @overload
     def Append(self,theItem : OpenGl_Structure) -> OpenGl_Structure: ...
     def Assign(self,theOther : OpenGl_ListOfStructure) -> OpenGl_ListOfStructure: 
@@ -4730,14 +4257,14 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : OpenGl_Structure,theIter : Any) -> OpenGl_Structure: ...
     @overload
-    def InsertBefore(self,theOther : OpenGl_ListOfStructure,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : OpenGl_Structure,theIter : Any) -> OpenGl_Structure: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : OpenGl_Structure,theIter : Any) -> OpenGl_Structure: ...
+    def InsertBefore(self,theOther : OpenGl_ListOfStructure,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -4774,46 +4301,44 @@ class OpenGl_ListOfStructure(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : OpenGl_ListOfStructure) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : OpenGl_ListOfStructure) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class OpenGl_Material():
     """
     OpenGL material definition
     """
-    def Init(self,theCtx : OpenGl_Context,theProp : OCP.Graphic3d.Graphic3d_MaterialAspect,theInteriorColor : OCP.Quantity.Quantity_Color) -> None: 
-        """
-        Initialize material
-        """
     def IsEqual(self,theOther : OpenGl_Material) -> bool: 
         """
         Check this material for equality with another material (without tolerance!).
         """
-    def SetColor(self,theColor : OCP.Graphic3d.Graphic3d_Vec4) -> None: 
+    @staticmethod
+    def NbOfVec4Common_s() -> int: 
+        """
+        None
+        """
+    @staticmethod
+    def NbOfVec4Pbr_s() -> int: 
+        """
+        None
+        """
+    def PackedCommon(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
+        """
+        Returns packed (serialized) representation of common material properties
+        """
+    def PackedPbr(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
+        """
+        Returns packed (serialized) representation of PBR material properties
+        """
+    def SetColor(self,theColor : OCP.gp.gp_Vec3f) -> None: 
         """
         Set material color.
         """
     def __init__(self) -> None: ...
-    @property
-    def Common(self) -> OpenGl_MaterialCommon:
-        """
-        :type: OpenGl_MaterialCommon
-        """
-    @Common.setter
-    def Common(self, arg0: OpenGl_MaterialCommon) -> None:
-        pass
-    @property
-    def Pbr(self) -> OpenGl_MaterialPBR:
-        """
-        :type: OpenGl_MaterialPBR
-        """
-    @Pbr.setter
-    def Pbr(self, arg0: OpenGl_MaterialPBR) -> None:
-        pass
     pass
 class OpenGl_MaterialCommon():
     """
@@ -4823,24 +4348,11 @@ class OpenGl_MaterialCommon():
         """
         None
         """
-    def ChangeTransparency(self) -> float: 
+    def SetColor(self,theColor : OCP.gp.gp_Vec3f) -> None: 
         """
-        None
-        """
-    @staticmethod
-    def NbOfVec4_s() -> int: 
-        """
-        None
-        """
-    def Packed(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
-        """
-        Returns packed (serialized) representation of material properties
+        Set material color.
         """
     def Shine(self) -> float: 
-        """
-        None
-        """
-    def Transparency(self) -> float: 
         """
         None
         """
@@ -4870,20 +4382,12 @@ class OpenGl_MaterialCommon():
     def Emission(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
         pass
     @property
-    def Params(self) -> OCP.Graphic3d.Graphic3d_Vec4:
+    def SpecularShininess(self) -> OCP.Graphic3d.Graphic3d_Vec4:
         """
         :type: OCP.Graphic3d.Graphic3d_Vec4
         """
-    @Params.setter
-    def Params(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
-        pass
-    @property
-    def Specular(self) -> OCP.Graphic3d.Graphic3d_Vec4:
-        """
-        :type: OCP.Graphic3d.Graphic3d_Vec4
-        """
-    @Specular.setter
-    def Specular(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
+    @SpecularShininess.setter
+    def SpecularShininess(self, arg0: OCP.Graphic3d.Graphic3d_Vec4) -> None:
         pass
     pass
 class OpenGl_MaterialFlag():
@@ -4899,6 +4403,7 @@ class OpenGl_MaterialFlag():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4935,18 +4440,13 @@ class OpenGl_MaterialPBR():
         """
         None
         """
-    @staticmethod
-    def NbOfVec4_s() -> int: 
-        """
-        None
-        """
-    def Packed(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
-        """
-        Returns packed (serialized) representation of material properties
-        """
     def Roughness(self) -> float: 
         """
         None
+        """
+    def SetColor(self,theColor : OCP.gp.gp_Vec3f) -> None: 
+        """
+        Set material color.
         """
     def __init__(self) -> None: ...
     @property
@@ -4982,14 +4482,6 @@ class OpenGl_MaterialState(OpenGl_StateInterface):
         """
         Alpha cutoff value.
         """
-    def BackMaterial(self) -> OpenGl_Material: 
-        """
-        Return back material.
-        """
-    def FrontMaterial(self) -> OpenGl_Material: 
-        """
-        Return front material.
-        """
     def HasAlphaCutoff(self) -> bool: 
         """
         Return TRUE if alpha test should be enabled.
@@ -4998,7 +4490,11 @@ class OpenGl_MaterialState(OpenGl_StateInterface):
         """
         Returns current state index.
         """
-    def Set(self,theFrontMat : OpenGl_Material,theBackMat : OpenGl_Material,theAlphaCutoff : float,theToDistinguish : bool,theToMapTexture : bool) -> None: 
+    def Material(self) -> OpenGl_Material: 
+        """
+        Return front material.
+        """
+    def Set(self,theMat : OpenGl_Material,theAlphaCutoff : float,theToDistinguish : bool,theToMapTexture : bool) -> None: 
         """
         Sets new material aspect.
         """
@@ -5014,12 +4510,6 @@ class OpenGl_MaterialState(OpenGl_StateInterface):
         """
         Increment current state.
         """
-    def __init__(self) -> None: ...
-    pass
-class OpenGl_Matrix():
-    """
-    None
-    """
     def __init__(self) -> None: ...
     pass
 class OpenGl_ModelWorldState(OpenGl_StateInterface):
@@ -5048,10 +4538,18 @@ class OpenGl_ModelWorldState(OpenGl_StateInterface):
         """
     def __init__(self) -> None: ...
     pass
-class OpenGl_NamedResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
+class OpenGl_DepthPeeling(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
-    Named resource object.
+    Class provides FBOs for dual depth peeling.
     """
+    def AttachDepthTexture(self,theCtx : OpenGl_Context,theDepthStencilTexture : OpenGl_Texture) -> None: 
+        """
+        Attach a texture image. Resets the active FBO to 0.
+        """
+    def BlendBackFboOit(self) -> OpenGl_FrameBuffer: 
+        """
+        Returns additional FBO for depth peeling
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -5081,26 +4579,26 @@ class OpenGl_NamedResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Release(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Release GPU resources. Notice that implementation should be SAFE for several consecutive calls (thus should invalidate internal structures / ids to avoid multiple-free errors).
+        Release OpenGL resources
         """
     def ResourceId(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -5110,7 +4608,7 @@ class OpenGl_NamedResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5126,6 +4624,10 @@ class OpenGl_OitState(OpenGl_StateInterface):
     """
     Defines generic state of order-independent transparency rendering properties.
     """
+    def ActiveMode(self) -> OCP.Graphic3d.Graphic3d_RenderTransparentMethod: 
+        """
+        Returns flag indicating whether writing of output for OIT processing should be enabled/disabled.
+        """
     def DepthFactor(self) -> float: 
         """
         Returns factor defining influence of depth component of a fragment to its final coverage coefficient.
@@ -5134,13 +4636,9 @@ class OpenGl_OitState(OpenGl_StateInterface):
         """
         Returns current state index.
         """
-    def Set(self,theToEnableWrite : bool,theDepthFactor : float) -> None: 
+    def Set(self,theMode : OCP.Graphic3d.Graphic3d_RenderTransparentMethod,theDepthFactor : float) -> None: 
         """
         Sets the uniform values.
-        """
-    def ToEnableWrite(self) -> bool: 
-        """
-        Returns flag indicating whether writing of output for OIT processing should be enabled/disabled.
         """
     def Update(self) -> None: 
         """
@@ -5160,7 +4658,7 @@ class OpenGl_PBREnvironment(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.
         """
         Binds diffuse and specular IBL maps to the corresponding texture units.
         """
-    def Clear(self,theCtx : OpenGl_Context,theColor : OCP.Graphic3d.Graphic3d_Vec3=OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+    def Clear(self,theCtx : OpenGl_Context,theColor : OCP.gp.gp_Vec3f=OCP.gp.gp_Vec3f) -> None: 
         """
         Fills all mipmaps of specular IBL map and diffuse IBL map with one color. So that environment illumination will be constant.
         """
@@ -5202,23 +4700,23 @@ class OpenGl_PBREnvironment(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.
         Checks completeness of PBR environment. Creation method returns only completed objects or null handles otherwise.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNeededToBeBound(self) -> bool: 
         """
         Indicates whether IBL map's textures have to be bound or it is not obligate.
@@ -5267,14 +4765,14 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
     Texture resource.Texture resource.
     """
     @overload
-    def Bind(self,theCtx : OpenGl_Context) -> None: 
+    def Bind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
         """
         Bind this Texture to the unit specified in sampler parameters. Also binds Sampler Object if it is allocated.
 
         Bind this Texture to specified unit. Also binds Sampler Object if it is allocated.
         """
     @overload
-    def Bind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: ...
+    def Bind(self,theCtx : OpenGl_Context) -> None: ...
     def Create(self,theCtx : OpenGl_Context) -> bool: 
         """
         Creates Texture id if not yet generated. Data should be initialized by another method.
@@ -5301,7 +4799,7 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
     @staticmethod
     @overload
-    def GetDataFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
+    def GetDataFormat_s(theCtx : OpenGl_Context,theData : OCP.Image.Image_PixMap,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
         """
         None
 
@@ -5309,7 +4807,7 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
     @staticmethod
     @overload
-    def GetDataFormat_s(theCtx : OpenGl_Context,theData : OCP.Image.Image_PixMap,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: ...
+    def GetDataFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: ...
     def GetFormat(self) -> int: 
         """
         Returns texture format (not sized)
@@ -5326,12 +4824,16 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
         Returns true if texture was generated within mipmaps
         """
+    def ImageDump(self,theImage : OCP.Image.Image_PixMap,theCtx : OpenGl_Context,theTexUnit : OCP.Graphic3d.Graphic3d_TextureUnit,theLevel : int=0,theCubeSide : int=0) -> bool: 
+        """
+        Auxiliary method for making an image dump from texture data.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: 
+    def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theIsColorMap : bool) -> bool: 
         """
         Notice that texture will be unbound after this call.
 
@@ -5344,13 +4846,13 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         None
         """
     @overload
+    def Init(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: ...
+    @overload
     def Init(self,theCtx : OpenGl_Context,theTextureMap : OCP.Graphic3d.Graphic3d_TextureMap) -> bool: ...
     @overload
     def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture) -> bool: ...
     @overload
     def Init(self,theCtx : OpenGl_Context,theFormat : OpenGl_TextureFormat,theSizeXY : OCP.Graphic3d.Graphic3d_Vec2i,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: ...
-    @overload
-    def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theIsColorMap : bool) -> bool: ...
     def Init2DMultisample(self,theCtx : OpenGl_Context,theNbSamples : int,theTextFormat : int,theSizeX : int,theSizeY : int) -> bool: 
         """
         Initialize the 2D multisampling texture using glTexImage2DMultisample().
@@ -5370,7 +4872,7 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         """
     def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theSize : int,theFormat : OCP.Image.Image_Format,theToGenMipmap : bool,theIsColorMap : bool) -> bool: 
         """
-        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parametres will be taken from arguments.
+        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parameters will be taken from arguments.
         """
     def InitRectangle(self,theCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theFormat : OpenGl_TextureFormat) -> bool: 
         """
@@ -5385,23 +4887,23 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         Return true for GL_RED and GL_ALPHA formats.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPointSprite(self) -> bool: 
         """
         Returns TRUE for point sprite texture.
@@ -5417,6 +4919,10 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
     def MaxMipmapLevel(self) -> int: 
         """
         Return upper mipmap level index (0 means no mipmaps).
+        """
+    def NbSamples(self) -> int: 
+        """
+        Return number of MSAA samples.
         """
     @staticmethod
     def PixelSizeOfPixelFormat_s(theInternalFormat : int) -> int: 
@@ -5476,14 +4982,14 @@ class OpenGl_Texture(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standar
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Unbind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
+    def Unbind(self,theCtx : OpenGl_Context) -> None: 
         """
         Unbind texture from the unit specified in sampler parameters. Also unbinds Sampler Object if it is allocated.
 
         Unbind texture from specified unit. Also unbinds Sampler Object if it is allocated.
         """
     @overload
-    def Unbind(self,theCtx : OpenGl_Context) -> None: ...
+    def Unbind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: ...
     def __init__(self,theResourceId : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,theParams : OCP.Graphic3d.Graphic3d_TextureParams=None) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -5536,7 +5042,7 @@ class OpenGl_BackgroundArray(OpenGl_PrimitiveArray, OpenGl_Element):
         """
         Gets background gradient fill method
         """
-    def IndexVbo(self) -> OpenGl_VertexBuffer: 
+    def IndexVbo(self) -> OpenGl_IndexBuffer: 
         """
         Returns index VBO.
         """
@@ -5607,90 +5113,6 @@ class OpenGl_BackgroundArray(OpenGl_PrimitiveArray, OpenGl_Element):
     def __init__(self,theType : OCP.Graphic3d.Graphic3d_TypeOfBackground) -> None: ...
     DRAW_MODE_NONE = -1
     pass
-class OpenGl_ProgramOptions():
-    """
-    Standard GLSL program combination bits.
-
-    Members:
-
-      OpenGl_PO_VertColor
-
-      OpenGl_PO_TextureRGB
-
-      OpenGl_PO_TextureEnv
-
-      OpenGl_PO_TextureNormal
-
-      OpenGl_PO_PointSimple
-
-      OpenGl_PO_PointSprite
-
-      OpenGl_PO_PointSpriteA
-
-      OpenGl_PO_StippleLine
-
-      OpenGl_PO_ClipPlanes1
-
-      OpenGl_PO_ClipPlanes2
-
-      OpenGl_PO_ClipPlanesN
-
-      OpenGl_PO_ClipChains
-
-      OpenGl_PO_MeshEdges
-
-      OpenGl_PO_AlphaTest
-
-      OpenGl_PO_WriteOit
-
-      OpenGl_PO_NB
-
-      OpenGl_PO_IsPoint
-
-      OpenGl_PO_HasTextures
-
-      OpenGl_PO_NeedsGeomShader
-    """
-    def __eq__(self,other : object) -> bool: ...
-    def __getstate__(self) -> int: ...
-    def __hash__(self) -> int: ...
-    def __init__(self,value : int) -> None: ...
-    def __int__(self) -> int: ...
-    def __ne__(self,other : object) -> bool: ...
-    def __repr__(self) -> str: ...
-    def __setstate__(self,state : int) -> None: ...
-    @property
-    def name(self) -> None:
-        """
-        :type: None
-        """
-    @property
-    def value(self) -> int:
-        """
-        :type: int
-        """
-    OpenGl_PO_AlphaTest: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>
-    OpenGl_PO_ClipChains: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>
-    OpenGl_PO_ClipPlanes1: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>
-    OpenGl_PO_ClipPlanes2: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>
-    OpenGl_PO_ClipPlanesN: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>
-    OpenGl_PO_HasTextures: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
-    OpenGl_PO_IsPoint: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
-    OpenGl_PO_MeshEdges: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
-    OpenGl_PO_NB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>
-    OpenGl_PO_NeedsGeomShader: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
-    OpenGl_PO_PointSimple: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>
-    OpenGl_PO_PointSprite: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>
-    OpenGl_PO_PointSpriteA: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
-    OpenGl_PO_StippleLine: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>
-    OpenGl_PO_TextureEnv: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>
-    OpenGl_PO_TextureNormal: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
-    OpenGl_PO_TextureRGB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>
-    OpenGl_PO_VertColor: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>
-    OpenGl_PO_WriteOit: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>
-    __entries: dict # value = {'OpenGl_PO_VertColor': (<OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>, None), 'OpenGl_PO_TextureRGB': (<OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>, None), 'OpenGl_PO_TextureEnv': (<OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>, None), 'OpenGl_PO_TextureNormal': (<OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, None), 'OpenGl_PO_PointSimple': (<OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>, None), 'OpenGl_PO_PointSprite': (<OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>, None), 'OpenGl_PO_PointSpriteA': (<OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, None), 'OpenGl_PO_StippleLine': (<OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>, None), 'OpenGl_PO_ClipPlanes1': (<OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>, None), 'OpenGl_PO_ClipPlanes2': (<OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>, None), 'OpenGl_PO_ClipPlanesN': (<OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>, None), 'OpenGl_PO_ClipChains': (<OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>, None), 'OpenGl_PO_MeshEdges': (<OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>, None), 'OpenGl_PO_AlphaTest': (<OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>, None), 'OpenGl_PO_WriteOit': (<OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>, None), 'OpenGl_PO_NB': (<OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>, None), 'OpenGl_PO_IsPoint': (<OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, None), 'OpenGl_PO_HasTextures': (<OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, None), 'OpenGl_PO_NeedsGeomShader': (<OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>, None)}
-    __members__: dict # value = {'OpenGl_PO_VertColor': <OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>, 'OpenGl_PO_TextureRGB': <OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>, 'OpenGl_PO_TextureEnv': <OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>, 'OpenGl_PO_TextureNormal': <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, 'OpenGl_PO_PointSimple': <OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>, 'OpenGl_PO_PointSprite': <OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>, 'OpenGl_PO_PointSpriteA': <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, 'OpenGl_PO_StippleLine': <OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>, 'OpenGl_PO_ClipPlanes1': <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>, 'OpenGl_PO_ClipPlanes2': <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>, 'OpenGl_PO_ClipPlanesN': <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>, 'OpenGl_PO_ClipChains': <OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>, 'OpenGl_PO_MeshEdges': <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>, 'OpenGl_PO_AlphaTest': <OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>, 'OpenGl_PO_WriteOit': <OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>, 'OpenGl_PO_NB': <OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>, 'OpenGl_PO_IsPoint': <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>, 'OpenGl_PO_HasTextures': <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>, 'OpenGl_PO_NeedsGeomShader': <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>}
-    pass
 class OpenGl_ProjectionState(OpenGl_StateInterface):
     """
     Defines state of OCCT projection transformation.
@@ -5759,6 +5181,7 @@ class OpenGl_RenderFilter():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -5782,13 +5205,17 @@ class OpenGl_RenderFilter():
     __entries: dict # value = {'OpenGl_RenderFilter_Empty': (<OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>, None), 'OpenGl_RenderFilter_OpaqueOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly: 1>, None), 'OpenGl_RenderFilter_TransparentOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly: 2>, None), 'OpenGl_RenderFilter_NonRaytraceableOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly: 4>, None), 'OpenGl_RenderFilter_FillModeOnly': (<OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>, None)}
     __members__: dict # value = {'OpenGl_RenderFilter_Empty': <OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>, 'OpenGl_RenderFilter_OpaqueOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_OpaqueOnly: 1>, 'OpenGl_RenderFilter_TransparentOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_TransparentOnly: 2>, 'OpenGl_RenderFilter_NonRaytraceableOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_NonRaytraceableOnly: 4>, 'OpenGl_RenderFilter_FillModeOnly': <OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>}
     pass
-class OpenGl_CappingPlaneResource(OpenGl_Resource, OCP.Standard.Standard_Transient):
+class OpenGl_IndexBuffer(OpenGl_Buffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
-    Container of graphical resources for rendering capping plane associated to graphical clipping plane. This resource holds data necessary for OpenGl_CappingAlgo. This object is implemented as OpenGl resource for the following reasons: - one instance should be shared between contexts. - instance associated to Graphic3d_ClipPlane data by id. - should created and released within context (owns OpenGl elements and resources).Container of graphical resources for rendering capping plane associated to graphical clipping plane. This resource holds data necessary for OpenGl_CappingAlgo. This object is implemented as OpenGl resource for the following reasons: - one instance should be shared between contexts. - instance associated to Graphic3d_ClipPlane data by id. - should created and released within context (owns OpenGl elements and resources).Container of graphical resources for rendering capping plane associated to graphical clipping plane. This resource holds data necessary for OpenGl_CappingAlgo. This object is implemented as OpenGl resource for the following reasons: - one instance should be shared between contexts. - instance associated to Graphic3d_ClipPlane data by id. - should created and released within context (owns OpenGl elements and resources).
+    Index buffer is just a VBO with special target (GL_ELEMENT_ARRAY_BUFFER).Index buffer is just a VBO with special target (GL_ELEMENT_ARRAY_BUFFER).
     """
-    def AspectFace(self) -> OpenGl_Aspects: 
+    def Bind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Returns aspect face for rendering capping surface.
+        Bind this buffer object.
+        """
+    def Create(self,theGlCtx : OpenGl_Context) -> bool: 
+        """
+        Creates buffer object name (id) if not yet generated. Data should be initialized by another method.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -5808,59 +5235,127 @@ class OpenGl_CappingPlaneResource(OpenGl_Resource, OCP.Standard.Standard_Transie
         """
     def EstimatedDataSize(self) -> int: 
         """
-        Returns estimated GPU memory usage - not implemented.
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    @staticmethod
+    def FormatTarget_s(theTarget : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format VBO target enumeration value.
+        """
+    def GetComponentsNb(self) -> int: 
+        """
+        Returns the number of components per generic vertex attribute.
+        """
+    def GetDataOffset(self) -> int: 
+        """
+        Returns offset to data, NULL by default
+        """
+    def GetDataType(self) -> int: 
+        """
+        Returns data type of each component in the array.
+        """
+    def GetElemsNb(self) -> int: 
+        """
+        Returns number of vertex attributes / number of vertices specified within ::Init()
         """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
+        """
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
+    def GetTarget(self) -> int: 
+        """
+        Return buffer object target (GL_ELEMENT_ARRAY_BUFFER).
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
+        """
+        Notice that buffer object will be unbound after this call.
+
+        Notice that buffer object will be unbound after this call.
+
+        Notice that buffer object will be unbound after this call.
+
+        Notice that buffer object will be unbound after this call.
+        """
+    @overload
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def Orientation(self) -> OpenGl_Matrix: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsValid(self) -> bool: 
         """
-        Returns evaluated orientation matrix to transform infinite plane.
+        Returns true if current object was initialized
         """
-    def Plane(self) -> OCP.Graphic3d.Graphic3d_ClipPlane: 
+    def IsVirtual(self) -> bool: 
         """
-        Return parent clipping plane structure.
+        Return TRUE if this is a virtual (for backward compatibility) VBO object.
         """
-    def Primitives(self) -> OpenGl_PrimitiveArray: 
+    def Release(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Returns primitive array of vertices to render infinite plane.
+        Destroy object - will release GPU memory if any.
         """
-    def Release(self,theContext : OpenGl_Context) -> None: 
+    def SetElemsNb(self,theNbElems : int) -> None: 
         """
-        Release associated OpenGl resources.
+        Overrides the number of vertex attributes / number of vertexes. It is up to user specifying this number correct (e.g. below initial value)!
         """
+    @overload
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+        """
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+        """
+    @overload
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def Update(self,theContext : OpenGl_Context,theObjAspect : OCP.Graphic3d.Graphic3d_Aspects) -> None: 
+    def Unbind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Update resource data in the passed context.
+        Unbind this buffer object.
         """
-    def __init__(self,thePlane : OCP.Graphic3d.Graphic3d_ClipPlane) -> None: ...
+    def __init__(self) -> None: ...
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5870,6 +5365,24 @@ class OpenGl_CappingPlaneResource(OpenGl_Resource, OCP.Standard.Standard_Transie
     def get_type_name_s() -> str: 
         """
         None
+        """
+    @overload
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
+        """
+        Initialize buffer with new data.
+
+        Initialize buffer with new data.
+        """
+    @overload
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
+    @staticmethod
+    def sizeOfGlType_s(theType : int) -> int: 
+        """
+        Returns size of specified GL type
+        """
+    def subData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Update part of the buffer with new data.
         """
     pass
 class OpenGl_Sampler(OpenGl_Resource, OCP.Standard.Standard_Transient):
@@ -5926,23 +5439,23 @@ class OpenGl_Sampler(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Return immutable flag preventing further modifications of sampler parameters, FALSE by default. Immutable flag might be set when Sampler Object is used within Bindless Texture.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized.
@@ -6029,23 +5542,23 @@ class OpenGl_SetOfPrograms(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6091,23 +5604,23 @@ class OpenGl_SetOfShaderPrograms(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6182,23 +5695,23 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OpenGl_ShaderObject) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OpenGl_ShaderObject) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OpenGl_ShaderObject) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OpenGl_ShaderObject) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : OpenGl_ShaderList) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -6225,14 +5738,14 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : OpenGl_ShaderObject) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -6270,9 +5783,9 @@ class OpenGl_ShaderList(OCP.NCollection.NCollection_BaseSequence):
         Static deleter to be passed to BaseSequence
         """
     pass
-class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
+class OpenGl_ShaderManager(OCP.Graphic3d.Graphic3d_ShaderManager, OCP.Standard.Standard_Transient):
     """
-    This class is responsible for managing shader programs.This class is responsible for managing shader programs.
+    This class is responsible for managing shader programs.
     """
     def BindBoundBoxProgram(self) -> bool: 
         """
@@ -6291,10 +5804,6 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Bind program for FBO blit operation.
         """
-    def BindFontProgram(self,theCustomProgram : OpenGl_ShaderProgram) -> bool: 
-        """
-        Bind program for rendering alpha-textured font.
-        """
     def BindLineProgram(self,theTextures : OpenGl_TextureSet,theLineType : OCP.Aspect.Aspect_TypeOfLine,theShadingModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel,theAlphaMode : OCP.Graphic3d.Graphic3d_AlphaMode,theHasVertColor : bool,theCustomProgram : OpenGl_ShaderProgram) -> bool: 
         """
         Bind program for line rendering
@@ -6307,11 +5816,19 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Bind program for blended order-independent transparency buffers compositing.
         """
+    def BindOitDepthPeelingBlendProgram(self,theIsMSAAEnabled : bool) -> bool: 
+        """
+        Bind program for Depth Peeling order-independent transparency back color blending.
+        """
+    def BindOitDepthPeelingFlushProgram(self,theIsMSAAEnabled : bool) -> bool: 
+        """
+        Bind program for Depth Peeling order-independent transparency flush.
+        """
     def BindOutlineProgram(self) -> bool: 
         """
         Bind program for outline rendering
         """
-    def BindPBREnvBakingProgram(self) -> bool: 
+    def BindPBREnvBakingProgram(self,theIndex : int) -> bool: 
         """
         Bind program for IBL maps generation in PBR pipeline.
         """
@@ -6351,13 +5868,37 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         None
         """
+    def EnableGlslExtension(self,theExt : OCP.Graphic3d.Graphic3d_GlslExtension,theToEnable : bool=True) -> None: 
+        """
+        Set if specified extension is available or not.
+        """
+    def GapiVersionMajor(self) -> int: 
+        """
+        Return GAPI version major number.
+        """
+    def GapiVersionMinor(self) -> int: 
+        """
+        Return GAPI version minor number.
+        """
     def GetBgCubeMapProgram(self) -> OCP.Graphic3d.Graphic3d_ShaderProgram: 
         """
         Generates shader program to render environment cubemap as background.
         """
+    def GetColoredQuadProgram(self) -> OCP.Graphic3d.Graphic3d_ShaderProgram: 
+        """
+        Generates shader program to render correctly colored quad.
+        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
+        """
+    def HasFlatShading(self) -> bool: 
+        """
+        Return flag indicating flat shading usage; TRUE by default.
+        """
+    def HasGlslExtension(self,theExt : OCP.Graphic3d.Graphic3d_GlslExtension) -> bool: 
+        """
+        Return TRUE if specified extension is available.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -6367,31 +5908,31 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Returns true if no program objects are registered in the manager.
         """
+    def IsGapiGreaterEqual(self,theVerMajor : int,theVerMinor : int) -> bool: 
+        """
+        Returns true if detected GL version is greater or equal to requested one.
+        """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsSameContext(self,theCtx : OpenGl_Context) -> bool: 
         """
         Returns true when provided context is the same as used one by shader manager.
-        """
-    def IsSameView(self,theView : OpenGl_View) -> bool: 
-        """
-        Returns true when provided view is the same as cached one.
         """
     def LightSourceState(self) -> OpenGl_LightSourceState: 
         """
@@ -6436,7 +5977,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
     def PushLightSourceState(self,theProgram : OpenGl_ShaderProgram) -> None: 
         """
-        Pushes current state of OCCT light sources to specified program (only on state change).
+        Pushes current state of OCCT light sources to specified program (only on state change). Note that light sources definition depends also on WorldViewState.
         """
     def PushMaterialState(self,theProgram : OpenGl_ShaderProgram) -> None: 
         """
@@ -6454,7 +5995,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Pushes current state of OCCT projection transform to specified program (only on state change).
         """
-    def PushState(self,theProgram : OpenGl_ShaderProgram,theShadingModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel=Graphic3d_TypeOfShadingModel.Graphic3d_TOSM_UNLIT) -> None: 
+    def PushState(self,theProgram : OpenGl_ShaderProgram,theShadingModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel=Graphic3d_TypeOfShadingModel.Graphic3d_TypeOfShadingModel_Unlit) -> None: 
         """
         Pushes current state of OCCT graphics parameters to specified program.
         """
@@ -6462,29 +6003,53 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Pushes current state of OCCT world-view transform to specified program (only on state change).
         """
+    def ResetOitState(self) -> None: 
+        """
+        Reset the state of OIT rendering pass (only on state change).
+        """
     def RevertClippingState(self) -> None: 
         """
         Reverts state of OCCT clipping planes.
+        """
+    def SetCastShadows(self,theToCast : bool) -> bool: 
+        """
+        Updates state of OCCT light sources to dynamically enable/disable shadowmap.
         """
     def SetContext(self,theCtx : OpenGl_Context) -> None: 
         """
         Overwrites context
         """
-    def SetLastView(self,theLastView : OpenGl_View) -> None: 
+    def SetEmulateDepthClamp(self,theToEmulate : bool) -> None: 
         """
-        Sets last view manger used with. Helps to handle matrix states in multi-view configurations.
+        Set if depth clamping should be emulated by GLSL program.
+        """
+    def SetFlatShading(self,theToUse : bool,theToReverseSign : bool) -> None: 
+        """
+        Set flag indicating flat shading usage.
+        """
+    def SetGapiVersion(self,theVerMajor : int,theVerMinor : int) -> None: 
+        """
+        Return GAPI version major number.
         """
     def SetLocalOrigin(self,theOrigin : OCP.gp.gp_XYZ) -> None: 
         """
         Setup local camera transformation for compensating float precision issues.
         """
-    def SetOitState(self,theToEnableOitWrite : bool,theDepthFactor : float) -> None: 
+    def SetOitState(self,theMode : OCP.Graphic3d.Graphic3d_RenderTransparentMethod) -> None: 
         """
         Set the state of OIT rendering pass (only on state change).
         """
     def SetShadingModel(self,theModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel) -> None: 
         """
         Sets shading model.
+        """
+    def SetUseRedAlpha(self,theUseRedAlpha : bool) -> None: 
+        """
+        Set if RED channel should be used instead of ALPHA for single-channel textures.
+        """
+    def SetWeighedOitState(self,theDepthFactor : float) -> None: 
+        """
+        Set the state of weighed OIT rendering pass (only on state change).
         """
     def ShaderPrograms(self) -> OpenGl_ShaderProgramList: 
         """
@@ -6498,6 +6063,14 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
+    def ToEmulateDepthClamp(self) -> bool: 
+        """
+        Return TRUE if depth clamping should be emulated by GLSL program; TRUE by default.
+        """
+    def ToReverseDFdxSign(self) -> bool: 
+        """
+        Return flag indicating flat shading should reverse normal flag; FALSE by default.
+        """
     def Unregister(self,theShareKey : OCP.TCollection.TCollection_AsciiString,theProgram : OpenGl_ShaderProgram) -> Any: 
         """
         Unregisters specified shader program.
@@ -6510,7 +6083,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Invalidate state of OCCT light sources.
         """
-    def UpdateLightSourceStateTo(self,theLights : OCP.Graphic3d.Graphic3d_LightSet,theSpecIBLMapLevels : int=0) -> None: 
+    def UpdateLightSourceStateTo(self,theLights : OCP.Graphic3d.Graphic3d_LightSet,theSpecIBLMapLevels : int,theShadowMaps : OpenGl_ShadowMapArray) -> None: 
         """
         Updates state of OCCT light sources.
         """
@@ -6518,7 +6091,7 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
         """
         Updates state of material.
         """
-    def UpdateMaterialStateTo(self,theFrontMat : OpenGl_Material,theBackMat : OpenGl_Material,theAlphaCutoff : float,theToDistinguish : bool,theToMapTexture : bool) -> None: 
+    def UpdateMaterialStateTo(self,theMat : OpenGl_Material,theAlphaCutoff : float,theToDistinguish : bool,theToMapTexture : bool) -> None: 
         """
         Updates state of material.
         """
@@ -6537,6 +6110,10 @@ class OpenGl_ShaderManager(OCP.Standard.Standard_Transient):
     def UpdateWorldViewStateTo(self,theWorldViewMatrix : OCP.Graphic3d.Graphic3d_Mat4) -> None: 
         """
         Updates state of OCCT world-view transform.
+        """
+    def UseRedAlpha(self) -> bool: 
+        """
+        Return TRUE if RED channel should be used instead of ALPHA for single-channel textures (e.g. GAPI supports only GL_RED textures and not GL_ALPHA).
         """
     def WorldViewState(self) -> OpenGl_WorldViewState: 
         """
@@ -6598,11 +6175,6 @@ class OpenGl_ShaderObject(OpenGl_Resource, OCP.Standard.Standard_Transient):
         """
         Creates new empty shader object of specified type.
         """
-    @staticmethod
-    def CreateFromSource_s(theSource : OCP.TCollection.TCollection_AsciiString,theType : OCP.Graphic3d.Graphic3d_TypeOfShaderObject,theUniforms : Any,theStageInOuts : Any,theInName : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,theOutName : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,theNbGeomInputVerts : int=0) -> OCP.Graphic3d.Graphic3d_ShaderObject: 
-        """
-        This is a preprocessor for Graphic3d_ShaderObject::CreateFromSource() function. Creates a new shader object from specified source according to list of uniforms and in/out variables.
-        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -6640,23 +6212,23 @@ class OpenGl_ShaderObject(OpenGl_Resource, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LoadAndCompile(self,theCtx : OpenGl_Context,theId : OCP.TCollection.TCollection_AsciiString,theSource : OCP.TCollection.TCollection_AsciiString,theIsVerbose : bool=True,theToPrintSource : bool=True) -> bool: 
         """
         Wrapper for compiling shader object with verbose printing on error.
@@ -6740,20 +6312,12 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
     @overload
     def GetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: 
         """
-        Returns the integer vertex attribute.
+        Returns the integer vertex attribute. Wrapper for glGetVertexAttribiv()
 
-        Returns the integer vertex attribute.
-
-        Returns the float vertex attribute.
-
-        Returns the float vertex attribute.
+        Returns the float vertex attribute. Wrapper for glGetVertexAttribfv()
         """
     @overload
     def GetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def GetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
-    def GetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
     def GetAttributeLocation(self,theCtx : OpenGl_Context,theName : str) -> int: 
         """
         Returns index of the generic vertex attribute by variable name.
@@ -6769,18 +6333,10 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
     @overload
     def GetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: 
         """
-        Returns the value of the integer uniform variable.
+        Returns the value of the integer uniform variable. Wrapper for glGetUniformiv()
 
-        None
-
-        Returns the value of the float uniform variable.
-
-        Returns the value of the float uniform variable.
+        Returns the value of the float uniform variable. Wrapper for glGetUniformfv()
         """
-    @overload
-    def GetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def GetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
     @overload
     def GetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
     def GetUniformLocation(self,theCtx : OpenGl_Context,theName : str) -> OpenGl_ShaderUniformLocation: 
@@ -6795,10 +6351,6 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         """
         Return TRUE if program defines tessellation stage.
         """
-    def HasWeightOitOutput(self) -> bool: 
-        """
-        Return true if Fragment Shader color should output the weighted OIT coverage; FALSE by default.
-        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -6808,23 +6360,23 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Initializes program object with the list of shader objects.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized
@@ -6845,6 +6397,14 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         """
         Return the length of array of light sources (THE_MAX_LIGHTS), to be used for initialization occLightSources (OpenGl_OCC_LIGHT_SOURCE_PARAMS).
         """
+    def NbShadowMaps(self) -> int: 
+        """
+        Return the length of array of shadow maps (THE_NB_SHADOWMAPS); 0 by default.
+        """
+    def OitOutput(self) -> OCP.Graphic3d.Graphic3d_RenderTransparentMethod: 
+        """
+        Return if Fragment Shader color should output the OIT values; OFF by default.
+        """
     def ProgramId(self) -> int: 
         """
         Returns program ID
@@ -6862,38 +6422,22 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
         Return resource name.
         """
     @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: 
+    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.gp.gp_Vec2f) -> bool: 
         """
         Wrapper for glVertexAttrib1f()
-
-        Wrapper for glVertexAttrib1f()
-
-        Wrapper for glVertexAttrib2fv()
 
         Wrapper for glVertexAttrib2fv()
 
         Wrapper for glVertexAttrib3fv()
 
-        Wrapper for glVertexAttrib3fv()
-
-        Wrapper for glVertexAttrib4fv()
-
         Wrapper for glVertexAttrib4fv()
         """
+    @overload
+    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.gp.gp_Vec3f) -> bool: ...
     @overload
     def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
     @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
-    @overload
     def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : float) -> bool: ...
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : float) -> bool: ...
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
-    def SetAttribute(self,theCtx : OpenGl_Context,theIndex : int,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
     def SetAttributeName(self,theCtx : OpenGl_Context,theIndex : int,theName : str) -> bool: 
         """
         Wrapper for glBindAttribLocation()
@@ -6908,134 +6452,98 @@ class OpenGl_ShaderProgram(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.S
     @overload
     def SetSampler(self,theCtx : OpenGl_Context,theLocation : int,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3) -> bool: 
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theValue : Any) -> bool: 
         """
-        Specifies the value of the integer uniform variable.
+        Specifies the value of the integer uniform variable. Wrapper for glUniform1i()
 
-        Specifies the value of the integer uniform variable.
+        Specifies the value of the integer uniform 2D vector. Wrapper for glUniform2iv()
 
-        Specifies the value of the integer uniform 2D vector.
+        Specifies the value of the integer uniform 3D vector. Wrapper for glUniform3iv()
 
-        Specifies the value of the integer uniform 2D vector.
+        Specifies the value of the integer uniform 4D vector. Wrapper for glUniform4iv()
 
-        Specifies the value of the integer uniform 3D vector.
+        Specifies the value of the unsigned integer uniform 2D vector (uvec2). Wrapper for glUniform2uiv()
 
-        Specifies the value of the integer uniform 3D vector.
+        Specifies the value of the uvec2 uniform array Wrapper for glUniform2uiv()
 
-        Specifies the value of the integer uniform 4D vector.
+        Specifies the value of the uvec2 uniform array Wrapper for glUniform2uiv()
 
-        Specifies the value of the integer uniform 4D vector.
+        Specifies the value of the float uniform variable. Wrapper for glUniform1f()
 
-        Specifies the value of the unsigned integer uniform 2D vector (uvec2).
+        Specifies the value of the float uniform 2D vector. Wrapper for glUniform2fv()
 
-        Specifies the value of the unsigned integer uniform 2D vector (uvec2).
+        Specifies the value of the float uniform 3D vector. Wrapper for glUniform3fv()
 
-        Specifies the value of the uvec2 uniform array
+        Specifies the value of the float uniform 4D vector. Wrapper for glUniform4fv()
 
-        Specifies the value of the uvec2 uniform array
+        Specifies the value of the array of float uniform 3x3 matrices. Wrapper over glUniformMatrix3fv().
 
-        Specifies the value of the float uniform variable.
+        Specifies the value of the float uniform 4x4 matrix. Wrapper for glUniformMatrix4fv()
 
-        Specifies the value of the float uniform variable.
+        Specifies the value of the float uniform 4x4 matrix. Wrapper for glUniformMatrix4fv()
 
-        Specifies the value of the float uniform 2D vector.
+        Specifies the value of the array of float uniform 4x4 matrices. Wrapper over glUniformMatrix4fv().
 
-        Specifies the value of the float uniform 2D vector.
+        Specifies the value of the float uniform array Wrapper over glUniform1fv()
 
-        Specifies the value of the float uniform 3D vector.
+        Specifies the value of the float2 uniform array Wrapper over glUniform2fv()
 
-        Specifies the value of the float uniform 3D vector.
+        Specifies the value of the float3 uniform array Wrapper over glUniform3fv()
 
-        Specifies the value of the float uniform 4D vector.
+        Specifies the value of the float4 uniform array Wrapper over glUniform4fv()
 
-        Specifies the value of the float uniform 4D vector.
+        Specifies the value of the integer uniform array Wrapper over glUniform1iv()
 
-        Specifies the value of the float uniform 4x4 matrix.
+        Specifies the value of the int2 uniform array Wrapper over glUniform2iv()
 
-        Specifies the value of the float uniform 4x4 matrix.
+        Specifies the value of the int3 uniform array Wrapper over glUniform3iv()
 
-        Specifies the value of the float uniform 4x4 matrix.
-
-        Specifies the value of the float uniform 4x4 matrix.
-
-        Specifies the value of the float uniform array
-
-        Specifies the value of the float2 uniform array
-
-        Specifies the value of the float3 uniform array
-
-        Specifies the value of the float4 uniform array
-
-        Specifies the value of the integer uniform array
-
-        Specifies the value of the int2 uniform array
-
-        Specifies the value of the int3 uniform array
-
-        Specifies the value of the int4 uniform array
+        Specifies the value of the int4 uniform array Wrapper over glUniform4iv()
         """
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : float) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : int) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theCount : int,theValue : Any) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : float) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : int) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OpenGl_Matrix,theTranspose : int=0) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Mat4) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec2) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : Any) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : float) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OpenGl_Matrix,theTranspose : int=0) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.gp.gp_Vec2f) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : float) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : int) -> bool: ...
-    @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
     @overload
     def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : Any) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theValue : Any) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.gp.gp_Vec2f) -> bool: ...
     @overload
-    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec2i) -> bool: ...
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : Any) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : int) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theName : str,theCount : int,theValue : Any) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : int) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Mat4,theTranspose : int=0) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4i) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.Graphic3d.Graphic3d_Vec4) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theValue : OCP.gp.gp_Vec3f) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.gp.gp_Vec3f) -> bool: ...
+    @overload
+    def SetUniform(self,theCtx : OpenGl_Context,theLocation : int,theCount : int,theData : OCP.Graphic3d.Graphic3d_Vec3i) -> bool: ...
     def TextureSetBits(self) -> int: 
         """
         Return texture units declared within the program,
@@ -7075,6 +6583,7 @@ class OpenGl_ShaderProgramDumpLevel():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -7142,14 +6651,14 @@ class OpenGl_ShaderProgramList(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OpenGl_ShaderProgram) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderProgramList) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : OpenGl_ShaderProgramList) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OpenGl_ShaderProgram) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : OpenGl_ShaderProgramList) -> None: 
         """
@@ -7185,14 +6694,14 @@ class OpenGl_ShaderProgramList(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : OpenGl_ShaderProgramList) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7218,11 +6727,11 @@ class OpenGl_ShaderProgramList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : OpenGl_ShaderProgramList) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : OpenGl_ShaderProgramList) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -7239,9 +6748,196 @@ class OpenGl_ShaderUniformLocation():
         Note you may safely put invalid location in functions like glUniform* - the data passed in will be silently ignored.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLocation : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    pass
+class OpenGl_ShadowMap(OpenGl_NamedResource, OpenGl_Resource, OCP.Standard.Standard_Transient):
+    """
+    This class contains shadow mapping resources.
+    """
+    def Camera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
+        """
+        Return rendering camera.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    def FrameBuffer(self) -> OpenGl_FrameBuffer: 
+        """
+        Return framebuffer.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsValid(self) -> bool: 
+        """
+        Return TRUE if defined.
+        """
+    def LightSource(self) -> OCP.Graphic3d.Graphic3d_CLight: 
+        """
+        Return light source casting the shadow or NULL if undefined.
+        """
+    def LightSourceMatrix(self) -> OCP.Graphic3d.Graphic3d_Mat4: 
+        """
+        Return light source mapping matrix.
+        """
+    def Release(self,theCtx : OpenGl_Context) -> None: 
+        """
+        Releases all OpenGL resources.
+        """
+    def ResourceId(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return resource name.
+        """
+    def SetLightSource(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: 
+        """
+        Set light source casting the shadow.
+        """
+    def SetLightSourceMatrix(self,theMat : OCP.Graphic3d.Graphic3d_Mat4) -> None: 
+        """
+        Set light source mapping matrix.
+        """
+    def SetShadowMapBias(self,theBias : float) -> None: 
+        """
+        Sets shadowmap bias.
+        """
+    def ShadowMapBias(self) -> float: 
+        """
+        Returns shadowmap bias.
+        """
+    def Texture(self) -> OpenGl_Texture: 
+        """
+        Return depth texture.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def UpdateCamera(self,theView : OCP.Graphic3d.Graphic3d_CView,theOrigin : OCP.gp.gp_XYZ=None) -> bool: 
+        """
+        Compute camera.
+        """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class OpenGl_ShadowMapArray(OCP.Standard.Standard_Transient):
+    """
+    Array of shadow maps.
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns a type descriptor about this object.
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsValid(self) -> bool: 
+        """
+        Return TRUE if defined.
+        """
+    def Release(self,theCtx : OpenGl_Context) -> None: 
+        """
+        Releases all OpenGL resources.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        Returns type descriptor of Standard_Transient class
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class OpenGl_StateCounter():
     """
@@ -7257,6 +6953,10 @@ class OpenGl_LightSourceState(OpenGl_StateInterface):
     """
     Defines state of OCCT light sources.
     """
+    def HasShadowMaps(self) -> bool: 
+        """
+        Returns TRUE if shadowmap is set.
+        """
     def Index(self) -> int: 
         """
         Returns current state index.
@@ -7269,13 +6969,29 @@ class OpenGl_LightSourceState(OpenGl_StateInterface):
         """
         Sets new light sources.
         """
+    def SetCastShadows(self,theToCast : bool) -> None: 
+        """
+        Set if shadowmap should be enabled when available.
+        """
+    def SetShadowMaps(self,theMap : OpenGl_ShadowMapArray) -> None: 
+        """
+        Sets shadowmap.
+        """
     def SetSpecIBLMapLevels(self,theSpecIBLMapLevels : int) -> None: 
         """
         Sets number of mipmap levels used in specular IBL map.
         """
+    def ShadowMaps(self) -> OpenGl_ShadowMapArray: 
+        """
+        Returns shadowmap.
+        """
     def SpecIBLMapLevels(self) -> int: 
         """
         Returns number of mipmap levels used in specular IBL map. 0 by default or in case of using non-PBR shading model.
+        """
+    def ToCastShadows(self) -> bool: 
+        """
+        Returns TRUE if shadowmap should be enabled when available; TRUE by default.
         """
     def Update(self) -> None: 
         """
@@ -7327,17 +7043,19 @@ class OpenGl_StateVariable():
 
       OpenGl_OCC_LIGHT_AMBIENT
 
+      OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS
+
+      OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS
+
+      OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES
+
       OpenGl_OCCT_TEXTURE_ENABLE
 
       OpenGl_OCCT_DISTINGUISH_MODE
 
-      OpenGl_OCCT_PBR_FRONT_MATERIAL
+      OpenGl_OCCT_PBR_MATERIAL
 
-      OpenGl_OCCT_PBR_BACK_MATERIAL
-
-      OpenGl_OCCT_COMMON_FRONT_MATERIAL
-
-      OpenGl_OCCT_COMMON_BACK_MATERIAL
+      OpenGl_OCCT_COMMON_MATERIAL
 
       OpenGl_OCCT_ALPHA_CUTOFF
 
@@ -7376,6 +7094,7 @@ class OpenGl_StateVariable():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -7391,33 +7110,34 @@ class OpenGl_StateVariable():
         """
         :type: int
         """
-    OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>
-    OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>
-    OpenGl_OCCT_COMMON_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>
-    OpenGl_OCCT_COMMON_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>
-    OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>
-    OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>
-    OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>
-    OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>
-    OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>
-    OpenGl_OCCT_NB_SPEC_IBL_LEVELS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>
-    OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>
-    OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>
-    OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>
-    OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>
-    OpenGl_OCCT_PBR_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>
-    OpenGl_OCCT_PBR_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>
-    OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>
-    OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>
-    OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>
-    OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>
-    OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>
-    OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>
-    OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>
+    OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 26>
+    OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 27>
+    OpenGl_OCCT_COMMON_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_MATERIAL: 25>
+    OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 23>
+    OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 34>
+    OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 36>
+    OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 35>
+    OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 33>
+    OpenGl_OCCT_NB_SPEC_IBL_LEVELS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 41>
+    OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 42>
+    OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 29>
+    OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 28>
+    OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 39>
+    OpenGl_OCCT_PBR_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_MATERIAL: 24>
+    OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 31>
+    OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 38>
+    OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 40>
+    OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 22>
+    OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 30>
+    OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 32>
+    OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 37>
     OpenGl_OCC_CLIP_PLANE_CHAINS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>
     OpenGl_OCC_CLIP_PLANE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>
     OpenGl_OCC_CLIP_PLANE_EQUATIONS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>
     OpenGl_OCC_LIGHT_AMBIENT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>
+    OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES: 21>
+    OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS: 20>
+    OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS: 19>
     OpenGl_OCC_LIGHT_SOURCE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>
     OpenGl_OCC_LIGHT_SOURCE_PARAMS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>
     OpenGl_OCC_LIGHT_SOURCE_TYPES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>
@@ -7433,8 +7153,8 @@ class OpenGl_StateVariable():
     OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>
     OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>
     OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>
-    __entries: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>, None), 'OpenGl_OCC_PROJECTION_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>, None), 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>, None), 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>, None), 'OpenGl_OCC_CLIP_PLANE_CHAINS': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>, None), 'OpenGl_OCC_CLIP_PLANE_COUNT': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>, None), 'OpenGl_OCC_LIGHT_SOURCE_COUNT': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>, None), 'OpenGl_OCC_LIGHT_SOURCE_TYPES': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>, None), 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>, None), 'OpenGl_OCC_LIGHT_AMBIENT': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>, None), 'OpenGl_OCCT_TEXTURE_ENABLE': (<OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>, None), 'OpenGl_OCCT_DISTINGUISH_MODE': (<OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>, None), 'OpenGl_OCCT_PBR_FRONT_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>, None), 'OpenGl_OCCT_PBR_BACK_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>, None), 'OpenGl_OCCT_COMMON_FRONT_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>, None), 'OpenGl_OCCT_COMMON_BACK_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>, None), 'OpenGl_OCCT_ALPHA_CUTOFF': (<OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>, None), 'OpenGl_OCCT_COLOR': (<OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>, None), 'OpenGl_OCCT_OIT_OUTPUT': (<OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>, None), 'OpenGl_OCCT_OIT_DEPTH_FACTOR': (<OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>, None), 'OpenGl_OCCT_TEXTURE_TRSF2D': (<OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>, None), 'OpenGl_OCCT_POINT_SIZE': (<OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>, None), 'OpenGl_OCCT_VIEWPORT': (<OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>, None), 'OpenGl_OCCT_LINE_WIDTH': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>, None), 'OpenGl_OCCT_LINE_FEATHER': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>, None), 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>, None), 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>, None), 'OpenGl_OCCT_WIREFRAME_COLOR': (<OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>, None), 'OpenGl_OCCT_QUAD_MODE_STATE': (<OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>, None), 'OpenGl_OCCT_ORTHO_SCALE': (<OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>, None), 'OpenGl_OCCT_SILHOUETTE_THICKNESS': (<OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>, None), 'OpenGl_OCCT_NB_SPEC_IBL_LEVELS': (<OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>, None), 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': (<OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>, None)}
-    __members__: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>, 'OpenGl_OCC_WORLD_VIEW_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>, 'OpenGl_OCC_PROJECTION_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>, 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>, 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>, 'OpenGl_OCC_CLIP_PLANE_CHAINS': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>, 'OpenGl_OCC_CLIP_PLANE_COUNT': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>, 'OpenGl_OCC_LIGHT_SOURCE_COUNT': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>, 'OpenGl_OCC_LIGHT_SOURCE_TYPES': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>, 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>, 'OpenGl_OCC_LIGHT_AMBIENT': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>, 'OpenGl_OCCT_TEXTURE_ENABLE': <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>, 'OpenGl_OCCT_DISTINGUISH_MODE': <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>, 'OpenGl_OCCT_PBR_FRONT_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>, 'OpenGl_OCCT_PBR_BACK_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>, 'OpenGl_OCCT_COMMON_FRONT_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>, 'OpenGl_OCCT_COMMON_BACK_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>, 'OpenGl_OCCT_ALPHA_CUTOFF': <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>, 'OpenGl_OCCT_COLOR': <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>, 'OpenGl_OCCT_OIT_OUTPUT': <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>, 'OpenGl_OCCT_OIT_DEPTH_FACTOR': <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>, 'OpenGl_OCCT_TEXTURE_TRSF2D': <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>, 'OpenGl_OCCT_POINT_SIZE': <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>, 'OpenGl_OCCT_VIEWPORT': <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>, 'OpenGl_OCCT_LINE_WIDTH': <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>, 'OpenGl_OCCT_LINE_FEATHER': <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>, 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>, 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>, 'OpenGl_OCCT_WIREFRAME_COLOR': <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>, 'OpenGl_OCCT_QUAD_MODE_STATE': <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>, 'OpenGl_OCCT_ORTHO_SCALE': <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>, 'OpenGl_OCCT_SILHOUETTE_THICKNESS': <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>, 'OpenGl_OCCT_NB_SPEC_IBL_LEVELS': <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>, 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>}
+    __entries: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>, None), 'OpenGl_OCC_PROJECTION_MATRIX': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>, None), 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>, None), 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>, None), 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>, None), 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': (<OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>, None), 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>, None), 'OpenGl_OCC_CLIP_PLANE_CHAINS': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>, None), 'OpenGl_OCC_CLIP_PLANE_COUNT': (<OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>, None), 'OpenGl_OCC_LIGHT_SOURCE_COUNT': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>, None), 'OpenGl_OCC_LIGHT_SOURCE_TYPES': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>, None), 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>, None), 'OpenGl_OCC_LIGHT_AMBIENT': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>, None), 'OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS: 19>, None), 'OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS: 20>, None), 'OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES': (<OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES: 21>, None), 'OpenGl_OCCT_TEXTURE_ENABLE': (<OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 22>, None), 'OpenGl_OCCT_DISTINGUISH_MODE': (<OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 23>, None), 'OpenGl_OCCT_PBR_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_PBR_MATERIAL: 24>, None), 'OpenGl_OCCT_COMMON_MATERIAL': (<OpenGl_StateVariable.OpenGl_OCCT_COMMON_MATERIAL: 25>, None), 'OpenGl_OCCT_ALPHA_CUTOFF': (<OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 26>, None), 'OpenGl_OCCT_COLOR': (<OpenGl_StateVariable.OpenGl_OCCT_COLOR: 27>, None), 'OpenGl_OCCT_OIT_OUTPUT': (<OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 28>, None), 'OpenGl_OCCT_OIT_DEPTH_FACTOR': (<OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 29>, None), 'OpenGl_OCCT_TEXTURE_TRSF2D': (<OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 30>, None), 'OpenGl_OCCT_POINT_SIZE': (<OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 31>, None), 'OpenGl_OCCT_VIEWPORT': (<OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 32>, None), 'OpenGl_OCCT_LINE_WIDTH': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 33>, None), 'OpenGl_OCCT_LINE_FEATHER': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 34>, None), 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 35>, None), 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': (<OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 36>, None), 'OpenGl_OCCT_WIREFRAME_COLOR': (<OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 37>, None), 'OpenGl_OCCT_QUAD_MODE_STATE': (<OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 38>, None), 'OpenGl_OCCT_ORTHO_SCALE': (<OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 39>, None), 'OpenGl_OCCT_SILHOUETTE_THICKNESS': (<OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 40>, None), 'OpenGl_OCCT_NB_SPEC_IBL_LEVELS': (<OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 41>, None), 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': (<OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 42>, None)}
+    __members__: dict # value = {'OpenGl_OCC_MODEL_WORLD_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX: 0>, 'OpenGl_OCC_WORLD_VIEW_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX: 1>, 'OpenGl_OCC_PROJECTION_MATRIX': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX: 2>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE: 3>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE: 5>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_TRANSPOSE: 6>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>, 'OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_TRANSPOSE: 8>, 'OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_MODEL_WORLD_MATRIX_INVERSE_TRANSPOSE: 9>, 'OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>, 'OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE': <OpenGl_StateVariable.OpenGl_OCC_PROJECTION_MATRIX_INVERSE_TRANSPOSE: 11>, 'OpenGl_OCC_CLIP_PLANE_EQUATIONS': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>, 'OpenGl_OCC_CLIP_PLANE_CHAINS': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>, 'OpenGl_OCC_CLIP_PLANE_COUNT': <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>, 'OpenGl_OCC_LIGHT_SOURCE_COUNT': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>, 'OpenGl_OCC_LIGHT_SOURCE_TYPES': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>, 'OpenGl_OCC_LIGHT_SOURCE_PARAMS': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>, 'OpenGl_OCC_LIGHT_AMBIENT': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>, 'OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS: 19>, 'OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS: 20>, 'OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES': <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES: 21>, 'OpenGl_OCCT_TEXTURE_ENABLE': <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 22>, 'OpenGl_OCCT_DISTINGUISH_MODE': <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 23>, 'OpenGl_OCCT_PBR_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_PBR_MATERIAL: 24>, 'OpenGl_OCCT_COMMON_MATERIAL': <OpenGl_StateVariable.OpenGl_OCCT_COMMON_MATERIAL: 25>, 'OpenGl_OCCT_ALPHA_CUTOFF': <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 26>, 'OpenGl_OCCT_COLOR': <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 27>, 'OpenGl_OCCT_OIT_OUTPUT': <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 28>, 'OpenGl_OCCT_OIT_DEPTH_FACTOR': <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 29>, 'OpenGl_OCCT_TEXTURE_TRSF2D': <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 30>, 'OpenGl_OCCT_POINT_SIZE': <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 31>, 'OpenGl_OCCT_VIEWPORT': <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 32>, 'OpenGl_OCCT_LINE_WIDTH': <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 33>, 'OpenGl_OCCT_LINE_FEATHER': <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 34>, 'OpenGl_OCCT_LINE_STIPPLE_PATTERN': <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 35>, 'OpenGl_OCCT_LINE_STIPPLE_FACTOR': <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 36>, 'OpenGl_OCCT_WIREFRAME_COLOR': <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 37>, 'OpenGl_OCCT_QUAD_MODE_STATE': <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 38>, 'OpenGl_OCCT_ORTHO_SCALE': <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 39>, 'OpenGl_OCCT_SILHOUETTE_THICKNESS': <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 40>, 'OpenGl_OCCT_NB_SPEC_IBL_LEVELS': <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 41>, 'OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES': <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 42>}
     pass
 class OpenGl_StencilTest(OpenGl_Element):
     """
@@ -7495,14 +7215,14 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         Returns bounding box of this presentation without transformation matrix applied
         """
     @overload
-    def Clear(self) -> None: 
+    def Clear(self,theGlCtx : OpenGl_Context) -> None: 
         """
         Clear graphic data
 
         None
         """
     @overload
-    def Clear(self,theGlCtx : OpenGl_Context) -> None: ...
+    def Clear(self) -> None: ...
     def ClipPlanes(self) -> OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane: 
         """
         Returns associated clip planes
@@ -7555,6 +7275,10 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         """
         Returns graphic groups
         """
+    def HasGroupTransformPersistence(self) -> bool: 
+        """
+        Return TRUE if some groups might have transform persistence; FALSE by default.
+        """
     def HighlightStyle(self) -> OCP.Graphic3d.Graphic3d_PresentationAttributes: 
         """
         Returns valid handle to highlight style of the structure in case if highlight flag is set to true
@@ -7576,27 +7300,23 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         Returns FALSE if the structure hits the current view volume, otherwise returns TRUE.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsRaytracable(self) -> bool: 
-        """
-        Is the structure ray-tracable (contains ray-tracable elements)?
-        """
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
     def IsVisible(self,theViewId : int) -> bool: 
         """
@@ -7654,6 +7374,10 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         """
         Marks structure as culled/not culled - note that IsAlwaysRendered() is ignored here!
         """
+    def SetGroupTransformPersistence(self,theValue : bool) -> None: 
+        """
+        Set if some groups might have transform persistence.
+        """
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Set transformation persistence.
@@ -7702,12 +7426,36 @@ class OpenGl_Structure(OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard
         Update render transformation matrix.
         """
     @property
-    def myZLayer(self) -> int:
+    def ContainsFacet(self) -> int:
         """
         :type: int
         """
-    @myZLayer.setter
-    def myZLayer(self, arg0: int) -> None:
+    @ContainsFacet.setter
+    def ContainsFacet(self, arg0: int) -> None:
+        pass
+    @property
+    def Id(self) -> int:
+        """
+        :type: int
+        """
+    @Id.setter
+    def Id(self, arg0: int) -> None:
+        pass
+    @property
+    def PreviousPriority(self) -> int:
+        """
+        :type: int
+        """
+    @PreviousPriority.setter
+    def PreviousPriority(self, arg0: int) -> None:
+        pass
+    @property
+    def Priority(self) -> int:
+        """
+        :type: int
+        """
+    @Priority.setter
+    def Priority(self, arg0: int) -> None:
         pass
     pass
 class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructure, OCP.Standard.Standard_Transient):
@@ -7727,14 +7475,14 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         Returns bounding box of this presentation without transformation matrix applied
         """
     @overload
-    def Clear(self) -> None: 
+    def Clear(self,theGlCtx : OpenGl_Context) -> None: 
         """
         Clear graphic data
 
         None
         """
     @overload
-    def Clear(self,theGlCtx : OpenGl_Context) -> None: ...
+    def Clear(self) -> None: ...
     def ClipPlanes(self) -> OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane: 
         """
         Returns associated clip planes
@@ -7787,6 +7535,10 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         """
         Returns graphic groups
         """
+    def HasGroupTransformPersistence(self) -> bool: 
+        """
+        Return TRUE if some groups might have transform persistence; FALSE by default.
+        """
     def HighlightStyle(self) -> OCP.Graphic3d.Graphic3d_PresentationAttributes: 
         """
         Returns valid handle to highlight style of the structure in case if highlight flag is set to true
@@ -7808,27 +7560,23 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         Returns FALSE if the structure hits the current view volume, otherwise returns TRUE.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsRaytracable(self) -> bool: 
-        """
-        Is the structure ray-tracable (contains ray-tracable elements)?
-        """
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
     def IsVisible(self,theViewId : int) -> bool: 
         """
@@ -7886,6 +7634,10 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         """
         Marks structure as culled/not culled - note that IsAlwaysRendered() is ignored here!
         """
+    def SetGroupTransformPersistence(self,theValue : bool) -> None: 
+        """
+        Set if some groups might have transform persistence.
+        """
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Set transformation persistence.
@@ -7934,12 +7686,36 @@ class OpenGl_StructureShadow(OpenGl_Structure, OCP.Graphic3d.Graphic3d_CStructur
         Update render transformation matrix.
         """
     @property
-    def myZLayer(self) -> int:
+    def ContainsFacet(self) -> int:
         """
         :type: int
         """
-    @myZLayer.setter
-    def myZLayer(self, arg0: int) -> None:
+    @ContainsFacet.setter
+    def ContainsFacet(self, arg0: int) -> None:
+        pass
+    @property
+    def Id(self) -> int:
+        """
+        :type: int
+        """
+    @Id.setter
+    def Id(self, arg0: int) -> None:
+        pass
+    @property
+    def PreviousPriority(self) -> int:
+        """
+        :type: int
+        """
+    @PreviousPriority.setter
+    def PreviousPriority(self, arg0: int) -> None:
+        pass
+    @property
+    def Priority(self) -> int:
+        """
+        :type: int
+        """
+    @Priority.setter
+    def Priority(self, arg0: int) -> None:
         pass
     pass
 class OpenGl_Text(OpenGl_Element):
@@ -7955,16 +7731,16 @@ class OpenGl_Text(OpenGl_Element):
         Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
         """
     @staticmethod
-    def FindFont_s(theCtx : OpenGl_Context,theAspect : OpenGl_Aspects,theHeight : int,theResolution : int,theKey : OCP.TCollection.TCollection_AsciiString) -> OpenGl_Font: 
+    def FindFont_s(theCtx : OpenGl_Context,theAspect : OpenGl_Aspects,theHeight : int,theResolution : int,theFontHinting : OCP.Font.Font_Hinting,theKey : OCP.TCollection.TCollection_AsciiString) -> OpenGl_Font: 
         """
         Find shared resource for specified font or initialize new one
         """
     @staticmethod
-    def FontKey_s(theAspect : OpenGl_Aspects,theHeight : int,theResolution : int) -> OCP.TCollection.TCollection_AsciiString: 
+    def FontKey_s(theAspect : OpenGl_Aspects,theHeight : int,theResolution : int,theFontHinting : OCP.Font.Font_Hinting) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Create key for shared resource
         """
-    def Init(self,theCtx : OpenGl_Context,theText : str,thePoint : OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+    def Init(self,theCtx : OpenGl_Context,theText : str,thePoint : OCP.gp.gp_Vec3f) -> None: 
         """
         Setup new string and position
         """
@@ -7981,14 +7757,14 @@ class OpenGl_Text(OpenGl_Element):
         None
         """
     @overload
-    def Render(self,theWorkspace : OpenGl_Workspace) -> None: 
+    def Render(self,theCtx : OpenGl_Context,theTextAspect : OpenGl_Aspects,theResolution : int=72,theFontHinting : OCP.Font.Font_Hinting=Font_Hinting.Font_Hinting_Off) -> None: 
         """
         None
 
         Perform rendering
         """
     @overload
-    def Render(self,theCtx : OpenGl_Context,theTextAspect : OpenGl_Aspects,theResolution : int=72) -> None: ...
+    def Render(self,theWorkspace : OpenGl_Workspace) -> None: ...
     def Reset(self,theCtx : OpenGl_Context) -> None: 
         """
         Release cached VBO resources and the previous font if height changed. Cached structures will be refilled by the next render. Call Reset after modifying text parameters.
@@ -8001,7 +7777,7 @@ class OpenGl_Text(OpenGl_Element):
         """
         Setup new font size
         """
-    def SetPosition(self,thePoint : OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+    def SetPosition(self,thePoint : OCP.gp.gp_Vec3f) -> None: 
         """
         Setup new position
         """
@@ -8010,7 +7786,7 @@ class OpenGl_Text(OpenGl_Element):
         Sets text parameters
         """
     @staticmethod
-    def StringSize_s(theCtx : OpenGl_Context,theText : OCP.NCollection.NCollection_Utf8String,theTextAspect : OpenGl_Aspects,theHeight : float,theResolution : int,theWidth : float,theAscent : float,theDescent : float) -> None: 
+    def StringSize_s(theCtx : OpenGl_Context,theText : OCP.NCollection.NCollection_Utf8String,theTextAspect : OpenGl_Aspects,theHeight : float,theResolution : int,theFontHinting : OCP.Font.Font_Hinting,theWidth : float,theAscent : float,theDescent : float) -> None: 
         """
         Compute text width
         """
@@ -8031,9 +7807,9 @@ class OpenGl_Text(OpenGl_Element):
         Increment memory usage statistics. Default implementation puts EstimatedDataSize() into Graphic3d_FrameStatsCounter_EstimatedBytesGeom.
         """
     @overload
-    def __init__(self,theTextParams : OCP.Graphic3d.Graphic3d_Text) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theTextParams : OCP.Graphic3d.Graphic3d_Text) -> None: ...
     pass
 class OpenGl_TextBuilder():
     """
@@ -8050,14 +7826,14 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
     Point sprite resource. On modern hardware it will be texture with extra parameters. On ancient hardware sprites will be drawn using bitmaps.Point sprite resource. On modern hardware it will be texture with extra parameters. On ancient hardware sprites will be drawn using bitmaps.Point sprite resource. On modern hardware it will be texture with extra parameters. On ancient hardware sprites will be drawn using bitmaps.
     """
     @overload
-    def Bind(self,theCtx : OpenGl_Context) -> None: 
+    def Bind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
         """
         Bind this Texture to the unit specified in sampler parameters. Also binds Sampler Object if it is allocated.
 
         Bind this Texture to specified unit. Also binds Sampler Object if it is allocated.
         """
     @overload
-    def Bind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: ...
+    def Bind(self,theCtx : OpenGl_Context) -> None: ...
     def Create(self,theCtx : OpenGl_Context) -> bool: 
         """
         Creates Texture id if not yet generated. Data should be initialized by another method.
@@ -8088,7 +7864,7 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
     @staticmethod
     @overload
-    def GetDataFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
+    def GetDataFormat_s(theCtx : OpenGl_Context,theData : OCP.Image.Image_PixMap,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: 
         """
         None
 
@@ -8096,7 +7872,7 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
     @staticmethod
     @overload
-    def GetDataFormat_s(theCtx : OpenGl_Context,theData : OCP.Image.Image_PixMap,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: ...
+    def GetDataFormat_s(theCtx : OpenGl_Context,theFormat : OCP.Image.Image_Format,theTextFormat : int,thePixelFormat : int,theDataType : int) -> bool: ...
     def GetFormat(self) -> int: 
         """
         Returns texture format (not sized)
@@ -8113,12 +7889,16 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
         Returns true if texture was generated within mipmaps
         """
+    def ImageDump(self,theImage : OCP.Image.Image_PixMap,theCtx : OpenGl_Context,theTexUnit : OCP.Graphic3d.Graphic3d_TextureUnit,theLevel : int=0,theCubeSide : int=0) -> bool: 
+        """
+        Auxiliary method for making an image dump from texture data.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: 
+    def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theIsColorMap : bool) -> bool: 
         """
         Notice that texture will be unbound after this call.
 
@@ -8131,13 +7911,13 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         None
         """
     @overload
+    def Init(self,theCtx : OpenGl_Context,theTextFormat : int,thePixelFormat : int,theDataType : int,theSizeX : int,theSizeY : int,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: ...
+    @overload
     def Init(self,theCtx : OpenGl_Context,theTextureMap : OCP.Graphic3d.Graphic3d_TextureMap) -> bool: ...
     @overload
     def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture) -> bool: ...
     @overload
     def Init(self,theCtx : OpenGl_Context,theFormat : OpenGl_TextureFormat,theSizeXY : OCP.Graphic3d.Graphic3d_Vec2i,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theImage : OCP.Image.Image_PixMap=None) -> bool: ...
-    @overload
-    def Init(self,theCtx : OpenGl_Context,theImage : OCP.Image.Image_PixMap,theType : OCP.Graphic3d.Graphic3d_TypeOfTexture,theIsColorMap : bool) -> bool: ...
     def Init2DMultisample(self,theCtx : OpenGl_Context,theNbSamples : int,theTextFormat : int,theSizeX : int,theSizeY : int) -> bool: 
         """
         Initialize the 2D multisampling texture using glTexImage2DMultisample().
@@ -8157,7 +7937,7 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         """
     def InitCubeMap(self,theCtx : OpenGl_Context,theCubeMap : OCP.Graphic3d.Graphic3d_CubeMap,theSize : int,theFormat : OCP.Image.Image_Format,theToGenMipmap : bool,theIsColorMap : bool) -> bool: 
         """
-        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parametres will be taken from arguments.
+        Initializes 6 sides of cubemap. If theCubeMap is not NULL then size and format will be taken from it and corresponding arguments will be ignored. Otherwise this parameters will be taken from arguments.
         """
     def InitRectangle(self,theCtx : OpenGl_Context,theSizeX : int,theSizeY : int,theFormat : OpenGl_TextureFormat) -> bool: 
         """
@@ -8176,23 +7956,23 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         Returns true if this is display list bitmap
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPointSprite(self) -> bool: 
         """
         Returns TRUE for point sprite texture.
@@ -8208,6 +7988,10 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
     def MaxMipmapLevel(self) -> int: 
         """
         Return upper mipmap level index (0 means no mipmaps).
+        """
+    def NbSamples(self) -> int: 
+        """
+        Return number of MSAA samples.
         """
     @staticmethod
     def PixelSizeOfPixelFormat_s(theInternalFormat : int) -> int: 
@@ -8271,14 +8055,14 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Unbind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
+    def Unbind(self,theCtx : OpenGl_Context) -> None: 
         """
         Unbind texture from the unit specified in sampler parameters. Also unbinds Sampler Object if it is allocated.
 
         Unbind texture from specified unit. Also unbinds Sampler Object if it is allocated.
         """
     @overload
-    def Unbind(self,theCtx : OpenGl_Context) -> None: ...
+    def Unbind(self,theCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: ...
     def __init__(self,theResourceId : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -8291,33 +8075,17 @@ class OpenGl_PointSprite(OpenGl_Texture, OpenGl_NamedResource, OpenGl_Resource, 
         None
         """
     pass
-class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
+class OpenGl_TextureBuffer(OpenGl_Buffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
     Texture Buffer Object. This is a special 1D texture that VBO-style initialized. The main differences from general 1D texture: - no interpolation between field; - greater sizes; - special sampler object in GLSL shader to access data by index.Texture Buffer Object. This is a special 1D texture that VBO-style initialized. The main differences from general 1D texture: - no interpolation between field; - greater sizes; - special sampler object in GLSL shader to access data by index.
     """
     def Bind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Bind this VBO.
-        """
-    def BindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Bind all vertex attributes to active program OpenGl_Context::ActiveProgram() or for FFP. Default implementation does nothing.
-        """
-    def BindAttribute(self,theCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Bind this VBO and enable specified attribute in OpenGl_Context::ActiveProgram() or FFP.
-        """
-    def BindPositionAttribute(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Bind vertex position attribute only. Default implementation does nothing.
+        Bind this buffer object.
         """
     def BindTexture(self,theGlCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
         """
         Bind TBO to specified Texture Unit.
-        """
-    def BindVertexAttrib(self,theGlCtx : OpenGl_Context,theAttribLoc : int) -> None: 
-        """
-        Bind this VBO to active GLSL program.
         """
     def Create(self,theGlCtx : OpenGl_Context) -> bool: 
         """
@@ -8343,6 +8111,11 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         """
         Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
         """
+    @staticmethod
+    def FormatTarget_s(theTarget : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format VBO target enumeration value.
+        """
     def GetComponentsNb(self) -> int: 
         """
         Returns the number of components per generic vertex attribute.
@@ -8364,36 +8137,28 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         Get the reference counter of this object
         """
     @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
         """
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
         """
     @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
     def GetTarget(self) -> int: 
         """
         Override VBO target
-        """
-    def HasColorAttribute(self) -> bool: 
-        """
-        Returns true if buffer contains per-vertex color attribute
-        """
-    def HasNormalAttribute(self) -> bool: 
-        """
-        Returns true if buffer contains per-vertex normal attribute
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
         """
         Perform TBO initialization with specified data. Existing data will be deleted.
 
@@ -8404,25 +8169,25 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         Perform TBO initialization with specified data. Existing data will be deleted.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if TBO is valid. Notice that no any real GL call is performed!
@@ -8440,18 +8205,18 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         Overrides the number of vertex attributes / number of vertexes. It is up to user specifying this number correct (e.g. below initial value)!
         """
     @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
         """
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
         """
     @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def TextureFormat(self) -> int: 
         """
         Returns internal texture format.
@@ -8466,30 +8231,13 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         """
     def Unbind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Unbind this VBO.
-        """
-    def UnbindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Unbind all vertex attributes. Default implementation does nothing.
-        """
-    def UnbindAttribute(self,theCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Unbind this VBO and disable specified attribute in OpenGl_Context::ActiveProgram() or FFP.
+        Unbind this buffer object.
         """
     def UnbindTexture(self,theGlCtx : OpenGl_Context,theTextureUnit : OCP.Graphic3d.Graphic3d_TextureUnit) -> None: 
         """
         Unbind TBO.
         """
-    def UnbindVertexAttrib(self,theGlCtx : OpenGl_Context,theAttribLoc : int) -> None: 
-        """
-        Unbind any VBO from active GLSL program.
-        """
     def __init__(self) -> None: ...
-    @staticmethod
-    def bindAttribute_s(theGlCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute,theNbComp : int,theDataType : int,theStride : int,theOffset : capsule) -> None: 
-        """
-        Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
-        """
     def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Read back buffer sub-range.
@@ -8505,14 +8253,14 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
         None
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
         """
         Initialize buffer with new data.
 
         Initialize buffer with new data.
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: ...
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
     @staticmethod
     def sizeOfGlType_s(theType : int) -> int: 
         """
@@ -8521,11 +8269,6 @@ class OpenGl_TextureBufferArb(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard
     def subData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Update part of the buffer with new data.
-        """
-    @staticmethod
-    def unbindAttribute_s(theGlCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Disable GLSL array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using unbindFixed() when no program bound.
         """
     pass
 class OpenGl_TextureFormat():
@@ -8555,6 +8298,20 @@ class OpenGl_TextureFormat():
         """
         Returns OpenGL format of the pixel data (example: GL_RED).
         """
+    @staticmethod
+    def FormatDataType_s(theDataType : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format data type enumeration.
+        """
+    @staticmethod
+    def FormatFormat_s(theInternalFormat : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format pixel format enumeration.
+        """
+    def ImageFormat(self) -> OCP.Image.Image_Format: 
+        """
+        Returns image format (best match or Image_Format_UNKNOWN if no suitable fit).
+        """
     def Internal(self) -> int: 
         """
         Returns OpenGL internal format of the pixel data (example: GL_R32F).
@@ -8582,6 +8339,10 @@ class OpenGl_TextureFormat():
     def SetDataType(self,theType : int) -> None: 
         """
         Sets OpenGL data type of the pixel data.
+        """
+    def SetImageFormat(self,theFormat : OCP.Image.Image_Format) -> None: 
+        """
+        Sets image format.
         """
     def SetInternalFormat(self,theInternal : int) -> None: 
         """
@@ -8774,23 +8535,23 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
         Return TRUE if texture array is empty.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Return TRUE if texture color modulation has been enabled for the first texture or if texture is not set at all.
@@ -8828,11 +8589,11 @@ class OpenGl_TextureSet(OCP.Standard.Standard_Transient):
         Return the texture at specified position within [0, Size()) range.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbTextures : int) -> None: ...
     @overload
     def __init__(self,theTexture : OpenGl_Texture) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -9001,6 +8762,186 @@ class OpenGl_TriangleSet(OpenGl_BVHTriangulation3f):
         None
         """
     pass
+class OpenGl_UniformBuffer(OpenGl_Buffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
+    """
+    Uniform buffer object.
+    """
+    def Bind(self,theGlCtx : OpenGl_Context) -> None: 
+        """
+        Bind this buffer object.
+        """
+    def Create(self,theGlCtx : OpenGl_Context) -> bool: 
+        """
+        Creates buffer object name (id) if not yet generated. Data should be initialized by another method.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EstimatedDataSize(self) -> int: 
+        """
+        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    @staticmethod
+    def FormatTarget_s(theTarget : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format VBO target enumeration value.
+        """
+    def GetComponentsNb(self) -> int: 
+        """
+        Returns the number of components per generic vertex attribute.
+        """
+    def GetDataOffset(self) -> int: 
+        """
+        Returns offset to data, NULL by default
+        """
+    def GetDataType(self) -> int: 
+        """
+        Returns data type of each component in the array.
+        """
+    def GetElemsNb(self) -> int: 
+        """
+        Returns number of vertex attributes / number of vertices specified within ::Init()
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
+        """
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
+        """
+    @overload
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
+    def GetTarget(self) -> int: 
+        """
+        Return buffer object target (GL_UNIFORM_BUFFER).
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
+        """
+        Notice that buffer object will be unbound after this call.
+
+        Notice that buffer object will be unbound after this call.
+
+        Notice that buffer object will be unbound after this call.
+
+        Notice that buffer object will be unbound after this call.
+        """
+    @overload
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsValid(self) -> bool: 
+        """
+        Returns true if current object was initialized
+        """
+    def IsVirtual(self) -> bool: 
+        """
+        Return TRUE if this is a virtual (for backward compatibility) VBO object.
+        """
+    def Release(self,theGlCtx : OpenGl_Context) -> None: 
+        """
+        Destroy object - will release GPU memory if any.
+        """
+    def SetElemsNb(self,theNbElems : int) -> None: 
+        """
+        Overrides the number of vertex attributes / number of vertexes. It is up to user specifying this number correct (e.g. below initial value)!
+        """
+    @overload
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+        """
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
+        """
+    @overload
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Unbind(self,theGlCtx : OpenGl_Context) -> None: 
+        """
+        Unbind this buffer object.
+        """
+    def __init__(self) -> None: ...
+    def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Read back buffer sub-range.
+        """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    @overload
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
+        """
+        Initialize buffer with new data.
+
+        Initialize buffer with new data.
+        """
+    @overload
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
+    @staticmethod
+    def sizeOfGlType_s(theType : int) -> int: 
+        """
+        Returns size of specified GL type
+        """
+    def subData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+        """
+        Update part of the buffer with new data.
+        """
+    pass
 class OpenGl_UniformStateType():
     """
     Defines types of uniform state variables.
@@ -9028,6 +8969,7 @@ class OpenGl_UniformStateType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -9055,13 +8997,13 @@ class OpenGl_UniformStateType():
     __entries: dict # value = {'OpenGl_LIGHT_SOURCES_STATE': (<OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE: 0>, None), 'OpenGl_CLIP_PLANES_STATE': (<OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE: 1>, None), 'OpenGl_MODEL_WORLD_STATE': (<OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>, None), 'OpenGl_WORLD_VIEW_STATE': (<OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE: 3>, None), 'OpenGl_PROJECTION_STATE': (<OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>, None), 'OpenGl_MATERIAL_STATE': (<OpenGl_UniformStateType.OpenGl_MATERIAL_STATE: 5>, None), 'OpenGl_SURF_DETAIL_STATE': (<OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE: 6>, None), 'OpenGL_OIT_STATE': (<OpenGl_UniformStateType.OpenGL_OIT_STATE: 7>, None), 'OpenGl_UniformStateType_NB': (<OpenGl_UniformStateType.OpenGl_UniformStateType_NB: 8>, None)}
     __members__: dict # value = {'OpenGl_LIGHT_SOURCES_STATE': <OpenGl_UniformStateType.OpenGl_LIGHT_SOURCES_STATE: 0>, 'OpenGl_CLIP_PLANES_STATE': <OpenGl_UniformStateType.OpenGl_CLIP_PLANES_STATE: 1>, 'OpenGl_MODEL_WORLD_STATE': <OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>, 'OpenGl_WORLD_VIEW_STATE': <OpenGl_UniformStateType.OpenGl_WORLD_VIEW_STATE: 3>, 'OpenGl_PROJECTION_STATE': <OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>, 'OpenGl_MATERIAL_STATE': <OpenGl_UniformStateType.OpenGl_MATERIAL_STATE: 5>, 'OpenGl_SURF_DETAIL_STATE': <OpenGl_UniformStateType.OpenGl_SURF_DETAIL_STATE: 6>, 'OpenGL_OIT_STATE': <OpenGl_UniformStateType.OpenGL_OIT_STATE: 7>, 'OpenGl_UniformStateType_NB': <OpenGl_UniformStateType.OpenGl_UniformStateType_NB: 8>}
     pass
-class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
+class OpenGl_VertexBuffer(OpenGl_Buffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
     """
-    Index buffer is just a VBO with special target (GL_ELEMENT_ARRAY_BUFFER).Index buffer is just a VBO with special target (GL_ELEMENT_ARRAY_BUFFER).
+    Vertex Buffer Object - is a general storage object for vertex attributes (position, normal, color). Notice that you should use OpenGl_IndexBuffer specialization for array of indices.Vertex Buffer Object - is a general storage object for vertex attributes (position, normal, color). Notice that you should use OpenGl_IndexBuffer specialization for array of indices.
     """
     def Bind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Bind this VBO.
+        Bind this buffer object.
         """
     def BindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
         """
@@ -9081,7 +9023,7 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         """
     def Create(self,theGlCtx : OpenGl_Context) -> bool: 
         """
-        Creates VBO name (id) if not yet generated. Data should be initialized by another method.
+        Creates buffer object name (id) if not yet generated. Data should be initialized by another method.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -9102,6 +9044,11 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
     def EstimatedDataSize(self) -> int: 
         """
         Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
+        """
+    @staticmethod
+    def FormatTarget_s(theTarget : int) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Format VBO target enumeration value.
         """
     def GetComponentsNb(self) -> int: 
         """
@@ -9124,21 +9071,21 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         Get the reference counter of this object
         """
     @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
         """
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
 
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
+        Read back buffer sub-range. Notice that buffer object will be unbound after this call. Function reads portion of data from this buffer object using glGetBufferSubData().
         """
     @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
+    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
     def GetTarget(self) -> int: 
         """
-        None
+        Return buffer target GL_ARRAY_BUFFER.
         """
     def HasColorAttribute(self) -> bool: 
         """
@@ -9153,36 +9100,36 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: 
         """
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
 
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
 
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
 
-        Notice that VBO will be unbound after this call.
+        Notice that buffer object will be unbound after this call.
         """
     @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
+    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns true if current object was initialized
@@ -9200,25 +9147,25 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         Overrides the number of vertex attributes / number of vertexes. It is up to user specifying this number correct (e.g. below initial value)!
         """
     @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
         """
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
 
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
+        Notice that buffer object will be unbound after this call. Function replaces portion of data within this buffer object using glBufferSubData(). The buffer object should be initialized before call.
         """
     @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
+    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def Unbind(self,theGlCtx : OpenGl_Context) -> None: 
         """
-        Unbind this VBO.
+        Unbind this buffer object.
         """
     def UnbindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
         """
@@ -9253,14 +9200,14 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         None
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
         """
         Initialize buffer with new data.
 
         Initialize buffer with new data.
         """
     @overload
-    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: ...
+    def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: ...
     @staticmethod
     def sizeOfGlType_s(theType : int) -> int: 
         """
@@ -9276,137 +9223,17 @@ class OpenGl_IndexBuffer(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Stan
         Disable GLSL array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using unbindFixed() when no program bound.
         """
     pass
-class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standard.Standard_Transient):
+class OpenGl_VertexBufferCompat():
     """
-    Compatibility layer for old OpenGL without VBO. Make sure to pass pointer from GetDataOffset() instead of NULL. Method GetDataOffset() returns pointer to real data in this class (while base class OpenGl_VertexBuffer always return NULL).Compatibility layer for old OpenGL without VBO. Make sure to pass pointer from GetDataOffset() instead of NULL. Method GetDataOffset() returns pointer to real data in this class (while base class OpenGl_VertexBuffer always return NULL).
+    Compatibility layer for old OpenGL without VBO. Make sure to pass pointer from GetDataOffset() instead of NULL. Method GetDataOffset() returns pointer to real data in this class (while base class OpenGl_VertexBuffer always return NULL).
     """
-    def Bind(self,theGlCtx : OpenGl_Context) -> None: 
+    def Bind(self,arg1 : OpenGl_Context) -> None: 
         """
         Bind this VBO.
-        """
-    def BindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Bind all vertex attributes to active program OpenGl_Context::ActiveProgram() or for FFP. Default implementation does nothing.
-        """
-    def BindAttribute(self,theCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Bind this VBO and enable specified attribute in OpenGl_Context::ActiveProgram() or FFP.
-        """
-    def BindPositionAttribute(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Bind vertex position attribute only. Default implementation does nothing.
-        """
-    def BindVertexAttrib(self,theGlCtx : OpenGl_Context,theAttribLoc : int) -> None: 
-        """
-        Bind this VBO to active GLSL program.
         """
     def Create(self,theGlCtx : OpenGl_Context) -> bool: 
         """
         Creates VBO name (id) if not yet generated. Data should be initialized by another method.
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def EstimatedDataSize(self) -> int: 
-        """
-        Returns estimated GPU memory usage for holding data without considering overheads and allocation alignment rules.
-        """
-    def GetComponentsNb(self) -> int: 
-        """
-        Returns the number of components per generic vertex attribute.
-        """
-    def GetDataOffset(self) -> int: 
-        """
-        Returns offset to data, NULL by default
-        """
-    def GetDataType(self) -> int: 
-        """
-        Returns data type of each component in the array.
-        """
-    def GetElemsNb(self) -> int: 
-        """
-        Returns number of vertex attributes / number of vertices specified within ::Init()
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: 
-        """
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
-
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
-
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
-
-        Read back buffer sub-range. Notice that VBO will be unbound after this call. Function reads portion of data from this VBO using glGetBufferSubData().
-        """
-    @overload
-    def GetSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: ...
-    def GetTarget(self) -> int: 
-        """
-        None
-        """
-    def HasColorAttribute(self) -> bool: 
-        """
-        Returns true if buffer contains per-vertex color attribute
-        """
-    def HasNormalAttribute(self) -> bool: 
-        """
-        Returns true if buffer contains per-vertex normal attribute
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : int) -> bool: 
-        """
-        Notice that VBO will be unbound after this call.
-
-        Notice that VBO will be unbound after this call.
-
-        Notice that VBO will be unbound after this call.
-
-        Notice that VBO will be unbound after this call.
-        """
-    @overload
-    def Init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : float) -> bool: ...
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsValid(self) -> bool: 
-        """
-        Returns true if current object was initialized
         """
     def IsVirtual(self) -> bool: 
         """
@@ -9416,62 +9243,14 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         """
         Destroy object - will release memory if any.
         """
-    def SetElemsNb(self,theNbElems : int) -> None: 
-        """
-        Overrides the number of vertex attributes / number of vertexes. It is up to user specifying this number correct (e.g. below initial value)!
-        """
-    @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : float) -> bool: 
-        """
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
-
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
-
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
-
-        Notice that VBO will be unbound after this call. Function replaces portion of data within this VBO using glBufferSubData(). The VBO should be initialized before call.
-        """
-    @overload
-    def SubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : int) -> bool: ...
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Unbind(self,theGlCtx : OpenGl_Context) -> None: 
+    def Unbind(self,arg1 : OpenGl_Context) -> None: 
         """
         Unbind this VBO.
         """
-    def UnbindAllAttributes(self,theGlCtx : OpenGl_Context) -> None: 
-        """
-        Unbind all vertex attributes. Default implementation does nothing.
-        """
-    def UnbindAttribute(self,theCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Unbind this VBO and disable specified attribute in OpenGl_Context::ActiveProgram() or FFP.
-        """
-    def UnbindVertexAttrib(self,theGlCtx : OpenGl_Context,theAttribLoc : int) -> None: 
-        """
-        Unbind any VBO from active GLSL program.
-        """
     def __init__(self) -> None: ...
-    @staticmethod
-    def bindAttribute_s(theGlCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute,theNbComp : int,theDataType : int,theStride : int,theOffset : capsule) -> None: 
-        """
-        Setup array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using bindFixed() when no program bound.
-        """
     def getSubData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Read back buffer sub-range.
-        """
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
         """
     def init(self,theGlCtx : OpenGl_Context,theComponentsNb : int,theElemsNb : int,theData : capsule,theDataType : int,theStride : int) -> bool: 
         """
@@ -9481,24 +9260,14 @@ class OpenGl_VertexBufferCompat(OpenGl_VertexBuffer, OpenGl_Resource, OCP.Standa
         """
         Initialize buffer with existing data. Data will NOT be copied by this method!
         """
-    @staticmethod
-    def sizeOfGlType_s(theType : int) -> int: 
-        """
-        Returns size of specified GL type
-        """
     def subData(self,theGlCtx : OpenGl_Context,theElemFrom : int,theElemsNb : int,theData : capsule,theDataType : int) -> bool: 
         """
         Update part of the buffer with new data.
         """
-    @staticmethod
-    def unbindAttribute_s(theGlCtx : OpenGl_Context,theMode : OCP.Graphic3d.Graphic3d_TypeOfAttribute) -> None: 
-        """
-        Disable GLSL array pointer - either for active GLSL program OpenGl_Context::ActiveProgram() or for FFP using unbindFixed() when no program bound.
-        """
     pass
 class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStructureManager, OCP.Standard.Standard_Transient):
     """
-    Implementation of OpenGl view.Implementation of OpenGl view.Implementation of OpenGl view.
+    Implementation of OpenGl view.Implementation of OpenGl view.
     """
     def Activate(self) -> None: 
         """
@@ -9510,7 +9279,7 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
     def BackfacingModel(self) -> OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel: 
         """
-        Return backfacing model used for the view.
+        Return backfacing model used for the view; Graphic3d_TypeOfBackfacingModel_Auto by default, which means that backface culling is defined by each presentation.
         """
     def Background(self) -> OCP.Aspect.Aspect_Background: 
         """
@@ -9532,6 +9301,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Returns background image fill style.
         """
+    def BackgroundType(self) -> OCP.Graphic3d.Graphic3d_TypeOfBackground: 
+        """
+        Returns background type.
+        """
     def BaseXRCamera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
         """
         Returns anchor camera definition (without tracked head orientation).
@@ -9551,10 +9324,6 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def ChangeRenderingParams(self) -> OCP.Graphic3d.Graphic3d_RenderingParams: 
         """
         Returns reference to current rendering parameters and effect settings.
-        """
-    def ClearPBREnvironment(self) -> None: 
-        """
-        Fills PBR specular probe and irradiance map with white color. So that environment indirect illumination will be constant and will be fully controlled by ambient light sources. If PBR is unavailable it does nothing.
         """
     def ClipPlanes(self) -> OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane: 
         """
@@ -9605,6 +9374,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Memory deallocator for transient classes
         """
+    def DepthPeelingFbos(self) -> OpenGl_DepthPeeling: 
+        """
+        Returns additional buffers for depth peeling OIT.
+        """
     def DiagnosticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theFlags : OCP.Graphic3d.Graphic3d_DiagnosticInfo) -> None: 
         """
         Fill in the dictionary with diagnostic info. Should be called within rendering thread.
@@ -9641,10 +9414,6 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Remove offscreen FBO from the graphic library
         """
-    def GeneratePBREnvironment(self) -> None: 
-        """
-        Generates PBR specular probe and irradiance map in order to provide environment indirect illumination in PBR shading model (Image Based Lighting). The source of environment data is background cubemap. If PBR is unavailable it does nothing. If PBR is available but there is no cubemap being set to background it clears all IBL maps (see 'ClearPBREnvironment').
-        """
     def GetGraduatedTrihedron(self) -> OCP.Graphic3d.Graphic3d_GraduatedTrihedron: 
         """
         Returns data of a graduated trihedron
@@ -9673,7 +9442,7 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Erases Graduated Trihedron.
         """
-    def GraduatedTrihedronMinMaxValues(self,theMin : OCP.Graphic3d.Graphic3d_Vec3,theMax : OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+    def GraduatedTrihedronMinMaxValues(self,theMin : OCP.gp.gp_Vec3f,theMax : OCP.gp.gp_Vec3f) -> None: 
         """
         Sets minimum and maximum points of scene bounding box for Graduated Trihedron stored in graphic view object.
         """
@@ -9684,6 +9453,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def HiddenObjects(self) -> Any: 
         """
         Returns map of objects hidden within this specific view (not viewer-wise).
+        """
+    def IBLCubeMap(self) -> OCP.Graphic3d.Graphic3d_CubeMap: 
+        """
+        Returns cubemap being set last time on background.
         """
     def Identification(self) -> int: 
         """
@@ -9734,27 +9507,27 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         Returns True if the window associated to the view is defined.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsInvalidated(self) -> bool: 
         """
         Return true if view content cache has been invalidated.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRemoved(self) -> bool: 
         """
         Returns true if the view was removed.
@@ -9841,11 +9614,15 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
     def SetBackgroundImage(self,theTextureMap : OCP.Graphic3d.Graphic3d_TextureMap,theToUpdatePBREnv : bool=True) -> None: 
         """
-        Sets image texture or environment cubemap as backround.
+        Sets image texture or environment cubemap as background.
         """
     def SetBackgroundImageStyle(self,theFillStyle : OCP.Aspect.Aspect_FillMethod) -> None: 
         """
         Sets background image fill style.
+        """
+    def SetBackgroundType(self,theType : OCP.Graphic3d.Graphic3d_TypeOfBackground) -> None: 
+        """
+        Sets background type.
         """
     def SetBaseXRCamera(self,theCamera : OCP.Graphic3d.Graphic3d_Camera) -> None: 
         """
@@ -9871,6 +9648,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
         Sets gradient background fill colors.
         """
+    def SetImageBasedLighting(self,theToEnableIBL : bool) -> None: 
+        """
+        Enables or disables IBL (Image Based Lighting) from background cubemap. Has no effect if PBR is not used.
+        """
     def SetImmediateModeDrawToFront(self,theDrawToFrontBuffer : bool) -> bool: 
         """
         Returns previous mode.
@@ -9889,7 +9670,7 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
     def SetShadingModel(self,theModel : OCP.Graphic3d.Graphic3d_TypeOfShadingModel) -> None: 
         """
-        Sets default Shading Model of the view. Will throw an exception on attempt to set Graphic3d_TOSM_DEFAULT.
+        Sets default Shading Model of the view. Will throw an exception on attempt to set Graphic3d_TypeOfShadingModel_DEFAULT.
         """
     def SetTextureEnv(self,theTextureEnv : OCP.Graphic3d.Graphic3d_TextureEnv) -> None: 
         """
@@ -9921,7 +9702,7 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
         """
     def ShadingModel(self) -> OCP.Graphic3d.Graphic3d_TypeOfShadingModel: 
         """
-        Returns default Shading Model of the view; Graphic3d_TOSM_FRAGMENT by default.
+        Returns default Shading Model of the view; Graphic3d_TypeOfShadingModel_Phong by default.
         """
     def SpecIBLMapLevels(self) -> int: 
         """
@@ -9971,6 +9752,10 @@ class OpenGl_View(OCP.Graphic3d.Graphic3d_CView, OCP.Graphic3d.Graphic3d_DataStr
     def Update(self,theLayerId : int=-1) -> None: 
         """
         Invalidates bounding box of specified ZLayerId.
+        """
+    def ViewAxisInWorld(self,thePoseXR : OCP.gp.gp_Trsf) -> OCP.gp.gp_Ax1: 
+        """
+        Returns view direction in the world space based on XR pose.
         """
     def VisualizationType(self) -> OCP.Graphic3d.Graphic3d_TypeOfVisualization: 
         """
@@ -10041,23 +9826,23 @@ class OpenGl_Window(OCP.Standard.Standard_Transient):
         Activates GL context and setup viewport.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def PlatformWindow(self) -> OCP.Aspect.Aspect_Window: 
         """
         None
@@ -10105,10 +9890,6 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
     def Aspects(self) -> OpenGl_Aspects: 
         """
         Currently set aspects (can differ from applied).
-        """
-    def BufferDump(self,theFbo : OpenGl_FrameBuffer,theImage : OCP.Image.Image_PixMap,theBufferType : OCP.Graphic3d.Graphic3d_BufferType) -> bool: 
-        """
-        None
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -10171,27 +9952,23 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
         Return Interior color taking into account highlight flag.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def ModelMatrix(self) -> OpenGl_Matrix: 
-        """
-        Returns applied model structure matrix.
-        """
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbSkippedTransparentElements(self) -> int: 
         """
         Return the number of skipped transparent elements within active OpenGl_RenderFilter_OpaqueOnly filter.
@@ -10203,10 +9980,6 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
     def RenderFilter(self) -> int: 
         """
         Get rendering filter.
-        """
-    def ResetAppliedAspect(self) -> None: 
-        """
-        Clear the applied aspect state to default values.
         """
     def ResetSkippedCounter(self) -> None: 
         """
@@ -10240,10 +10013,6 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
         """
         Setup Z-buffer usage flag (without affecting GL state!). Returns previously set flag.
         """
-    def ShouldRender(self,theElement : OpenGl_Element) -> bool: 
-        """
-        Checks whether the element can be rendered or not.
-        """
     def TextColor(self) -> OCP.Graphic3d.Graphic3d_Vec4: 
         """
         Return text color taking into account highlight flag.
@@ -10271,10 +10040,6 @@ class OpenGl_Workspace(OCP.Standard.Standard_Transient):
     def View(self) -> OpenGl_View: 
         """
         None
-        """
-    def ViewMatrix(self) -> OpenGl_Matrix: 
-        """
-        Returns applied view matrix.
         """
     def Width(self) -> int: 
         """
@@ -10356,33 +10121,34 @@ OpenGl_MATERIAL_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_Unif
 OpenGl_MODEL_WORLD_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_MODEL_WORLD_STATE: 2>
 OpenGl_MaterialFlag_Back: OCP.OpenGl.OpenGl_MaterialFlag # value = <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Back: 1>
 OpenGl_MaterialFlag_Front: OCP.OpenGl.OpenGl_MaterialFlag # value = <OpenGl_MaterialFlag.OpenGl_MaterialFlag_Front: 0>
-OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 25>
-OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 26>
-OpenGl_OCCT_COMMON_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_BACK_MATERIAL: 24>
-OpenGl_OCCT_COMMON_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_FRONT_MATERIAL: 23>
-OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 20>
-OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 33>
-OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 35>
-OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 34>
-OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 32>
-OpenGl_OCCT_NB_SPEC_IBL_LEVELS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 40>
-OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 41>
-OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 28>
-OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 27>
-OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 38>
-OpenGl_OCCT_PBR_BACK_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_BACK_MATERIAL: 22>
-OpenGl_OCCT_PBR_FRONT_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_FRONT_MATERIAL: 21>
-OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 30>
-OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 37>
-OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 39>
-OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 19>
-OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 29>
-OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 31>
-OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 36>
+OpenGl_OCCT_ALPHA_CUTOFF: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ALPHA_CUTOFF: 26>
+OpenGl_OCCT_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COLOR: 27>
+OpenGl_OCCT_COMMON_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_COMMON_MATERIAL: 25>
+OpenGl_OCCT_DISTINGUISH_MODE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_DISTINGUISH_MODE: 23>
+OpenGl_OCCT_LINE_FEATHER: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_FEATHER: 34>
+OpenGl_OCCT_LINE_STIPPLE_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_FACTOR: 36>
+OpenGl_OCCT_LINE_STIPPLE_PATTERN: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_STIPPLE_PATTERN: 35>
+OpenGl_OCCT_LINE_WIDTH: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_LINE_WIDTH: 33>
+OpenGl_OCCT_NB_SPEC_IBL_LEVELS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NB_SPEC_IBL_LEVELS: 41>
+OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_NUMBER_OF_STATE_VARIABLES: 42>
+OpenGl_OCCT_OIT_DEPTH_FACTOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_DEPTH_FACTOR: 29>
+OpenGl_OCCT_OIT_OUTPUT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_OIT_OUTPUT: 28>
+OpenGl_OCCT_ORTHO_SCALE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_ORTHO_SCALE: 39>
+OpenGl_OCCT_PBR_MATERIAL: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_PBR_MATERIAL: 24>
+OpenGl_OCCT_POINT_SIZE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_POINT_SIZE: 31>
+OpenGl_OCCT_QUAD_MODE_STATE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_QUAD_MODE_STATE: 38>
+OpenGl_OCCT_SILHOUETTE_THICKNESS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_SILHOUETTE_THICKNESS: 40>
+OpenGl_OCCT_TEXTURE_ENABLE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_ENABLE: 22>
+OpenGl_OCCT_TEXTURE_TRSF2D: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_TEXTURE_TRSF2D: 30>
+OpenGl_OCCT_VIEWPORT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_VIEWPORT: 32>
+OpenGl_OCCT_WIREFRAME_COLOR: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCCT_WIREFRAME_COLOR: 37>
 OpenGl_OCC_CLIP_PLANE_CHAINS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_CHAINS: 13>
 OpenGl_OCC_CLIP_PLANE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_COUNT: 14>
 OpenGl_OCC_CLIP_PLANE_EQUATIONS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_CLIP_PLANE_EQUATIONS: 12>
 OpenGl_OCC_LIGHT_AMBIENT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_AMBIENT: 18>
+OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_MATRICES: 21>
+OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SAMPLERS: 20>
+OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SHADOWMAP_SIZE_BIAS: 19>
 OpenGl_OCC_LIGHT_SOURCE_COUNT: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_COUNT: 15>
 OpenGl_OCC_LIGHT_SOURCE_PARAMS: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_PARAMS: 17>
 OpenGl_OCC_LIGHT_SOURCE_TYPES: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_LIGHT_SOURCE_TYPES: 16>
@@ -10398,25 +10164,6 @@ OpenGl_OCC_WORLD_VIEW_MATRIX: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_
 OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE: 4>
 OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_INVERSE_TRANSPOSE: 10>
 OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: OCP.OpenGl.OpenGl_StateVariable # value = <OpenGl_StateVariable.OpenGl_OCC_WORLD_VIEW_MATRIX_TRANSPOSE: 7>
-OpenGl_PO_AlphaTest: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_AlphaTest: 1024>
-OpenGl_PO_ClipChains: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipChains: 256>
-OpenGl_PO_ClipPlanes1: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes1: 64>
-OpenGl_PO_ClipPlanes2: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanes2: 128>
-OpenGl_PO_ClipPlanesN: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_ClipPlanesN: 192>
-OpenGl_PO_HasTextures: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
-OpenGl_PO_IsPoint: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
-OpenGl_PO_MeshEdges: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
-OpenGl_PO_NB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_NB: 4096>
-OpenGl_PO_NeedsGeomShader: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_MeshEdges: 512>
-OpenGl_PO_PointSimple: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSimple: 8>
-OpenGl_PO_PointSprite: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSprite: 16>
-OpenGl_PO_PointSpriteA: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_PointSpriteA: 24>
-OpenGl_PO_StippleLine: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_StippleLine: 32>
-OpenGl_PO_TextureEnv: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureEnv: 4>
-OpenGl_PO_TextureNormal: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureNormal: 6>
-OpenGl_PO_TextureRGB: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_TextureRGB: 2>
-OpenGl_PO_VertColor: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_VertColor: 1>
-OpenGl_PO_WriteOit: OCP.OpenGl.OpenGl_ProgramOptions # value = <OpenGl_ProgramOptions.OpenGl_PO_WriteOit: 2048>
 OpenGl_PROJECTION_STATE: OCP.OpenGl.OpenGl_UniformStateType # value = <OpenGl_UniformStateType.OpenGl_PROJECTION_STATE: 4>
 OpenGl_RenderFilter_Empty: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_Empty: 0>
 OpenGl_RenderFilter_FillModeOnly: OCP.OpenGl.OpenGl_RenderFilter # value = <OpenGl_RenderFilter.OpenGl_RenderFilter_FillModeOnly: 8>

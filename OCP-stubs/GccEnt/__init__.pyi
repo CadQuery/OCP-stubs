@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import io
+import OCP.gp
 __all__  = [
 "GccEnt",
 "GccEnt_Array1OfPosition",
@@ -41,7 +41,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
+    def Outside_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: 
         """
         Constructs a qualified line, so that the solution computed by a construction algorithm using the qualified circle or line and the circle or line are external to one another.
 
@@ -49,7 +49,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Outside_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: ...
+    def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
     @staticmethod
     @overload
     def PositionFromString_s(thePositionString : str) -> GccEnt_Position: 
@@ -86,7 +86,7 @@ class GccEnt():
     pass
 class GccEnt_Array1OfPosition():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : GccEnt_Array1OfPosition) -> GccEnt_Array1OfPosition: 
         """
@@ -161,13 +161,13 @@ class GccEnt_Array1OfPosition():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : GccEnt_Position,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : GccEnt_Array1OfPosition) -> None: ...
     @overload
-    def __init__(self,theBegin : GccEnt_Position,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class GccEnt_BadQualifier(Exception, BaseException):
@@ -200,6 +200,7 @@ class GccEnt_Position():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

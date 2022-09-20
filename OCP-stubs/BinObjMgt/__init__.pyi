@@ -5,12 +5,13 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TCollection
 import io
 import OCP.Storage
 import OCP.Standard
+import OCP.TCollection
 __all__  = [
 "BinObjMgt_Persistent",
+"BinObjMgt_Position",
 "BinObjMgt_RRelocationTable"
 ]
 class BinObjMgt_Persistent():
@@ -100,6 +101,10 @@ class BinObjMgt_Persistent():
     def Init(self) -> None: 
         """
         Initializes me to reuse again
+        """
+    def IsDirect(self) -> bool: 
+        """
+        Returns true if after this record a direct writing to the stream is performed.
         """
     def IsError(self) -> bool: 
         """
@@ -203,11 +208,19 @@ class BinObjMgt_Persistent():
         """
         Retrieves <me> from the stream. inline Standard_IStream& operator>> (Standard_IStream&, BinObjMgt_Persistent&) is also available
         """
+    def SetIStream(self,theStream : io.BytesIO) -> None: 
+        """
+        Sets the stream for direct reading
+        """
     def SetId(self,theId : int) -> None: 
         """
         Sets the Id of the object
 
         Sets the Id of the object
+        """
+    def SetOStream(self,theStream : io.BytesIO) -> None: 
+        """
+        Sets the stream for direct writing
         """
     def SetPosition(self,thePos : int) -> bool: 
         """
@@ -224,6 +237,10 @@ class BinObjMgt_Persistent():
         """
     @overload
     def SetTypeId(self,theTypeId : int) -> None: ...
+    def StreamStart(self) -> BinObjMgt_Position: 
+        """
+        Returns the start position of the direct writing in the stream
+        """
     def Truncate(self) -> None: 
         """
         Truncates the buffer by current position, i.e. updates mySize
@@ -236,11 +253,77 @@ class BinObjMgt_Persistent():
 
         Returns the Id of the type of the object
         """
-    def Write(self,theOS : io.BytesIO) -> io.BytesIO: 
+    def Write(self,theOS : io.BytesIO,theDirectStream : bool=False) -> io.BytesIO: 
         """
-        Stores <me> to the stream. inline Standard_OStream& operator<< (Standard_OStream&, BinObjMgt_Persistent&) is also available
+        Stores <me> to the stream. inline Standard_OStream& operator<< (Standard_OStream&, BinObjMgt_Persistent&) is also available. If theDirectStream is true, after this data the direct stream data is stored.
         """
     def __init__(self) -> None: ...
+    pass
+class BinObjMgt_Position(OCP.Standard.Standard_Transient):
+    """
+    Stores and manipulates position in the stream.Stores and manipulates position in the stream.Stores and manipulates position in the stream.
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def StoreSize(self,theStream : io.BytesIO) -> None: 
+        """
+        Stores the difference between the current position and the stored one.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def WriteSize(self,theStream : io.BytesIO,theDummy : bool=False) -> None: 
+        """
+        Writes stored size at the stored position. Changes the current stream position. If theDummy is true, is writes to the current position zero size.
+        """
+    def __init__(self,theStream : io.BytesIO) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class BinObjMgt_RRelocationTable():
     """

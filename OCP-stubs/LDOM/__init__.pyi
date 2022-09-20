@@ -4,11 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
 import io
-import LDOM_OSStream
-import LDOM_XmlReader
 import LDOM_Node
+import LDOM_OSStream
 __all__  = [
 "LDOM_Node",
 "LDOM_BasicNode",
@@ -41,9 +39,9 @@ class LDOM_Node():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anOther : LDOM_Node) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -116,11 +114,6 @@ class LDOM_BasicElement(LDOM_BasicNode):
     """
     None
     """
-    @staticmethod
-    def Create_s(aName : str,aLength : int,aDoc : LDOM_MemManager) -> LDOM_BasicElement: 
-        """
-        None
-        """
     def GetAttribute(self,aName : LDOMBasicString,aLastCh : LDOM_BasicNode) -> LDOM_BasicAttribute: 
         """
         None
@@ -258,16 +251,6 @@ class LDOM_CharReference():
     """
     None
     """
-    @staticmethod
-    def Decode_s(theSrc : str,theLen : int) -> str: 
-        """
-        None
-        """
-    @staticmethod
-    def Encode_s(theSrc : str,theLen : int,isAttribute : bool) -> str: 
-        """
-        None
-        """
     def __init__(self) -> None: ...
     pass
 class LDOM_Text(LDOM_CharacterData, LDOM_Node):
@@ -281,9 +264,9 @@ class LDOM_Text(LDOM_CharacterData, LDOM_Node):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anOther : LDOM_Text) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -358,9 +341,9 @@ class LDOM_Comment(LDOM_CharacterData, LDOM_Node):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : LDOM_Comment) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -429,9 +412,9 @@ class LDOM_Document():
     None
     """
     @overload
-    def __init__(self,aMemManager : LDOM_MemManager) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aMemManager : LDOM_MemManager) -> None: ...
     def createCDATASection(self,theData : LDOMString) -> LDOM_CDATASection: 
         """
         None
@@ -617,6 +600,7 @@ class LDOM_Attr(LDOM_Node):
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -766,6 +750,7 @@ class LDOM_OSStream():
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -962,6 +947,7 @@ class LDOM_XmlReader():
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -990,25 +976,11 @@ class LDOM_XmlReader():
         __entries: dict # value = {'XML_UNKNOWN': (<RecordType_e.XML_UNKNOWN: 0>, None), 'XML_HEADER': (<RecordType_e.XML_HEADER: 1>, None), 'XML_DOCTYPE': (<RecordType_e.XML_DOCTYPE: 2>, None), 'XML_COMMENT': (<RecordType_e.XML_COMMENT: 3>, None), 'XML_START_ELEMENT': (<RecordType_e.XML_START_ELEMENT: 4>, None), 'XML_END_ELEMENT': (<RecordType_e.XML_END_ELEMENT: 5>, None), 'XML_FULL_ELEMENT': (<RecordType_e.XML_FULL_ELEMENT: 6>, None), 'XML_TEXT': (<RecordType_e.XML_TEXT: 7>, None), 'XML_CDATA': (<RecordType_e.XML_CDATA: 8>, None), 'XML_EOF': (<RecordType_e.XML_EOF: 9>, None)}
         __members__: dict # value = {'XML_UNKNOWN': <RecordType_e.XML_UNKNOWN: 0>, 'XML_HEADER': <RecordType_e.XML_HEADER: 1>, 'XML_DOCTYPE': <RecordType_e.XML_DOCTYPE: 2>, 'XML_COMMENT': <RecordType_e.XML_COMMENT: 3>, 'XML_START_ELEMENT': <RecordType_e.XML_START_ELEMENT: 4>, 'XML_END_ELEMENT': <RecordType_e.XML_END_ELEMENT: 5>, 'XML_FULL_ELEMENT': <RecordType_e.XML_FULL_ELEMENT: 6>, 'XML_TEXT': <RecordType_e.XML_TEXT: 7>, 'XML_CDATA': <RecordType_e.XML_CDATA: 8>, 'XML_EOF': <RecordType_e.XML_EOF: 9>}
         pass
-    def CreateElement(self,theName : str,theLen : int) -> None: 
-        """
-        None
-        """
     def GetBOM(self) -> LDOM_OSStream.BOMType_e: 
         """
         None
         """
     def GetElement(self) -> LDOM_BasicElement: 
-        """
-        None
-        """
-    def ReadRecord(self,theIStream : io.BytesIO,theData : LDOM_OSStream) -> LDOM_XmlReader.RecordType_e: 
-        """
-        None
-        """
-    def __init__(self,aDocument : LDOM_MemManager,anErrorString : OCP.TCollection.TCollection_AsciiString,theTagPerStep : bool=False) -> None: ...
-    @staticmethod
-    def getInteger_s(theValue : LDOMBasicString,theStart : str,theEnd : str) -> bool: 
         """
         None
         """
@@ -1032,13 +1004,13 @@ class LDOM_XmlWriter():
         None
         """
     @overload
-    def Write(self,theOStream : io.BytesIO,theDoc : LDOM_Document) -> None: 
+    def Write(self,theOStream : io.BytesIO,theNode : LDOM_Node) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Write(self,theOStream : io.BytesIO,theNode : LDOM_Node) -> None: ...
+    def Write(self,theOStream : io.BytesIO,theDoc : LDOM_Document) -> None: ...
     def __init__(self,theEncoding : str=None) -> None: ...
     pass

@@ -4,22 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Geom
-import OCP.TopoDS
-import OCP.Bnd
-import OCP.BRepAdaptor
-import OCP.Standard
-import OCP.TopAbs
-import OCP.Poly
-import OCP.TColStd
-import OCP.TCollection
-import io
-import BRepMesh_GeomTool
-import OCP.gp
 import OCP.GeomAbs
+import OCP.NCollection
+import BRepMesh_GeomTool
+import OCP.Poly
+import io
+import OCP.BRepAdaptor
 import OCP.Geom2d
+import OCP.Standard
+import OCP.BRepBuilderAPI
+import OCP.TopoDS
+import OCP.TColgp
+import OCP.Bnd
 import OCP.TopLoc
+import OCP.gp
+import OCP.TopAbs
+import OCP.Geom
+import OCP.Message
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "BRepMesh_Circle",
 "BRepMesh_CircleInspector",
@@ -53,6 +56,7 @@ __all__  = [
 "BRepMesh_SelectorOfDataStructureOfDelaun",
 "BRepMesh_ShapeTool",
 "BRepMesh_ShapeVisitor",
+"BRepMesh_Triangulator",
 "BRepMesh_Vertex",
 "BRepMesh_VertexInspector",
 "BRepMesh_VertexTool",
@@ -96,7 +100,7 @@ class BRepMesh_Circle():
     pass
 class BRepMesh_CircleInspector(OCP.NCollection.NCollection_CellFilter_InspectorXY):
     """
-    Auxilary class to find circles shot by the given point.
+    Auxiliary class to find circles shot by the given point.
     """
     def Bind(self,theIndex : int,theCircle : BRepMesh_Circle) -> None: 
         """
@@ -113,7 +117,7 @@ class BRepMesh_CircleInspector(OCP.NCollection.NCollection_CellFilter_InspectorX
     @staticmethod
     def Coord_s(i : int,thePnt : OCP.gp.gp_XY) -> float: 
         """
-        Access to co-ordinate
+        Access to coordinate
         """
     def GetShotCircles(self) -> Any: 
         """
@@ -162,7 +166,7 @@ class BRepMesh_CircleTool():
         """
     def IsEmpty(self) -> bool: 
         """
-        Retruns true if cell filter contains no circle.
+        Returns true if cell filter contains no circle.
         """
     @staticmethod
     def MakeCircle_s(thePoint1 : OCP.gp.gp_XY,thePoint2 : OCP.gp.gp_XY,thePoint3 : OCP.gp.gp_XY,theLocation : OCP.gp.gp_XY,theRadius : float) -> bool: 
@@ -178,26 +182,26 @@ class BRepMesh_CircleTool():
         Select the circles shot by the given point.
         """
     @overload
-    def SetCellSize(self,theSizeX : float,theSizeY : float) -> None: 
+    def SetCellSize(self,theSize : float) -> None: 
         """
         Sets new size for cell filter.
 
         Sets new size for cell filter.
         """
     @overload
-    def SetCellSize(self,theSize : float) -> None: ...
+    def SetCellSize(self,theSizeX : float,theSizeY : float) -> None: ...
     def SetMinMaxSize(self,theMin : OCP.gp.gp_XY,theMax : OCP.gp.gp_XY) -> None: 
         """
         Sets limits of inspection area.
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
-    @overload
     def __init__(self,theReservedSize : int,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_IncAllocator) -> None: ...
     pass
 class BRepMesh_Classifier(OCP.Standard.Standard_Transient):
     """
-    Auxilary class intended for classification of points regarding internals of discrete face.
+    Auxiliary class intended for classification of points regarding internals of discrete face.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -220,23 +224,23 @@ class BRepMesh_Classifier(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Perform(self,thePoint : OCP.gp.gp_Pnt2d) -> OCP.TopAbs.TopAbs_State: 
         """
         Performs classification of the given point regarding to face internals.
@@ -278,9 +282,9 @@ class BRepMesh_CurveTessellator():
         Returns parameters of solution with the given index.
         """
     @overload
-    def __init__(self,theEdge : IMeshData_Edge,theOrientation : OCP.TopAbs.TopAbs_Orientation,theFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: ...
-    @overload
     def __init__(self,theEdge : IMeshData_Edge,theParameters : IMeshTools_Parameters) -> None: ...
+    @overload
+    def __init__(self,theEdge : IMeshData_Edge,theOrientation : OCP.TopAbs.TopAbs_Orientation,theFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -342,7 +346,7 @@ class BRepMesh_DataStructureOfDelaun(OCP.Standard.Standard_Transient):
         """
     def ElementsConnectedTo(self,theLinkIndex : int) -> BRepMesh_PairOfIndex: 
         """
-        Returns indices of elements conected to the link with the given index.
+        Returns indices of elements connected to the link with the given index.
         """
     def ElementsOfDomain(self) -> Any: 
         """
@@ -378,23 +382,23 @@ class BRepMesh_DataStructureOfDelaun(OCP.Standard.Standard_Transient):
     @overload
     def IndexOf(self,theNode : BRepMesh_Vertex) -> int: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LinksConnectedTo(self,theIndex : int) -> Any: 
         """
         Get list of links attached to the node with the given index.
@@ -470,7 +474,7 @@ class BRepMesh_Deflection(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def ComputeDeflection_s(theDFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: 
+    def ComputeDeflection_s(theDWire : IMeshData_Wire,theParameters : IMeshTools_Parameters) -> None: 
         """
         Computes and updates deflection of the given discrete edge.
 
@@ -480,7 +484,7 @@ class BRepMesh_Deflection(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def ComputeDeflection_s(theDWire : IMeshData_Wire,theParameters : IMeshTools_Parameters) -> None: ...
+    def ComputeDeflection_s(theDFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> None: ...
     @staticmethod
     @overload
     def ComputeDeflection_s(theDEdge : IMeshData_Edge,theMaxShapeSize : float,theParameters : IMeshTools_Parameters) -> None: ...
@@ -510,23 +514,23 @@ class BRepMesh_Deflection(OCP.Standard.Standard_Transient):
         Checks if the deflection of current polygonal representation is consistent with the required deflection.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -566,6 +570,7 @@ class BRepMesh_DegreeOfFreedom():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -706,23 +711,23 @@ class BRepMesh_DiscretRoot(OCP.Standard.Standard_Transient):
         Returns true if triangualtion was performed and has success.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Compute triangulation for set shape.
@@ -771,9 +776,9 @@ class BRepMesh_OrientedEdge():
         Returns index of last node of the Link.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theFirstNode : int,theLastNode : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepMesh_EdgeDiscret():
     """
@@ -786,7 +791,7 @@ class BRepMesh_EdgeDiscret():
         """
     @staticmethod
     @overload
-    def CreateEdgeTessellator_s(theDEdge : IMeshData_Edge,theParameters : IMeshTools_Parameters) -> IMeshTools_CurveTessellator: 
+    def CreateEdgeTessellator_s(theDEdge : IMeshData_Edge,theOrientation : OCP.TopAbs.TopAbs_Orientation,theDFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> IMeshTools_CurveTessellator: 
         """
         Creates instance of free edge tessellator.
 
@@ -794,7 +799,7 @@ class BRepMesh_EdgeDiscret():
         """
     @staticmethod
     @overload
-    def CreateEdgeTessellator_s(theDEdge : IMeshData_Edge,theOrientation : OCP.TopAbs.TopAbs_Orientation,theDFace : IMeshData_Face,theParameters : IMeshTools_Parameters) -> IMeshTools_CurveTessellator: ...
+    def CreateEdgeTessellator_s(theDEdge : IMeshData_Edge,theParameters : IMeshTools_Parameters) -> IMeshTools_CurveTessellator: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -851,7 +856,7 @@ class BRepMesh_EdgeTessellationExtractor():
     pass
 class BRepMesh_FaceChecker(OCP.Standard.Standard_Transient):
     """
-    Auxiliary class checking wires of target face for self-intersections. Explodes wires of discrete face on sets of segments using tessellation data stored in model. Each segment is then checked for intersection with other ones. All collisions are registerd and returned as result of check.
+    Auxiliary class checking wires of target face for self-intersections. Explodes wires of discrete face on sets of segments using tessellation data stored in model. Each segment is then checked for intersection with other ones. All collisions are registered and returned as result of check.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -878,23 +883,23 @@ class BRepMesh_FaceChecker(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Perform(self) -> bool: 
         """
         Performs check wires of the face for intersections.
@@ -952,6 +957,7 @@ class BRepMesh_FactoryError():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1005,6 +1011,7 @@ class BRepMesh_GeomTool():
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -1043,7 +1050,7 @@ class BRepMesh_GeomTool():
         Returns number of discretization points.
         """
     @staticmethod
-    def Normal_s(theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theParamU : float,theParamV : float,thePoint : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> bool: 
+    def Normal_s(theSurface : OCP.BRepAdaptor.BRepAdaptor_Surface,theParamU : float,theParamV : float,thePoint : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> bool: 
         """
         Computes normal to the given surface at the specified position in parametric space.
         """
@@ -1053,18 +1060,18 @@ class BRepMesh_GeomTool():
         Compute deflection of the given segment.
         """
     @overload
-    def Value(self,theIndex : int,theIsoParam : float,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: 
+    def Value(self,theIndex : int,theSurface : OCP.BRepAdaptor.BRepAdaptor_Surface,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: 
         """
         Gets parameters of discretization point with the given index.
 
         Gets parameters of discretization point with the given index.
         """
     @overload
-    def Value(self,theIndex : int,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: ...
+    def Value(self,theIndex : int,theIsoParam : float,theParam : float,thePoint : OCP.gp.gp_Pnt,theUV : OCP.gp.gp_Pnt2d) -> bool: ...
+    @overload
+    def __init__(self,theSurface : OCP.BRepAdaptor.BRepAdaptor_Surface,theIsoType : OCP.GeomAbs.GeomAbs_IsoType,theParamIso : float,theFirstParam : float,theLastParam : float,theLinDeflection : float,theAngDeflection : float,theMinPointsNb : int=2,theMinSize : float=1e-07) -> None: ...
     @overload
     def __init__(self,theCurve : OCP.BRepAdaptor.BRepAdaptor_Curve,theFirstParam : float,theLastParam : float,theLinDeflection : float,theAngDeflection : float,theMinPointsNb : int=2,theMinSize : float=1e-07) -> None: ...
-    @overload
-    def __init__(self,theSurface : OCP.BRepAdaptor.BRepAdaptor_HSurface,theIsoType : OCP.GeomAbs.GeomAbs_IsoType,theParamIso : float,theFirstParam : float,theLastParam : float,theLinDeflection : float,theAngDeflection : float,theMinPointsNb : int=2,theMinSize : float=1e-07) -> None: ...
     Cross: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Cross: 1>
     EndPointTouch: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.EndPointTouch: 2>
     Glued: OCP.BRepMesh.IntFlag_e # value = <IntFlag_e.Glued: 4>
@@ -1109,23 +1116,23 @@ class BRepMesh_IncrementalMesh(BRepMesh_DiscretRoot, OCP.Standard.Standard_Trans
         Returns true if triangualtion was performed and has success.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsModified(self) -> bool: 
         """
         Returns modified flag.
@@ -1142,7 +1149,7 @@ class BRepMesh_IncrementalMesh(BRepMesh_DiscretRoot, OCP.Standard.Standard_Trans
     @overload
     def Perform(self,theContext : IMeshTools_Context,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
-        Performs meshing ot the shape.
+        Performs meshing of the shape.
 
         Performs meshing using custom context;
         """
@@ -1216,7 +1223,7 @@ class BRepMesh_MeshTool(OCP.Standard.Standard_Transient):
         """
     def AddLink(self,theFirstNode : int,theLastNode : int) -> Tuple[int, bool]: 
         """
-        Adds new link to mesh. Updates link index and link orientaion parameters.
+        Adds new link to mesh. Updates link index and link orientation parameters.
         """
     def CleanFrontierLinks(self) -> None: 
         """
@@ -1230,23 +1237,19 @@ class BRepMesh_MeshTool(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
-    def DumpTriangles(self,theFileName : str,theTriangles : Any) -> None: 
-        """
-        Dumps triangles to specified file.
-        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
     @overload
-    def EraseFreeLinks(self,theLinks : Any) -> None: 
+    def EraseFreeLinks(self) -> None: 
         """
         Erases all links that have no elements connected to them.
 
         Erases links from the specified map that have no elements connected to them.
         """
     @overload
-    def EraseFreeLinks(self) -> None: ...
+    def EraseFreeLinks(self,theLinks : Any) -> None: ...
     def EraseItemsConnectedTo(self,theNodeIndex : int) -> None: 
         """
         Erases all elements connected to the specified artificial node. In addition, erases the artificial node itself.
@@ -1254,10 +1257,6 @@ class BRepMesh_MeshTool(OCP.Standard.Standard_Transient):
     def EraseTriangle(self,theTriangleIndex : int,theLoopEdges : Any) -> None: 
         """
         Erases triangle with the given index and adds the free edges into the map. When an edge is suppressed more than one time it is destroyed.
-        """
-    def EraseTriangles(self,theTriangles : Any,theLoopEdges : Any) -> None: 
-        """
-        Erases the given set of triangles. Fills map of loop edges forming the countour surrounding the erased triangles.
         """
     def GetEdgesByType(self,theEdgeType : BRepMesh_DegreeOfFreedom) -> Any: 
         """
@@ -1276,23 +1275,23 @@ class BRepMesh_MeshTool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Legalize(self,theLinkIndex : int) -> None: 
         """
         Performs legalization of triangles connected to the specified link.
@@ -1335,7 +1334,7 @@ class BRepMesh_ModelBuilder():
     pass
 class BRepMesh_ModelHealer():
     """
-    Class implements functionality of model healer tool. Iterates over model's faces and checks consistency of their wires, i.e.whether wires are closed and do not contain self - intersections. In case if wire contains disconnected parts, ends of adjacent edges forming the gaps are connected in parametric space forcibly. The notion of this operation is to create correct discrete model defined relatively parametric space of target face taking into account connectivity and tolerances of 3D space only. This means that there are no specific computations are made for the sake of determination of U and V tolerance. Registers intersections on edges forming the face's shape and tries to amplify discrete represenation by decreasing of deflection for the target edge. Checks can be performed in parallel mode.
+    Class implements functionality of model healer tool. Iterates over model's faces and checks consistency of their wires, i.e.whether wires are closed and do not contain self - intersections. In case if wire contains disconnected parts, ends of adjacent edges forming the gaps are connected in parametric space forcibly. The notion of this operation is to create correct discrete model defined relatively parametric space of target face taking into account connectivity and tolerances of 3D space only. This means that there are no specific computations are made for the sake of determination of U and V tolerance. Registers intersections on edges forming the face's shape and tries to amplify discrete representation by decreasing of deflection for the target edge. Checks can be performed in parallel mode.
     """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -1426,9 +1425,9 @@ class BRepMesh_Edge(BRepMesh_OrientedEdge):
         Sets movability flag of the Link.
         """
     @overload
-    def __init__(self,theFirstNode : int,theLastNode : int,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theFirstNode : int,theLastNode : int,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
     pass
 class BRepMesh_PairOfIndex():
     """
@@ -1444,7 +1443,7 @@ class BRepMesh_PairOfIndex():
         """
     def Extent(self) -> int: 
         """
-        Returns number of initialized indeces.
+        Returns number of initialized indices.
         """
     def FirstIndex(self) -> int: 
         """
@@ -1517,23 +1516,23 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
         Initializes selector by the mesh.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Links(self) -> Any: 
         """
         Returns selected links.
@@ -1543,7 +1542,7 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
         Selects all neighboring elements by links of the given element.
         """
     @overload
-    def NeighboursOf(self,theElement : BRepMesh_Triangle) -> None: 
+    def NeighboursOf(self,arg1 : BRepMesh_SelectorOfDataStructureOfDelaun) -> None: 
         """
         Selects all neighboring elements of the given node.
 
@@ -1556,7 +1555,7 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
     @overload
     def NeighboursOf(self,theLink : BRepMesh_Edge) -> None: ...
     @overload
-    def NeighboursOf(self,arg1 : BRepMesh_SelectorOfDataStructureOfDelaun) -> None: ...
+    def NeighboursOf(self,theElement : BRepMesh_Triangle) -> None: ...
     @overload
     def NeighboursOf(self,theNode : BRepMesh_Vertex) -> None: ...
     def NeighboursOfElement(self,theElementIndex : int) -> None: 
@@ -1580,9 +1579,9 @@ class BRepMesh_SelectorOfDataStructureOfDelaun(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theMesh : BRepMesh_DataStructureOfDelaun) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1634,23 +1633,23 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def MaxFaceTolerance_s(theFace : OCP.TopoDS.TopoDS_Face) -> float: 
         """
@@ -1694,7 +1693,7 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon1 : OCP.Poly.Poly_PolygonOnTriangulation,thePolygon2 : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: 
+    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_Polygon3D) -> None: 
         """
         Updates the given edge by the given tessellated representation.
 
@@ -1704,10 +1703,10 @@ class BRepMesh_ShapeTool(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon1 : OCP.Poly.Poly_PolygonOnTriangulation,thePolygon2 : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: ...
     @staticmethod
     @overload
-    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_Polygon3D) -> None: ...
+    def UpdateEdge_s(theEdge : OCP.TopoDS.TopoDS_Edge,thePolygon : OCP.Poly.Poly_PolygonOnTriangulation,theTriangulation : OCP.Poly.Poly_Triangulation,theLocation : OCP.TopLoc.TopLoc_Location) -> None: ...
     @staticmethod
     def UseLocation_s(thePnt : OCP.gp.gp_Pnt,theLoc : OCP.TopLoc.TopLoc_Location) -> OCP.gp.gp_Pnt: 
         """
@@ -1754,6 +1753,25 @@ class BRepMesh_ShapeVisitor():
         None
         """
     pass
+class BRepMesh_Triangulator():
+    """
+    Auxiliary tool to generate triangulation
+    """
+    def Perform(self,thePolyTriangles : Any) -> bool: 
+        """
+        Performs triangulation of source wires and stores triangles the output list.
+        """
+    def SetMessenger(self,theMess : OCP.Message.Message_Messenger) -> None: 
+        """
+        Set messenger for output information without this Message::DefaultMessenger() will be used
+        """
+    @staticmethod
+    def ToPolyTriangulation_s(theNodes : OCP.TColgp.TColgp_Array1OfPnt,thePolyTriangles : Any) -> OCP.Poly.Poly_Triangulation: 
+        """
+        Performs conversion of the given list of triangles to Poly_Triangulation.
+        """
+    def __init__(self,theXYZs : OCP.BRepBuilderAPI.VectorOfPoint,theWires : Any,theNorm : OCP.gp.gp_Dir) -> None: ...
+    pass
 class BRepMesh_Vertex():
     """
     Light weighted structure representing vertex of the mesh in parametric space. Vertex could be associated with 3d point stored in external map.
@@ -1791,11 +1809,11 @@ class BRepMesh_Vertex():
         Sets movability of the vertex.
         """
     @overload
-    def __init__(self,theU : float,theV : float,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
-    @overload
     def __init__(self,theUV : OCP.gp.gp_XY,theLocation3d : int,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theU : float,theV : float,theMovability : BRepMesh_DegreeOfFreedom) -> None: ...
     pass
 class BRepMesh_VertexInspector(OCP.NCollection.NCollection_CellFilter_InspectorXY):
     """
@@ -1816,7 +1834,7 @@ class BRepMesh_VertexInspector(OCP.NCollection.NCollection_CellFilter_InspectorX
     @staticmethod
     def Coord_s(i : int,thePnt : OCP.gp.gp_XY) -> float: 
         """
-        Access to co-ordinate
+        Access to coordinate
         """
     def Delete(self,theIndex : int) -> None: 
         """
@@ -1852,14 +1870,14 @@ class BRepMesh_VertexInspector(OCP.NCollection.NCollection_CellFilter_InspectorX
         Set reference point to be checked.
         """
     @overload
-    def SetTolerance(self,theToleranceX : float,theToleranceY : float) -> None: 
+    def SetTolerance(self,theTolerance : float) -> None: 
         """
         Sets the tolerance to be used for identification of coincident vertices equal for both dimensions.
 
         Sets the tolerance to be used for identification of coincident vertices.
         """
     @overload
-    def SetTolerance(self,theTolerance : float) -> None: ...
+    def SetTolerance(self,theToleranceX : float,theToleranceY : float) -> None: ...
     def Shift(self,thePnt : OCP.gp.gp_XY,theTol : float) -> OCP.gp.gp_XY: 
         """
         Auxiliary method to shift point by each coordinate on given value; useful for preparing a points range for Inspect with tolerance
@@ -1932,23 +1950,23 @@ class BRepMesh_VertexTool(OCP.Standard.Standard_Transient):
         Returns True when the map contains no keys.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RemoveLast(self) -> None: 
         """
         Remove last node from the structure.
@@ -2004,20 +2022,20 @@ def HashCode(theVertex : BRepMesh_Vertex,theUpperBound : int) -> int:
     """
     Computes a hash code for the given vertex, in the range [1, theUpperBound]
 
+    Computes a hash code for the given triangle, in the range [1, theUpperBound]
+
     Computes a hash code for the given edge, in the range [1, theUpperBound]
 
     Computes a hash code for the given oriented edge, in the range [1, theUpperBound]
-
-    Computes a hash code for the given triangle, in the range [1, theUpperBound]
     """
 @overload
 def HashCode(theTriangle : BRepMesh_Triangle,theUpperBound : int) -> int:
     pass
 @overload
-def HashCode(theOrientedEdge : BRepMesh_OrientedEdge,theUpperBound : int) -> int:
+def HashCode(theEdge : BRepMesh_Edge,theUpperBound : int) -> int:
     pass
 @overload
-def HashCode(theEdge : BRepMesh_Edge,theUpperBound : int) -> int:
+def HashCode(theOrientedEdge : BRepMesh_OrientedEdge,theUpperBound : int) -> int:
     pass
 BRepMesh_Deleted: OCP.BRepMesh.BRepMesh_DegreeOfFreedom # value = <BRepMesh_DegreeOfFreedom.BRepMesh_Deleted: 6>
 BRepMesh_FE_CANNOTCREATEALGO: OCP.BRepMesh.BRepMesh_FactoryError # value = <BRepMesh_FactoryError.BRepMesh_FE_CANNOTCREATEALGO: 3>

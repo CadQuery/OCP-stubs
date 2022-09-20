@@ -5,14 +5,14 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.BinTools
-import OCP.TColStd
-import OCP.TCollection
 import OCP.BinObjMgt
 import io
+import OCP.Standard
 import OCP.Message
 import OCP.BinMDF
-import OCP.Standard
+import OCP.TCollection
+import OCP.TColStd
+import OCP.BinTools
 __all__  = [
 "BinMNaming",
 "BinMNaming_NamedShapeDriver",
@@ -49,11 +49,9 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         """
         None
         """
-    def GetFormatNb(self) -> int: 
+    def EnableQuickPart(self,theValue : bool) -> None: 
         """
-        get the format of topology
-
-        get the format of topology
+        Sets the flag for quick part of the document access: shapes are stored in the attribute.
         """
     def GetRefCount(self) -> int: 
         """
@@ -61,32 +59,38 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         """
     def GetShapesLocations(self) -> OCP.BinTools.BinTools_LocationSet: 
         """
-        get the format of topology
-
-        get the format of topology
+        get the shapes locations
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsQuickPart(self) -> bool: 
+        """
+        Returns true if quick part of the document access is enabled: shapes are stored in the attribute.
+        """
+    def IsWithNormals(self) -> bool: 
+        """
+        Return true if shape should be stored with triangulation normals.
+        """
     def IsWithTriangles(self) -> bool: 
         """
         Return true if shape should be stored with triangles.
@@ -112,20 +116,21 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
         """
         Input the shapes from Bin Document file
         """
-    @overload
-    def SetFormatNb(self,theFormat : int) -> None: 
+    def SetWithNormals(self,isWithNormals : bool) -> None: 
         """
-        set the format of topology First : does not write CurveOnSurface UV Points into the file on reading calls Check() method. Second: stores CurveOnSurface UV Points.
+        set whether to store triangulation with normals
 
-        set the format of topology First : does not write CurveOnSurface UV Points into the file on reading calls Check() method. Second: stores CurveOnSurface UV Points.
+        set whether to store triangulation with normals
         """
-    @overload
-    def SetFormatNb(self,theFormatNb : int) -> None: ...
     def SetWithTriangles(self,isWithTriangles : bool) -> None: 
         """
         set whether to store triangulation
 
         set whether to store triangulation
+        """
+    def ShapeSet(self,theReading : bool) -> OCP.BinTools.BinTools_ShapeSetBase: 
+        """
+        Returns shape-set of the needed type
         """
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -141,7 +146,7 @@ class BinMNaming_NamedShapeDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standa
 
         Returns the type name of the attribute object
         """
-    def WriteShapeSection(self,theOS : io.BytesIO,therange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def WriteShapeSection(self,theOS : io.BytesIO,theDocVer : int,therange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Output the shapes into Bin Document file
         """
@@ -182,23 +187,23 @@ class BinMNaming_NamingDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -208,14 +213,14 @@ class BinMNaming_NamingDriver(OCP.BinMDF.BinMDF_ADriver, OCP.Standard.Standard_T
         None
         """
     @overload
-    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.BinObjMgt.BinObjMgt_Persistent,RelocTable : OCP.TColStd.TColStd_IndexedMapOfTransient) -> None: ...
+    def Paste(self,Source : OCP.BinObjMgt.BinObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.BinObjMgt.BinObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.

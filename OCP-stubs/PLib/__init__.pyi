@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.math
 import OCP.GeomAbs
+import OCP.math
 import OCP.TColgp
 import OCP.Standard
+import OCP.TColStd
 __all__  = [
 "PLib",
 "PLib_Base",
@@ -27,7 +27,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -44,13 +44,13 @@ class PLib():
     def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
+    def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
     def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def ConstraintOrder_s(NivConstr : int) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -59,7 +59,7 @@ class PLib():
     @staticmethod
     def EvalCubicHermite_s(U : float,DerivativeOrder : int,Dimension : int,ValueArray : float,DerivativeArray : float,ParameterArray : float,Results : float) -> int: 
         """
-        Performs the Cubic Hermite Interpolation of given series of points with given parameters with the requested derivative order. ValueArray stores the value at the first and last parameter. It has the following format : [0], [Dimension-1] : value at first param [Dimension], [Dimension + Dimension-1] : value at last param Derivative array stores the value of the derivatives at the first parameter and at the last parameter in the following format [0], [Dimension-1] : derivative at first param [Dimension], [Dimension + Dimension-1] : derivative at last param
+        Performs the Cubic Hermite Interpolation of given series of points with given parameters with the requested derivative order. ValueArray stores the value at the first and last parameter. It has the following format : Derivative array stores the value of the derivatives at the first parameter and at the last parameter in the following format first param last param
         """
     @staticmethod
     def EvalLagrange_s(U : float,DerivativeOrder : int,Degree : int,Dimension : int,ValueArray : float,ParameterArray : float,Results : float) -> int: 
@@ -68,7 +68,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def EvalLength_s(Degree : int,Dimension : int,U1 : float,U2 : float,Tol : float) -> Tuple[float, float, float]: 
+    def EvalLength_s(Degree : int,Dimension : int,U1 : float,U2 : float) -> Tuple[float, float]: 
         """
         None
 
@@ -76,7 +76,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def EvalLength_s(Degree : int,Dimension : int,U1 : float,U2 : float) -> Tuple[float, float]: ...
+    def EvalLength_s(Degree : int,Dimension : int,U1 : float,U2 : float,Tol : float) -> Tuple[float, float, float]: ...
     @staticmethod
     def EvalPoly2Var_s(U : float,V : float,UDerivativeOrder : int,VDerivativeOrder : int,UDegree : int,VDegree : int,Dimension : int) -> Tuple[float, float]: 
         """
@@ -85,7 +85,7 @@ class PLib():
     @staticmethod
     def EvalPolynomial_s(U : float,DerivativeOrder : int,Degree : int,Dimension : int) -> Tuple[float, float]: 
         """
-        Performs Horner method with synthethic division for derivatives parameter <U>, with <Degree> and <Dimension>. PolynomialCoeff are stored in the following fashion c0(1) c0(2) .... c0(Dimension) c1(1) c1(2) .... c1(Dimension)
+        Performs Horner method with synthetic division for derivatives parameter <U>, with <Degree> and <Dimension>. PolynomialCoeff are stored in the following fashion
         """
     @staticmethod
     @overload
@@ -101,13 +101,13 @@ class PLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    @staticmethod
+    @overload
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def HermiteCoefficients_s(FirstParameter : float,LastParameter : float,FirstOrder : int,LastOrder : int,MatrixCoefs : OCP.math.math_Matrix) -> bool: 
         """
@@ -155,7 +155,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Copy in FP the coordinates of the poles.
 
@@ -167,16 +167,16 @@ class PLib():
         """
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -194,7 +194,7 @@ class PLib():
     def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def UTrimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array2OfPnt,WCoeffs : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
@@ -248,23 +248,23 @@ class PLib_Base(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ReduceDegree(self,Dimension : int,MaxDegree : int,Tol : float) -> Tuple[float, int, float]: 
         """
         Compute NewDegree <= MaxDegree so that MaxError is lower than Tol. MaxError can be greater than Tol if it is not possible to find a NewDegree <= MaxDegree. In this case NewDegree = MaxDegree
@@ -345,13 +345,13 @@ class PLib_DoubleJacobiPolynomial():
         None
         """
     @overload
-    def __init__(self,JacPolU : PLib_JacobiPolynomial,JacPolV : PLib_JacobiPolynomial) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,JacPolU : PLib_JacobiPolynomial,JacPolV : PLib_JacobiPolynomial) -> None: ...
     pass
 class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
     """
-    This class provides method to work with Jacobi Polynomials relativly to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relativly to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = H(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relativly to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relativly to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = H(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relativly to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relativly to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = H(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:
+    This class provides method to work with Jacobi Polynomials relatively to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relatively to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = H(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relatively to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relatively to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = H(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relatively to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relatively to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = H(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:
     """
     def AverageError(self,Dimension : int,HermJacCoeff : float,NewDegree : int) -> float: 
         """
@@ -394,23 +394,23 @@ class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MaxError(self,Dimension : int,HermJacCoeff : float,NewDegree : int) -> float: 
         """
         This method computes the maximum error on the polynomial W(t) Q(t) obtained by missing the coefficients of JacCoeff from NewDegree +1 to Degree
@@ -453,7 +453,7 @@ class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
     pass
 class PLib_JacobiPolynomial(PLib_Base, OCP.Standard.Standard_Transient):
     """
-    This class provides method to work with Jacobi Polynomials relativly to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relativly to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = R(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relativly to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relativly to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = R(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relativly to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relativly to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = R(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:
+    This class provides method to work with Jacobi Polynomials relatively to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relatively to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = R(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relatively to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relatively to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = R(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:This class provides method to work with Jacobi Polynomials relatively to an order of constraint q = myWorkDegree-2*(myNivConstr+1) Jk(t) for k=0,q compose the Jacobi Polynomial base relatively to the weigth W(t) iorder is the integer value for the constraints: iorder = 0 <=> ConstraintOrder = GeomAbs_C0 iorder = 1 <=> ConstraintOrder = GeomAbs_C1 iorder = 2 <=> ConstraintOrder = GeomAbs_C2 P(t) = R(t) + W(t) * Q(t) Where W(t) = (1-t**2)**(2*iordre+2) the coefficients JacCoeff represents P(t) JacCoeff are stored as follow:
     """
     def AverageError(self,Dimension : int,JacCoeff : float,NewDegree : int) -> float: 
         """
@@ -496,23 +496,23 @@ class PLib_JacobiPolynomial(PLib_Base, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MaxError(self,Dimension : int,JacCoeff : float,NewDegree : int) -> float: 
         """
         This method computes the maximum error on the polynomial W(t) Q(t) obtained by missing the coefficients of JacCoeff from NewDegree +1 to Degree
@@ -529,7 +529,7 @@ class PLib_JacobiPolynomial(PLib_Base, OCP.Standard.Standard_Transient):
         """
     def Points(self,NbGaussPoints : int,TabPoints : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        returns the Jacobi Points for Gauss integration ie the positive values of the Legendre roots by increasing values NbGaussPoints is the number of points choosen for the integral computation. TabPoints (0,NbGaussPoints/2) TabPoints (0) is loaded only for the odd values of NbGaussPoints The possible values for NbGaussPoints are : 8, 10, 15, 20, 25, 30, 35, 40, 50, 61 NbGaussPoints must be greater than Degree
+        returns the Jacobi Points for Gauss integration ie the positive values of the Legendre roots by increasing values NbGaussPoints is the number of points chosen for the integral computation. TabPoints (0,NbGaussPoints/2) TabPoints (0) is loaded only for the odd values of NbGaussPoints The possible values for NbGaussPoints are : 8, 10, 15, 20, 25, 30, 35, 40, 50, 61 NbGaussPoints must be greater than Degree
         """
     def ReduceDegree(self,Dimension : int,MaxDegree : int,Tol : float) -> Tuple[float, int, float]: 
         """
@@ -545,7 +545,7 @@ class PLib_JacobiPolynomial(PLib_Base, OCP.Standard.Standard_Transient):
         """
     def Weights(self,NbGaussPoints : int,TabWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
-        returns the Jacobi weigths for Gauss integration only for the positive values of the Legendre roots in the order they are given by the method Points NbGaussPoints is the number of points choosen for the integral computation. TabWeights (0,NbGaussPoints/2,0,Degree) TabWeights (0,.) are only loaded for the odd values of NbGaussPoints The possible values for NbGaussPoints are : 8 , 10 , 15 ,20 ,25 , 30, 35 , 40 , 50 , 61 NbGaussPoints must be greater than Degree
+        returns the Jacobi weigths for Gauss integration only for the positive values of the Legendre roots in the order they are given by the method Points NbGaussPoints is the number of points chosen for the integral computation. TabWeights (0,NbGaussPoints/2,0,Degree) TabWeights (0,.) are only loaded for the odd values of NbGaussPoints The possible values for NbGaussPoints are : 8 , 10 , 15 ,20 ,25 , 30, 35 , 40 , 50 , 61 NbGaussPoints must be greater than Degree
         """
     def WorkDegree(self) -> int: 
         """

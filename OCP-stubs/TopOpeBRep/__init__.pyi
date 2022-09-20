@@ -4,24 +4,24 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Geom
-import OCP.IntSurf
-import OCP.TopoDS
-import OCP.Bnd
-import OCP.BRepAdaptor
-import OCP.Standard
-import OCP.IntPatch
-import OCP.TopAbs
+import OCP.Geom2dAdaptor
 import OCP.TopTools
-import OCP.TCollection
+import OCP.NCollection
 import io
+import OCP.BRepAdaptor
+import OCP.Geom2d
+import OCP.TopOpeBRepTool
+import OCP.Standard
+import OCP.TopoDS
+import OCP.IntSurf
+import OCP.IntPatch
 import OCP.gp
 import OCP.TopOpeBRepDS
-import OCP.TopOpeBRepTool
-import OCP.Geom2dAdaptor
-import OCP.Geom2d
+import OCP.TopAbs
+import OCP.Geom
 import OCP.IntRes2d
+import OCP.TCollection
+import OCP.Bnd
 __all__  = [
 "TopOpeBRep",
 "TopOpeBRep_Array1OfLineInter",
@@ -85,7 +85,7 @@ class TopOpeBRep():
     pass
 class TopOpeBRep_Array1OfLineInter():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : TopOpeBRep_Array1OfLineInter) -> TopOpeBRep_Array1OfLineInter: 
         """
@@ -160,18 +160,18 @@ class TopOpeBRep_Array1OfLineInter():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : TopOpeBRep_LineInter,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopOpeBRep_Array1OfLineInter) -> None: ...
+    def __init__(self,theBegin : TopOpeBRep_LineInter,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TopOpeBRep_Array1OfLineInter) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRep_Array1OfVPointInter():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : TopOpeBRep_Array1OfVPointInter) -> TopOpeBRep_Array1OfVPointInter: 
         """
@@ -246,13 +246,13 @@ class TopOpeBRep_Array1OfVPointInter():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : TopOpeBRep_Array1OfVPointInter) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theBegin : TopOpeBRep_VPointInter,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRep_Array1OfVPointInter) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRep_Bipoint():
@@ -306,11 +306,11 @@ class TopOpeBRep_DSFiller():
         """
     def CompleteDS(self,HDS : OCP.TopOpeBRepDS.TopOpeBRepDS_HDataStructure) -> None: 
         """
-        Update the data structure with relevant informations deduced from the intersections.
+        Update the data structure with relevant information deduced from the intersections.
         """
     def CompleteDS2d(self,HDS : OCP.TopOpeBRepDS.TopOpeBRepDS_HDataStructure) -> None: 
         """
-        Update the data structure with relevant informations deduced from the intersections 2d.
+        Update the data structure with relevant information deduced from the intersections 2d.
         """
     def Filter(self,HDS : OCP.TopOpeBRepDS.TopOpeBRepDS_HDataStructure) -> None: 
         """
@@ -363,14 +363,14 @@ class TopOpeBRep_EdgesFiller():
     Fills a TopOpeBRepDS_DataStructure with Edge/Edge instersection data described by TopOpeBRep_EdgesIntersector.
     """
     @overload
-    def Face(self,I : int) -> OCP.TopoDS.TopoDS_Shape: 
+    def Face(self,I : int,F : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Face(self,I : int,F : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Face(self,I : int) -> OCP.TopoDS.TopoDS_Shape: ...
     def Insert(self,E1 : OCP.TopoDS.TopoDS_Shape,E2 : OCP.TopoDS.TopoDS_Shape,EI : TopOpeBRep_EdgesIntersector,HDS : OCP.TopOpeBRepDS.TopOpeBRepDS_HDataStructure) -> None: 
         """
         None
@@ -447,14 +447,14 @@ class TopOpeBRep_EdgesIntersector():
         None
         """
     @overload
-    def Point(self,I : int) -> TopOpeBRep_Point2d: 
+    def Point(self) -> TopOpeBRep_Point2d: 
         """
         None
 
         None
         """
     @overload
-    def Point(self) -> TopOpeBRep_Point2d: ...
+    def Point(self,I : int) -> TopOpeBRep_Point2d: ...
     def Points(self) -> TopOpeBRep_SequenceOfPoint2d: 
         """
         None
@@ -512,14 +512,14 @@ class TopOpeBRep_FFDumper(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def DumpLine(self,L : TopOpeBRep_LineInter) -> None: 
+    def DumpLine(self,I : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def DumpLine(self,I : int) -> None: ...
+    def DumpLine(self,L : TopOpeBRep_LineInter) -> None: ...
     @overload
     def DumpVP(self,VP : TopOpeBRep_VPointInter) -> None: 
         """
@@ -546,23 +546,23 @@ class TopOpeBRep_FFDumper(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def PFacesFillerDummy(self) -> TopOpeBRep_FacesFiller: 
         """
         None
@@ -645,14 +645,14 @@ class TopOpeBRep_FaceEdgeIntersector():
         None
         """
     @overload
-    def IsVertex(self,I : int,V : OCP.TopoDS.TopoDS_Vertex) -> bool: 
+    def IsVertex(self,S : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.TopoDS.TopoDS_Vertex) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def IsVertex(self,S : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.TopoDS.TopoDS_Vertex) -> bool: ...
+    def IsVertex(self,I : int,V : OCP.TopoDS.TopoDS_Vertex) -> bool: ...
     def MorePoint(self) -> bool: 
         """
         None
@@ -754,14 +754,14 @@ class TopOpeBRep_FacesFiller():
         Get map <mapES > of restriction edges having parts IN one of the 2 faces.
         """
     @overload
-    def GetFFGeometry(self,VP : TopOpeBRep_VPointInter,K : OCP.TopOpeBRepDS.TopOpeBRepDS_Kind,G : int) -> bool: 
+    def GetFFGeometry(self,DSP : OCP.TopOpeBRepDS.TopOpeBRepDS_Point,K : OCP.TopOpeBRepDS.TopOpeBRepDS_Kind,G : int) -> bool: 
         """
         search for G = geometry of Point which is identical to <DSP> among the DS Points created in the CURRENT face/face intersection ( current Insert() call).
 
         search for G = geometry of Point which is identical to <VP> among the DS Points created in the CURRENT face/face intersection ( current Insert() call).
         """
     @overload
-    def GetFFGeometry(self,DSP : OCP.TopOpeBRepDS.TopOpeBRepDS_Point,K : OCP.TopOpeBRepDS.TopOpeBRepDS_Kind,G : int) -> bool: ...
+    def GetFFGeometry(self,VP : TopOpeBRep_VPointInter,K : OCP.TopOpeBRepDS.TopOpeBRepDS_Kind,G : int) -> bool: ...
     def GetGeometry(self,IT : Any,VP : TopOpeBRep_VPointInter,G : int,K : OCP.TopOpeBRepDS.TopOpeBRepDS_Kind) -> bool: 
         """
         Get the geometry of a DS point <DSP>. Search for it with ScanInterfList (previous method). if found, set <G> to the geometry of the interference found. else, add the point <DSP> in the <DS> and set <G> to the value of the new geometry such created. returns the value of ScanInterfList().
@@ -835,7 +835,7 @@ class TopOpeBRep_FacesFiller():
         """
     def ProcessVPR(self,FF : TopOpeBRep_FacesFiller,VP : TopOpeBRep_VPointInter) -> None: 
         """
-        calling the followings ProcessVPIonR and ProcessVPonR.
+        calling the following ProcessVPIonR and ProcessVPonR.
         """
     def ProcessVPnotonR(self,VP : TopOpeBRep_VPointInter) -> None: 
         """
@@ -876,7 +876,7 @@ class TopOpeBRep_FacesFiller():
         Returns parameter u of vp on the restriction edge.
         """
     @overload
-    def VP_Position(self,L : TopOpeBRep_LineInter) -> None: 
+    def VP_Position(self,VP : TopOpeBRep_VPointInter,VPC : TopOpeBRep_VPointInterClassifier) -> None: 
         """
         compute position of VPoints of lines
 
@@ -885,9 +885,9 @@ class TopOpeBRep_FacesFiller():
         compute position of VP with current faces, according to VP.ShapeIndex() .
         """
     @overload
-    def VP_Position(self,FACINT : TopOpeBRep_FacesIntersector) -> None: ...
+    def VP_Position(self,L : TopOpeBRep_LineInter) -> None: ...
     @overload
-    def VP_Position(self,VP : TopOpeBRep_VPointInter,VPC : TopOpeBRep_VPointInterClassifier) -> None: ...
+    def VP_Position(self,FACINT : TopOpeBRep_FacesIntersector) -> None: ...
     def VP_PositionOnL(self,L : TopOpeBRep_LineInter) -> None: 
         """
         compute position of VPoints of non-restriction line L.
@@ -1077,23 +1077,23 @@ class TopOpeBRep_HArray1OfLineInter(TopOpeBRep_Array1OfLineInter, OCP.Standard.S
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> TopOpeBRep_LineInter: 
         """
         Returns last element
@@ -1135,13 +1135,13 @@ class TopOpeBRep_HArray1OfLineInter(TopOpeBRep_Array1OfLineInter, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRep_Array1OfLineInter) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRep_LineInter) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1220,23 +1220,23 @@ class TopOpeBRep_HArray1OfVPointInter(TopOpeBRep_Array1OfVPointInter, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> TopOpeBRep_VPointInter: 
         """
         Returns last element
@@ -1278,13 +1278,13 @@ class TopOpeBRep_HArray1OfVPointInter(TopOpeBRep_Array1OfVPointInter, OCP.Standa
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TopOpeBRep_Array1OfVPointInter) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : TopOpeBRep_VPointInter) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1331,23 +1331,23 @@ class TopOpeBRep_Hctxee2d(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetEdges(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,BAS1 : OCP.BRepAdaptor.BRepAdaptor_Surface,BAS2 : OCP.BRepAdaptor.BRepAdaptor_Surface) -> None: 
         """
         None
@@ -1405,7 +1405,7 @@ class TopOpeBRep_Hctxff2d(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def HSurface(self,I : int) -> OCP.BRepAdaptor.BRepAdaptor_HSurface: 
+    def HSurface(self,I : int) -> OCP.BRepAdaptor.BRepAdaptor_Surface: 
         """
         None
         """
@@ -1414,28 +1414,28 @@ class TopOpeBRep_Hctxff2d(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetFaces(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         None
         """
-    def SetHSurfaces(self,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface) -> None: 
+    def SetHSurfaces(self,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface) -> None: 
         """
         None
         """
@@ -1545,7 +1545,7 @@ class TopOpeBRep_LineInter():
         None
         """
     @overload
-    def Index(self) -> int: 
+    def Index(self,I : int) -> None: 
         """
         None
 
@@ -1556,7 +1556,7 @@ class TopOpeBRep_LineInter():
         None
         """
     @overload
-    def Index(self,I : int) -> None: ...
+    def Index(self) -> int: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -1723,14 +1723,14 @@ class TopOpeBRep_ListOfBipoint(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TopOpeBRep_ListOfBipoint,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: ...
+    def InsertAfter(self,theOther : TopOpeBRep_ListOfBipoint,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : TopOpeBRep_Bipoint,theIter : Any) -> TopOpeBRep_Bipoint: 
         """
@@ -1751,14 +1751,14 @@ class TopOpeBRep_ListOfBipoint(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : TopOpeBRep_Bipoint) -> TopOpeBRep_Bipoint: 
+    def Prepend(self,theOther : TopOpeBRep_ListOfBipoint) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TopOpeBRep_ListOfBipoint) -> None: ...
+    def Prepend(self,theItem : TopOpeBRep_Bipoint) -> TopOpeBRep_Bipoint: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1776,9 +1776,9 @@ class TopOpeBRep_ListOfBipoint(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : TopOpeBRep_ListOfBipoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRep_ListOfBipoint) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1802,6 +1802,7 @@ class TopOpeBRep_P2Dstatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1910,41 +1911,41 @@ class TopOpeBRep_Point2d():
         None
         """
     @overload
-    def SetEdgesConfig(self,C : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: 
+    def SetEdgesConfig(self,B : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetEdgesConfig(self,B : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: ...
+    def SetEdgesConfig(self,C : OCP.TopOpeBRepDS.TopOpeBRepDS_Config) -> None: ...
     @overload
-    def SetHctxee2d(self,ee2d : TopOpeBRep_Hctxee2d) -> None: 
+    def SetHctxee2d(self,h : TopOpeBRep_Hctxee2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetHctxee2d(self,h : TopOpeBRep_Hctxee2d) -> None: ...
+    def SetHctxee2d(self,ee2d : TopOpeBRep_Hctxee2d) -> None: ...
     @overload
-    def SetHctxff2d(self,ff2d : TopOpeBRep_Hctxff2d) -> None: 
+    def SetHctxff2d(self,h : TopOpeBRep_Hctxff2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetHctxff2d(self,h : TopOpeBRep_Hctxff2d) -> None: ...
+    def SetHctxff2d(self,ff2d : TopOpeBRep_Hctxff2d) -> None: ...
     @overload
-    def SetIndex(self,I : int) -> None: 
+    def SetIndex(self,X : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetIndex(self,X : int) -> None: ...
+    def SetIndex(self,I : int) -> None: ...
     def SetIsPointOfSegment(self,B : bool) -> None: 
         """
         None
@@ -1997,14 +1998,14 @@ class TopOpeBRep_Point2d():
     @overload
     def SetStatus(self,S : TopOpeBRep_P2Dstatus) -> None: ...
     @overload
-    def SetTolerance(self,T : float) -> None: 
+    def SetTolerance(self,t : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetTolerance(self,t : float) -> None: ...
+    def SetTolerance(self,T : float) -> None: ...
     @overload
     def SetTransition(self,I : int,T : OCP.TopOpeBRepDS.TopOpeBRepDS_Transition) -> None: 
         """
@@ -2102,7 +2103,7 @@ class TopOpeBRep_PointGeomTool():
         """
     @staticmethod
     @overload
-    def MakePoint_s(S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: 
+    def MakePoint_s(IP : TopOpeBRep_VPointInter) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: 
         """
         None
 
@@ -2114,13 +2115,13 @@ class TopOpeBRep_PointGeomTool():
         """
     @staticmethod
     @overload
-    def MakePoint_s(IP : TopOpeBRep_VPointInter) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
+    def MakePoint_s(FEI : TopOpeBRep_FaceEdgeIntersector) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
     @staticmethod
     @overload
     def MakePoint_s(P2D : TopOpeBRep_Point2d) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
     @staticmethod
     @overload
-    def MakePoint_s(FEI : TopOpeBRep_FaceEdgeIntersector) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
+    def MakePoint_s(S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Point: ...
     def __init__(self) -> None: ...
     pass
 class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
@@ -2169,14 +2170,14 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : TopOpeBRep_Point2d) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TopOpeBRep_Point2d) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : TopOpeBRep_Point2d) -> None: 
         """
@@ -2203,14 +2204,14 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: 
+    def Prepend(self,theItem : TopOpeBRep_Point2d) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : TopOpeBRep_Point2d) -> None: ...
+    def Prepend(self,theSeq : TopOpeBRep_SequenceOfPoint2d) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -2245,9 +2246,9 @@ class TopOpeBRep_SequenceOfPoint2d(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRep_SequenceOfPoint2d) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2432,6 +2433,7 @@ class TopOpeBRep_TypeLineCurve():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2518,7 +2520,7 @@ class TopOpeBRep_VPointInter():
         None
         """
     @overload
-    def Index(self) -> int: 
+    def Index(self,I : int) -> None: 
         """
         None
 
@@ -2529,7 +2531,7 @@ class TopOpeBRep_VPointInter():
         None
         """
     @overload
-    def Index(self,I : int) -> None: ...
+    def Index(self) -> int: ...
     def IsInternal(self) -> bool: 
         """
         None
@@ -2625,7 +2627,7 @@ class TopOpeBRep_VPointInter():
         None
         """
     @overload
-    def ShapeIndex(self) -> int: 
+    def ShapeIndex(self,I : int) -> None: 
         """
         returns value of filed myShapeIndex = 0,1,2,3 0 means the VPoint is on no restriction 1 means the VPoint is on the restriction 1 2 means the VPoint is on the restriction 2 3 means the VPoint is on the restrictions 1 and 2
 
@@ -2636,16 +2638,16 @@ class TopOpeBRep_VPointInter():
         set value of shape supporting me (0,1,2,3).
         """
     @overload
-    def ShapeIndex(self,I : int) -> None: ...
+    def ShapeIndex(self) -> int: ...
     @overload
-    def State(self,I : int) -> OCP.TopAbs.TopAbs_State: 
+    def State(self,S : OCP.TopAbs.TopAbs_State,I : int) -> None: 
         """
         get state of VPoint within the domain of geometric shape domain <I> (= 1 or 2).
 
         Set the state of VPoint within the domain of the geometric shape <I> (= 1 or 2).
         """
     @overload
-    def State(self,S : OCP.TopAbs.TopAbs_State,I : int) -> None: ...
+    def State(self,I : int) -> OCP.TopAbs.TopAbs_State: ...
     def SurfaceParameters(self,I : int) -> OCP.gp.gp_Pnt2d: 
         """
         get the parameter on surface of shape I (1,2) containing the point
@@ -2739,14 +2741,14 @@ class TopOpeBRep_VPointInterIterator():
         None
         """
     @overload
-    def Init(self,LI : TopOpeBRep_LineInter,checkkeep : bool=False) -> None: 
+    def Init(self) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self) -> None: ...
+    def Init(self,LI : TopOpeBRep_LineInter,checkkeep : bool=False) -> None: ...
     def More(self) -> bool: 
         """
         None
@@ -2811,14 +2813,14 @@ class TopOpeBRep_WPointInterIterator():
         None
         """
     @overload
-    def Init(self,LI : TopOpeBRep_LineInter) -> None: 
+    def Init(self) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self) -> None: ...
+    def Init(self,LI : TopOpeBRep_LineInter) -> None: ...
     def More(self) -> bool: 
         """
         None

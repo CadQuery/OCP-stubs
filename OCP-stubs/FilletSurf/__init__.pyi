@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Law
 import OCP.Adaptor3d
 import OCP.TopTools
-import OCP.TopOpeBRepBuild
-import OCP.ChFi3d
-import OCP.Law
 import OCP.GeomAbs
+import OCP.ChFiDS
+import OCP.Geom2d
+import OCP.ChFi3d
 import OCP.gp
 import OCP.Geom
+import OCP.TopOpeBRepBuild
 import OCP.TopoDS
-import OCP.Geom2d
-import OCP.ChFiDS
 __all__  = [
 "FilletSurf_Builder",
 "FilletSurf_ErrorTypeStatus",
@@ -104,7 +104,7 @@ class FilletSurf_Builder():
         """
     def StatusError(self) -> FilletSurf_ErrorTypeStatus: 
         """
-        gives informations about error status if IsDone=IsNotOk returns EdgeNotG1: the edges are not G1 FacesNotG1 : two connected faces on a same support are not G1 EdgeNotOnShape: the edge is not on shape NotSharpEdge: the edge is not sharp PbFilletCompute: problem during the computation of the fillet
+        gives information about error status if IsDone=IsNotOk returns EdgeNotG1: the edges are not G1 FacesNotG1 : two connected faces on a same support are not G1 EdgeNotOnShape: the edge is not on shape NotSharpEdge: the edge is not sharp PbFilletCompute: problem during the computation of the fillet
         """
     def SupportFace1(self,Index : int) -> OCP.TopoDS.TopoDS_Face: 
         """
@@ -145,6 +145,7 @@ class FilletSurf_ErrorTypeStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -269,7 +270,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
     @overload
     def IsConstant(self,IC : int) -> bool: 
         """
-        Returns true the contour is flaged as edge constant.
+        Returns true the contour is flagged as edge constant.
 
         Returns true E is flagged as edge constant.
         """
@@ -344,14 +345,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: 
+    def Radius(self,IC : int) -> float: 
         """
         Returns the vector if the contour is flagged as edge constant.
 
         Returns the vector if E is flagged as edge constant.
         """
     @overload
-    def Radius(self,IC : int) -> float: ...
+    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
     def RelativeAbscissa(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
         """
         returns the relative abscissa([0.,1.]) of the vertex V on the contour of index IC.
@@ -362,7 +363,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         """
     def Reset(self) -> None: 
         """
-        Reset all results of compute and returns the algorythm in the state of the last acquisition to enable modification of contours or areas.
+        Reset all results of compute and returns the algorithm in the state of the last acquisition to enable modification of contours or areas.
         """
     def ResetContour(self,IC : int) -> None: 
         """
@@ -393,7 +394,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: 
         """
         Set the radius of the contour of index IC.
 
@@ -408,7 +409,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
     @overload
     def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: ...
+    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         if (Isdone()) makes the result. if (!Isdone())
@@ -417,7 +418,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         """
         None
         """
-    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
+    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
         """
         Method, implemented in the inheritants, calculates the elements of construction of the surface (fillet or chamfer).
         """
@@ -446,14 +447,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         gives the 3d tolerance reached during approximation of the surface of index Index
         """
     @overload
-    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Extracts the flag constant and the vector of edge E.
 
         Extracts the vector of the vertex V.
         """
     @overload
-    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def Value(self,I : int) -> OCP.ChFiDS.ChFiDS_Spine: 
         """
         gives the n'th set of edges (contour) if I >NbElements()
@@ -475,6 +476,7 @@ class FilletSurf_StatusDone():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -511,6 +513,7 @@ class FilletSurf_StatusType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
+import OCP.Standard
 import OCP.XmlObjMgt
+import OCP.Message
 import OCP.TCollection
 import OCP.XmlMDF
-import OCP.Message
-import OCP.Standard
 __all__  = [
 "XmlMDataStd",
 "XmlMDataStd_AsciiStringDriver",
@@ -71,23 +71,23 @@ class XmlMDataStd_AsciiStringDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -159,23 +159,23 @@ class XmlMDataStd_BooleanArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -189,14 +189,14 @@ class XmlMDataStd_BooleanArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -247,23 +247,23 @@ class XmlMDataStd_BooleanListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -335,23 +335,23 @@ class XmlMDataStd_ByteArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -365,14 +365,14 @@ class XmlMDataStd_ByteArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -426,23 +426,23 @@ class XmlMDataStd_ExpressionDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -517,23 +517,23 @@ class XmlMDataStd_ExtStringArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -547,14 +547,14 @@ class XmlMDataStd_ExtStringArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.S
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -605,23 +605,23 @@ class XmlMDataStd_ExtStringListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -693,23 +693,23 @@ class XmlMDataStd_GenericEmptyDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -784,23 +784,23 @@ class XmlMDataStd_GenericExtStringDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -814,14 +814,14 @@ class XmlMDataStd_GenericExtStringDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -875,23 +875,23 @@ class XmlMDataStd_IntPackedMapDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -966,23 +966,23 @@ class XmlMDataStd_IntegerArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -996,14 +996,14 @@ class XmlMDataStd_IntegerArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Sta
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1057,23 +1057,23 @@ class XmlMDataStd_IntegerDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1145,23 +1145,23 @@ class XmlMDataStd_IntegerListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1175,14 +1175,14 @@ class XmlMDataStd_IntegerListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stan
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1233,23 +1233,23 @@ class XmlMDataStd_NamedDataDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1324,23 +1324,23 @@ class XmlMDataStd_RealArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1415,23 +1415,23 @@ class XmlMDataStd_RealDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1503,23 +1503,23 @@ class XmlMDataStd_RealListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1533,14 +1533,14 @@ class XmlMDataStd_RealListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1591,23 +1591,23 @@ class XmlMDataStd_ReferenceArrayDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1679,23 +1679,23 @@ class XmlMDataStd_ReferenceListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1709,14 +1709,14 @@ class XmlMDataStd_ReferenceListDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.St
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1770,23 +1770,23 @@ class XmlMDataStd_TreeNodeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1800,14 +1800,14 @@ class XmlMDataStd_TreeNodeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
@@ -1861,23 +1861,23 @@ class XmlMDataStd_UAttributeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1952,23 +1952,23 @@ class XmlMDataStd_VariableDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -1982,14 +1982,14 @@ class XmlMDataStd_VariableDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standar
         None
         """
     @overload
-    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
+    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,Source : OCP.XmlObjMgt.XmlObjMgt_Persistent,Target : OCP.TDF.TDF_Attribute,RelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
+    def Paste(self,Source : OCP.TDF.TDF_Attribute,Target : OCP.XmlObjMgt.XmlObjMgt_Persistent,RelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.

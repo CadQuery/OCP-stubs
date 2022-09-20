@@ -4,25 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Approx
-import OCP.math
-import OCP.NCollection
-import OCP.Law
-import OCP.TColgp
-import OCP.IntSurf
 import OCP.Blend
-import OCP.Geom
-import OCP.Standard
-import OCP.TopAbs
-import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.Adaptor2d
-import OCP.gp
 import OCP.GeomAbs
 import OCP.BlendFunc
-import OCP.Geom2d
-import OCP.ChFiDS
+import OCP.NCollection
 import OCP.AppBlend
+import OCP.Geom2d
+import OCP.Standard
+import OCP.TColStd
+import OCP.Adaptor3d
+import OCP.Law
+import OCP.Adaptor2d
+import OCP.IntSurf
+import OCP.math
+import OCP.TColgp
+import OCP.ChFiDS
+import OCP.gp
+import OCP.Geom
+import OCP.TopAbs
+import OCP.Approx
 __all__  = [
 "BRepBlend_AppFuncRoot",
 "BRepBlend_AppFunc",
@@ -57,7 +57,7 @@ class BRepBlend_AppFuncRoot(OCP.Approx.Approx_SweepFunction, OCP.Standard.Standa
     """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditionned rational approximation.
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation.
         """
     def D0(self,Param : float,First : float,Last : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
@@ -85,7 +85,7 @@ class BRepBlend_AppFuncRoot(OCP.Approx.Approx_SweepFunction, OCP.Standard.Standa
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles of all sections. This information is usefull to perform well conditionned rational approximation.
+        Compute the minimal value of weight for each poles of all sections. This information is useful to perform well conditioned rational approximation.
         """
     def GetRefCount(self) -> int: 
         """
@@ -104,23 +104,23 @@ class BRepBlend_AppFuncRoot(OCP.Approx.Approx_SweepFunction, OCP.Standard.Standa
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -131,7 +131,7 @@ class BRepBlend_AppFuncRoot(OCP.Approx.Approx_SweepFunction, OCP.Standard.Standa
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the maximum section. This information is usefull to perform well conditionned rational approximation.
+        Returns the length of the maximum section. This information is useful to perform well conditioned rational approximation.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -190,7 +190,7 @@ class BRepBlend_AppFunc(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunction, 
     """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditionned rational approximation.
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation.
         """
     def D0(self,Param : float,First : float,Last : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
@@ -218,7 +218,7 @@ class BRepBlend_AppFunc(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunction, 
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles of all sections. This information is usefull to perform well conditionned rational approximation.
+        Compute the minimal value of weight for each poles of all sections. This information is useful to perform well conditioned rational approximation.
         """
     def GetRefCount(self) -> int: 
         """
@@ -237,23 +237,23 @@ class BRepBlend_AppFunc(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunction, 
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -264,7 +264,7 @@ class BRepBlend_AppFunc(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunction, 
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the maximum section. This information is usefull to perform well conditionned rational approximation.
+        Returns the length of the maximum section. This information is useful to perform well conditioned rational approximation.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -324,7 +324,7 @@ class BRepBlend_AppFuncRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunctio
     """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditionned rational approximation.
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation.
         """
     def D0(self,Param : float,First : float,Last : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
@@ -352,7 +352,7 @@ class BRepBlend_AppFuncRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunctio
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles of all sections. This information is usefull to perform well conditionned rational approximation.
+        Compute the minimal value of weight for each poles of all sections. This information is useful to perform well conditioned rational approximation.
         """
     def GetRefCount(self) -> int: 
         """
@@ -371,23 +371,23 @@ class BRepBlend_AppFuncRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunctio
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -398,7 +398,7 @@ class BRepBlend_AppFuncRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunctio
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the maximum section. This information is usefull to perform well conditionned rational approximation.
+        Returns the length of the maximum section. This information is useful to perform well conditioned rational approximation.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -458,7 +458,7 @@ class BRepBlend_AppFuncRstRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunc
     """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditionned rational approximation.
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation.
         """
     def D0(self,Param : float,First : float,Last : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
@@ -486,7 +486,7 @@ class BRepBlend_AppFuncRstRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunc
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles of all sections. This information is usefull to perform well conditionned rational approximation.
+        Compute the minimal value of weight for each poles of all sections. This information is useful to perform well conditioned rational approximation.
         """
     def GetRefCount(self) -> int: 
         """
@@ -505,23 +505,23 @@ class BRepBlend_AppFuncRstRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunc
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -532,7 +532,7 @@ class BRepBlend_AppFuncRstRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunc
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the maximum section. This information is usefull to perform well conditionned rational approximation.
+        Returns the length of the maximum section. This information is useful to perform well conditioned rational approximation.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -721,62 +721,62 @@ class BRepBlend_BlendTool():
     None
     """
     @staticmethod
-    def Bounds_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> Tuple[float, float]: 
+    def Bounds_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> Tuple[float, float]: 
         """
         Returns the parametric limits on the arc C. These limits must be finite : they are either the real limits of the arc, for a finite arc, or a bounding box for an infinite arc.
         """
     @staticmethod
-    def CurveOnSurf_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def CurveOnSurf_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,S : OCP.Adaptor3d.Adaptor3d_Surface) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
         """
     @staticmethod
-    def Inters_s(P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Param : float,Dist : float) -> bool: 
+    def Inters_s(P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Param : float,Dist : float) -> bool: 
         """
         None
         """
     @staticmethod
-    def NbSamplesU_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,u1 : float,u2 : float) -> int: 
+    def NbSamplesU_s(S : OCP.Adaptor3d.Adaptor3d_Surface,u1 : float,u2 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def NbSamplesV_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,v1 : float,v2 : float) -> int: 
+    def NbSamplesV_s(S : OCP.Adaptor3d.Adaptor3d_Surface,v1 : float,v2 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def Parameter_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Parameter_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         Returns the parameter of the vertex V on the edge A.
         """
     @staticmethod
-    def Project_s(P : OCP.gp.gp_Pnt2d,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Paramproj : float,Dist : float) -> bool: 
+    def Project_s(P : OCP.gp.gp_Pnt2d,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Paramproj : float,Dist : float) -> bool: 
         """
         Projects the point P on the arc C. If the methods returns Standard_True, the projection is successful, and Paramproj is the parameter on the arc of the projected point, Dist is the distance between P and the curve.. If the method returns Standard_False, Param proj and Dist are not significant.
         """
     @staticmethod
-    def SingularOnUMax_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnUMax_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def SingularOnUMin_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnUMin_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def SingularOnVMax_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnVMax_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def SingularOnVMin_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnVMin_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def Tolerance_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Tolerance_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         Returns the parametric tolerance on the arc A used to consider that the vertex and another point meet, i-e if Abs(Parameter(Vertex)-Parameter(OtherPnt))<= Tolerance, the points are "merged".
         """
@@ -802,7 +802,7 @@ class BRepBlend_CSWalking():
         """
         None
         """
-    def __init__(self,Curv : OCP.Adaptor3d.Adaptor3d_HCurve,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
+    def __init__(self,Curv : OCP.Adaptor3d.Adaptor3d_Curve,Surf : OCP.Adaptor3d.Adaptor3d_Surface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
     pass
 class BRepBlend_CurvPointRadInv(OCP.Blend.Blend_CurvPointFuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -853,13 +853,13 @@ class BRepBlend_CurvPointRadInv(OCP.Blend.Blend_CurvPointFuncInv, OCP.math.math_
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_HCurve,C2 : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,C1 : OCP.Adaptor3d.Adaptor3d_Curve,C2 : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BRepBlend_Extremity():
     """
     None
     """
-    def AddArc(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: 
+    def AddArc(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: 
         """
         Sets the values of a point which is on the arc A, at parameter Param.
         """
@@ -953,135 +953,135 @@ class BRepBlend_Extremity():
         Returns the vertex when IsVertex returns Standard_True.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,W : float,Param : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepBlend_HCurve2dTool():
     """
     None
     """
     @staticmethod
-    def BSpline_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def BSpline_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         None
         """
     @staticmethod
-    def Bezier_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.Geom2d.Geom2d_BezierCurve: 
+    def Bezier_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.Geom2d.Geom2d_BezierCurve: 
         """
         None
         """
     @staticmethod
-    def Circle_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Circ2d: 
+    def Circle_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Circ2d: 
         """
         None
         """
     @staticmethod
-    def Continuity_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
         """
     @staticmethod
-    def D0_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
+    def D0_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Computes the point of parameter U on the curve.
         """
     @staticmethod
-    def D1_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: 
+    def D1_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Computes the point of parameter U on the curve with its first derivative. Raised if the continuity of the current interval is not C1.
         """
     @staticmethod
-    def D2_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
+    def D2_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
         """
         Returns the point P of parameter U, the first and second derivatives V1 and V2. Raised if the continuity of the current interval is not C2.
         """
     @staticmethod
-    def D3_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: 
+    def D3_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: 
         """
         Returns the point P of parameter U, the first, the second and the third derivative. Raised if the continuity of the current interval is not C3.
         """
     @staticmethod
-    def DN_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,N : int) -> OCP.gp.gp_Vec2d: 
+    def DN_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,N : int) -> OCP.gp.gp_Vec2d: 
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
     @staticmethod
-    def Ellipse_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Elips2d: 
+    def Ellipse_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Elips2d: 
         """
         None
         """
     @staticmethod
-    def FirstParameter_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def FirstParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
     @staticmethod
-    def GetType_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.GeomAbs.GeomAbs_CurveType: 
+    def GetType_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         Returns the type of the curve in the current interval : Line, Circle, Ellipse, Hyperbola, Parabola, BezierCurve, BSplineCurve, OtherCurve.
         """
     @staticmethod
-    def Hyperbola_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Hypr2d: 
+    def Hyperbola_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Hypr2d: 
         """
         None
         """
     @staticmethod
-    def Intervals_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Intervals_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @staticmethod
-    def IsClosed_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> bool: 
+    def IsClosed_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> bool: 
         """
         None
         """
     @staticmethod
-    def IsPeriodic_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> bool: 
+    def IsPeriodic_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> bool: 
         """
         None
         """
     @staticmethod
-    def LastParameter_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def LastParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
     @staticmethod
-    def Line_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Lin2d: 
+    def Line_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Lin2d: 
         """
         None
         """
     @staticmethod
-    def NbIntervals_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def NbIntervals_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(myclass) >= <S>
         """
     @staticmethod
-    def NbSamples_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U0 : float,U1 : float) -> int: 
+    def NbSamples_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,U1 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def Parabola_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Parab2d: 
+    def Parabola_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Parab2d: 
         """
         None
         """
     @staticmethod
-    def Period_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Period_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
     @staticmethod
-    def Resolution_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,R3d : float) -> float: 
+    def Resolution_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,R3d : float) -> float: 
         """
         Returns the parametric resolution corresponding to the real space resolution <R3d>.
         """
     @staticmethod
-    def Value_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float) -> OCP.gp.gp_Pnt2d: 
+    def Value_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float) -> OCP.gp.gp_Pnt2d: 
         """
         Computes the point of parameter U on the curve.
         """
@@ -1092,122 +1092,122 @@ class BRepBlend_HCurveTool():
     None
     """
     @staticmethod
-    def BSpline_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.Geom.Geom_BSplineCurve: 
+    def BSpline_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.Geom.Geom_BSplineCurve: 
         """
         None
         """
     @staticmethod
-    def Bezier_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.Geom.Geom_BezierCurve: 
+    def Bezier_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.Geom.Geom_BezierCurve: 
         """
         None
         """
     @staticmethod
-    def Circle_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Circ: 
+    def Circle_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Circ: 
         """
         None
         """
     @staticmethod
-    def Continuity_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
         """
     @staticmethod
-    def D0_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt) -> None: 
+    def D0_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point of parameter U on the curve.
         """
     @staticmethod
-    def D1_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
+    def D1_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point of parameter U on the curve with its first derivative. Raised if the continuity of the current interval is not C1.
         """
     @staticmethod
-    def D2_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
+    def D2_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
         """
         Returns the point P of parameter U, the first and second derivatives V1 and V2. Raised if the continuity of the current interval is not C2.
         """
     @staticmethod
-    def D3_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
+    def D3_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
         """
         Returns the point P of parameter U, the first, the second and the third derivative. Raised if the continuity of the current interval is not C3.
         """
     @staticmethod
-    def DN_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,N : int) -> OCP.gp.gp_Vec: 
+    def DN_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,N : int) -> OCP.gp.gp_Vec: 
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
     @staticmethod
-    def Ellipse_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Elips: 
+    def Ellipse_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Elips: 
         """
         None
         """
     @staticmethod
-    def FirstParameter_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def FirstParameter_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         None
         """
     @staticmethod
-    def GetType_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.GeomAbs.GeomAbs_CurveType: 
+    def GetType_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         Returns the type of the curve in the current interval : Line, Circle, Ellipse, Hyperbola, Parabola, BezierCurve, BSplineCurve, OtherCurve.
         """
     @staticmethod
-    def Hyperbola_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Hypr: 
+    def Hyperbola_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Hypr: 
         """
         None
         """
     @staticmethod
-    def Intervals_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Intervals_s(C : OCP.Adaptor3d.Adaptor3d_Curve,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @staticmethod
-    def IsClosed_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> bool: 
+    def IsClosed_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> bool: 
         """
         None
         """
     @staticmethod
-    def IsPeriodic_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> bool: 
+    def IsPeriodic_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> bool: 
         """
         None
         """
     @staticmethod
-    def LastParameter_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def LastParameter_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         None
         """
     @staticmethod
-    def Line_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Lin: 
+    def Line_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Lin: 
         """
         None
         """
     @staticmethod
-    def NbIntervals_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def NbIntervals_s(C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(myclass) >= <S>
         """
     @staticmethod
-    def NbSamples_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U0 : float,U1 : float) -> int: 
+    def NbSamples_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U0 : float,U1 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def Parabola_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Parab: 
+    def Parabola_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Parab: 
         """
         None
         """
     @staticmethod
-    def Period_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def Period_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         None
         """
     @staticmethod
-    def Resolution_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,R3d : float) -> float: 
+    def Resolution_s(C : OCP.Adaptor3d.Adaptor3d_Curve,R3d : float) -> float: 
         """
         Returns the parametric resolution corresponding to the real space resolution <R3d>.
         """
     @staticmethod
-    def Value_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float) -> OCP.gp.gp_Pnt: 
+    def Value_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on the curve.
         """
@@ -1263,23 +1263,23 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
         Adds a point in the line at the first place.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbPoints(self) -> int: 
         """
         Returns the number of points in the line.
@@ -1305,14 +1305,14 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
         Removes from <me> all the items of positions between <FromIndex> and <ToIndex>. Raises an exception if the indices are out of bounds.
         """
     @overload
-    def Set(self,Trans : OCP.IntSurf.IntSurf_TypeTrans) -> None: 
+    def Set(self,TranS1 : OCP.IntSurf.IntSurf_TypeTrans,TranS2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: 
         """
         Sets the value of the transition of the line on S1 and the line on S2.
 
         Sets the value of the transition of the line on a surface
         """
     @overload
-    def Set(self,TranS1 : OCP.IntSurf.IntSurf_TypeTrans,TranS2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    def Set(self,Trans : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def SetEndPoints(self,EndPt1 : BRepBlend_Extremity,EndPt2 : BRepBlend_Extremity) -> None: 
         """
@@ -1379,9 +1379,9 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
     pass
 class BRepBlend_PointOnRst():
     """
-    Definition of an intersection point between a line and a restriction on a surface. Such a point is contains geometrical informations (see the Value method) and logical informations.
+    Definition of an intersection point between a line and a restriction on a surface. Such a point is contains geometrical information (see the Value method) and logical information.
     """
-    def Arc(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def Arc(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the arc of restriction containing the vertex.
 
@@ -1393,7 +1393,7 @@ class BRepBlend_PointOnRst():
 
         Returns the parameter of the point on the arc returned by the method Arc().
         """
-    def SetArc(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: 
+    def SetArc(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: 
         """
         Sets the values of a point which is on the arc A, at parameter Param.
         """
@@ -1410,7 +1410,7 @@ class BRepBlend_PointOnRst():
         Returns the transition of the point on the line on surface.
         """
     @overload
-    def __init__(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: ...
+    def __init__(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -1436,7 +1436,7 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1465,7 +1465,7 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
     def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accomodate for the parameters. i.e. T.Length() > NbIntervals()
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters. i.e. T.Length() > NbIntervals()
         """
     def IsRational(self) -> bool: 
         """
@@ -1540,7 +1540,7 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -1551,13 +1551,13 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: 
         """
         None
 
@@ -1570,13 +1570,13 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         Sets the type of section generation for the approximations.
         """
     @overload
+    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef1 : OCP.Adaptor2d.Adaptor2d_Curve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
     def Set(self,First : float,Last : float) -> None: ...
     @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
-    @overload
-    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef2 : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
-    @overload
     def Set(self,Radius : float,Choix : int) -> None: ...
+    @overload
+    def Set(self,Param : float) -> None: ...
     def Tangent2dOnRst1(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -1601,7 +1601,7 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst2 : OCP.Adaptor2d.Adaptor2d_HCurve2d,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,Rst1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,Rst2 : OCP.Adaptor2d.Adaptor2d_Curve2d,CGuide : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -1625,7 +1625,7 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1654,7 +1654,7 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
     def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accomodate for the parameters. i.e. T.Length() > NbIntervals()
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters. i.e. T.Length() > NbIntervals()
         """
     def IsRational(self) -> bool: 
         """
@@ -1729,7 +1729,7 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: 
         """
         Used for the first and last section
 
@@ -1740,13 +1740,13 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         None
         """
     @overload
-    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: 
+    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef1 : OCP.Adaptor2d.Adaptor2d_Curve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
@@ -1759,13 +1759,13 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef2 : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
     @overload
-    def Set(self,Choix : int) -> None: ...
+    def Set(self,First : float,Last : float) -> None: ...
     @overload
     def Set(self,Param : float) -> None: ...
     @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
+    def Set(self,Choix : int) -> None: ...
     def Tangent2dOnRst1(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -1790,7 +1790,7 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst2 : OCP.Adaptor2d.Adaptor2d_HCurve2d,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve,Evol : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,Rst1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,Rst2 : OCP.Adaptor2d.Adaptor2d_Curve2d,CGuide : OCP.Adaptor3d.Adaptor3d_Curve,Evol : OCP.Law.Law_Function) -> None: ...
     pass
 class BRepBlend_RstRstLineBuilder():
     """
@@ -1844,7 +1844,7 @@ class BRepBlend_RstRstLineBuilder():
         """
         None
         """
-    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst1 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst2 : OCP.Adaptor2d.Adaptor2d_HCurve2d,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
+    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,Rst1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,Rst2 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
     pass
 class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -1855,14 +1855,14 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BRepBlend_Line) -> None: 
+    def Append(self,theSeq : BRepBlend_SequenceOfLine) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : BRepBlend_SequenceOfLine) -> None: ...
+    def Append(self,theItem : BRepBlend_Line) -> None: ...
     def Assign(self,theOther : BRepBlend_SequenceOfLine) -> BRepBlend_SequenceOfLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1926,23 +1926,23 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : BRepBlend_Line) -> None: 
+    def Prepend(self,theSeq : BRepBlend_SequenceOfLine) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : BRepBlend_SequenceOfLine) -> None: ...
+    def Prepend(self,theItem : BRepBlend_Line) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1989,14 +1989,14 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BRepBlend_PointOnRst) -> None: 
+    def Append(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
+    def Append(self,theItem : BRepBlend_PointOnRst) -> None: ...
     def Assign(self,theOther : BRepBlend_SequenceOfPointOnRst) -> BRepBlend_SequenceOfPointOnRst: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2060,14 +2060,14 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
+    def Prepend(self,theItem : BRepBlend_PointOnRst) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : BRepBlend_PointOnRst) -> None: ...
+    def Prepend(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -2102,9 +2102,9 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : BRepBlend_SequenceOfPointOnRst) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2147,14 +2147,14 @@ class BRepBlend_SurfCurvConstRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.ma
         Returns 3.
         """
     @overload
-    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Set(self,R : float,Choix : int) -> None: 
         """
         None
 
         Set the restriction on which a solution has to be found.
         """
     @overload
-    def Set(self,R : float,Choix : int) -> None: ...
+    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2163,7 +2163,7 @@ class BRepBlend_SurfCurvConstRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.ma
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,Cg : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,Cg : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BRepBlend_SurfCurvEvolRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2198,7 +2198,7 @@ class BRepBlend_SurfCurvEvolRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.mat
         Returns 3.
         """
     @overload
-    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
@@ -2214,7 +2214,7 @@ class BRepBlend_SurfCurvEvolRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.mat
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,Cg : OCP.Adaptor3d.Adaptor3d_HCurve,Evol : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,Cg : OCP.Adaptor3d.Adaptor3d_Curve,Evol : OCP.Law.Law_Function) -> None: ...
     pass
 class BRepBlend_SurfPointConstRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2249,14 +2249,14 @@ class BRepBlend_SurfPointConstRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.
         Returns 3.
         """
     @overload
-    def Set(self,R : float,Choix : int) -> None: 
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         None
 
         Set the Point on which a solution has to be found.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Set(self,R : float,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2265,7 +2265,7 @@ class BRepBlend_SurfPointConstRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class BRepBlend_SurfPointEvolRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2300,14 +2300,14 @@ class BRepBlend_SurfPointEvolRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.m
         Returns 3.
         """
     @overload
-    def Set(self,Choix : int) -> None: 
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         None
 
         Set the Point on which a solution has to be found.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Set(self,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2316,7 +2316,7 @@ class BRepBlend_SurfPointEvolRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.m
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,Evol : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,Evol : OCP.Law.Law_Function) -> None: ...
     pass
 class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2336,7 +2336,7 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         """
     def GetMinimalDistance(self) -> float: 
         """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
+        Returns the minimal Distance between two extremities of calculated sections.
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -2365,188 +2365,7 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
     def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accomodate for the parameters. i.e. T.Length() > NbIntervals()
-        """
-    def IsRational(self) -> bool: 
-        """
-        Returns if the section is rationnal
-        """
-    def IsSolution(self,Sol : OCP.math.math_Vector,Tol : float) -> bool: 
-        """
-        None
-        """
-    def IsTangencyPoint(self) -> bool: 
-        """
-        None
-        """
-    def Knots(self,TKnots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
-        """
-        None
-        """
-    def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
-        """
-        None
-        """
-    def NbEquations(self) -> int: 
-        """
-        Returns 3.
-        """
-    def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
-        """
-    def NbVariables(self) -> int: 
-        """
-        Returns 3.
-        """
-    def Parameter(self,P : OCP.Blend.Blend_Point) -> float: 
-        """
-        Returns the parameter of the point P. Used to impose the parameters in the approximation.
-        """
-    def ParameterOnRst(self) -> float: 
-        """
-        Returns parameter of the point on the curve.
-        """
-    def Pnt1(self) -> OCP.gp.gp_Pnt: 
-        """
-        Returns the point on the first support.
-        """
-    def Pnt2(self) -> OCP.gp.gp_Pnt: 
-        """
-        Returns the point on the seconde support.
-        """
-    def Pnt2dOnRst(self) -> OCP.gp.gp_Pnt2d: 
-        """
-        Returns U,V coordinates of the point on the curve on surface.
-        """
-    def Pnt2dOnS(self) -> OCP.gp.gp_Pnt2d: 
-        """
-        Returns U,V coordinates of the point on the surface.
-        """
-    def PointOnRst(self) -> OCP.gp.gp_Pnt: 
-        """
-        None
-        """
-    def PointOnS(self) -> OCP.gp.gp_Pnt: 
-        """
-        None
-        """
-    def Resolution(self,IC2d : int,Tol : float) -> Tuple[float, float]: 
-        """
-        None
-        """
-    @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
-        """
-        Used for the first and last section
-
-        Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
-
-        None
-
-        None
-        """
-    @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
-    def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
-    @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: 
-        """
-        None
-
-        None
-
-        Sets the bounds of the parametric interval on the guide line. This determines the derivatives in these values if the function is not Cn.
-
-        None
-
-        Sets the type of section generation for the approximations.
-        """
-    @overload
-    def Set(self,First : float,Last : float) -> None: ...
-    @overload
-    def Set(self,Param : float) -> None: ...
-    @overload
-    def Set(self,Radius : float,Choix : int) -> None: ...
-    @overload
-    def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
-    def Tangent2dOnRst(self) -> OCP.gp.gp_Vec2d: 
-        """
-        None
-        """
-    def Tangent2dOnS(self) -> OCP.gp.gp_Vec2d: 
-        """
-        None
-        """
-    def TangentOnRst(self) -> OCP.gp.gp_Vec: 
-        """
-        None
-        """
-    def TangentOnS(self) -> OCP.gp.gp_Vec: 
-        """
-        None
-        """
-    def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
-        """
-        computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
-        """
-    def Values(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector,D : OCP.math.math_Matrix) -> bool: 
-        """
-        returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
-        """
-    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,SurfRst : OCP.Adaptor3d.Adaptor3d_HSurface,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
-    pass
-class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
-    """
-    Function to approximate by AppSurface for Edge/Face and evolutif radius
-    """
-    def Decroch(self,Sol : OCP.math.math_Vector,NS : OCP.gp.gp_Vec,TgS : OCP.gp.gp_Vec) -> bool: 
-        """
-        Permet d ' implementer un critere de decrochage specifique a la fonction.
-        """
-    def Derivatives(self,X : OCP.math.math_Vector,D : OCP.math.math_Matrix) -> bool: 
-        """
-        returns the values <D> of the derivatives for the variable <X>. Returns True if the computation was done successfully, False otherwise.
-        """
-    def GetBounds(self,InfBound : OCP.math.math_Vector,SupBound : OCP.math.math_Vector) -> None: 
-        """
-        None
-        """
-    def GetMinimalDistance(self) -> float: 
-        """
-        Returns the minimal Distance beetween two extremitys of calculed sections.
-        """
-    def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
-        """
-        Compute the minimal value of weight for each poles of all sections.
-        """
-    def GetSectionSize(self) -> float: 
-        """
-        Returns the length of the maximum section
-        """
-    def GetShape(self) -> Tuple[int, int, int, int]: 
-        """
-        None
-        """
-    def GetStateNumber(self) -> int: 
-        """
-        Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
-        """
-    @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
-        """
-        None
-
-        Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
-        """
-    @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
-    def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accomodate for the parameters. i.e. T.Length() > NbIntervals()
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters. i.e. T.Length() > NbIntervals()
         """
     def IsRational(self) -> bool: 
         """
@@ -2630,11 +2449,11 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
-    @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: 
+    def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    @overload
+    def Set(self,Param : float) -> None: 
         """
         None
 
@@ -2647,11 +2466,11 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,Param : float) -> None: ...
+    def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_Surface,RstRef : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
-    def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_HSurface,RstRef : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Set(self,Radius : float,Choix : int) -> None: ...
     @overload
-    def Set(self,Choix : int) -> None: ...
+    def Set(self,First : float,Last : float) -> None: ...
     @overload
     def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
     def Tangent2dOnRst(self) -> OCP.gp.gp_Vec2d: 
@@ -2678,7 +2497,188 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,SurfRst : OCP.Adaptor3d.Adaptor3d_HSurface,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d,CGuide : OCP.Adaptor3d.Adaptor3d_HCurve,Evol : OCP.Law.Law_Function) -> None: ...
+    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_Surface,SurfRst : OCP.Adaptor3d.Adaptor3d_Surface,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d,CGuide : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    pass
+class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
+    """
+    Function to approximate by AppSurface for Edge/Face and evolutif radius
+    """
+    def Decroch(self,Sol : OCP.math.math_Vector,NS : OCP.gp.gp_Vec,TgS : OCP.gp.gp_Vec) -> bool: 
+        """
+        Permet d ' implementer un critere de decrochage specifique a la fonction.
+        """
+    def Derivatives(self,X : OCP.math.math_Vector,D : OCP.math.math_Matrix) -> bool: 
+        """
+        returns the values <D> of the derivatives for the variable <X>. Returns True if the computation was done successfully, False otherwise.
+        """
+    def GetBounds(self,InfBound : OCP.math.math_Vector,SupBound : OCP.math.math_Vector) -> None: 
+        """
+        None
+        """
+    def GetMinimalDistance(self) -> float: 
+        """
+        Returns the minimal Distance between two extremities of calculated sections.
+        """
+    def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+        """
+        Compute the minimal value of weight for each poles of all sections.
+        """
+    def GetSectionSize(self) -> float: 
+        """
+        Returns the length of the maximum section
+        """
+    def GetShape(self) -> Tuple[int, int, int, int]: 
+        """
+        None
+        """
+    def GetStateNumber(self) -> int: 
+        """
+        Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
+        """
+    @overload
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
+        """
+        None
+
+        Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
+        """
+    @overload
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
+    def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+        """
+        Stores in <T> the parameters bounding the intervals of continuity <S>. The array must provide enough room to accommodate for the parameters. i.e. T.Length() > NbIntervals()
+        """
+    def IsRational(self) -> bool: 
+        """
+        Returns if the section is rationnal
+        """
+    def IsSolution(self,Sol : OCP.math.math_Vector,Tol : float) -> bool: 
+        """
+        None
+        """
+    def IsTangencyPoint(self) -> bool: 
+        """
+        None
+        """
+    def Knots(self,TKnots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+        """
+        None
+        """
+    def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
+        """
+        None
+        """
+    def NbEquations(self) -> int: 
+        """
+        Returns 3.
+        """
+    def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+        """
+        Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
+        """
+    def NbVariables(self) -> int: 
+        """
+        Returns 3.
+        """
+    def Parameter(self,P : OCP.Blend.Blend_Point) -> float: 
+        """
+        Returns the parameter of the point P. Used to impose the parameters in the approximation.
+        """
+    def ParameterOnRst(self) -> float: 
+        """
+        Returns parameter of the point on the curve.
+        """
+    def Pnt1(self) -> OCP.gp.gp_Pnt: 
+        """
+        Returns the point on the first support.
+        """
+    def Pnt2(self) -> OCP.gp.gp_Pnt: 
+        """
+        Returns the point on the seconde support.
+        """
+    def Pnt2dOnRst(self) -> OCP.gp.gp_Pnt2d: 
+        """
+        Returns U,V coordinates of the point on the curve on surface.
+        """
+    def Pnt2dOnS(self) -> OCP.gp.gp_Pnt2d: 
+        """
+        Returns U,V coordinates of the point on the surface.
+        """
+    def PointOnRst(self) -> OCP.gp.gp_Pnt: 
+        """
+        None
+        """
+    def PointOnS(self) -> OCP.gp.gp_Pnt: 
+        """
+        None
+        """
+    def Resolution(self,IC2d : int,Tol : float) -> Tuple[float, float]: 
+        """
+        None
+        """
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+        """
+        Used for the first and last section
+
+        Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
+
+        None
+
+        None
+        """
+    @overload
+    def Section(self,Param : float,U : float,V : float,W : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    @overload
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: 
+        """
+        None
+
+        None
+
+        Sets the bounds of the parametric interval on the guide line. This determines the derivatives in these values if the function is not Cn.
+
+        None
+
+        Sets the type of section generation for the approximations.
+        """
+    @overload
+    def Set(self,First : float,Last : float) -> None: ...
+    @overload
+    def Set(self,Param : float) -> None: ...
+    @overload
+    def Set(self,Choix : int) -> None: ...
+    @overload
+    def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_Surface,RstRef : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    def Tangent2dOnRst(self) -> OCP.gp.gp_Vec2d: 
+        """
+        None
+        """
+    def Tangent2dOnS(self) -> OCP.gp.gp_Vec2d: 
+        """
+        None
+        """
+    def TangentOnRst(self) -> OCP.gp.gp_Vec: 
+        """
+        None
+        """
+    def TangentOnS(self) -> OCP.gp.gp_Vec: 
+        """
+        None
+        """
+    def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
+        """
+        computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
+        """
+    def Values(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector,D : OCP.math.math_Matrix) -> bool: 
+        """
+        returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
+        """
+    def __init__(self,Surf : OCP.Adaptor3d.Adaptor3d_Surface,SurfRst : OCP.Adaptor3d.Adaptor3d_Surface,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d,CGuide : OCP.Adaptor3d.Adaptor3d_Curve,Evol : OCP.Law.Law_Function) -> None: ...
     pass
 class BRepBlend_SurfRstLineBuilder():
     """
@@ -2724,7 +2724,7 @@ class BRepBlend_SurfRstLineBuilder():
         """
         None
         """
-    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Rst : OCP.Adaptor2d.Adaptor2d_HCurve2d,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
+    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: ...
     pass
 class BRepBlend_Walking():
     """
@@ -2776,14 +2776,14 @@ class BRepBlend_Walking():
         None
         """
     @overload
-    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,Pdep : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,Pos1 : OCP.TopAbs.TopAbs_State,Pos2 : OCP.TopAbs.TopAbs_State) -> bool: 
+    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,Pdep : float,Pmax : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,RecOnS1 : bool,RecOnS2 : bool,Psol : float,ParSol : OCP.math.math_Vector) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,Pdep : float,Pmax : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,RecOnS1 : bool,RecOnS2 : bool,Psol : float,ParSol : OCP.math.math_Vector) -> bool: ...
+    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,Pdep : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,Pos1 : OCP.TopAbs.TopAbs_State,Pos2 : OCP.TopAbs.TopAbs_State) -> bool: ...
     def SetDomainsToRecadre(self,RecDomain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,RecDomain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: 
         """
         To define different domains for control and clipping.
@@ -2796,5 +2796,5 @@ class BRepBlend_Walking():
         """
         None
         """
-    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,HGuide : OCP.ChFiDS.ChFiDS_HElSpine) -> None: ...
+    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,HGuide : OCP.ChFiDS.ChFiDS_ElSpine) -> None: ...
     pass

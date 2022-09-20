@@ -4,10 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.StepRepr
+import OCP.Geom2d
 import OCP.gp
 import OCP.Geom
-import OCP.Geom2d
 import OCP.StepGeom
+import OCP.TColStd
 __all__  = [
 "StepToGeom"
 ]
@@ -21,10 +23,16 @@ class StepToGeom():
         None
         """
     @staticmethod
-    def MakeAxis2Placement_s(SA : OCP.StepGeom.StepGeom_Axis2Placement3d) -> OCP.Geom.Geom_Axis2Placement: 
+    @overload
+    def MakeAxis2Placement_s(SP : OCP.StepGeom.StepGeom_SuParameters) -> OCP.Geom.Geom_Axis2Placement: 
         """
         None
+
+        None
         """
+    @staticmethod
+    @overload
+    def MakeAxis2Placement_s(SA : OCP.StepGeom.StepGeom_Axis2Placement3d) -> OCP.Geom.Geom_Axis2Placement: ...
     @staticmethod
     def MakeAxisPlacement_s(SA : OCP.StepGeom.StepGeom_Axis2Placement2d) -> OCP.Geom2d.Geom2d_AxisPlacement: 
         """
@@ -242,6 +250,11 @@ class StepToGeom():
         """
     @staticmethod
     def MakeVectorWithMagnitude_s(SV : OCP.StepGeom.StepGeom_Vector) -> OCP.Geom.Geom_VectorWithMagnitude: 
+        """
+        None
+        """
+    @staticmethod
+    def MakeYprRotation_s(SR : StepKinematics_SpatialRotation,theCntxt : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         None
         """

@@ -5,15 +5,15 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.Intf
+import OCP.IntSurf
+import OCP.GeomAbs
 import OCP.math
 import OCP.NCollection
-import OCP.gp
-import OCP.GeomAbs
-import OCP.Geom
-import OCP.IntSurf
 import OCP.Bnd
+import OCP.gp
+import OCP.Geom
+import OCP.TColStd
+import OCP.Intf
 __all__  = [
 "IntCurveSurface_Intersection",
 "IntCurveSurface_HInter",
@@ -94,7 +94,7 @@ class IntCurveSurface_HInter(IntCurveSurface_Intersection):
         returns the number of IntersectionSegment if IsDone returns True. else NotDone is raised.
         """
     @overload
-    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,ThePolygon : IntCurveSurface_ThePolygonOfHInter,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron : IntCurveSurface_ThePolyhedronOfHInter,BndBSB : OCP.Bnd.Bnd_BoundSortBox) -> None: 
+    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron : IntCurveSurface_ThePolyhedronOfHInter) -> None: 
         """
         Compute the Intersection between the curve and the surface
 
@@ -107,13 +107,13 @@ class IntCurveSurface_HInter(IntCurveSurface_Intersection):
         Compute the Intersection between the curve and the surface. The Surface is already sampled and its polyhedron : <Polyhedron> is given.
         """
     @overload
-    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,ThePolygon : IntCurveSurface_ThePolygonOfHInter,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
     @overload
-    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,ThePolygon : IntCurveSurface_ThePolygonOfHInter,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
+    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,ThePolygon : IntCurveSurface_ThePolygonOfHInter,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron : IntCurveSurface_ThePolyhedronOfHInter,BndBSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     @overload
-    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,Polygon : IntCurveSurface_ThePolygonOfHInter,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,Polygon : IntCurveSurface_ThePolygonOfHInter,Surface : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
-    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
+    def Perform(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,Surface : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     def Point(self,Index : int) -> IntCurveSurface_IntersectionPoint: 
         """
         returns the IntersectionPoint of range <Index> raises NotDone if the computation has failed or if the computation has not been done raises OutOfRange if Index is not in the range <1..NbPoints>
@@ -210,9 +210,9 @@ class IntCurveSurface_IntersectionSegment():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P1 : IntCurveSurface_IntersectionPoint,P2 : IntCurveSurface_IntersectionPoint) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntCurveSurface_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -223,14 +223,14 @@ class IntCurveSurface_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntCurveSurface_SequenceOfPnt) -> None: 
+    def Append(self,theItem : IntCurveSurface_IntersectionPoint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntCurveSurface_IntersectionPoint) -> None: ...
+    def Append(self,theSeq : IntCurveSurface_SequenceOfPnt) -> None: ...
     def Assign(self,theOther : IntCurveSurface_SequenceOfPnt) -> IntCurveSurface_SequenceOfPnt: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -260,14 +260,14 @@ class IntCurveSurface_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntCurveSurface_SequenceOfPnt) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntCurveSurface_IntersectionPoint) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntCurveSurface_IntersectionPoint) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntCurveSurface_SequenceOfPnt) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : IntCurveSurface_IntersectionPoint) -> None: 
         """
@@ -303,14 +303,14 @@ class IntCurveSurface_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : IntCurveSurface_SequenceOfPnt) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -336,9 +336,9 @@ class IntCurveSurface_SequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntCurveSurface_SequenceOfPnt) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -357,14 +357,14 @@ class IntCurveSurface_SequenceOfSeg(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntCurveSurface_SequenceOfSeg) -> None: 
+    def Append(self,theItem : IntCurveSurface_IntersectionSegment) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntCurveSurface_IntersectionSegment) -> None: ...
+    def Append(self,theSeq : IntCurveSurface_SequenceOfSeg) -> None: ...
     def Assign(self,theOther : IntCurveSurface_SequenceOfSeg) -> IntCurveSurface_SequenceOfSeg: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -394,23 +394,23 @@ class IntCurveSurface_SequenceOfSeg(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntCurveSurface_SequenceOfSeg) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntCurveSurface_IntersectionSegment) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntCurveSurface_IntersectionSegment) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntCurveSurface_SequenceOfSeg) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntCurveSurface_IntersectionSegment) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntCurveSurface_SequenceOfSeg) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntCurveSurface_SequenceOfSeg) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntCurveSurface_IntersectionSegment) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -428,23 +428,23 @@ class IntCurveSurface_SequenceOfSeg(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntCurveSurface_IntersectionSegment) -> None: 
+    def Prepend(self,theSeq : IntCurveSurface_SequenceOfSeg) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntCurveSurface_SequenceOfSeg) -> None: ...
+    def Prepend(self,theItem : IntCurveSurface_IntersectionSegment) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -470,11 +470,11 @@ class IntCurveSurface_SequenceOfSeg(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : IntCurveSurface_SequenceOfSeg) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : IntCurveSurface_SequenceOfSeg) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -486,11 +486,11 @@ class IntCurveSurface_TheCSFunctionOfHInter(OCP.math.math_FunctionSetWithDerivat
     """
     None
     """
-    def AuxillarCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def AuxillarCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
-    def AuxillarSurface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def AuxillarSurface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         None
         """
@@ -526,7 +526,7 @@ class IntCurveSurface_TheCSFunctionOfHInter(OCP.math.math_FunctionSetWithDerivat
         """
         None
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class IntCurveSurface_TheExactHInter():
     """
@@ -561,136 +561,136 @@ class IntCurveSurface_TheExactHInter():
         returns the intersection point The exception NotDone is raised if IsDone is false. The exception DomainError is raised if IsEmpty is true.
         """
     @overload
-    def __init__(self,U : float,V : float,W : float,F : IntCurveSurface_TheCSFunctionOfHInter,TolTangency : float,MarginCoef : float=0.0) -> None: ...
-    @overload
     def __init__(self,F : IntCurveSurface_TheCSFunctionOfHInter,TolTangency : float) -> None: ...
+    @overload
+    def __init__(self,U : float,V : float,W : float,F : IntCurveSurface_TheCSFunctionOfHInter,TolTangency : float,MarginCoef : float=0.0) -> None: ...
     pass
 class IntCurveSurface_TheHCurveTool():
     """
     None
     """
     @staticmethod
-    def BSpline_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.Geom.Geom_BSplineCurve: 
+    def BSpline_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.Geom.Geom_BSplineCurve: 
         """
         None
         """
     @staticmethod
-    def Bezier_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.Geom.Geom_BezierCurve: 
+    def Bezier_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.Geom.Geom_BezierCurve: 
         """
         None
         """
     @staticmethod
-    def Circle_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Circ: 
+    def Circle_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Circ: 
         """
         None
         """
     @staticmethod
-    def Continuity_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
         """
     @staticmethod
-    def D0_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt) -> None: 
+    def D0_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point of parameter U on the curve.
         """
     @staticmethod
-    def D1_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
+    def D1_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point of parameter U on the curve with its first derivative. Raised if the continuity of the current interval is not C1.
         """
     @staticmethod
-    def D2_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
+    def D2_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
         """
         Returns the point P of parameter U, the first and second derivatives V1 and V2. Raised if the continuity of the current interval is not C2.
         """
     @staticmethod
-    def D3_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
+    def D3_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
         """
         Returns the point P of parameter U, the first, the second and the third derivative. Raised if the continuity of the current interval is not C3.
         """
     @staticmethod
-    def DN_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,N : int) -> OCP.gp.gp_Vec: 
+    def DN_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,N : int) -> OCP.gp.gp_Vec: 
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
     @staticmethod
-    def Ellipse_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Elips: 
+    def Ellipse_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Elips: 
         """
         None
         """
     @staticmethod
-    def FirstParameter_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def FirstParameter_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         None
         """
     @staticmethod
-    def GetType_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.GeomAbs.GeomAbs_CurveType: 
+    def GetType_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         Returns the type of the curve in the current interval : Line, Circle, Ellipse, Hyperbola, Parabola, BezierCurve, BSplineCurve, OtherCurve.
         """
     @staticmethod
-    def Hyperbola_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Hypr: 
+    def Hyperbola_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Hypr: 
         """
         None
         """
     @staticmethod
-    def Intervals_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Intervals_s(C : OCP.Adaptor3d.Adaptor3d_Curve,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @staticmethod
-    def IsClosed_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> bool: 
+    def IsClosed_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> bool: 
         """
         None
         """
     @staticmethod
-    def IsPeriodic_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> bool: 
+    def IsPeriodic_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> bool: 
         """
         None
         """
     @staticmethod
-    def LastParameter_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def LastParameter_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         None
         """
     @staticmethod
-    def Line_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Lin: 
+    def Line_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Lin: 
         """
         None
         """
     @staticmethod
-    def NbIntervals_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def NbIntervals_s(C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(myclass) >= <S>
         """
     @staticmethod
-    def NbSamples_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U0 : float,U1 : float) -> int: 
+    def NbSamples_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U0 : float,U1 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def Parabola_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> OCP.gp.gp_Parab: 
+    def Parabola_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> OCP.gp.gp_Parab: 
         """
         None
         """
     @staticmethod
-    def Period_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def Period_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         None
         """
     @staticmethod
-    def Resolution_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,R3d : float) -> float: 
+    def Resolution_s(C : OCP.Adaptor3d.Adaptor3d_Curve,R3d : float) -> float: 
         """
         Returns the parametric resolution corresponding to the real space resolution <R3d>.
         """
     @staticmethod
-    def SamplePars_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U0 : float,U1 : float,Defl : float,NbMin : int,Pars : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def SamplePars_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U0 : float,U1 : float,Defl : float,NbMin : int,Pars : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         None
         """
     @staticmethod
-    def Value_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float) -> OCP.gp.gp_Pnt: 
+    def Value_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on the curve.
         """
@@ -757,7 +757,7 @@ class IntCurveSurface_TheInterferenceOfHInter(OCP.Intf.Intf_Interference):
         Gives the number of zones of tangence in the interference.
         """
     @overload
-    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: 
+    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: 
         """
         Computes an interference between the Polygon and the Polyhedron.
 
@@ -772,15 +772,15 @@ class IntCurveSurface_TheInterferenceOfHInter(OCP.Intf.Intf_Interference):
         Computes an interference between the Straight Lines and the Polyhedron.
         """
     @overload
-    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
-    @overload
-    def Perform(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
-    @overload
-    def Perform(self,theLin : OCP.gp.gp_Lin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    def Perform(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     @overload
     def Perform(self,theLin : OCP.gp.gp_Lin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
     @overload
-    def Perform(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    def Perform(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
+    @overload
+    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    @overload
+    def Perform(self,theLin : OCP.gp.gp_Lin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     def PntValue(self,Index : int) -> OCP.Intf.Intf_SectionPoint: 
         """
         Gives the point of intersection of address Index in the interference.
@@ -794,19 +794,19 @@ class IntCurveSurface_TheInterferenceOfHInter(OCP.Intf.Intf_Interference):
         Gives the zone of tangence at address Index in the interference.
         """
     @overload
-    def __init__(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
-    @overload
     def __init__(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
-    @overload
-    def __init__(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLin : OCP.gp.gp_Lin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
-    @overload
     def __init__(self,theLin : OCP.gp.gp_Lin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     @overload
+    def __init__(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
+    @overload
     def __init__(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    @overload
+    def __init__(self,thePolyg : IntCurveSurface_ThePolygonOfHInter,thePolyh : IntCurveSurface_ThePolyhedronOfHInter,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    @overload
+    def __init__(self,theLin : OCP.gp.gp_Lin,thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> None: ...
     pass
 class IntCurveSurface_ThePolygonOfHInter():
     """
@@ -816,7 +816,7 @@ class IntCurveSurface_ThePolygonOfHInter():
         """
         Give an approximation of the parameter on the curve according to the discretization of the Curve.
         """
-    def BeginOfSeg(self,Index : int) -> OCP.gp.gp_Pnt: 
+    def BeginOfSeg(self,theIndex : int) -> OCP.gp.gp_Pnt: 
         """
         Give the point of range Index in the Polygon.
         """
@@ -825,14 +825,14 @@ class IntCurveSurface_ThePolygonOfHInter():
         Give the bounding box of the polygon.
         """
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,flag : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Closed(self,clos : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def DeflectionOverEstimation(self) -> float: 
         """
         None
@@ -841,7 +841,7 @@ class IntCurveSurface_ThePolygonOfHInter():
         """
         None
         """
-    def EndOfSeg(self,Index : int) -> OCP.gp.gp_Pnt: 
+    def EndOfSeg(self,theIndex : int) -> OCP.gp.gp_Pnt: 
         """
         Give the point of range Index in the Polygon.
         """
@@ -862,11 +862,11 @@ class IntCurveSurface_ThePolygonOfHInter():
         Returns the parameter (On the curve) of the last point of the Polygon
         """
     @overload
-    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,Upars : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,Upars : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,U1 : float,U2 : float,NbPnt : int) -> None: ...
+    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,NbPnt : int) -> None: ...
     @overload
-    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,NbPnt : int) -> None: ...
+    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,NbPnt : int) -> None: ...
     pass
 class IntCurveSurface_ThePolygonToolOfHInter():
     """
@@ -923,9 +923,9 @@ class IntCurveSurface_ThePolyhedronOfHInter():
         """
     def Contain(self,Triang : int,ThePnt : OCP.gp.gp_Pnt) -> bool: 
         """
-        Give the plane equation of the triangle of addresse Triang.
+        Give the plane equation of the triangle of address Triang.
         """
-    def DeflectionOnTriangle(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Index : int) -> float: 
+    def DeflectionOnTriangle(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Index : int) -> float: 
         """
         None
         """
@@ -972,10 +972,10 @@ class IntCurveSurface_ThePolyhedronOfHInter():
         """
     def PlaneEquation(self,Triang : int,NormalVector : OCP.gp.gp_XYZ) -> Tuple[float]: 
         """
-        Give the plane equation of the triangle of addresse Triang.
+        Give the plane equation of the triangle of address Triang.
         """
     @overload
-    def Point(self,Index : int) -> OCP.gp.gp_Pnt: 
+    def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: 
         """
         Set the value of a field of the double array of points.
 
@@ -986,27 +986,27 @@ class IntCurveSurface_ThePolyhedronOfHInter():
         Give the point of index i in the MaTriangle.
         """
     @overload
-    def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: ...
+    def Point(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Point(self,Index : int,U : float,V : float) -> OCP.gp.gp_Pnt: ...
     @overload
-    def Point(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
+    def Point(self,Index : int) -> OCP.gp.gp_Pnt: ...
     def Size(self) -> Tuple[int, int]: 
         """
         get the size of the discretization.
         """
     def TriConnex(self,Triang : int,Pivot : int,Pedge : int,TriCon : int,OtherP : int) -> int: 
         """
-        Give the addresse Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
+        Give the address Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
         """
     def Triangle(self,Index : int) -> Tuple[int, int, int]: 
         """
-        Give the 3 points of the triangle of addresse Index in the double array of triangles.
+        Give the 3 points of the triangle of address Index in the double array of triangles.
         """
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Upars : OCP.TColStd.TColStd_Array1OfReal,Vpars : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Upars : OCP.TColStd.TColStd_Array1OfReal,Vpars : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,nbdU : int,nbdV : int,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,nbdU : int,nbdV : int,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
     pass
 class IntCurveSurface_ThePolyhedronToolOfHInter():
     """
@@ -1045,17 +1045,17 @@ class IntCurveSurface_ThePolyhedronToolOfHInter():
     @staticmethod
     def NbTriangles_s(thePolyh : IntCurveSurface_ThePolyhedronOfHInter) -> int: 
         """
-        Give the number of triangles in this polyedral surface.
+        Give the number of triangles in this polyhedral surface.
         """
     @staticmethod
     def Point_s(thePolyh : IntCurveSurface_ThePolyhedronOfHInter,Index : int) -> OCP.gp.gp_Pnt: 
         """
-        Give the point of index i in the polyedral surface.
+        Give the point of index i in the polyhedral surface.
         """
     @staticmethod
     def TriConnex_s(thePolyh : IntCurveSurface_ThePolyhedronOfHInter,Triang : int,Pivot : int,Pedge : int,TriCon : int,OtherP : int) -> int: 
         """
-        Give the addresse Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
+        Give the address Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
         """
     @staticmethod
     def Triangle_s(thePolyh : IntCurveSurface_ThePolyhedronOfHInter,Index : int) -> Tuple[int, int, int]: 
@@ -1088,7 +1088,7 @@ class IntCurveSurface_TheQuadCurvExactHInter():
         """
         None
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class IntCurveSurface_TheQuadCurvFuncOfTheQuadCurvExactHInter(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
@@ -1110,7 +1110,7 @@ class IntCurveSurface_TheQuadCurvFuncOfTheQuadCurvExactHInter(OCP.math.math_Func
         """
         Computes the value and the derivative of the function. returns True.
         """
-    def __init__(self,Q : OCP.IntSurf.IntSurf_Quadric,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,Q : OCP.IntSurf.IntSurf_Quadric,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class IntCurveSurface_TransitionOnCurve():
     """
@@ -1127,6 +1127,7 @@ class IntCurveSurface_TransitionOnCurve():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
-import OCP.IGESGeom
-import OCP.Geom
 import OCP.Geom2d
+import OCP.Geom
+import OCP.IGESGeom
+import OCP.gp
 __all__  = [
 "IGESConvGeom",
 "IGESConvGeom_GeomBuilder"
@@ -101,7 +101,7 @@ class IGESConvGeom_GeomBuilder():
         Returns the Position in which the method EvalXYZ will evaluate a XYZ. It can be regarded as defining a local system. It is initially set to Identity
         """
     @overload
-    def SetPosition(self,pos : OCP.gp.gp_Ax1) -> None: 
+    def SetPosition(self,pos : OCP.gp.gp_Trsf) -> None: 
         """
         Sets final position from an already defined Trsf
 
@@ -112,9 +112,9 @@ class IGESConvGeom_GeomBuilder():
         Sets final position from an Ax1 (this means that origin point and Z-axis are defined, the other axes are defined arbitrarily)
         """
     @overload
-    def SetPosition(self,pos : OCP.gp.gp_Ax2) -> None: ...
+    def SetPosition(self,pos : OCP.gp.gp_Ax1) -> None: ...
     @overload
-    def SetPosition(self,pos : OCP.gp.gp_Trsf) -> None: ...
+    def SetPosition(self,pos : OCP.gp.gp_Ax2) -> None: ...
     @overload
     def SetPosition(self,pos : OCP.gp.gp_Ax3) -> None: ...
     def __init__(self) -> None: ...

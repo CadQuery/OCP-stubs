@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.CDM
 import OCP.TDocStd
-import OCP.TCollection
+import OCP.PCDM
 import io
+import OCP.Storage
+import OCP.Standard
+import OCP.BinLDrivers
 import OCP.Message
 import OCP.BinMDF
-import OCP.CDM
-import OCP.PCDM
-import OCP.Storage
-import OCP.BinLDrivers
-import OCP.Standard
+import OCP.TCollection
 __all__  = [
 "BinDrivers",
 "BinDrivers_DocumentRetrievalDriver",
@@ -41,11 +41,6 @@ class BinDrivers():
         """
         None
         """
-    @staticmethod
-    def StorageVersion_s() -> OCP.TCollection.TCollection_AsciiString: 
-        """
-        returns "1"
-        """
     def __init__(self) -> None: ...
     pass
 class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRetrievalDriver, OCP.PCDM.PCDM_RetrievalDriver, OCP.PCDM.PCDM_Reader, OCP.Standard.Standard_Transient):
@@ -60,10 +55,6 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
     def Clear(self) -> None: 
         """
         Clears the NamedShape driver
-        """
-    def CreateDocument(self) -> OCP.CDM.CDM_Document: 
-        """
-        pure virtual method definition
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -81,6 +72,10 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
+        """
+    def EnableQuickPartReading(self,theMessageDriver : OCP.Message.Message_Messenger,theValue : bool) -> None: 
+        """
+        Enables reading in the quick part access mode.
         """
     def GetFormat(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -101,32 +96,32 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def ReadShapeSection(self,theSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theIS : io.BytesIO,isMess : bool=False,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
@@ -158,7 +153,7 @@ class BinDrivers_DocumentRetrievalDriver(OCP.BinLDrivers.BinLDrivers_DocumentRet
     pass
 class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStorageDriver, OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PCDM_Writer, OCP.Standard.Standard_Transient):
     """
-    persistent implemention of storage a document in a binary filepersistent implemention of storage a document in a binary filepersistent implemention of storage a document in a binary file
+    persistent implementation of storage a document in a binary filepersistent implementation of storage a document in a binary filepersistent implementation of storage a document in a binary file
     """
     def AddSection(self,theName : OCP.TCollection.TCollection_AsciiString,isPostRead : bool=True) -> None: 
         """
@@ -167,6 +162,10 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
     def AttributeDrivers(self,theMsgDriver : OCP.Message.Message_Messenger) -> OCP.BinMDF.BinMDF_ADriverTable: 
         """
         None
+        """
+    def Clear(self) -> None: 
+        """
+        Clears the NamedShape driver
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -179,6 +178,10 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
+        """
+    def EnableQuickPartWriting(self,theMessageDriver : OCP.Message.Message_Messenger,theValue : bool) -> None: 
+        """
+        Enables writing in the quick part access mode.
         """
     def GetFormat(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -201,36 +204,44 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsQuickPart(self,theVersion : int) -> bool: 
+        """
+        Return true if document should be stored in quick mode for partial reading
+        """
+    def IsWithNormals(self) -> bool: 
+        """
+        Return true if shape should be stored with triangulation normals.
+        """
     def IsWithTriangles(self) -> bool: 
         """
         Return true if shape should be stored with triangles.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -243,6 +254,10 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         """
         None
         """
+    def SetWithNormals(self,theMessageDriver : OCP.Message.Message_Messenger,theWithTriangulation : bool) -> None: 
+        """
+        Set if triangulation should be stored with normals or not.
+        """
     def SetWithTriangles(self,theMessageDriver : OCP.Message.Message_Messenger,theWithTriangulation : bool) -> None: 
         """
         Set if triangulation should be stored or not.
@@ -252,15 +267,15 @@ class BinDrivers_DocumentStorageDriver(OCP.BinLDrivers.BinLDrivers_DocumentStora
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Write <theDocument> to the binary file <theFileName>
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
-    def WriteShapeSection(self,theDocSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theOS : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def WriteShapeSection(self,theDocSection : OCP.BinLDrivers.BinLDrivers_DocumentSection,theOS : io.BytesIO,theDocVer : OCP.TDocStd.TDocStd_FormatVersion,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         implements the procedure of writing a shape section to file
         """
@@ -289,6 +304,7 @@ class BinDrivers_Marker():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

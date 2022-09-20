@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TCollection
-import OCP.StepBasic
 import OCP.StepRepr
-import OCP.StepShape
-import OCP.StepDimTol
-import OCP.Standard
+import OCP.StepBasic
 import OCP.StepAP214
+import OCP.Standard
+import OCP.StepShape
 import OCP.StepData
+import OCP.TCollection
+import OCP.StepDimTol
 __all__  = [
 "StepAP242_ItemIdentifiedRepresentationUsage",
 "StepAP242_GeometricItemSpecificUsage",
@@ -62,23 +62,23 @@ class StepAP242_ItemIdentifiedRepresentationUsage(OCP.Standard.Standard_Transien
         Init all fields own and inherited
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns field Name
@@ -117,7 +117,7 @@ class StepAP242_ItemIdentifiedRepresentationUsage(OCP.Standard.Standard_Transien
         """
     def UsedRepresentation(self) -> OCP.StepRepr.StepRepr_Representation: 
         """
-        Retuns field UsedRepresentation
+        Returns field UsedRepresentation
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -176,23 +176,23 @@ class StepAP242_GeometricItemSpecificUsage(StepAP242_ItemIdentifiedRepresentatio
         Init all fields own and inherited
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns field Name
@@ -231,7 +231,7 @@ class StepAP242_GeometricItemSpecificUsage(StepAP242_ItemIdentifiedRepresentatio
         """
     def UsedRepresentation(self) -> OCP.StepRepr.StepRepr_Representation: 
         """
-        Retuns field UsedRepresentation
+        Returns field UsedRepresentation
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -279,23 +279,23 @@ class StepAP242_IdAttribute(OCP.Standard.Standard_Transient):
         Init all field own and inherited
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetAttributeValue(self,theAttributeValue : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
@@ -511,23 +511,23 @@ class StepAP242_DraughtingModelItemAssociation(StepAP242_ItemIdentifiedRepresent
         Init all fields own and inherited
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns field Name
@@ -566,7 +566,7 @@ class StepAP242_DraughtingModelItemAssociation(StepAP242_ItemIdentifiedRepresent
         """
     def UsedRepresentation(self) -> OCP.StepRepr.StepRepr_Representation: 
         """
-        Retuns field UsedRepresentation
+        Returns field UsedRepresentation
         """
     def __init__(self) -> None: ...
     @staticmethod

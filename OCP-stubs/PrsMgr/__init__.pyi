@@ -5,18 +5,19 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Quantity
-import OCP.TColStd
-import OCP.Prs3d
-import io
 import OCP.NCollection
-import OCP.gp
 import OCP.Bnd
-import OCP.V3d
-import OCP.Graphic3d
-import OCP.Standard
-import OCP.Aspect
+import io
 import OCP.TopLoc
+import OCP.Graphic3d
+import OCP.gp
+import OCP.Standard
+import OCP.V3d
+import OCP.Aspect
+import OCP.Prs3d
+import OCP.TColStd
 __all__  = [
+"PrsMgr_DisplayStatus",
 "PrsMgr_ListOfPresentableObjects",
 "PrsMgr_ListOfPresentations",
 "PrsMgr_PresentableObject",
@@ -24,9 +25,61 @@ __all__  = [
 "PrsMgr_PresentationManager",
 "PrsMgr_Presentations",
 "PrsMgr_TypeOfPresentation3d",
+"AIS_DS_Displayed",
+"AIS_DS_Erased",
+"AIS_DS_None",
+"PrsMgr_DisplayStatus_Displayed",
+"PrsMgr_DisplayStatus_Erased",
+"PrsMgr_DisplayStatus_None",
 "PrsMgr_TOP_AllView",
-"PrsMgr_TOP_ProjectorDependant"
+"PrsMgr_TOP_ProjectorDependent"
 ]
+class PrsMgr_DisplayStatus():
+    """
+    To give the display status of an Interactive Object.
+
+    Members:
+
+      PrsMgr_DisplayStatus_Displayed
+
+      PrsMgr_DisplayStatus_Erased
+
+      PrsMgr_DisplayStatus_None
+
+      AIS_DS_Displayed
+
+      AIS_DS_Erased
+
+      AIS_DS_None
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    AIS_DS_Displayed: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>
+    AIS_DS_Erased: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>
+    AIS_DS_None: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>
+    PrsMgr_DisplayStatus_Displayed: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>
+    PrsMgr_DisplayStatus_Erased: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>
+    PrsMgr_DisplayStatus_None: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>
+    __entries: dict # value = {'PrsMgr_DisplayStatus_Displayed': (<PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>, None), 'PrsMgr_DisplayStatus_Erased': (<PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>, None), 'PrsMgr_DisplayStatus_None': (<PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>, None), 'AIS_DS_Displayed': (<PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>, None), 'AIS_DS_Erased': (<PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>, None), 'AIS_DS_None': (<PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>, None)}
+    __members__: dict # value = {'PrsMgr_DisplayStatus_Displayed': <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>, 'PrsMgr_DisplayStatus_Erased': <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>, 'PrsMgr_DisplayStatus_None': <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>, 'AIS_DS_Displayed': <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>, 'AIS_DS_Erased': <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>, 'AIS_DS_None': <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>}
+    pass
 class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
     """
     Purpose: Simple list to link items together keeping the first and the last one. Inherits BaseList, adding the data item to each node.
@@ -36,7 +89,7 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : PrsMgr_PresentableObject,theIter : Any) -> None: 
+    def Append(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: 
         """
         Append one item at the end
 
@@ -45,9 +98,9 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: ...
-    @overload
     def Append(self,theItem : PrsMgr_PresentableObject) -> PrsMgr_PresentableObject: ...
+    @overload
+    def Append(self,theItem : PrsMgr_PresentableObject,theIter : Any) -> None: ...
     def Assign(self,theOther : PrsMgr_ListOfPresentableObjects) -> PrsMgr_ListOfPresentableObjects: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -76,14 +129,14 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : PrsMgr_PresentableObject,theIter : Any) -> PrsMgr_PresentableObject: ...
     @overload
-    def InsertBefore(self,theItem : PrsMgr_PresentableObject,theIter : Any) -> PrsMgr_PresentableObject: 
+    def InsertBefore(self,theOther : PrsMgr_ListOfPresentableObjects,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : PrsMgr_ListOfPresentableObjects,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : PrsMgr_PresentableObject,theIter : Any) -> PrsMgr_PresentableObject: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -120,11 +173,11 @@ class PrsMgr_ListOfPresentableObjects(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : PrsMgr_ListOfPresentableObjects) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
@@ -136,7 +189,7 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> None: 
+    def Append(self,theOther : PrsMgr_ListOfPresentations) -> None: 
         """
         Append one item at the end
 
@@ -145,9 +198,9 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Structure: ...
+    def Append(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> None: ...
     @overload
-    def Append(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
+    def Append(self,theItem : OCP.Graphic3d.Graphic3d_Structure) -> OCP.Graphic3d.Graphic3d_Structure: ...
     def Assign(self,theOther : PrsMgr_ListOfPresentations) -> PrsMgr_ListOfPresentations: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -167,14 +220,14 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : PrsMgr_ListOfPresentations,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: ...
+    def InsertAfter(self,theOther : PrsMgr_ListOfPresentations,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : OCP.Graphic3d.Graphic3d_Structure,theIter : Any) -> OCP.Graphic3d.Graphic3d_Structure: 
         """
@@ -220,11 +273,11 @@ class PrsMgr_ListOfPresentations(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : PrsMgr_ListOfPresentations) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
@@ -291,13 +344,17 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         """
         Returns the display mode setting of the Interactive Object. The range of supported display mode indexes should be specified within object definition and filtered by AccepDisplayMode().
         """
+    def DisplayStatus(self) -> PrsMgr_DisplayStatus: 
+        """
+        Return presentation display status; PrsMgr_DisplayStatus_None by default.
+        """
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
     def DynamicHilightAttributes(self) -> OCP.Prs3d.Prs3d_Drawer: 
         """
-        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalDynamic and Prs3d_TypeOfHighlight_Dynamic defined within AIS_InteractiveContext.
+        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalDynamic and Prs3d_TypeOfHighlight_Dynamic defined within AIS_InteractiveContext::HighlightStyle().
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -306,14 +363,6 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
-        """
-    def GetTransformPersistenceMode(self) -> OCP.Graphic3d.Graphic3d_TransModeFlags: 
-        """
-        Gets Transform Persistence Mode for this object
-        """
-    def GetTransformPersistencePoint(self) -> OCP.gp.gp_Pnt: 
-        """
-        Gets point of transform persistence for this object
         """
     def HasColor(self) -> bool: 
         """
@@ -349,7 +398,7 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         """
     def HilightAttributes(self) -> OCP.Prs3d.Prs3d_Drawer: 
         """
-        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalSelected and Prs3d_TypeOfHighlight_Selected defined within AIS_InteractiveContext.
+        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalSelected and Prs3d_TypeOfHighlight_Selected defined within AIS_InteractiveContext::HighlightStyle().
         """
     def HilightMode(self) -> int: 
         """
@@ -368,23 +417,23 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -440,8 +489,6 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
     def SetClipPlanes(self,thePlanes : OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane) -> None: 
         """
         Set clip planes for graphical clipping for all display mode presentations. The composition of clip planes truncates the rendering space to convex volume. Please be aware that number of supported clip plane is limited. The planes which exceed the limit are ignored. Besides of this, some planes can be already set in view where the object is shown: the number of these planes should be subtracted from limit to predict the maximum possible number of object clipping planes.
-
-        None
         """
     def SetColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
@@ -476,14 +523,14 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -501,23 +548,18 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self) -> None: 
+    def SetToUpdate(self,theMode : int) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: ...
-    @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
+    def SetToUpdate(self) -> None: ...
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
-
-        Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
-    @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -543,14 +585,14 @@ class PrsMgr_PresentableObject(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def ToBeUpdated(self,theToIncludeHidden : bool=False) -> bool: 
+    def ToBeUpdated(self,ListOfMode : OCP.TColStd.TColStd_ListOfInteger) -> None: 
         """
         Returns TRUE if any active presentation has invalidation flag.
 
         gives the list of modes which are flagged "to be updated".
         """
     @overload
-    def ToBeUpdated(self,ListOfMode : OCP.TColStd.TColStd_ListOfInteger) -> None: ...
+    def ToBeUpdated(self,theToIncludeHidden : bool=False) -> bool: ...
     def ToPropagateVisualState(self) -> bool: 
         """
         Get value of the flag "propagate visual state" It means that the display/erase/color visual state is propagated automatically to all children; by default, the flag is true
@@ -790,23 +832,23 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         Returns Standard_True if the structure <me> is infinite.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if structure has mutable nature (content or location are be changed regularly). Mutable structure will be managed in different way than static onces.
@@ -821,7 +863,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         """
     def MinMaxValues(self,theToIgnoreInfiniteFlag : bool=False) -> OCP.Bnd.Bnd_Box: 
         """
-        Returns the coordinates of the boundary box of the structure <me>. If <theToIgnoreInfiniteFlag> is TRUE, the method returns actual graphical boundaries of the Graphic3d_Group components. Otherwise, the method returns boundaries taking into account infinite state of the structure. This approach generally used for application specific fit operation (e.g. fitting the model into screen, not taking into accout infinite helper elements). Warning: If the structure <me> is empty then the empty box is returned, If the structure <me> is infinite then the whole box is returned.
+        Returns the coordinates of the boundary box of the structure <me>. If <theToIgnoreInfiniteFlag> is TRUE, the method returns actual graphical boundaries of the Graphic3d_Group components. Otherwise, the method returns boundaries taking into account infinite state of the structure. This approach generally used for application specific fit operation (e.g. fitting the model into screen, not taking into account infinite helper elements). Warning: If the structure <me> is empty then the empty box is returned, If the structure <me> is infinite then the whole box is returned.
         """
     def Mode(self) -> int: 
         """
@@ -859,7 +901,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
     @staticmethod
     def PrintNetwork_s(AStructure : OCP.Graphic3d.Graphic3d_Structure,AType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: 
         """
-        Prints informations about the network associated with the structure <AStructure>.
+        Prints information about the network associated with the structure <AStructure>.
         """
     @overload
     def ReCompute(self) -> None: 
@@ -871,7 +913,7 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
     @overload
     def ReCompute(self,aProjector : OCP.Graphic3d.Graphic3d_DataStructureManager) -> None: ...
     @overload
-    def Remove(self,thePrs : OCP.Graphic3d.Graphic3d_Structure) -> None: 
+    def Remove(self,thePtr : OCP.Graphic3d.Graphic3d_Structure,theType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: 
         """
         Suppress the structure <me>. It will be erased at the next screen update. Warning: No more graphic operations in <me> after this call. Category: Methods to modify the class definition
 
@@ -880,9 +922,9 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
         Suppress the structure in the list of descendants or in the list of ancestors.
         """
     @overload
-    def Remove(self,thePtr : OCP.Graphic3d.Graphic3d_Structure,theType : OCP.Graphic3d.Graphic3d_TypeOfConnection) -> None: ...
-    @overload
     def Remove(self) -> None: ...
+    @overload
+    def Remove(self,thePrs : OCP.Graphic3d.Graphic3d_Structure) -> None: ...
     def RemoveAll(self) -> None: 
         """
         None
@@ -954,10 +996,6 @@ class PrsMgr_Presentation(OCP.Graphic3d.Graphic3d_Structure, OCP.Standard.Standa
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Transform(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
-        """
-        None
         """
     def TransformPersistence(self) -> OCP.Graphic3d.Graphic3d_TransformPers: 
         """
@@ -1084,23 +1122,23 @@ class PrsMgr_PresentationManager(OCP.Standard.Standard_Transient):
         Returns true if Presentation Manager is accumulating transient list of presentations to be displayed in immediate mode.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Presentation(self,thePrsObject : PrsMgr_PresentableObject,theMode : int=0,theToCreate : bool=False,theSelObj : PrsMgr_PresentableObject=None) -> PrsMgr_Presentation: 
         """
         Returns the presentation Presentation of the presentable object thePrsObject in this framework. When theToCreate is true - automatically creates presentation for specified mode when not exist. Optional argument theSelObj specifies parent decomposed object to inherit its view affinity.
@@ -1133,15 +1171,10 @@ class PrsMgr_PresentationManager(OCP.Standard.Standard_Transient):
         """
         Sets the transformation theTransformation for the presentable object thePrsObject. thePrsObject has the display mode theMode; this has the default value of 0, that is, the wireframe display mode.
         """
-    @overload
-    def Unhighlight(self,thePrsObject : PrsMgr_PresentableObject,theMode : int) -> None: 
+    def Unhighlight(self,thePrsObject : PrsMgr_PresentableObject) -> None: 
         """
         Removes highlighting from the presentation of the presentable object.
-
-        None
         """
-    @overload
-    def Unhighlight(self,thePrsObject : PrsMgr_PresentableObject) -> None: ...
     def Update(self,thePrsObject : PrsMgr_PresentableObject,theMode : int=0) -> None: 
         """
         Updates the presentation of the presentable object thePrsObject in this framework with the display mode theMode.
@@ -1171,14 +1204,14 @@ class PrsMgr_Presentations(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : PrsMgr_Presentations) -> None: 
+    def Append(self,theItem : PrsMgr_Presentation) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : PrsMgr_Presentation) -> None: ...
+    def Append(self,theSeq : PrsMgr_Presentations) -> None: ...
     def Assign(self,theOther : PrsMgr_Presentations) -> PrsMgr_Presentations: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1217,14 +1250,14 @@ class PrsMgr_Presentations(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : PrsMgr_Presentation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : PrsMgr_Presentation) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : PrsMgr_Presentations) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : PrsMgr_Presentations) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : PrsMgr_Presentation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1251,14 +1284,14 @@ class PrsMgr_Presentations(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : PrsMgr_Presentation) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1284,11 +1317,11 @@ class PrsMgr_Presentations(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : PrsMgr_Presentations) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : PrsMgr_Presentations) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1298,17 +1331,18 @@ class PrsMgr_Presentations(OCP.NCollection.NCollection_BaseSequence):
     pass
 class PrsMgr_TypeOfPresentation3d():
     """
-    To declare the type of presentation as follows - AllView for display involving no recalculation for new projectors (points of view)in hidden line removal mode - ProjectorDependant for display in hidden line removal mode, where every new point of view entails recalculation of the display.
+    The type of presentation.
 
     Members:
 
       PrsMgr_TOP_AllView
 
-      PrsMgr_TOP_ProjectorDependant
+      PrsMgr_TOP_ProjectorDependent
     """
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1325,9 +1359,15 @@ class PrsMgr_TypeOfPresentation3d():
         :type: int
         """
     PrsMgr_TOP_AllView: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>
-    PrsMgr_TOP_ProjectorDependant: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>
-    __entries: dict # value = {'PrsMgr_TOP_AllView': (<PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>, None), 'PrsMgr_TOP_ProjectorDependant': (<PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>, None)}
-    __members__: dict # value = {'PrsMgr_TOP_AllView': <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>, 'PrsMgr_TOP_ProjectorDependant': <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>}
+    PrsMgr_TOP_ProjectorDependent: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependent: 1>
+    __entries: dict # value = {'PrsMgr_TOP_AllView': (<PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>, None), 'PrsMgr_TOP_ProjectorDependent': (<PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependent: 1>, None)}
+    __members__: dict # value = {'PrsMgr_TOP_AllView': <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>, 'PrsMgr_TOP_ProjectorDependent': <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependent: 1>}
     pass
+AIS_DS_Displayed: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>
+AIS_DS_Erased: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>
+AIS_DS_None: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>
+PrsMgr_DisplayStatus_Displayed: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Displayed: 0>
+PrsMgr_DisplayStatus_Erased: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_Erased: 1>
+PrsMgr_DisplayStatus_None: OCP.PrsMgr.PrsMgr_DisplayStatus # value = <PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None: 2>
 PrsMgr_TOP_AllView: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_AllView: 0>
-PrsMgr_TOP_ProjectorDependant: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependant: 1>
+PrsMgr_TOP_ProjectorDependent: OCP.PrsMgr.PrsMgr_TypeOfPresentation3d # value = <PrsMgr_TypeOfPresentation3d.PrsMgr_TOP_ProjectorDependent: 1>

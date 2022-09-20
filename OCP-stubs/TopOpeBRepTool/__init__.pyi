@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAdaptor
+import OCP.TopTools
+import OCP.GeomAbs
 import OCP.NCollection
-import OCP.Geom
-import OCP.TColgp
-import OCP.TopoDS
-import OCP.Bnd
-import OCP.TopExp
+import io
+import OCP.Geom2d
 import OCP.BRepAdaptor
 import OCP.Standard
-import OCP.TopAbs
-import OCP.TopTools
+import OCP.TopoDS
+import OCP.TColgp
 import OCP.Extrema
-import io
+import OCP.TopExp
 import OCP.gp
-import OCP.GeomAbs
-import OCP.Geom2d
+import OCP.TopAbs
+import OCP.GeomAdaptor
+import OCP.Geom
+import OCP.Bnd
 __all__  = [
 "TopOpeBRepTool",
 "TopOpeBRepTool_AncestorsTool",
@@ -165,7 +165,7 @@ class TopOpeBRepTool():
     @overload
     def PurgeClosingEdges_s(F : OCP.TopoDS.TopoDS_Face,LOF : OCP.TopTools.TopTools_ListOfShape,MWisOld : OCP.TopTools.TopTools_DataMapOfShapeInteger,MshNOK : OCP.TopTools.TopTools_IndexedMapOfOrientedShape) -> bool: 
         """
-        Fuse edges (in a wire) of a shape where we have useless vertex. In case face <FF> is built on UV-non-connexed wires (with the two closing edges FORWARD and REVERSED, in spite of one only), we find out the faulty edge, add the faulty shapes (edge,wire,face) to <MshNOK>. <FF> is a face descendant of <F>. <MWisOld>(wire) = 1 if wire is wire of <F> 0 wire results from <F>'s wire splitted. returns false if purge fails
+        Fuse edges (in a wire) of a shape where we have useless vertex. In case face <FF> is built on UV-non-connexed wires (with the two closing edges FORWARD and REVERSED, in spite of one only), we find out the faulty edge, add the faulty shapes (edge,wire,face) to <MshNOK>. <FF> is a face descendant of <F>. <MWisOld>(wire) = 1 if wire is wire of <F> 0 wire results from <F>'s wire split. returns false if purge fails
 
         None
         """
@@ -432,9 +432,9 @@ class TopOpeBRepTool_CORRISO():
         None
         """
     @overload
-    def __init__(self,FRef : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,FRef : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class TopOpeBRepTool_CurveTool():
     """
@@ -477,9 +477,9 @@ class TopOpeBRepTool_CurveTool():
         None
         """
     @overload
-    def __init__(self,OCT : TopOpeBRepTool_OutCurveType) -> None: ...
-    @overload
     def __init__(self,GT : TopOpeBRepTool_GeomTool) -> None: ...
+    @overload
+    def __init__(self,OCT : TopOpeBRepTool_OutCurveType) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -512,14 +512,14 @@ class TopOpeBRepTool_DataMapOfOrientedShapeC2DF(OCP.NCollection.NCollection_Base
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TopOpeBRepTool_DataMapOfOrientedShapeC2DF) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -529,14 +529,14 @@ class TopOpeBRepTool_DataMapOfOrientedShapeC2DF(OCP.NCollection.NCollection_Base
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_C2DF: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_C2DF) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_C2DF) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_C2DF: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -570,11 +570,11 @@ class TopOpeBRepTool_DataMapOfOrientedShapeC2DF(OCP.NCollection.NCollection_Base
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepTool_DataMapOfOrientedShapeC2DF) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepTool_DataMapOfShapeListOfC2DF(OCP.NCollection.NCollection_BaseMap):
@@ -623,14 +623,14 @@ class TopOpeBRepTool_DataMapOfShapeListOfC2DF(OCP.NCollection.NCollection_BaseMa
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_ListOfC2DF: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_ListOfC2DF) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_ListOfC2DF) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_ListOfC2DF: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -664,11 +664,11 @@ class TopOpeBRepTool_DataMapOfShapeListOfC2DF(OCP.NCollection.NCollection_BaseMa
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepTool_DataMapOfShapeListOfC2DF) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepTool_DataMapOfShapeface(OCP.NCollection.NCollection_BaseMap):
@@ -700,14 +700,14 @@ class TopOpeBRepTool_DataMapOfShapeface(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TopOpeBRepTool_DataMapOfShapeface) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -717,14 +717,14 @@ class TopOpeBRepTool_DataMapOfShapeface(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_face) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_face: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_face: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_face) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -758,11 +758,11 @@ class TopOpeBRepTool_DataMapOfShapeface(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : TopOpeBRepTool_DataMapOfShapeface) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepTool_FuseEdges():
@@ -872,14 +872,14 @@ class TopOpeBRepTool_HBoxTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Box(self,I : int) -> OCP.Bnd.Bnd_Box: 
+    def Box(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box: 
         """
         None
 
         None
         """
     @overload
-    def Box(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box: ...
+    def Box(self,I : int) -> OCP.Bnd.Bnd_Box: ...
     def ChangeIMS(self) -> TopOpeBRepTool_IndexedDataMapOfShapeBox: 
         """
         None
@@ -940,23 +940,23 @@ class TopOpeBRepTool_HBoxTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Shape(self,I : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
@@ -1006,14 +1006,14 @@ class TopOpeBRepTool_IndexedDataMapOfShapeBox(OCP.NCollection.NCollection_BaseMa
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -1031,14 +1031,14 @@ class TopOpeBRepTool_IndexedDataMapOfShapeBox(OCP.NCollection.NCollection_BaseMa
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Bnd.Bnd_Box) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Bnd.Bnd_Box) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -1092,11 +1092,11 @@ class TopOpeBRepTool_IndexedDataMapOfShapeBox(OCP.NCollection.NCollection_BaseMa
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepTool_IndexedDataMapOfShapeBox) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepTool_IndexedDataMapOfShapeBox2d(OCP.NCollection.NCollection_BaseMap):
@@ -1216,9 +1216,9 @@ class TopOpeBRepTool_IndexedDataMapOfShapeBox2d(OCP.NCollection.NCollection_Base
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopOpeBRepTool_IndexedDataMapOfShapeBox2d) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TopOpeBRepTool_IndexedDataMapOfShapeBox2d) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepTool_IndexedDataMapOfShapeconnexity(OCP.NCollection.NCollection_BaseMap):
@@ -1275,14 +1275,14 @@ class TopOpeBRepTool_IndexedDataMapOfShapeconnexity(OCP.NCollection.NCollection_
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_connexity) -> bool: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_connexity: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepTool_connexity: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepTool_connexity) -> bool: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -1336,9 +1336,9 @@ class TopOpeBRepTool_IndexedDataMapOfShapeconnexity(OCP.NCollection.NCollection_
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepTool_IndexedDataMapOfShapeconnexity) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1361,9 +1361,9 @@ class TopOpeBRepTool_ListOfC2DF(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TopOpeBRepTool_C2DF,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : TopOpeBRepTool_ListOfC2DF) -> None: ...
+    @overload
+    def Append(self,theItem : TopOpeBRepTool_C2DF,theIter : Any) -> None: ...
     def Assign(self,theOther : TopOpeBRepTool_ListOfC2DF) -> TopOpeBRepTool_ListOfC2DF: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1383,14 +1383,14 @@ class TopOpeBRepTool_ListOfC2DF(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TopOpeBRepTool_ListOfC2DF,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TopOpeBRepTool_C2DF,theIter : Any) -> TopOpeBRepTool_C2DF: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TopOpeBRepTool_C2DF,theIter : Any) -> TopOpeBRepTool_C2DF: ...
+    def InsertAfter(self,theOther : TopOpeBRepTool_ListOfC2DF,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : TopOpeBRepTool_C2DF,theIter : Any) -> TopOpeBRepTool_C2DF: 
         """
@@ -1411,14 +1411,14 @@ class TopOpeBRepTool_ListOfC2DF(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : TopOpeBRepTool_ListOfC2DF) -> None: 
+    def Prepend(self,theItem : TopOpeBRepTool_C2DF) -> TopOpeBRepTool_C2DF: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : TopOpeBRepTool_C2DF) -> TopOpeBRepTool_C2DF: ...
+    def Prepend(self,theOther : TopOpeBRepTool_ListOfC2DF) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1436,11 +1436,11 @@ class TopOpeBRepTool_ListOfC2DF(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRepTool_ListOfC2DF) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepTool_OutCurveType():
@@ -1458,6 +1458,7 @@ class TopOpeBRepTool_OutCurveType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1622,14 +1623,14 @@ class TopOpeBRepTool_REGUW():
         None
         """
     @overload
-    def REGU(self,istep : int,Scur : OCP.TopoDS.TopoDS_Shape,Splits : OCP.TopTools.TopTools_ListOfShape) -> bool: 
+    def REGU(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def REGU(self) -> bool: ...
+    def REGU(self,istep : int,Scur : OCP.TopoDS.TopoDS_Shape,Splits : OCP.TopTools.TopTools_ListOfShape) -> bool: ...
     def RemoveOldConnexity(self,v : OCP.TopoDS.TopoDS_Vertex,OriKey : int,e : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         None
@@ -1681,14 +1682,14 @@ class TopOpeBRepTool_ShapeClassifier():
         None
         """
     @overload
-    def SameDomain(self,samedomain : int) -> None: 
+    def SameDomain(self) -> int: 
         """
         None
 
         set mode for next StateShapeShape call samedomain = true --> S,Sref are same domain --> point on restriction (ON S) is used to classify S. samedomain = false --> S,Sref are not domain --> point not on restriction of S (IN S) is used to classify S. samedomain value is used only in next StateShapeShape call
         """
     @overload
-    def SameDomain(self) -> int: ...
+    def SameDomain(self,samedomain : int) -> None: ...
     def SetReference(self,SRef : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Set SRef as reference shape the next StateShapeReference(S,AvoidS) calls will classify S with SRef.
@@ -1708,29 +1709,29 @@ class TopOpeBRepTool_ShapeClassifier():
     @overload
     def StateShapeReference(self,S : OCP.TopoDS.TopoDS_Shape,LAvoidS : OCP.TopTools.TopTools_ListOfShape) -> OCP.TopAbs.TopAbs_State: 
         """
-        classify shape S compared with reference shape. AvoidS is not used in classification; AvoidS may be IsNull(). (usefull to avoid ON or UNKNOWN state in special cases)
+        classify shape S compared with reference shape. AvoidS is not used in classification; AvoidS may be IsNull(). (useful to avoid ON or UNKNOWN state in special cases)
 
-        classify shape S compared with reference shape. LAvoidS is list of S subshapes to avoid in classification (usefull to avoid ON or UNKNOWN state in special cases)
+        classify shape S compared with reference shape. LAvoidS is list of S subshapes to avoid in classification (useful to avoid ON or UNKNOWN state in special cases)
         """
     @overload
     def StateShapeReference(self,S : OCP.TopoDS.TopoDS_Shape,AvoidS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     @overload
-    def StateShapeShape(self,S : OCP.TopoDS.TopoDS_Shape,AvoidS : OCP.TopoDS.TopoDS_Shape,SRef : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
+    def StateShapeShape(self,S : OCP.TopoDS.TopoDS_Shape,SRef : OCP.TopoDS.TopoDS_Shape,samedomain : int=0) -> OCP.TopAbs.TopAbs_State: 
         """
         classify shape S compared with shape SRef. samedomain = 0 : S1,S2 are not same domain samedomain = 1 : S1,S2 are same domain
 
-        classify shape S compared with shape SRef. AvoidS is not used in classification; AvoidS may be IsNull(). (usefull to avoid ON or UNKNOWN state in special cases)
+        classify shape S compared with shape SRef. AvoidS is not used in classification; AvoidS may be IsNull(). (useful to avoid ON or UNKNOWN state in special cases)
 
-        classify shape S compared with shape SRef. LAvoidS is list of S subshapes to avoid in classification AvoidS is not used in classification; AvoidS may be IsNull(). (usefull to avoid ON or UNKNOWN state in special cases)
+        classify shape S compared with shape SRef. LAvoidS is list of S subshapes to avoid in classification AvoidS is not used in classification; AvoidS may be IsNull(). (useful to avoid ON or UNKNOWN state in special cases)
         """
+    @overload
+    def StateShapeShape(self,S : OCP.TopoDS.TopoDS_Shape,AvoidS : OCP.TopoDS.TopoDS_Shape,SRef : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     @overload
     def StateShapeShape(self,S : OCP.TopoDS.TopoDS_Shape,LAvoidS : OCP.TopTools.TopTools_ListOfShape,SRef : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     @overload
-    def StateShapeShape(self,S : OCP.TopoDS.TopoDS_Shape,SRef : OCP.TopoDS.TopoDS_Shape,samedomain : int=0) -> OCP.TopAbs.TopAbs_State: ...
+    def __init__(self,SRef : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,SRef : OCP.TopoDS.TopoDS_Shape) -> None: ...
     pass
 class TopOpeBRepTool_ShapeExplorer(OCP.TopExp.TopExp_Explorer):
     """
@@ -1738,8 +1739,6 @@ class TopOpeBRepTool_ShapeExplorer(OCP.TopExp.TopExp_Explorer):
     """
     def Clear(self) -> None: 
         """
-        Clears the content of the explorer. It will return False on More().
-
         Clears the content of the explorer. It will return False on More().
         """
     def Current(self) -> OCP.TopoDS.TopoDS_Shape: 
@@ -1749,16 +1748,14 @@ class TopOpeBRepTool_ShapeExplorer(OCP.TopExp.TopExp_Explorer):
     def Depth(self) -> int: 
         """
         Returns the current depth of the exploration. 0 is the shape to explore itself.
-
-        Returns the current depth of the exploration. 0 is the shape to explore itself.
-        """
-    def Destroy(self) -> None: 
-        """
-        None
         """
     def DumpCurrent(self,OS : io.BytesIO) -> io.BytesIO: 
         """
         Dump info on current shape to stream
+        """
+    def ExploredShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Return explored shape.
         """
     def Index(self) -> int: 
         """
@@ -1770,8 +1767,6 @@ class TopOpeBRepTool_ShapeExplorer(OCP.TopExp.TopExp_Explorer):
         """
     def More(self) -> bool: 
         """
-        Returns True if there are more shapes in the exploration.
-
         Returns True if there are more shapes in the exploration.
         """
     def Next(self) -> None: 
@@ -1798,7 +1793,7 @@ class TopOpeBRepTool_ShapeTool():
     @staticmethod
     def AdjustOnPeriodic_s(S : OCP.TopoDS.TopoDS_Shape) -> Tuple[float, float]: 
         """
-        ajust u,v values in UVBounds of the domain of the geometric shape <S>, according to Uperiodicity and VPeriodicity of the domain. <S> is assumed to be a face. u and/or v is/are not modified when the domain is not periodic in U and/or V .
+        adjust u,v values in UVBounds of the domain of the geometric shape <S>, according to Uperiodicity and VPeriodicity of the domain. <S> is assumed to be a face. u and/or v is/are not modified when the domain is not periodic in U and/or V .
         """
     @staticmethod
     @overload
@@ -1825,7 +1820,7 @@ class TopOpeBRepTool_ShapeTool():
     @staticmethod
     def Closed_s(S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
-        indicates wheter shape S1 is a closing shape on S2 or not.
+        indicates whether shape S1 is a closing shape on S2 or not.
         """
     @staticmethod
     def CurvesSameOriented_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve) -> bool: 
@@ -1834,7 +1829,7 @@ class TopOpeBRepTool_ShapeTool():
         """
     @staticmethod
     @overload
-    def EdgeData_s(E : OCP.TopoDS.TopoDS_Shape,P : float,T : OCP.gp.gp_Dir,N : OCP.gp.gp_Dir,C : float) -> float: 
+    def EdgeData_s(BRAC : OCP.BRepAdaptor.BRepAdaptor_Curve,P : float,T : OCP.gp.gp_Dir,N : OCP.gp.gp_Dir,C : float) -> float: 
         """
         Compute tangent T, normal N, curvature C at point of parameter P on curve BRAC. Returns the tolerance indicating if T,N are null.
 
@@ -1842,7 +1837,7 @@ class TopOpeBRepTool_ShapeTool():
         """
     @staticmethod
     @overload
-    def EdgeData_s(BRAC : OCP.BRepAdaptor.BRepAdaptor_Curve,P : float,T : OCP.gp.gp_Dir,N : OCP.gp.gp_Dir,C : float) -> float: ...
+    def EdgeData_s(E : OCP.TopoDS.TopoDS_Shape,P : float,T : OCP.gp.gp_Dir,N : OCP.gp.gp_Dir,C : float) -> float: ...
     @staticmethod
     def EdgesSameOriented_s(E1 : OCP.TopoDS.TopoDS_Shape,E2 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -1875,7 +1870,7 @@ class TopOpeBRepTool_ShapeTool():
         """
     @staticmethod
     @overload
-    def Resolution3d_s(F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> float: 
+    def Resolution3d_s(SU : OCP.Geom.Geom_Surface,Tol2d : float) -> float: 
         """
         None
 
@@ -1883,7 +1878,7 @@ class TopOpeBRepTool_ShapeTool():
         """
     @staticmethod
     @overload
-    def Resolution3d_s(SU : OCP.Geom.Geom_Surface,Tol2d : float) -> float: ...
+    def Resolution3d_s(F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> float: ...
     @staticmethod
     def ShapesSameOriented_s(S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
@@ -1901,7 +1896,7 @@ class TopOpeBRepTool_ShapeTool():
         """
     @staticmethod
     @overload
-    def UVBOUNDS_s(F : OCP.TopoDS.TopoDS_Face) -> Tuple[bool, bool, float, float, float, float]: 
+    def UVBOUNDS_s(S : OCP.Geom.Geom_Surface) -> Tuple[bool, bool, float, float, float, float]: 
         """
         None
 
@@ -1909,7 +1904,7 @@ class TopOpeBRepTool_ShapeTool():
         """
     @staticmethod
     @overload
-    def UVBOUNDS_s(S : OCP.Geom.Geom_Surface) -> Tuple[bool, bool, float, float, float, float]: ...
+    def UVBOUNDS_s(F : OCP.TopoDS.TopoDS_Face) -> Tuple[bool, bool, float, float, float, float]: ...
     def __init__(self) -> None: ...
     pass
 class TopOpeBRepTool_SolidClassifier():
@@ -1917,14 +1912,14 @@ class TopOpeBRepTool_SolidClassifier():
     None
     """
     @overload
-    def Classify(self,S : OCP.TopoDS.TopoDS_Shell,P : OCP.gp.gp_Pnt,Tol : float) -> OCP.TopAbs.TopAbs_State: 
+    def Classify(self,S : OCP.TopoDS.TopoDS_Solid,P : OCP.gp.gp_Pnt,Tol : float) -> OCP.TopAbs.TopAbs_State: 
         """
         compute the position of point <P> regarding with the geometric domain of the solid <S>.
 
         compute the position of point <P> regarding with the geometric domain of the shell <S>.
         """
     @overload
-    def Classify(self,S : OCP.TopoDS.TopoDS_Solid,P : OCP.gp.gp_Pnt,Tol : float) -> OCP.TopAbs.TopAbs_State: ...
+    def Classify(self,S : OCP.TopoDS.TopoDS_Shell,P : OCP.gp.gp_Pnt,Tol : float) -> OCP.TopAbs.TopAbs_State: ...
     def Clear(self) -> None: 
         """
         None
@@ -1984,7 +1979,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def IsClosingE_s(E : OCP.TopoDS.TopoDS_Edge,W : OCP.TopoDS.TopoDS_Shape,F : OCP.TopoDS.TopoDS_Face) -> bool: 
+    def IsClosingE_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         None
 
@@ -1992,7 +1987,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def IsClosingE_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    def IsClosingE_s(E : OCP.TopoDS.TopoDS_Edge,W : OCP.TopoDS.TopoDS_Shape,F : OCP.TopoDS.TopoDS_Face) -> bool: ...
     @staticmethod
     @overload
     def IsQuad_s(F : OCP.TopoDS.TopoDS_Face) -> bool: 
@@ -2006,7 +2001,7 @@ class TopOpeBRepTool_TOOL():
     def IsQuad_s(E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
     @staticmethod
     @overload
-    def IsonCLO_s(PC : OCP.Geom2d.Geom2d_Curve,onU : bool,xfirst : float,xperiod : float,xtol : float) -> bool: 
+    def IsonCLO_s(C2DF : TopOpeBRepTool_C2DF,onU : bool,xfirst : float,xperiod : float,xtol : float) -> bool: 
         """
         None
 
@@ -2014,7 +2009,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def IsonCLO_s(C2DF : TopOpeBRepTool_C2DF,onU : bool,xfirst : float,xperiod : float,xtol : float) -> bool: ...
+    def IsonCLO_s(PC : OCP.Geom2d.Geom2d_Curve,onU : bool,xfirst : float,xperiod : float,xtol : float) -> bool: ...
     @staticmethod
     def MatterKPtg_s(f1 : OCP.TopoDS.TopoDS_Face,f2 : OCP.TopoDS.TopoDS_Face,e : OCP.TopoDS.TopoDS_Edge,Ang : float) -> bool: 
         """
@@ -2022,7 +2017,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def Matter_s(f1 : OCP.TopoDS.TopoDS_Face,f2 : OCP.TopoDS.TopoDS_Face,e : OCP.TopoDS.TopoDS_Edge,pare : float,tola : float,Ang : float) -> bool: 
+    def Matter_s(d1 : OCP.gp.gp_Vec,d2 : OCP.gp.gp_Vec,ref : OCP.gp.gp_Vec) -> float: 
         """
         None
 
@@ -2032,15 +2027,15 @@ class TopOpeBRepTool_TOOL():
 
         None
         """
+    @staticmethod
+    @overload
+    def Matter_s(f1 : OCP.TopoDS.TopoDS_Face,f2 : OCP.TopoDS.TopoDS_Face,e : OCP.TopoDS.TopoDS_Edge,pare : float,tola : float,Ang : float) -> bool: ...
     @staticmethod
     @overload
     def Matter_s(d1 : OCP.gp.gp_Vec2d,d2 : OCP.gp.gp_Vec2d) -> float: ...
     @staticmethod
     @overload
     def Matter_s(xx1 : OCP.gp.gp_Dir,nt1 : OCP.gp.gp_Dir,xx2 : OCP.gp.gp_Dir,nt2 : OCP.gp.gp_Dir,tola : float,Ang : float) -> bool: ...
-    @staticmethod
-    @overload
-    def Matter_s(d1 : OCP.gp.gp_Vec,d2 : OCP.gp.gp_Vec,ref : OCP.gp.gp_Vec) -> float: ...
     @staticmethod
     def MkShell_s(lF : OCP.TopTools.TopTools_ListOfShape,She : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
@@ -2118,7 +2113,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def TggeomE_s(par : float,E : OCP.TopoDS.TopoDS_Edge,Tg : OCP.gp.gp_Vec) -> bool: 
+    def TggeomE_s(par : float,BC : OCP.BRepAdaptor.BRepAdaptor_Curve,Tg : OCP.gp.gp_Vec) -> bool: 
         """
         None
 
@@ -2126,7 +2121,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def TggeomE_s(par : float,BC : OCP.BRepAdaptor.BRepAdaptor_Curve,Tg : OCP.gp.gp_Vec) -> bool: ...
+    def TggeomE_s(par : float,E : OCP.TopoDS.TopoDS_Edge,Tg : OCP.gp.gp_Vec) -> bool: ...
     @staticmethod
     def TolP_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> float: 
         """
@@ -2154,7 +2149,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def UVISO_s(C2DF : TopOpeBRepTool_C2DF,isou : bool,isov : bool,d2d : OCP.gp.gp_Dir2d,o2d : OCP.gp.gp_Pnt2d) -> bool: 
+    def UVISO_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,isou : bool,isov : bool,d2d : OCP.gp.gp_Dir2d,o2d : OCP.gp.gp_Pnt2d) -> bool: 
         """
         None
 
@@ -2164,7 +2159,7 @@ class TopOpeBRepTool_TOOL():
         """
     @staticmethod
     @overload
-    def UVISO_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,isou : bool,isov : bool,d2d : OCP.gp.gp_Dir2d,o2d : OCP.gp.gp_Pnt2d) -> bool: ...
+    def UVISO_s(C2DF : TopOpeBRepTool_C2DF,isou : bool,isov : bool,d2d : OCP.gp.gp_Dir2d,o2d : OCP.gp.gp_Pnt2d) -> bool: ...
     @staticmethod
     @overload
     def UVISO_s(PC : OCP.Geom2d.Geom2d_Curve,isou : bool,isov : bool,d2d : OCP.gp.gp_Dir2d,o2d : OCP.gp.gp_Pnt2d) -> bool: ...
@@ -2230,14 +2225,14 @@ class TopOpeBRepTool_connexity():
     None
     """
     @overload
-    def AddItem(self,OriKey : int,Item : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def AddItem(self,OriKey : int,Item : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddItem(self,OriKey : int,Item : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def AddItem(self,OriKey : int,Item : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     def AllItems(self,Item : OCP.TopTools.TopTools_ListOfShape) -> int: 
         """
         None
@@ -2267,14 +2262,14 @@ class TopOpeBRepTool_connexity():
         None
         """
     @overload
-    def RemoveItem(self,OriKey : int,Item : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def RemoveItem(self,Item : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def RemoveItem(self,Item : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def RemoveItem(self,OriKey : int,Item : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def SetKey(self,Key : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
@@ -2377,14 +2372,14 @@ class TopOpeBRepTool_mkTondgE():
         None
         """
     @overload
-    def MkTonE(self,Ei : OCP.TopoDS.TopoDS_Edge,mkT : int,par1 : float,par2 : float) -> bool: 
+    def MkTonE(self,mkT : int,par1 : float,par2 : float) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def MkTonE(self,mkT : int,par1 : float,par2 : float) -> bool: ...
+    def MkTonE(self,Ei : OCP.TopoDS.TopoDS_Edge,mkT : int,par1 : float,par2 : float) -> bool: ...
     def SetRest(self,pari : float,Ei : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         None
@@ -2492,14 +2487,14 @@ def FTOL_FaceTolerances2d(B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box,myFace1 : OC
     None
     """
 @overload
-def FTOL_FaceTolerances3d(B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box,myFace1 : OCP.TopoDS.TopoDS_Face,myFace2 : OCP.TopoDS.TopoDS_Face,mySurface1 : OCP.BRepAdaptor.BRepAdaptor_Surface,mySurface2 : OCP.BRepAdaptor.BRepAdaptor_Surface,myTol1 : float,myTol2 : float,Deflection : float,MaxUV : float) -> None:
+def FTOL_FaceTolerances3d(myFace1 : OCP.TopoDS.TopoDS_Face,myFace2 : OCP.TopoDS.TopoDS_Face,Tol : float) -> None:
     """
     None
 
     None
     """
 @overload
-def FTOL_FaceTolerances3d(myFace1 : OCP.TopoDS.TopoDS_Face,myFace2 : OCP.TopoDS.TopoDS_Face,Tol : float) -> None:
+def FTOL_FaceTolerances3d(B1 : OCP.Bnd.Bnd_Box,B2 : OCP.Bnd.Bnd_Box,myFace1 : OCP.TopoDS.TopoDS_Face,myFace2 : OCP.TopoDS.TopoDS_Face,mySurface1 : OCP.BRepAdaptor.BRepAdaptor_Surface,mySurface2 : OCP.BRepAdaptor.BRepAdaptor_Surface,myTol1 : float,myTol2 : float,Deflection : float,MaxUV : float) -> None:
     pass
 def FUN_ds_CopyEdge(Ein : OCP.TopoDS.TopoDS_Shape,Eou : OCP.TopoDS.TopoDS_Shape) -> None:
     """
@@ -2568,14 +2563,14 @@ def FUN_tool_UpdateBnd2d(B2d : OCP.Bnd.Bnd_Box2d,newB2d : OCP.Bnd.Bnd_Box2d) -> 
     None
     """
 @overload
-def FUN_tool_bounds(F : OCP.TopoDS.TopoDS_Shape,u1 : float,u2 : float,v1 : float,v2 : float) -> bool:
+def FUN_tool_bounds(E : OCP.TopoDS.TopoDS_Edge,f : float,l : float) -> None:
     """
     None
 
     None
     """
 @overload
-def FUN_tool_bounds(E : OCP.TopoDS.TopoDS_Edge,f : float,l : float) -> None:
+def FUN_tool_bounds(F : OCP.TopoDS.TopoDS_Shape,u1 : float,u2 : float,v1 : float,v2 : float) -> bool:
     pass
 def FUN_tool_closed(S : OCP.Geom.Geom_Surface,uclosed : bool,uperiod : float,vclosed : bool,vperiod : float) -> bool:
     """
@@ -2662,14 +2657,14 @@ def FUN_tool_getdxx(F : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge,parE :
     None
     """
 @overload
-def FUN_tool_getgeomxx(Fi : OCP.TopoDS.TopoDS_Face,Ei : OCP.TopoDS.TopoDS_Edge,parOnEi : float) -> OCP.gp.gp_Vec:
+def FUN_tool_getgeomxx(Fi : OCP.TopoDS.TopoDS_Face,Ei : OCP.TopoDS.TopoDS_Edge,parOnEi : float,ngFi : OCP.gp.gp_Dir) -> OCP.gp.gp_Vec:
     """
     None
 
     None
     """
 @overload
-def FUN_tool_getgeomxx(Fi : OCP.TopoDS.TopoDS_Face,Ei : OCP.TopoDS.TopoDS_Edge,parOnEi : float,ngFi : OCP.gp.gp_Dir) -> OCP.gp.gp_Vec:
+def FUN_tool_getgeomxx(Fi : OCP.TopoDS.TopoDS_Face,Ei : OCP.TopoDS.TopoDS_Edge,parOnEi : float) -> OCP.gp.gp_Vec:
     pass
 @overload
 def FUN_tool_getindex(ponc : OCP.Extrema.Extrema_ExtPC) -> int:
@@ -2704,7 +2699,7 @@ def FUN_tool_isobounds(F : OCP.TopoDS.TopoDS_Shape,u1 : float,u2 : float,v1 : fl
     None
     """
 @overload
-def FUN_tool_line(E : OCP.TopoDS.TopoDS_Edge) -> bool:
+def FUN_tool_line(BAC : OCP.BRepAdaptor.BRepAdaptor_Curve) -> bool:
     """
     None
 
@@ -2715,13 +2710,13 @@ def FUN_tool_line(E : OCP.TopoDS.TopoDS_Edge) -> bool:
     None
     """
 @overload
-def FUN_tool_line(C3d : OCP.Geom.Geom_Curve) -> bool:
+def FUN_tool_line(E : OCP.TopoDS.TopoDS_Edge) -> bool:
     pass
 @overload
 def FUN_tool_line(C2d : OCP.Geom2d.Geom2d_Curve) -> bool:
     pass
 @overload
-def FUN_tool_line(BAC : OCP.BRepAdaptor.BRepAdaptor_Curve) -> bool:
+def FUN_tool_line(C3d : OCP.Geom.Geom_Curve) -> bool:
     pass
 @overload
 def FUN_tool_maxtol(S : OCP.TopoDS.TopoDS_Shape) -> float:
@@ -2799,14 +2794,14 @@ def FUN_tool_parE(E0 : OCP.TopoDS.TopoDS_Edge,par0 : float,E : OCP.TopoDS.TopoDS
 def FUN_tool_parE(E0 : OCP.TopoDS.TopoDS_Edge,par0 : float,E : OCP.TopoDS.TopoDS_Edge,par : float,tol : float) -> bool:
     pass
 @overload
-def FUN_tool_parF(E : OCP.TopoDS.TopoDS_Edge,par : float,F : OCP.TopoDS.TopoDS_Face,UV : OCP.gp.gp_Pnt2d,tol : float) -> bool:
+def FUN_tool_parF(E : OCP.TopoDS.TopoDS_Edge,par : float,F : OCP.TopoDS.TopoDS_Face,UV : OCP.gp.gp_Pnt2d) -> bool:
     """
     None
 
     None
     """
 @overload
-def FUN_tool_parF(E : OCP.TopoDS.TopoDS_Edge,par : float,F : OCP.TopoDS.TopoDS_Face,UV : OCP.gp.gp_Pnt2d) -> bool:
+def FUN_tool_parF(E : OCP.TopoDS.TopoDS_Edge,par : float,F : OCP.TopoDS.TopoDS_Face,UV : OCP.gp.gp_Pnt2d,tol : float) -> bool:
     pass
 def FUN_tool_parVonE(v : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,par : float) -> bool:
     """
@@ -2823,14 +2818,14 @@ def FUN_tool_paronEF(E : OCP.TopoDS.TopoDS_Edge,par : float,F : OCP.TopoDS.TopoD
 def FUN_tool_paronEF(E : OCP.TopoDS.TopoDS_Edge,par : float,F : OCP.TopoDS.TopoDS_Face,UV : OCP.gp.gp_Pnt2d,tol : float) -> bool:
     pass
 @overload
-def FUN_tool_pcurveonF(F : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge) -> bool:
+def FUN_tool_pcurveonF(fF : OCP.TopoDS.TopoDS_Face,faultyE : OCP.TopoDS.TopoDS_Edge,C2d : OCP.Geom2d.Geom2d_Curve,newf : OCP.TopoDS.TopoDS_Face) -> bool:
     """
     None
 
     None
     """
 @overload
-def FUN_tool_pcurveonF(fF : OCP.TopoDS.TopoDS_Face,faultyE : OCP.TopoDS.TopoDS_Edge,C2d : OCP.Geom2d.Geom2d_Curve,newf : OCP.TopoDS.TopoDS_Face) -> bool:
+def FUN_tool_pcurveonF(F : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge) -> bool:
     pass
 def FUN_tool_plane(F : OCP.TopoDS.TopoDS_Shape) -> bool:
     """
@@ -2861,10 +2856,10 @@ def FUN_tool_projPonC2D(P : OCP.gp.gp_Pnt,tole : float,BAC2D : OCP.BRepAdaptor.B
     None
     """
 @overload
-def FUN_tool_projPonC2D(P : OCP.gp.gp_Pnt,BAC2D : OCP.BRepAdaptor.BRepAdaptor_Curve2d,param : float,dist : float) -> bool:
+def FUN_tool_projPonC2D(P : OCP.gp.gp_Pnt,BAC2D : OCP.BRepAdaptor.BRepAdaptor_Curve2d,pmin : float,pmax : float,param : float,dist : float) -> bool:
     pass
 @overload
-def FUN_tool_projPonC2D(P : OCP.gp.gp_Pnt,BAC2D : OCP.BRepAdaptor.BRepAdaptor_Curve2d,pmin : float,pmax : float,param : float,dist : float) -> bool:
+def FUN_tool_projPonC2D(P : OCP.gp.gp_Pnt,BAC2D : OCP.BRepAdaptor.BRepAdaptor_Curve2d,param : float,dist : float) -> bool:
     pass
 @overload
 def FUN_tool_projPonE(P : OCP.gp.gp_Pnt,E : OCP.TopoDS.TopoDS_Edge,param : float,dist : float) -> bool:
@@ -2889,7 +2884,7 @@ def FUN_tool_projPonboundedF(P : OCP.gp.gp_Pnt,F : OCP.TopoDS.TopoDS_Face,UV : O
     None
     """
 @overload
-def FUN_tool_quad(E : OCP.TopoDS.TopoDS_Edge) -> bool:
+def FUN_tool_quad(S : OCP.Geom.Geom_Surface) -> bool:
     """
     None
 
@@ -2903,9 +2898,6 @@ def FUN_tool_quad(E : OCP.TopoDS.TopoDS_Edge) -> bool:
 
     None
     """
-@overload
-def FUN_tool_quad(F : OCP.TopoDS.TopoDS_Face) -> bool:
-    pass
 @overload
 def FUN_tool_quad(BAC : OCP.BRepAdaptor.BRepAdaptor_Curve) -> bool:
     pass
@@ -2913,10 +2905,13 @@ def FUN_tool_quad(BAC : OCP.BRepAdaptor.BRepAdaptor_Curve) -> bool:
 def FUN_tool_quad(pc : OCP.Geom2d.Geom2d_Curve) -> bool:
     pass
 @overload
+def FUN_tool_quad(E : OCP.TopoDS.TopoDS_Edge) -> bool:
+    pass
+@overload
 def FUN_tool_quad(C3d : OCP.Geom.Geom_Curve) -> bool:
     pass
 @overload
-def FUN_tool_quad(S : OCP.Geom.Geom_Surface) -> bool:
+def FUN_tool_quad(F : OCP.TopoDS.TopoDS_Face) -> bool:
     pass
 def FUN_tool_shapes(S : OCP.TopoDS.TopoDS_Shape,typ : OCP.TopAbs.TopAbs_ShapeEnum,ltyp : OCP.TopTools.TopTools_ListOfShape) -> None:
     """
@@ -2945,14 +2940,14 @@ def FUN_tool_typ(E : OCP.TopoDS.TopoDS_Edge) -> OCP.GeomAbs.GeomAbs_CurveType:
     None
     """
 @overload
-def FUN_tool_value(UV : OCP.gp.gp_Pnt2d,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt) -> bool:
+def FUN_tool_value(par : float,E : OCP.TopoDS.TopoDS_Edge,P : OCP.gp.gp_Pnt) -> bool:
     """
     None
 
     None
     """
 @overload
-def FUN_tool_value(par : float,E : OCP.TopoDS.TopoDS_Edge,P : OCP.gp.gp_Pnt) -> bool:
+def FUN_tool_value(UV : OCP.gp.gp_Pnt2d,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt) -> bool:
     pass
 TopOpeBRepTool_APPROX: OCP.TopOpeBRepTool.TopOpeBRepTool_OutCurveType # value = <TopOpeBRepTool_OutCurveType.TopOpeBRepTool_APPROX: 1>
 TopOpeBRepTool_BSPLINE1: OCP.TopOpeBRepTool.TopOpeBRepTool_OutCurveType # value = <TopOpeBRepTool_OutCurveType.TopOpeBRepTool_BSPLINE1: 0>

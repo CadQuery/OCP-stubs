@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.NCollection
 import OCP.Extrema
 import io
-import OCP.NCollection
-import OCP.SelectMgr
 import OCP.gp
-import OCP.TopoDS
-import OCP.Bnd
+import OCP.SelectMgr
 import BRepExtrema_ElementFilter
 import OCP.Standard
+import OCP.TopoDS
+import OCP.Bnd
 __all__  = [
 "BRepExtrema_DistShapeShape",
 "BRepExtrema_DistanceSS",
@@ -52,6 +52,10 @@ class BRepExtrema_DistShapeShape():
         """
         True if the minimum distance is found.
         """
+    def IsMultiThread(self) -> bool: 
+        """
+        Returns Standard_True then computation will be performed in parallel Default value is Standard_False
+        """
     def LoadS1(self,Shape1 : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         load first shape into extrema
@@ -66,11 +70,11 @@ class BRepExtrema_DistShapeShape():
         """
     def ParOnEdgeS1(self,N : int) -> Tuple[float]: 
         """
-        gives the corresponding parameter t if the Nth solution is situated on an Egde of the first shape
+        gives the corresponding parameter t if the Nth solution is situated on an Edge of the first shape
         """
     def ParOnEdgeS2(self,N : int) -> Tuple[float]: 
         """
-        gives the corresponding parameter t if the Nth solution is situated on an Egde of the first shape
+        gives the corresponding parameter t if the Nth solution is situated on an Edge of the first shape
         """
     def ParOnFaceS1(self,N : int) -> Tuple[float, float]: 
         """
@@ -80,9 +84,9 @@ class BRepExtrema_DistShapeShape():
         """
         gives the corresponding parameters (U,V) if the Nth solution is situated on an Face of the second shape
         """
-    def Perform(self) -> bool: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
-        computation of the minimum distance (value and couple of points). Parameter theDeflection is used to specify a maximum deviation of extreme distances from the minimum one. Returns IsDone status.
+        computation of the minimum distance (value and couple of points). Parameter theDeflection is used to specify a maximum deviation of extreme distances from the minimum one. Returns IsDone status. theRange - the progress indicator of algorithm
         """
     def PointOnShape1(self,N : int) -> OCP.gp.gp_Pnt: 
         """
@@ -94,15 +98,19 @@ class BRepExtrema_DistShapeShape():
         """
     def SetAlgo(self,A : OCP.Extrema.Extrema_ExtAlgo) -> None: 
         """
-        None
+        Sets unused parameter Obsolete
         """
     def SetDeflection(self,theDeflection : float) -> None: 
         """
-        None
+        Sets deflection to computation of the minimum distance
         """
     def SetFlag(self,F : OCP.Extrema.Extrema_ExtFlag) -> None: 
         """
-        None
+        Sets unused parameter Obsolete
+        """
+    def SetMultiThread(self,theIsMultiThread : bool) -> None: 
+        """
+        If isMultiThread == Standard_True then computation will be performed in parallel.
         """
     def SupportOnShape1(self,N : int) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -125,9 +133,9 @@ class BRepExtrema_DistShapeShape():
         Returns the value of the minimum distance.
         """
     @overload
-    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,theDeflection : float,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    def __init__(self,Shape1 : OCP.TopoDS.TopoDS_Shape,Shape2 : OCP.TopoDS.TopoDS_Shape,theDeflection : float,F : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,A : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -183,6 +191,7 @@ class BRepExtrema_ElementFilter():
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -311,9 +320,9 @@ class BRepExtrema_ExtCF():
         Returns the value of the <N>th extremum square distance.
         """
     @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class BRepExtrema_ExtFF():
     """
@@ -360,9 +369,9 @@ class BRepExtrema_ExtFF():
         Returns the value of the <N>th extremum square distance.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepExtrema_ExtPC():
     """
@@ -450,9 +459,9 @@ class BRepExtrema_ExtPF():
         Returns the value of the <N>th extremum square distance.
         """
     @overload
-    def __init__(self,TheVertex : OCP.TopoDS.TopoDS_Vertex,TheFace : OCP.TopoDS.TopoDS_Face,TheFlag : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,TheAlgo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,TheVertex : OCP.TopoDS.TopoDS_Vertex,TheFace : OCP.TopoDS.TopoDS_Face,TheFlag : OCP.Extrema.Extrema_ExtFlag=Extrema_ExtFlag.Extrema_ExtFlag_MINMAX,TheAlgo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     pass
 class BRepExtrema_OverlapTool():
     """
@@ -466,10 +475,6 @@ class BRepExtrema_OverlapTool():
         """
         Is overlap test completed?
         """
-    def LoadTriangleSets(self,theSet1 : BRepExtrema_TriangleSet,theSet2 : BRepExtrema_TriangleSet) -> None: 
-        """
-        Loads the given element sets into the overlap tool.
-        """
     def MarkDirty(self) -> None: 
         """
         Marks test results as outdated.
@@ -482,10 +487,6 @@ class BRepExtrema_OverlapTool():
         """
         Returns set of overlapped sub-shapes of 2nd shape (currently only faces are detected).
         """
-    def Perform(self,theTolerance : float=0.0) -> None: 
-        """
-        Performs searching of overlapped mesh elements.
-        """
     def RejectNode(self,theCornerMin1 : OCP.SelectMgr.SelectMgr_Vec3,theCornerMax1 : OCP.SelectMgr.SelectMgr_Vec3,theCornerMin2 : OCP.SelectMgr.SelectMgr_Vec3,theCornerMax2 : OCP.SelectMgr.SelectMgr_Vec3,arg5 : float) -> bool: 
         """
         Defines the rules for node rejection by bounding box
@@ -494,10 +495,6 @@ class BRepExtrema_OverlapTool():
         """
         Sets filtering tool for preliminary checking pairs of mesh elements.
         """
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theSet1 : BRepExtrema_TriangleSet,theSet2 : BRepExtrema_TriangleSet) -> None: ...
     pass
 class BRepExtrema_Poly():
     """
@@ -553,9 +550,9 @@ class BRepExtrema_SelfIntersection(BRepExtrema_ElementFilter):
         Returns tolerance value used for self-intersection test.
         """
     @overload
-    def __init__(self,theTolerance : float=0.0) -> None: ...
-    @overload
     def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theTolerance : float=0.0) -> None: ...
+    @overload
+    def __init__(self,theTolerance : float=0.0) -> None: ...
     DoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.DoCheck: 2>
     NoCheck: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.NoCheck: 0>
     Overlap: OCP.BRepExtrema.FilterResult_e # value = <FilterResult_e.Overlap: 1>
@@ -615,14 +612,14 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : BRepExtrema_SeqOfSolution) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : BRepExtrema_SolutionElem) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -640,14 +637,14 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : BRepExtrema_SeqOfSolution) -> None: 
+    def Prepend(self,theItem : BRepExtrema_SolutionElem) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : BRepExtrema_SolutionElem) -> None: ...
+    def Prepend(self,theSeq : BRepExtrema_SeqOfSolution) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -682,9 +679,9 @@ class BRepExtrema_SeqOfSolution(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : BRepExtrema_SeqOfSolution) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -867,13 +864,13 @@ class BRepExtrema_SolutionElem():
         Returns the vertex if the solution is a Vertex.
         """
     @overload
-    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theFace : OCP.TopoDS.TopoDS_Face,theU : float,theV : float) -> None: ...
-    @overload
-    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theEdge : OCP.TopoDS.TopoDS_Edge,theParam : float) -> None: ...
+    @overload
+    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theVertex : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def __init__(self,theDist : float,thePoint : OCP.gp.gp_Pnt,theSolType : BRepExtrema_SupportType,theFace : OCP.TopoDS.TopoDS_Face,theU : float,theV : float) -> None: ...
     pass
 class BRepExtrema_SupportType():
     """
@@ -890,6 +887,7 @@ class BRepExtrema_SupportType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

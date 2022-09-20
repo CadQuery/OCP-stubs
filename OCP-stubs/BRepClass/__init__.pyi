@@ -4,11 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom2dInt
+import OCP.TopTools
 import OCP.gp
-import OCP.TopoDS
-import OCP.IntRes2d
 import OCP.TopAbs
+import OCP.IntRes2d
+import OCP.TopoDS
+import OCP.Geom2dInt
 __all__  = [
 "BRepClass_Edge",
 "BRepClass_FClass2dOfFClassifier",
@@ -24,28 +25,52 @@ class BRepClass_Edge():
     """
     def Edge(self) -> OCP.TopoDS.TopoDS_Edge: 
         """
-        None
+        Returns the current Edge
 
         None
 
-        None
+        Returns the current Edge
 
         None
         """
     def Face(self) -> OCP.TopoDS.TopoDS_Face: 
         """
-        None
+        Returns the Face for the current Edge
 
         None
 
-        None
+        Returns the Face for the current Edge
 
         None
         """
-    @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def MaxTolerance(self) -> float: 
+        """
+        Returns the maximum tolerance
+        """
+    def NextEdge(self) -> OCP.TopoDS.TopoDS_Edge: 
+        """
+        Returns the next Edge
+        """
+    def SetMaxTolerance(self,theValue : float) -> None: 
+        """
+        Sets the maximum tolerance at which to start checking in the intersector
+        """
+    def SetNextEdge(self,theMapVE : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape) -> None: 
+        """
+        Finds and sets the next Edge for the current
+        """
+    def SetUseBndBox(self,theValue : bool) -> None: 
+        """
+        Sets the status of whether we are using boxes or not
+        """
+    def UseBndBox(self) -> bool: 
+        """
+        Returns true if we are using boxes in the intersector
+        """
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class BRepClass_FClass2dOfFClassifier():
     """
@@ -135,14 +160,14 @@ class BRepClass_FaceClassifier(BRepClass_FClassifier):
         Returns True if the face contains no wire. The state is IN.
         """
     @overload
-    def Perform(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,Tol : float) -> None: 
+    def Perform(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: 
         """
-        Classify the Point P with Tolerance <T> on the face described by <F>.
+        Classify the Point P with Tolerance <T> on the face described by <F>. Recommended to use Bnd_Box if the number of edges > 10 and the geometry is mostly spline
 
-        Classify the Point P with Tolerance <T> on the face described by <F>.
+        Classify the Point P with Tolerance <T> on the face described by <F>. Recommended to use Bnd_Box if the number of edges > 10 and the geometry is mostly spline
         """
     @overload
-    def Perform(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
+    def Perform(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt2d,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
     def Position(self) -> OCP.IntRes2d.IntRes2d_Position: 
         """
         Returns the position of the point on the edge returned by Edge.
@@ -156,13 +181,13 @@ class BRepClass_FaceClassifier(BRepClass_FClassifier):
         Returns the result of the classification.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
+    @overload
     def __init__(self,F : BRepClass_FaceExplorer,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
-    @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt2d,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
     pass
 class BRepClass_FaceExplorer():
     """
@@ -183,6 +208,10 @@ class BRepClass_FaceExplorer():
     def InitWires(self) -> None: 
         """
         Starts an exploration of the wires.
+        """
+    def MaxTolerance(self) -> float: 
+        """
+        Returns the maximum tolerance
         """
     def MoreEdges(self) -> bool: 
         """
@@ -227,6 +256,18 @@ class BRepClass_FaceExplorer():
     def Segment(self,P : OCP.gp.gp_Pnt2d,L : OCP.gp.gp_Lin2d,Par : float) -> bool: 
         """
         Returns in <L>, <Par> a segment having at least one intersection with the face boundary to compute intersections.
+        """
+    def SetMaxTolerance(self,theValue : float) -> None: 
+        """
+        Sets the maximum tolerance at which to start checking in the intersector
+        """
+    def SetUseBndBox(self,theValue : bool) -> None: 
+        """
+        Sets the status of whether we are using boxes or not
+        """
+    def UseBndBox(self) -> bool: 
+        """
+        Returns true if we are using boxes in the intersector
         """
     def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass

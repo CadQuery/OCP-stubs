@@ -4,28 +4,28 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Bisector
-import OCP.NCollection
 import OCP.MAT
-import OCP.Law
-import OCP.AppParCurves
-import OCP.AppCont
-import OCP.Geom
-import OCP.TColgp
-import OCP.TopoDS
-import OCP.GeomFill
-import OCP.GeomPlate
-import OCP.Standard
-import OCP.Adaptor3d
 import OCP.TopTools
-import OCP.TColStd
-import io
-import OCP.Adaptor2d
-import OCP.gp
 import OCP.GeomAbs
-import OCP.GeomLProp
-import OCP.BRepMAT2d
+import OCP.NCollection
+import io
 import OCP.Geom2d
+import OCP.Standard
+import OCP.TopoDS
+import OCP.BRepMAT2d
+import OCP.Adaptor3d
+import OCP.Law
+import OCP.Adaptor2d
+import OCP.Bisector
+import OCP.GeomPlate
+import OCP.TColgp
+import OCP.GeomLProp
+import OCP.GeomFill
+import OCP.gp
+import OCP.Geom
+import OCP.AppCont
+import OCP.AppParCurves
+import OCP.TColStd
 __all__  = [
 "BRepFill",
 "BRepFill_LocationLaw",
@@ -123,7 +123,7 @@ class BRepFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
     def D0(self,Abscissa : float,Section : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
-        Apply the Law to a shape, for a given Curnilinear abscissa
+        Apply the Law to a shape, for a given Curvilinear abscissa
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -167,26 +167,26 @@ class BRepFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
     def IsG1(self,Index : int,SpatialTolerance : float=1e-07,AngularTolerance : float=0.0001) -> int: 
         """
-        Compute the Law's continuity beetween 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
+        Compute the Law's continuity between 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Law(self,Index : int) -> OCP.GeomFill.GeomFill_LocationLaw: 
         """
         Return the elementary Law of rank <Index> <Index> have to be in [1, NbLaw()]
@@ -201,7 +201,7 @@ class BRepFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
     def Parameter(self,Abscissa : float) -> Tuple[int, float]: 
         """
-        Find the index Law and the parmaeter, for a given Curnilinear abscissa
+        Find the index Law and the parameter, for a given Curvilinear abscissa
         """
     def PerformVertex(self,Index : int,InputVertex : OCP.TopoDS.TopoDS_Vertex,TolMin : float,OutputVertex : OCP.TopoDS.TopoDS_Vertex,Location : int=0) -> None: 
         """
@@ -217,7 +217,7 @@ class BRepFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
     def TransformInG0Law(self) -> None: 
         """
-        Apply a linear transformation on each law, to have continuity of the global law beetween the edges.
+        Apply a linear transformation on each law, to have continuity of the global law between the edges.
         """
     def Vertex(self,Index : int) -> OCP.TopoDS.TopoDS_Vertex: 
         """
@@ -263,7 +263,7 @@ class BRepFill_AdvancedEvolved():
     pass
 class BRepFill_ApproxSeewing():
     """
-    Evaluate the 3dCurve and the PCurves described in a MultiLine from BRepFill. The parametrization of those curves is not imposed by the Bissectrice. The parametrization is given approximatively by the abscissa of the curve3d.
+    Evaluate the 3dCurve and the PCurves described in a MultiLine from BRepFill. The parametrization of those curves is not imposed by the Bissectrice. The parametrization is given approximately by the abscissa of the curve3d.
     """
     def Curve(self) -> OCP.Geom.Geom_Curve: 
         """
@@ -286,9 +286,9 @@ class BRepFill_ApproxSeewing():
         None
         """
     @overload
-    def __init__(self,ML : BRepFill_MultiLine) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,ML : BRepFill_MultiLine) -> None: ...
     pass
 class BRepFill_CompatibleWires():
     """
@@ -392,9 +392,9 @@ class BRepFill_ComputeCLine():
         returns the approximation MultiCurve of range <Index>.
         """
     @overload
-    def __init__(self,degreemin : int=3,degreemax : int=8,Tolerance3d : float=1e-05,Tolerance2d : float=1e-05,cutting : bool=False,FirstC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint,LastC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint) -> None: ...
-    @overload
     def __init__(self,Line : BRepFill_MultiLine,degreemin : int=3,degreemax : int=8,Tolerance3d : float=1e-05,Tolerance2d : float=1e-05,cutting : bool=False,FirstC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint,LastC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint) -> None: ...
+    @overload
+    def __init__(self,degreemin : int=3,degreemax : int=8,Tolerance3d : float=1e-05,Tolerance2d : float=1e-05,cutting : bool=False,FirstC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint,LastC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint) -> None: ...
     pass
 class BRepFill_CurveConstraint(OCP.GeomPlate.GeomPlate_CurveConstraint, OCP.Standard.Standard_Transient):
     """
@@ -404,7 +404,7 @@ class BRepFill_CurveConstraint(OCP.GeomPlate.GeomPlate_CurveConstraint, OCP.Stan
         """
         Returns a 2d curve associated the surface resulting of the constraints
         """
-    def Curve3d(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def Curve3d(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -457,23 +457,23 @@ class BRepFill_CurveConstraint(OCP.GeomPlate.GeomPlate_CurveConstraint, OCP.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LPropSurf(self,U : float) -> OCP.GeomLProp.GeomLProp_SLProps: 
         """
         None
@@ -494,7 +494,7 @@ class BRepFill_CurveConstraint(OCP.GeomPlate.GeomPlate_CurveConstraint, OCP.Stan
         """
         Returns the order of constraint, one of G0, G1 or G2.
         """
-    def ProjectedCurve(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def ProjectedCurve(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the projected curve resulting from the normal projection of the curve on the initial surface
         """
@@ -522,7 +522,7 @@ class BRepFill_CurveConstraint(OCP.GeomPlate.GeomPlate_CurveConstraint, OCP.Stan
         """
         Allows you to set the order of continuity required for the constraints: G0, G1, and G2, controlled respectively by G0Criterion G1Criterion and G2Criterion.
         """
-    def SetProjectedCurve(self,Curve2d : OCP.Adaptor2d.Adaptor2d_HCurve2d,TolU : float,TolV : float) -> None: 
+    def SetProjectedCurve(self,Curve2d : OCP.Adaptor2d.Adaptor2d_Curve2d,TolU : float,TolV : float) -> None: 
         """
         loads a 2d curve resulting from the normal projection of the curve on the initial surface
         """
@@ -531,9 +531,9 @@ class BRepFill_CurveConstraint(OCP.GeomPlate.GeomPlate_CurveConstraint, OCP.Stan
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,Boundary : OCP.Adaptor3d.Adaptor3d_HCurveOnSurface,Order : int,NPt : int=10,TolDist : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1) -> None: ...
+    def __init__(self,Boundary : OCP.Adaptor3d.Adaptor3d_CurveOnSurface,Order : int,NPt : int=10,TolDist : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1) -> None: ...
     @overload
-    def __init__(self,Boundary : OCP.Adaptor3d.Adaptor3d_HCurve,Tang : int,NPt : int=10,TolDist : float=0.0001) -> None: ...
+    def __init__(self,Boundary : OCP.Adaptor3d.Adaptor3d_Curve,Tang : int,NPt : int=10,TolDist : float=0.0001) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -574,14 +574,14 @@ class BRepFill_DataMapOfNodeDataMapOfShapeShape(OCP.NCollection.NCollection_Base
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : BRepFill_DataMapOfNodeDataMapOfShapeShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -634,9 +634,9 @@ class BRepFill_DataMapOfNodeDataMapOfShapeShape(OCP.NCollection.NCollection_Base
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : BRepFill_DataMapOfNodeDataMapOfShapeShape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfNodeShape(OCP.NCollection.NCollection_BaseMap):
@@ -762,14 +762,14 @@ class BRepFill_DataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollection_Bas
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : BRepFill_DataMapOfOrientedShapeListOfShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -873,14 +873,14 @@ class BRepFill_DataMapOfShapeDataMapOfShapeListOfShape(OCP.NCollection.NCollecti
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopTools.TopTools_DataMapOfShapeListOfShape) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_DataMapOfShapeListOfShape: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_DataMapOfShapeListOfShape: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopTools.TopTools_DataMapOfShapeListOfShape) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -914,11 +914,11 @@ class BRepFill_DataMapOfShapeDataMapOfShapeListOfShape(OCP.NCollection.NCollecti
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : BRepFill_DataMapOfShapeDataMapOfShapeListOfShape) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : BRepFill_DataMapOfShapeDataMapOfShapeListOfShape) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfShapeSequenceOfPnt(OCP.NCollection.NCollection_BaseMap):
@@ -967,14 +967,14 @@ class BRepFill_DataMapOfShapeSequenceOfPnt(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TColgp.TColgp_SequenceOfPnt: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TColgp.TColgp_SequenceOfPnt) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TColgp.TColgp_SequenceOfPnt) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TColgp.TColgp_SequenceOfPnt: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -1008,11 +1008,11 @@ class BRepFill_DataMapOfShapeSequenceOfPnt(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : BRepFill_DataMapOfShapeSequenceOfPnt) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BRepFill_DataMapOfShapeSequenceOfPnt) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_DataMapOfShapeSequenceOfReal(OCP.NCollection.NCollection_BaseMap):
@@ -1102,9 +1102,9 @@ class BRepFill_DataMapOfShapeSequenceOfReal(OCP.NCollection.NCollection_BaseMap)
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : BRepFill_DataMapOfShapeSequenceOfReal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepFill_DataMapOfShapeSequenceOfReal) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1122,7 +1122,7 @@ class BRepFill_Draft():
         None
         """
     @overload
-    def Perform(self,LengthMax : float) -> None: 
+    def Perform(self,Surface : OCP.Geom.Geom_Surface,KeepInsideSurface : bool=True) -> None: 
         """
         None
 
@@ -1133,7 +1133,7 @@ class BRepFill_Draft():
     @overload
     def Perform(self,StopShape : OCP.TopoDS.TopoDS_Shape,KeepOutSide : bool=True) -> None: ...
     @overload
-    def Perform(self,Surface : OCP.Geom.Geom_Surface,KeepInsideSurface : bool=True) -> None: ...
+    def Perform(self,LengthMax : float) -> None: ...
     def SetDraft(self,IsInternal : bool=False) -> None: 
         """
         None
@@ -1166,7 +1166,7 @@ class BRepFill_Edge3DLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def D0(self,Abscissa : float,Section : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
-        Apply the Law to a shape, for a given Curnilinear abscissa
+        Apply the Law to a shape, for a given Curvilinear abscissa
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1210,26 +1210,26 @@ class BRepFill_Edge3DLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def IsG1(self,Index : int,SpatialTolerance : float=1e-07,AngularTolerance : float=0.0001) -> int: 
         """
-        Compute the Law's continuity beetween 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
+        Compute the Law's continuity between 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Law(self,Index : int) -> OCP.GeomFill.GeomFill_LocationLaw: 
         """
         Return the elementary Law of rank <Index> <Index> have to be in [1, NbLaw()]
@@ -1244,7 +1244,7 @@ class BRepFill_Edge3DLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def Parameter(self,Abscissa : float) -> Tuple[int, float]: 
         """
-        Find the index Law and the parmaeter, for a given Curnilinear abscissa
+        Find the index Law and the parameter, for a given Curvilinear abscissa
         """
     def PerformVertex(self,Index : int,InputVertex : OCP.TopoDS.TopoDS_Vertex,TolMin : float,OutputVertex : OCP.TopoDS.TopoDS_Vertex,Location : int=0) -> None: 
         """
@@ -1260,7 +1260,7 @@ class BRepFill_Edge3DLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def TransformInG0Law(self) -> None: 
         """
-        Apply a linear transformation on each law, to have continuity of the global law beetween the edges.
+        Apply a linear transformation on each law, to have continuity of the global law between the edges.
         """
     def Vertex(self,Index : int) -> OCP.TopoDS.TopoDS_Vertex: 
         """
@@ -1300,7 +1300,7 @@ class BRepFill_DraftLaw(BRepFill_Edge3DLaw, BRepFill_LocationLaw, OCP.Standard.S
         """
     def D0(self,Abscissa : float,Section : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
-        Apply the Law to a shape, for a given Curnilinear abscissa
+        Apply the Law to a shape, for a given Curvilinear abscissa
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1344,26 +1344,26 @@ class BRepFill_DraftLaw(BRepFill_Edge3DLaw, BRepFill_LocationLaw, OCP.Standard.S
         """
     def IsG1(self,Index : int,SpatialTolerance : float=1e-07,AngularTolerance : float=0.0001) -> int: 
         """
-        Compute the Law's continuity beetween 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
+        Compute the Law's continuity between 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Law(self,Index : int) -> OCP.GeomFill.GeomFill_LocationLaw: 
         """
         Return the elementary Law of rank <Index> <Index> have to be in [1, NbLaw()]
@@ -1378,7 +1378,7 @@ class BRepFill_DraftLaw(BRepFill_Edge3DLaw, BRepFill_LocationLaw, OCP.Standard.S
         """
     def Parameter(self,Abscissa : float) -> Tuple[int, float]: 
         """
-        Find the index Law and the parmaeter, for a given Curnilinear abscissa
+        Find the index Law and the parameter, for a given Curvilinear abscissa
         """
     def PerformVertex(self,Index : int,InputVertex : OCP.TopoDS.TopoDS_Vertex,TolMin : float,OutputVertex : OCP.TopoDS.TopoDS_Vertex,Location : int=0) -> None: 
         """
@@ -1394,7 +1394,7 @@ class BRepFill_DraftLaw(BRepFill_Edge3DLaw, BRepFill_LocationLaw, OCP.Standard.S
         """
     def TransformInG0Law(self) -> None: 
         """
-        Apply a linear transformation on each law, to have continuity of the global law beetween the edges.
+        Apply a linear transformation on each law, to have continuity of the global law between the edges.
         """
     def Vertex(self,Index : int) -> OCP.TopoDS.TopoDS_Vertex: 
         """
@@ -1439,7 +1439,7 @@ class BRepFill_EdgeOnSurfLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def D0(self,Abscissa : float,Section : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
-        Apply the Law to a shape, for a given Curnilinear abscissa
+        Apply the Law to a shape, for a given Curvilinear abscissa
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1487,26 +1487,26 @@ class BRepFill_EdgeOnSurfLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def IsG1(self,Index : int,SpatialTolerance : float=1e-07,AngularTolerance : float=0.0001) -> int: 
         """
-        Compute the Law's continuity beetween 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
+        Compute the Law's continuity between 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Law(self,Index : int) -> OCP.GeomFill.GeomFill_LocationLaw: 
         """
         Return the elementary Law of rank <Index> <Index> have to be in [1, NbLaw()]
@@ -1521,7 +1521,7 @@ class BRepFill_EdgeOnSurfLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def Parameter(self,Abscissa : float) -> Tuple[int, float]: 
         """
-        Find the index Law and the parmaeter, for a given Curnilinear abscissa
+        Find the index Law and the parameter, for a given Curvilinear abscissa
         """
     def PerformVertex(self,Index : int,InputVertex : OCP.TopoDS.TopoDS_Vertex,TolMin : float,OutputVertex : OCP.TopoDS.TopoDS_Vertex,Location : int=0) -> None: 
         """
@@ -1537,7 +1537,7 @@ class BRepFill_EdgeOnSurfLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def TransformInG0Law(self) -> None: 
         """
-        Apply a linear transformation on each law, to have continuity of the global law beetween the edges.
+        Apply a linear transformation on each law, to have continuity of the global law between the edges.
         """
     def Vertex(self,Index : int) -> OCP.TopoDS.TopoDS_Vertex: 
         """
@@ -1597,9 +1597,9 @@ class BRepFill_Evolved():
         Return the face Top if <Solid> is True in the constructor.
         """
     @overload
-    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Spine : OCP.TopoDS.TopoDS_Face,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
     @overload
     def __init__(self,Spine : OCP.TopoDS.TopoDS_Wire,Profile : OCP.TopoDS.TopoDS_Wire,AxeProf : OCP.gp.gp_Ax3,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,Solid : bool=False) -> None: ...
     pass
@@ -1617,7 +1617,7 @@ class BRepFill_Filling():
     N-Side Filling This algorithm avoids to build a face from: * a set of edges defining the bounds of the face and some constraints the surface support has to satisfy * a set of edges and points defining some constraints the support surface has to satisfy * an initial surface to deform for satisfying the constraints * a set of parameters to control the constraints.
     """
     @overload
-    def Add(self,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def Add(self,U : float,V : float,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Adds a new constraint which also defines an edge of the wire of the face Order: Order of the constraint: GeomAbs_C0 : the surface has to pass by 3D representation of the edge GeomAbs_G1 : the surface has to pass by 3D representation of the edge and to respect tangency with the first face of the edge GeomAbs_G2 : the surface has to pass by 3D representation of the edge and to respect tangency and curvature with the first face of the edge.
 
@@ -1632,11 +1632,11 @@ class BRepFill_Filling():
     @overload
     def Add(self,Point : OCP.gp.gp_Pnt) -> int: ...
     @overload
+    def Add(self,anEdge : OCP.TopoDS.TopoDS_Edge,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
+    @overload
     def Add(self,anEdge : OCP.TopoDS.TopoDS_Edge,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
     @overload
-    def Add(self,U : float,V : float,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: ...
-    @overload
-    def Add(self,anEdge : OCP.TopoDS.TopoDS_Edge,Order : OCP.GeomAbs.GeomAbs_Shape,IsBound : bool=True) -> int: ...
+    def Add(self,Support : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape) -> int: ...
     def Build(self) -> None: 
         """
         Builds the resulting faces
@@ -1655,14 +1655,14 @@ class BRepFill_Filling():
     @overload
     def G0Error(self,Index : int) -> float: ...
     @overload
-    def G1Error(self,Index : int) -> float: 
+    def G1Error(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def G1Error(self) -> float: ...
+    def G1Error(self,Index : int) -> float: ...
     @overload
     def G2Error(self) -> float: 
         """
@@ -1694,7 +1694,7 @@ class BRepFill_Filling():
         """
     def SetResolParam(self,Degree : int=3,NbPtsOnCur : int=15,NbIter : int=2,Anisotropie : bool=False) -> None: 
         """
-        Sets the parameters used for resolution. The default values of these parameters have been chosen for a good ratio quality/performance. Degree: it is the order of energy criterion to minimize for computing the deformation of the surface. The default value is 3 The recommanded value is i+2 where i is the maximum order of the constraints. NbPtsOnCur: it is the average number of points for discretisation of the edges. NbIter: it is the maximum number of iterations of the process. For each iteration the number of discretisation points is increased. Anisotropie:
+        Sets the parameters used for resolution. The default values of these parameters have been chosen for a good ratio quality/performance. Degree: it is the order of energy criterion to minimize for computing the deformation of the surface. The default value is 3 The recommended value is i+2 where i is the maximum order of the constraints. NbPtsOnCur: it is the average number of points for discretisation of the edges. NbIter: it is the maximum number of iterations of the process. For each iteration the number of discretisation points is increased. Anisotropie:
         """
     def __init__(self,Degree : int=3,NbPtsOnCur : int=15,NbIter : int=2,Anisotropie : bool=False,Tol2d : float=1e-05,Tol3d : float=0.0001,TolAng : float=0.01,TolCurv : float=0.1,MaxDeg : int=8,MaxSegments : int=9) -> None: ...
     pass
@@ -1755,14 +1755,14 @@ class BRepFill_IndexedDataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollect
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -1841,9 +1841,9 @@ class BRepFill_IndexedDataMapOfOrientedShapeListOfShape(OCP.NCollection.NCollect
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BRepFill_IndexedDataMapOfOrientedShapeListOfShape) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1866,9 +1866,9 @@ class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : BRepFill_ListOfOffsetWire) -> None: ...
-    @overload
     def Append(self,theItem : BRepFill_OffsetWire) -> BRepFill_OffsetWire: ...
+    @overload
+    def Append(self,theOther : BRepFill_ListOfOffsetWire) -> None: ...
     def Assign(self,theOther : BRepFill_ListOfOffsetWire) -> BRepFill_ListOfOffsetWire: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1941,11 +1941,11 @@ class BRepFill_ListOfOffsetWire(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : BRepFill_ListOfOffsetWire) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepFill_ACRLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
@@ -1962,7 +1962,7 @@ class BRepFill_ACRLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def D0(self,Abscissa : float,Section : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
-        Apply the Law to a shape, for a given Curnilinear abscissa
+        Apply the Law to a shape, for a given Curvilinear abscissa
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2006,26 +2006,26 @@ class BRepFill_ACRLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def IsG1(self,Index : int,SpatialTolerance : float=1e-07,AngularTolerance : float=0.0001) -> int: 
         """
-        Compute the Law's continuity beetween 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
+        Compute the Law's continuity between 2 edges of the path The result can be : -1 : Case Not connex 0 : It is connex (G0) 1 : It is tangent (G1)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Law(self,Index : int) -> OCP.GeomFill.GeomFill_LocationLaw: 
         """
         Return the elementary Law of rank <Index> <Index> have to be in [1, NbLaw()]
@@ -2040,7 +2040,7 @@ class BRepFill_ACRLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def Parameter(self,Abscissa : float) -> Tuple[int, float]: 
         """
-        Find the index Law and the parmaeter, for a given Curnilinear abscissa
+        Find the index Law and the parameter, for a given Curvilinear abscissa
         """
     def PerformVertex(self,Index : int,InputVertex : OCP.TopoDS.TopoDS_Vertex,TolMin : float,OutputVertex : OCP.TopoDS.TopoDS_Vertex,Location : int=0) -> None: 
         """
@@ -2056,7 +2056,7 @@ class BRepFill_ACRLaw(BRepFill_LocationLaw, OCP.Standard.Standard_Transient):
         """
     def TransformInG0Law(self) -> None: 
         """
-        Apply a linear transformation on each law, to have continuity of the global law beetween the edges.
+        Apply a linear transformation on each law, to have continuity of the global law between the edges.
         """
     def Vertex(self,Index : int) -> OCP.TopoDS.TopoDS_Vertex: 
         """
@@ -2119,14 +2119,14 @@ class BRepFill_MultiLine(OCP.AppCont.AppCont_Function):
         returns the last parameter of the Bissectrice.
         """
     @overload
-    def Value(self,U : float) -> OCP.gp.gp_Pnt: 
+    def Value(self,theU : float,thePnt2d : OCP.TColgp.TColgp_Array1OfPnt2d,thePnt : OCP.TColgp.TColgp_Array1OfPnt) -> bool: 
         """
         Returns the current point on the 3d curve
 
         Returns the point at parameter <theU>.
         """
     @overload
-    def Value(self,theU : float,thePnt2d : OCP.TColgp.TColgp_Array1OfPnt2d,thePnt : OCP.TColgp.TColgp_Array1OfPnt) -> bool: ...
+    def Value(self,U : float) -> OCP.gp.gp_Pnt: ...
     def Value3dOnF1OnF2(self,U : float,P3d : OCP.gp.gp_Pnt,PF1 : OCP.gp.gp_Pnt2d,PF2 : OCP.gp.gp_Pnt2d) -> None: 
         """
         None
@@ -2140,9 +2140,9 @@ class BRepFill_MultiLine(OCP.AppCont.AppCont_Function):
         returns the current point on the PCurve of the first face
         """
     @overload
-    def __init__(self,Face1 : OCP.TopoDS.TopoDS_Face,Face2 : OCP.TopoDS.TopoDS_Face,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Inv1 : bool,Inv2 : bool,Bissec : OCP.Geom2d.Geom2d_Curve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Face1 : OCP.TopoDS.TopoDS_Face,Face2 : OCP.TopoDS.TopoDS_Face,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Inv1 : bool,Inv2 : bool,Bissec : OCP.Geom2d.Geom2d_Curve) -> None: ...
     pass
 class BRepFill_SectionLaw(OCP.Standard.Standard_Transient):
     """
@@ -2201,23 +2201,23 @@ class BRepFill_SectionLaw(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         None
@@ -2282,9 +2282,9 @@ class BRepFill_OffsetAncestors():
         None
         """
     @overload
-    def __init__(self,Paral : BRepFill_OffsetWire) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Paral : BRepFill_OffsetWire) -> None: ...
     pass
 class BRepFill_OffsetWire():
     """
@@ -2296,7 +2296,7 @@ class BRepFill_OffsetWire():
         """
     def Init(self,Spine : OCP.TopoDS.TopoDS_Face,Join : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc,IsOpenResult : bool=False) -> None: 
         """
-        Initialize the evaluation of Offseting.
+        Initialize the evaluation of Offsetting.
         """
     def IsDone(self) -> bool: 
         """
@@ -2391,9 +2391,9 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
     @overload
     def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: 
         """
-        Set an section. The corespondance with the spine, will be automaticaly performed.
+        Set an section. The correspondence with the spine, will be automatically performed.
 
-        Set an section. The corespondance with the spine, is given by <Location>
+        Set an section. The correspondence with the spine, is given by Location.
         """
     @overload
     def Add(self,Profile : OCP.TopoDS.TopoDS_Shape,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
@@ -2442,23 +2442,23 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsReady(self) -> bool: 
         """
         Say if <me> is ready to build the shape return False if <me> do not have section definition
@@ -2476,7 +2476,7 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
         Returns the list of original profiles
         """
     @overload
-    def Set(self,Axe : OCP.gp.gp_Ax2) -> None: 
+    def Set(self,AuxiliarySpine : OCP.TopoDS.TopoDS_Wire,CurvilinearEquivalence : bool=True,KeepContact : BRepFill_TypeOfContact=BRepFill_TypeOfContact.BRepFill_NoContact) -> None: 
         """
         Set an Frenet or an CorrectedFrenet trihedron to perform the sweeping
 
@@ -2484,16 +2484,16 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
 
         Set an fixed BiNormal direction to perform the sweeping
 
-        Set support to the spine to define the BiNormal at the spine, like the normal the surfaces. Warning: To be effective, Each edge of the <spine> must have an representaion on one face of<SpineSupport>
+        Set support to the spine to define the BiNormal at the spine, like the normal the surfaces. Warning: To be effective, Each edge of the <spine> must have an representation on one face of<SpineSupport>
 
         Set an auxiliary spine to define the Normal For each Point of the Spine P, an Point Q is evalued on <AuxiliarySpine> If <CurvilinearEquivalence> Q split <AuxiliarySpine> with the same length ratio than P split <Spline>. Else the plan define by P and the tangent to the <Spine> intersect <AuxiliarySpine> in Q. If <KeepContact> equals BRepFill_NoContact: The Normal is defined by the vector PQ. If <KeepContact> equals BRepFill_Contact: The Normal is defined to achieve that the sweeped section is in contact to the auxiliarySpine. The width of section is constant all along the path. In other words, the auxiliary spine lies on the swept surface, but not necessarily is a boundary of this surface. However, the auxiliary spine has to be close enough to the main spine to provide intersection with any section all along the path. If <KeepContact> equals BRepFill_ContactOnBorder: The auxiliary spine becomes a boundary of the swept surface and the width of section varies along the path.
         """
     @overload
-    def Set(self,BiNormal : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def Set(self,AuxiliarySpine : OCP.TopoDS.TopoDS_Wire,CurvilinearEquivalence : bool=True,KeepContact : BRepFill_TypeOfContact=BRepFill_TypeOfContact.BRepFill_NoContact) -> None: ...
+    def Set(self,Axe : OCP.gp.gp_Ax2) -> None: ...
     @overload
     def Set(self,Frenet : bool=False) -> None: ...
+    @overload
+    def Set(self,BiNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
     def Set(self,SpineSupport : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def SetDiscrete(self) -> None: 
@@ -2502,17 +2502,17 @@ class BRepFill_PipeShell(OCP.Standard.Standard_Transient):
         """
     def SetForceApproxC1(self,ForceApproxC1 : bool) -> None: 
         """
-        Set the flag that indicates attempt to approximate a C1-continuous surface if a swept surface proved to be C0. Give section to sweep. Possibilities are : - Give one or sevral profile - Give one profile and an homotetic law. - Automatic compute of correspondance beetween profile, and section on the sweeped shape - correspondance beetween profile, and section on the sweeped shape defined by a vertex of the spine
+        Set the flag that indicates attempt to approximate a C1-continuous surface if a swept surface proved to be C0. Give section to sweep. Possibilities are : - Give one or sevral profile - Give one profile and an homotetic law. - Automatic compute of correspondence between profile, and section on the sweeped shape - correspondence between profile, and section on the sweeped shape defined by a vertex of the spine
         """
     @overload
-    def SetLaw(self,Profile : OCP.TopoDS.TopoDS_Shape,L : OCP.Law.Law_Function,WithContact : bool=False,WithCorrection : bool=False) -> None: 
+    def SetLaw(self,Profile : OCP.TopoDS.TopoDS_Shape,L : OCP.Law.Law_Function,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: 
         """
         Set an section and an homotetic law. The homotetie's centers is given by point on the <Spine>.
 
         Set an section and an homotetic law. The homotetie center is given by point on the <Spine>
         """
     @overload
-    def SetLaw(self,Profile : OCP.TopoDS.TopoDS_Shape,L : OCP.Law.Law_Function,Location : OCP.TopoDS.TopoDS_Vertex,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
+    def SetLaw(self,Profile : OCP.TopoDS.TopoDS_Shape,L : OCP.Law.Law_Function,WithContact : bool=False,WithCorrection : bool=False) -> None: ...
     def SetMaxDegree(self,NewMaxDegree : int) -> None: 
         """
         Define the maximum V degree of resulting surface
@@ -2612,9 +2612,9 @@ class BRepFill_Section():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Profile : OCP.TopoDS.TopoDS_Shape,V : OCP.TopoDS.TopoDS_Vertex,WithContact : bool,WithCorrection : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepFill_NSections(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
     """
@@ -2622,7 +2622,7 @@ class BRepFill_NSections(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
     """
     def ConcatenedLaw(self) -> OCP.GeomFill.GeomFill_SectionLaw: 
         """
-        Give the law build on a concatened section
+        Give the law build on a concatenated section
         """
     def Continuity(self,Index : int,TolAngular : float) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -2673,23 +2673,23 @@ class BRepFill_NSections(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         None
@@ -2876,11 +2876,11 @@ class BRepFill_SequenceOfEdgeFaceAndOrder(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : BRepFill_SequenceOfEdgeFaceAndOrder) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : BRepFill_SequenceOfEdgeFaceAndOrder) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2943,14 +2943,14 @@ class BRepFill_SequenceOfFaceAndOrder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : BRepFill_SequenceOfFaceAndOrder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepFill_SequenceOfFaceAndOrder) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : BRepFill_FaceAndOrder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : BRepFill_FaceAndOrder) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : BRepFill_SequenceOfFaceAndOrder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3012,9 +3012,9 @@ class BRepFill_SequenceOfFaceAndOrder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : BRepFill_SequenceOfFaceAndOrder) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3031,14 +3031,14 @@ class BRepFill_SequenceOfSection(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BRepFill_Section) -> None: 
+    def Append(self,theSeq : BRepFill_SequenceOfSection) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : BRepFill_SequenceOfSection) -> None: ...
+    def Append(self,theItem : BRepFill_Section) -> None: ...
     def Assign(self,theOther : BRepFill_SequenceOfSection) -> BRepFill_SequenceOfSection: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3111,14 +3111,14 @@ class BRepFill_SequenceOfSection(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : BRepFill_Section) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3144,9 +3144,9 @@ class BRepFill_SequenceOfSection(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : BRepFill_SequenceOfSection) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepFill_SequenceOfSection) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -3162,7 +3162,7 @@ class BRepFill_ShapeLaw(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
     """
     def ConcatenedLaw(self) -> OCP.GeomFill.GeomFill_SectionLaw: 
         """
-        Give the law build on a concaneted section
+        Give the law build on a concatenated section
         """
     def Continuity(self,Index : int,TolAngular : float) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -3219,23 +3219,23 @@ class BRepFill_ShapeLaw(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         None
@@ -3269,11 +3269,11 @@ class BRepFill_ShapeLaw(BRepFill_SectionLaw, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,Build : bool=True) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,L : OCP.Law.Law_Function,Build : bool=True) -> None: ...
     @overload
     def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,Build : bool=True) -> None: ...
     @overload
-    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,L : OCP.Law.Law_Function,Build : bool=True) -> None: ...
+    def __init__(self,W : OCP.TopoDS.TopoDS_Wire,Build : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3291,7 +3291,7 @@ class BRepFill_Sweep():
     """
     def Build(self,ReversedEdges : OCP.TopTools.TopTools_MapOfShape,Tapes : Any,Rails : Any,Transition : BRepFill_TransitionStyle=BRepFill_TransitionStyle.BRepFill_Modified,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Approx : OCP.GeomFill.GeomFill_ApproxStyle=GeomFill_ApproxStyle.GeomFill_Location,Degmax : int=11,Segmax : int=30) -> None: 
         """
-        Build the Sweep Surface Transition define Transition strategy Approx define Approximation Strategy - GeomFill_Section : The composed Function Location X Section is directly approximed. - GeomFill_Location : The location law is approximed, and the SweepSurface is bulid algebric composition of approximed location law and section law This option is Ok, if Section.Surface() methode is effective. Continuity : The continuity in v waiting on the surface Degmax : The maximum degree in v requiered on the surface Segmax : The maximum number of span in v requiered on the surface.
+        Build the Sweep Surface Transition define Transition strategy Approx define Approximation Strategy - GeomFill_Section : The composed Function Location X Section is directly approximated. - GeomFill_Location : The location law is approximated, and the SweepSurface is bulid algebric composition of approximated location law and section law This option is Ok, if Section.Surface() methode is effective. Continuity : The continuity in v waiting on the surface Degmax : The maximum degree in v required on the surface Segmax : The maximum number of span in v required on the surface.
         """
     def ErrorOnSurface(self) -> float: 
         """
@@ -3323,7 +3323,7 @@ class BRepFill_Sweep():
         """
     def SetTolerance(self,Tol3d : float,BoundTol : float=1.0,Tol2d : float=1e-05,TolAngular : float=0.01) -> None: 
         """
-        Set Approximation Tolerance Tol3d : Tolerance to surface approximation Tol2d : Tolerance used to perform curve approximation Normaly the 2d curve are approximated with a tolerance given by the resolution on support surfaces, but if this tolerance is too large Tol2d is used. TolAngular : Tolerance (in radian) to control the angle beetween tangents on the section law and tangent of iso-v on approximed surface
+        Set Approximation Tolerance Tol3d : Tolerance to surface approximation Tol2d : Tolerance used to perform curve approximation Normally the 2d curve are approximated with a tolerance given by the resolution on support surfaces, but if this tolerance is too large Tol2d is used. TolAngular : Tolerance (in radian) to control the angle between tangents on the section law and tangent of iso-v on approximated surface
         """
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -3354,6 +3354,7 @@ class BRepFill_TransitionStyle():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3392,9 +3393,9 @@ class BRepFill_TrimEdgeTool():
         None
         """
     @overload
-    def __init__(self,Bisec : OCP.Bisector.Bisector_Bisec,S1 : OCP.Geom2d.Geom2d_Geometry,S2 : OCP.Geom2d.Geom2d_Geometry,Offset : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Bisec : OCP.Bisector.Bisector_Bisec,S1 : OCP.Geom2d.Geom2d_Geometry,S2 : OCP.Geom2d.Geom2d_Geometry,Offset : float) -> None: ...
     pass
 class BRepFill_TrimShellCorner():
     """
@@ -3467,6 +3468,7 @@ class BRepFill_TypeOfContact():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

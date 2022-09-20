@@ -46,7 +46,7 @@ class TopTrans_Array2OfOrientation():
         """
     def Move(self,theOther : TopTrans_Array2OfOrientation) -> TopTrans_Array2OfOrientation: 
         """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left unitialized and should not be used anymore.
+        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
         """
     def NbColumns(self) -> int: 
         """
@@ -84,11 +84,11 @@ class TopTrans_Array2OfOrientation():
     @overload
     def __init__(self,theBegin : OCP.TopAbs.TopAbs_Orientation,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : TopTrans_Array2OfOrientation) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : TopTrans_Array2OfOrientation) -> None: ...
     pass
 class TopTrans_CurveTransition():
     """
@@ -99,14 +99,14 @@ class TopTrans_CurveTransition():
         Add a curve element to the boundary. If Or is REVERSED the curve is before the intersection, else if Or is FORWARD the curv is after the intersection and if Or is INTERNAL the intersection is in the middle of the curv.
         """
     @overload
-    def Reset(self,Tgt : OCP.gp.gp_Dir) -> None: 
+    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir,Curv : float) -> None: 
         """
         Initialize a Transition with the local description of a Curve.
 
-        Initialize a Transition with the local description of a straigth line.
+        Initialize a Transition with the local description of a straight line.
         """
     @overload
-    def Reset(self,Tgt : OCP.gp.gp_Dir,Norm : OCP.gp.gp_Dir,Curv : float) -> None: ...
+    def Reset(self,Tgt : OCP.gp.gp_Dir) -> None: ...
     def StateAfter(self) -> OCP.TopAbs.TopAbs_State: 
         """
         returns the state of the curve after the intersection, this is the position relative to the boundary of a point very close to the intersection on the positive side of the tangent.

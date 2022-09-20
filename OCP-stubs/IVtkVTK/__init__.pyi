@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
-import OCP.Graphic3d
 import OCP.Standard
 import OCP.IVtk
+import OCP.Graphic3d
 __all__  = [
 "IVtkVTK_ShapeData",
 "IVtkVTK_View"
@@ -46,19 +46,28 @@ class IVtkVTK_ShapeData(OCP.IVtk.IVtk_IShapeData, OCP.IVtk.IVtk_Interface, OCP.S
         """
         Increments the reference counter of this object
         """
+    @overload
     def InsertCoordinate(self,theX : float,theY : float,theZ : float) -> int: 
         """
         Insert a coordinate
+
+        Insert a coordinate
         """
     @overload
-    def InsertLine(self,theShapeID : int,thePointId1 : int,thePointId2 : int,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: 
+    def InsertCoordinate(self,thePnt : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def InsertLine(self,theShapeID : int,thePointIds : OCP.IVtk.IVtk_ShapeIdList,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: 
         """
         Insert a line.
 
         Insert a poly-line.
         """
     @overload
-    def InsertLine(self,theShapeID : int,thePointIds : OCP.IVtk.IVtk_ShapeIdList,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: ...
+    def InsertLine(self,theShapeID : int,thePointId1 : int,thePointId2 : int,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: ...
+    def InsertPoint(self,thePnt : OCP.gp.gp_Pnt,theNorm : OCP.gp.gp_Vec3f) -> int: 
+        """
+        Insert a coordinate
+        """
     def InsertTriangle(self,theShapeID : int,thePointId1 : int,thePointId2 : int,thePointId3 : int,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: 
         """
         Insert a triangle
@@ -68,23 +77,23 @@ class IVtkVTK_ShapeData(OCP.IVtk.IVtk_IShapeData, OCP.IVtk.IVtk_Interface, OCP.S
         Insert a vertex.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -125,9 +134,17 @@ class IVtkVTK_View(OCP.IVtk.IVtk_IView, OCP.IVtk.IVtk_Interface, OCP.Standard.St
         """
         None
         """
+    def GetAspectRatio(self) -> float: 
+        """
+        Returns The current view the aspect ratio
+        """
     def GetCamera(self,theProj : OCP.Graphic3d.Graphic3d_Mat4d,theOrient : OCP.Graphic3d.Graphic3d_Mat4d) -> Tuple[bool]: 
         """
         Gets camera projection and orientation matrices
+        """
+    def GetClippingRange(self,theZNear : float,theZFar : float) -> None: 
+        """
+        Returns The location of the near and far clipping planes along the direction of projection
         """
     def GetDirectionOfProjection(self,theDx : float,theDy : float,theDz : float) -> None: 
         """
@@ -136,6 +153,10 @@ class IVtkVTK_View(OCP.IVtk.IVtk_IView, OCP.IVtk.IVtk_Interface, OCP.Standard.St
     def GetDistance(self) -> float: 
         """
         Returns The focal distance of the view
+        """
+    def GetEyePosition(self,theX : float,theY : float,theZ : float) -> None: 
+        """
+        Returns The world coordinates of the camera position
         """
     def GetParallelScale(self) -> float: 
         """
@@ -178,23 +199,23 @@ class IVtkVTK_View(OCP.IVtk.IVtk_IView, OCP.IVtk.IVtk_Interface, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPerspective(self) -> bool: 
         """
         Returns true if this is a perspective view, and false otherwise.

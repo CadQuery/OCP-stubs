@@ -4,25 +4,28 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Prs3d
+import OCP.AIS
+import OCP.PrsMgr
 import OCP.NCollection
+import OCP.IVtk
+import io
+import OCP.SelectMgr
+import OCP.Standard
+import OCP.V3d
+import OCP.StdSelect
+import OCP.TopoDS
+import OCP.Prs3d
+import OCP.Select3D
+import OCP.Quantity
 import OCP.TColgp
 import OCP.Bnd
-import OCP.TopoDS
-import OCP.PrsMgr
-import OCP.Standard
-import OCP.SelectMgr
-import OCP.Quantity
-import OCP.TColStd
-import OCP.Select3D
-import io
-import OCP.TCollection
-import OCP.gp
-import OCP.AIS
-import OCP.IVtk
-import OCP.Graphic3d
-import OCP.Aspect
 import OCP.TopLoc
+import OCP.Graphic3d
+import OCP.gp
+import OCP.Image
+import OCP.Aspect
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "IVtkOCC_SelectableObject",
 "IVtkOCC_Shape",
@@ -124,13 +127,17 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         """
         Returns the display mode setting of the Interactive Object. The range of supported display mode indexes should be specified within object definition and filtered by AccepDisplayMode().
         """
+    def DisplayStatus(self) -> OCP.PrsMgr.PrsMgr_DisplayStatus: 
+        """
+        Return presentation display status; PrsMgr_DisplayStatus_None by default.
+        """
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
         """
     def DynamicHilightAttributes(self) -> OCP.Prs3d.Prs3d_Drawer: 
         """
-        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalDynamic and Prs3d_TypeOfHighlight_Dynamic defined within AIS_InteractiveContext.
+        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalDynamic and Prs3d_TypeOfHighlight_Dynamic defined within AIS_InteractiveContext::HighlightStyle().
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
@@ -159,14 +166,6 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
     def GetShape(self) -> IVtkOCC_Shape: 
         """
         None
-        """
-    def GetTransformPersistenceMode(self) -> OCP.Graphic3d.Graphic3d_TransModeFlags: 
-        """
-        Gets Transform Persistence Mode for this object
-        """
-    def GetTransformPersistencePoint(self) -> OCP.gp.gp_Pnt: 
-        """
-        Gets point of transform persistence for this object
         """
     def GlobalSelOwner(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
         """
@@ -214,7 +213,7 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         """
     def HilightAttributes(self) -> OCP.Prs3d.Prs3d_Drawer: 
         """
-        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalSelected and Prs3d_TypeOfHighlight_Selected defined within AIS_InteractiveContext.
+        Returns the hilight attributes settings. When not NULL, overrides both Prs3d_TypeOfHighlight_LocalSelected and Prs3d_TypeOfHighlight_Selected defined within AIS_InteractiveContext::HighlightStyle().
         """
     def HilightMode(self) -> int: 
         """
@@ -245,23 +244,23 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -342,8 +341,6 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
     def SetClipPlanes(self,thePlanes : OCP.Graphic3d.Graphic3d_SequenceOfHClipPlane) -> None: 
         """
         Set clip planes for graphical clipping for all display mode presentations. The composition of clip planes truncates the rendering space to convex volume. Please be aware that number of supported clip plane is limited. The planes which exceed the limit are ignored. Besides of this, some planes can be already set in view where the object is shown: the number of these planes should be subtracted from limit to predict the maximum possible number of object clipping planes.
-
-        None
         """
     def SetColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
@@ -378,14 +375,14 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -415,15 +412,10 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         """
     @overload
     def SetToUpdate(self) -> None: ...
-    @overload
-    def SetTransformPersistence(self,theMode : OCP.Graphic3d.Graphic3d_TransModeFlags,thePoint : OCP.gp.gp_Pnt=OCP.gp.gp_Pnt) -> None: 
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
-
-        Sets up Transform Persistence Mode for this object. This function used to lock in object position, rotation and / or zooming relative to camera position. Object will be drawn in the origin setted by thePoint parameter (except Graphic3d_TMF_TriedronPers flag - see description later). theMode should be: - Graphic3d_TMF_None - no persistence attributes (reset); - Graphic3d_TMF_ZoomPers - object doesn't resize; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_ZoomRotatePers - object doesn't resize and rotate; - Graphic3d_TMF_RotatePers - object doesn't rotate; - Graphic3d_TMF_TriedronPers - object behaves like trihedron. If Graphic3d_TMF_TriedronPers or Graphic3d_TMF_2d persistence mode selected thePoint coordinates X and Y means: - X = 0.0, Y = 0.0 - center of view window; - X > 0.0, Y > 0.0 - right upper corner of view window; - X > 0.0, Y < 0.0 - right lower corner of view window; - X < 0.0, Y > 0.0 - left upper corner of view window; - X < 0.0, Y < 0.0 - left lower corner of view window. And Z coordinate defines the gap from border of view window (except center position).
         """
-    @overload
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: ...
     def SetTransparency(self,aValue : float=0.6) -> None: 
         """
         Attributes a setting aValue for transparency. The transparency value should be between 0.0 and 1.0. At 0.0 an object will be totally opaque, and at 1.0, fully transparent. Warning At a value of 1.0, there may be nothing visible.
@@ -533,10 +525,6 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         """
         Get ID of Z layer for main presentation.
         """
-    @overload
-    def __init__(self,theShape : IVtkOCC_Shape) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -552,6 +540,10 @@ class IVtkOCC_Shape(OCP.IVtk.IVtk_IShape, OCP.IVtk.IVtk_Interface, OCP.Standard.
     """
     OCC implementation of IShape interface.OCC implementation of IShape interface.OCC implementation of IShape interface.
     """
+    def Attributes(self) -> OCP.Prs3d.Prs3d_Drawer: 
+        """
+        Return presentation attributes.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -597,23 +589,27 @@ class IVtkOCC_Shape(OCP.IVtk.IVtk_IShape, OCP.IVtk.IVtk_Interface, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def SetAttributes(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+        """
+        Set presentation attributes.
+        """
     def SetId(self,theId : int) -> None: 
         """
         None
@@ -626,7 +622,7 @@ class IVtkOCC_Shape(OCP.IVtk.IVtk_IShape, OCP.IVtk.IVtk_Interface, OCP.Standard.
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape,theDrawerLink : OCP.Prs3d.Prs3d_Drawer=None) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -644,7 +640,7 @@ class IVtkOCC_ShapeMesher(OCP.IVtk.IVtk_IShapeMesher, OCP.IVtk.IVtk_Interface, O
     """
     def Build(self,theShape : OCP.IVtk.IVtk_IShape,theData : OCP.IVtk.IVtk_IShapeData) -> None: 
         """
-        None
+        Main entry point for building shape representation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -679,28 +675,28 @@ class IVtkOCC_ShapeMesher(OCP.IVtk.IVtk_IShapeMesher, OCP.IVtk.IVtk_Interface, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,theDevCoeff : float=0.0001,theDevAngle : float=0.20943951023931953,theNbUIsos : int=1,theNbVIsos : int=1) -> None: ...
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -770,10 +766,6 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
     """
     Class that implements OCCT selection algorithm.Class that implements OCCT selection algorithm.
     """
-    def Activate(self,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
-        """
-        Activates the given selection
-        """
     def ActiveOwners(self,theOwners : OCP.AIS.AIS_NListOfEntityOwner) -> None: 
         """
         Returns the list of active entity owners
@@ -798,6 +790,10 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
         Clears picking results.
         """
+    def ClearSensitive(self,theView : OCP.V3d.V3d_View) -> None: 
+        """
+        None
+        """
     def Contains(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         None
@@ -805,10 +801,6 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
     def CustomPixelTolerance(self) -> int: 
         """
         Returns custom pixel tolerance value.
-        """
-    def Deactivate(self,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
-        """
-        Deactivate the given selection
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -826,10 +818,15 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
         Return the type of tolerance for considering two entities having a similar depth (distance from eye to entity); SelectMgr_TypeOfDepthTolerance_SensitivityFactor by default.
         """
-    def DetectedEntity(self) -> OCP.Select3D.Select3D_SensitiveEntity: 
+    @overload
+    def DisplaySensitive(self,theView : OCP.V3d.V3d_View) -> None: 
         """
-        Returns sensitive entity that was detected during the previous run of selection algorithm
+        Displays sensitives in view <theView>.
+
+        None
         """
+    @overload
+    def DisplaySensitive(self,theSel : OCP.SelectMgr.SelectMgr_Selection,theTrsf : OCP.gp.gp_Trsf,theView : OCP.V3d.V3d_View,theToClearOthers : bool=True) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -854,14 +851,6 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
         Increments the reference counter of this object
         """
-    def Init(self) -> None: 
-        """
-        Begins an iteration scanning for the owners detected at a position in the view.
-        """
-    def InitDetected(self) -> None: 
-        """
-        Initializes internal iterator for stored detected sensitive entities
-        """
     def IsActive(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject,theMode : int) -> bool: 
         """
         Returns true if the selectable object aSelectableObject having the selection mode aMode is active in this selector.
@@ -871,34 +860,26 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         Returns true if the selectable object aSelectableObject having the selection mode aMode is in this selector.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Modes(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject,theModeList : OCP.TColStd.TColStd_ListOfInteger,theWantedState : OCP.SelectMgr.SelectMgr_StateOfSelection=SelectMgr_StateOfSelection.SelectMgr_SOS_Any) -> bool: 
         """
         Returns the list of selection modes ModeList found in this selector for the selectable object aSelectableObject. Returns true if aSelectableObject is referenced inside this selector; returns false if the object is not present in this selector.
-        """
-    def More(self) -> bool: 
-        """
-        Continues the interation scanning for the owners detected at a position in the view, or continues the iteration scanning for the owner closest to the position in the view.
-        """
-    def MoreDetected(self) -> bool: 
-        """
-        Returns true if iterator of map of detected sensitive entities has reached its end
         """
     def MoveSelectableObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
@@ -908,27 +889,31 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
         Returns the number of detected owners.
         """
-    def Next(self) -> None: 
-        """
-        Returns the next owner found in the iteration. This is a scan for the owners detected at a position in the view.
-        """
-    def NextDetected(self) -> None: 
-        """
-        Makes a step along the map of detected sensitive entities and their owners
-        """
     def OnePicked(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
         """
         Returns the picked element with the highest priority, and which is the closest to the last successful mouse position.
         """
     @overload
-    def Picked(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
+    def Pick(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View) -> None: 
         """
-        Returns the entity Owner for the object picked at specified position.
+        Picks the sensitive entity at the pixel coordinates of the mouse <theXPix> and <theYPix>. The selector looks for touched areas and owners.
 
-        Returns the current selected entity detected by the selector;
+        Picks the sensitive entity according to the minimum and maximum pixel values <theXPMin>, <theYPMin>, <theXPMax> and <theYPMax> defining a 2D area for selection in the 3D view aView.
+
+        pick action - input pixel values for polyline selection for selection.
+
+        Picks the sensitive entity according to the input axis. This is geometric intersection 3D objects by axis (camera parameters are ignored and objects with transform persistance are skipped).
         """
     @overload
-    def Picked(self,theRank : int) -> OCP.SelectMgr.SelectMgr_EntityOwner: ...
+    def Pick(self,theAxis : OCP.gp.gp_Ax1,theView : OCP.V3d.V3d_View) -> None: ...
+    @overload
+    def Pick(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View) -> None: ...
+    @overload
+    def Pick(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View) -> None: ...
+    def Picked(self,theRank : int) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
+        """
+        Returns the entity Owner for the object picked at specified position.
+        """
     def PickedData(self,theRank : int) -> OCP.SelectMgr.SelectMgr_SortCriterion: 
         """
         Returns the Entity for the object picked at specified position.
@@ -956,6 +941,10 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
     def RebuildSensitivesTree(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject,theIsForce : bool=False) -> None: 
         """
         Marks BVH of sensitive entities of particular selectable object for rebuild. Parameter theIsForce set as true guarantees that 2nd level BVH for the object given will be rebuilt during this call
+        """
+    def RemovePicked(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
+        """
+        Remove picked entities associated with specified object.
         """
     def RemoveSelectableObject(self,theObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
@@ -999,7 +988,7 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
     def SortResult(self) -> None: 
         """
-        Sorts the detected entites by priority and distance.
+        Sorts the detected entities by priority and distance.
         """
     @overload
     def Status(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject) -> OCP.TCollection.TCollection_AsciiString: 
@@ -1018,6 +1007,10 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
         Return the flag determining precedence of picked depth (distance from eye to entity) over entity priority in sorted results; TRUE by default. When flag is TRUE, priority will be considered only if entities have the same depth within the tolerance. When flag is FALSE, entities with higher priority will be in front regardless of their depth (like x-ray).
         """
+    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theView : OCP.V3d.V3d_View,theType : OCP.StdSelect.StdSelect_TypeOfSelectionImage,thePickedIndex : int=1) -> bool: 
+        """
+        Dump of detection results into image. This method performs axis picking for each pixel in the image and generates a color depending on picking results and selection image type.
+        """
     def ToPrebuildBVH(self) -> bool: 
         """
         Returns TRUE if building BVH for sensitives in separate threads is enabled
@@ -1026,7 +1019,6 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         """
         Waits BVH threads finished building
         """
-    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1047,7 +1039,7 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt) -> OCP.TColgp.TColgp_SequenceOfPnt: 
+    def Append(self,theOther : IVtk_PolylineList) -> None: 
         """
         Append one item at the end
 
@@ -1056,9 +1048,9 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt,theIter : Any) -> None: ...
+    def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt) -> OCP.TColgp.TColgp_SequenceOfPnt: ...
     @overload
-    def Append(self,theOther : IVtk_PolylineList) -> None: ...
+    def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt,theIter : Any) -> None: ...
     def Assign(self,theOther : IVtk_PolylineList) -> IVtk_PolylineList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1131,11 +1123,11 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : IVtk_PolylineList) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : IVtk_PolylineList) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IVtk_ShapeTypeMap(OCP.NCollection.NCollection_BaseMap):
@@ -1167,14 +1159,14 @@ class IVtk_ShapeTypeMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : IVtk_ShapeTypeMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!

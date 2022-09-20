@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
 import OCP.NCollection
+import io
 import OCP.gp
 import OCP.Graphic3d
 import OCP.Standard
@@ -60,6 +60,7 @@ class IVtk_DisplayMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -105,23 +106,23 @@ class IVtk_Interface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -140,7 +141,7 @@ class IVtk_Interface(OCP.Standard.Standard_Transient):
     pass
 class IVtk_IShapeData(IVtk_Interface, OCP.Standard.Standard_Transient):
     """
-    Interface for working with triangulated data.Interface for working with triangulated data.Interface for working with triangulated data.
+    Interface for working with triangulated data.Interface for working with triangulated data.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -162,10 +163,15 @@ class IVtk_IShapeData(IVtk_Interface, OCP.Standard.Standard_Transient):
         """
         Increments the reference counter of this object
         """
+    @overload
     def InsertCoordinate(self,theX : float,theY : float,theZ : float) -> int: 
         """
         Insert a coordinate
+
+        Insert a coordinate
         """
+    @overload
+    def InsertCoordinate(self,thePnt : OCP.gp.gp_Pnt) -> int: ...
     @overload
     def InsertLine(self,theShapeID : int,thePointId1 : int,thePointId2 : int,theMeshType : IVtk_MeshType=IVtk_MeshType.MT_Undefined) -> None: 
         """
@@ -175,6 +181,10 @@ class IVtk_IShapeData(IVtk_Interface, OCP.Standard.Standard_Transient):
         """
     @overload
     def InsertLine(self,theShapeID : int,thePointIds : IVtk_ShapeIdList,theMeshType : IVtk_MeshType=IVtk_MeshType.MT_Undefined) -> None: ...
+    def InsertPoint(self,thePnt : OCP.gp.gp_Pnt,theNorm : OCP.gp.gp_Vec3f) -> int: 
+        """
+        Insert a coordinate
+        """
     def InsertTriangle(self,theShapeID : int,thePointId1 : int,thePointId2 : int,thePointId3 : int,theMeshType : IVtk_MeshType=IVtk_MeshType.MT_Undefined) -> None: 
         """
         Insert a triangle
@@ -184,23 +194,23 @@ class IVtk_IShapeData(IVtk_Interface, OCP.Standard.Standard_Transient):
         Insert a vertex.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -222,7 +232,7 @@ class IVtk_IShapeMesher(IVtk_Interface, OCP.Standard.Standard_Transient):
     """
     def Build(self,theShape : IVtk_IShape,theData : IVtk_IShapeData) -> None: 
         """
-        None
+        Main entry point for building shape representation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -245,23 +255,23 @@ class IVtk_IShapeMesher(IVtk_Interface, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -297,9 +307,17 @@ class IVtk_IView(IVtk_Interface, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def GetAspectRatio(self) -> float: 
+        """
+        Returns The current view the aspect ratio
+        """
     def GetCamera(self,theProj : OCP.Graphic3d.Graphic3d_Mat4d,theOrient : OCP.Graphic3d.Graphic3d_Mat4d) -> Tuple[bool]: 
         """
         Gets camera projection and orientation matrices
+        """
+    def GetClippingRange(self,theZNear : float,theZFar : float) -> None: 
+        """
+        Returns The location of the near and far clipping planes along the direction of projection
         """
     def GetDirectionOfProjection(self,theDx : float,theDy : float,theDz : float) -> None: 
         """
@@ -308,6 +326,10 @@ class IVtk_IView(IVtk_Interface, OCP.Standard.Standard_Transient):
     def GetDistance(self) -> float: 
         """
         Returns The focal distance of the view
+        """
+    def GetEyePosition(self,theX : float,theY : float,theZ : float) -> None: 
+        """
+        Returns The world coordinates of the camera position
         """
     def GetParallelScale(self) -> float: 
         """
@@ -323,7 +345,7 @@ class IVtk_IView(IVtk_Interface, OCP.Standard.Standard_Transient):
         """
     def GetScale(self,theX : float,theY : float,theZ : float) -> None: 
         """
-        Returns Three doubles contaning scale components of the view transformation
+        Returns Three doubles containing scale components of the view transformation
         """
     def GetViewAngle(self) -> float: 
         """
@@ -350,23 +372,23 @@ class IVtk_IView(IVtk_Interface, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPerspective(self) -> bool: 
         """
         Returns true if this is a perspective view, and false otherwise.
@@ -407,14 +429,14 @@ class IVtk_IdTypeMap(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     @overload
     def Contains(self,K : int) -> bool: 
         """
@@ -497,9 +519,9 @@ class IVtk_IdTypeMap(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theOther : IVtk_IdTypeMap) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : IVtk_IdTypeMap) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -536,23 +558,23 @@ class IVtk_IShape(IVtk_Interface, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetId(self,theId : int) -> None: 
         """
         None
@@ -601,6 +623,7 @@ class IVtk_MeshType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -647,9 +670,9 @@ class IVtk_Pnt2dList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_XY) -> OCP.gp.gp_XY: ...
-    @overload
     def Append(self,theItem : OCP.gp.gp_XY,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : OCP.gp.gp_XY) -> OCP.gp.gp_XY: ...
     def Assign(self,theOther : IVtk_Pnt2dList) -> IVtk_Pnt2dList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -678,14 +701,14 @@ class IVtk_Pnt2dList(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : OCP.gp.gp_XY,theIter : Any) -> OCP.gp.gp_XY: ...
     @overload
-    def InsertBefore(self,theItem : OCP.gp.gp_XY,theIter : Any) -> OCP.gp.gp_XY: 
+    def InsertBefore(self,theOther : IVtk_Pnt2dList,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : IVtk_Pnt2dList,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : OCP.gp.gp_XY,theIter : Any) -> OCP.gp.gp_XY: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -722,11 +745,11 @@ class IVtk_Pnt2dList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : IVtk_Pnt2dList) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : IVtk_Pnt2dList) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IVtk_SelectionMode():
@@ -758,6 +781,7 @@ class IVtk_SelectionMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -795,7 +819,7 @@ class IVtk_SelectionModeList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : IVtk_SelectionModeList) -> None: 
+    def Append(self,theItem : IVtk_SelectionMode) -> IVtk_SelectionMode: 
         """
         Append one item at the end
 
@@ -804,9 +828,9 @@ class IVtk_SelectionModeList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : IVtk_SelectionMode,theIter : Any) -> None: ...
+    def Append(self,theOther : IVtk_SelectionModeList) -> None: ...
     @overload
-    def Append(self,theItem : IVtk_SelectionMode) -> IVtk_SelectionMode: ...
+    def Append(self,theItem : IVtk_SelectionMode,theIter : Any) -> None: ...
     def Assign(self,theOther : IVtk_SelectionModeList) -> IVtk_SelectionModeList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -895,7 +919,7 @@ class IVtk_ShapeIdList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : int) -> int: 
+    def Append(self,theOther : IVtk_ShapeIdList) -> None: 
         """
         Append one item at the end
 
@@ -904,9 +928,9 @@ class IVtk_ShapeIdList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : IVtk_ShapeIdList) -> None: ...
-    @overload
     def Append(self,theItem : int,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : int) -> int: ...
     def Assign(self,theOther : IVtk_ShapeIdList) -> IVtk_ShapeIdList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -979,11 +1003,11 @@ class IVtk_ShapeIdList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : IVtk_ShapeIdList) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : IVtk_ShapeIdList) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IVtk_ShapePtrList(OCP.NCollection.NCollection_BaseList):
@@ -995,7 +1019,7 @@ class IVtk_ShapePtrList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : IVtk_ShapePtrList) -> None: 
+    def Append(self,theItem : IVtk_IShape,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -1004,9 +1028,9 @@ class IVtk_ShapePtrList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : IVtk_IShape) -> IVtk_IShape: ...
+    def Append(self,theOther : IVtk_ShapePtrList) -> None: ...
     @overload
-    def Append(self,theItem : IVtk_IShape,theIter : Any) -> None: ...
+    def Append(self,theItem : IVtk_IShape) -> IVtk_IShape: ...
     def Assign(self,theOther : IVtk_ShapePtrList) -> IVtk_ShapePtrList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1035,14 +1059,14 @@ class IVtk_ShapePtrList(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : IVtk_IShape,theIter : Any) -> IVtk_IShape: ...
     @overload
-    def InsertBefore(self,theOther : IVtk_ShapePtrList,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : IVtk_IShape,theIter : Any) -> IVtk_IShape: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : IVtk_IShape,theIter : Any) -> IVtk_IShape: ...
+    def InsertBefore(self,theOther : IVtk_ShapePtrList,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1054,14 +1078,14 @@ class IVtk_ShapePtrList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : IVtk_IShape) -> IVtk_IShape: 
+    def Prepend(self,theOther : IVtk_ShapePtrList) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : IVtk_ShapePtrList) -> None: ...
+    def Prepend(self,theItem : IVtk_IShape) -> IVtk_IShape: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1081,9 +1105,9 @@ class IVtk_ShapePtrList(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theOther : IVtk_ShapePtrList) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IVtk_SubShapeMap(OCP.NCollection.NCollection_BaseMap):
@@ -1132,14 +1156,14 @@ class IVtk_SubShapeMap(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : int,theValue : IVtk_ShapeIdList) -> bool: 
+    def Find(self,theKey : int) -> IVtk_ShapeIdList: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : int) -> IVtk_ShapeIdList: ...
+    def Find(self,theKey : int,theValue : IVtk_ShapeIdList) -> bool: ...
     def IsBound(self,theKey : int) -> bool: 
         """
         IsBound
@@ -1173,9 +1197,9 @@ class IVtk_SubShapeMap(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : IVtk_SubShapeMap) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...

@@ -5,14 +5,14 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.math
-import OCP.AdvApprox
 import OCP.Adaptor2d
-import OCP.gp
-import OCP.Geom
+import OCP.math
 import OCP.TColgp
+import OCP.gp
 import OCP.Geom2d
+import OCP.Geom
+import OCP.AdvApprox
+import OCP.TColStd
 __all__  = [
 "GeomLib",
 "GeomLib_Array1OfMat",
@@ -54,7 +54,7 @@ class GeomLib():
     @staticmethod
     def CancelDenominatorDerivative_s(BSurf : OCP.Geom.Geom_BSplineSurface,UDirection : bool,VDirection : bool) -> None: 
         """
-        Cancel,on the boudaries,the denominator first derivative in the directions wished by the user and set its value to 1.
+        Cancel,on the boundaries,the denominator first derivative in the directions wished by the user and set its value to 1.
         """
     @staticmethod
     def DensifyArray1OfReal_s(MinNumPoints : int,InParameters : OCP.TColStd.TColStd_Array1OfReal,OutParameters : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
@@ -64,7 +64,7 @@ class GeomLib():
     @staticmethod
     def EvalMaxDistanceAlongParameter_s(Curve : OCP.Adaptor3d.Adaptor3d_Curve,AReferenceCurve : OCP.Adaptor3d.Adaptor3d_Curve,Tolerance : float,Parameters : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: 
         """
-        this will compute the maximum distancef at the parameters given in the Parameters array by projecting from the Curve to the reference curve and taking the minimum distance Than the maximum will be taken on those minimas.
+        this will compute the maximum distance at the parameters given in the Parameters array by projecting from the Curve to the reference curve and taking the minimum distance Than the maximum will be taken on those minimas.
         """
     @staticmethod
     def EvalMaxParametricDistance_s(Curve : OCP.Adaptor3d.Adaptor3d_Curve,AReferenceCurve : OCP.Adaptor3d.Adaptor3d_Curve,Tolerance : float,Parameters : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: 
@@ -82,9 +82,9 @@ class GeomLib():
         Extends the bounded surface Surf along one of its boundaries. The chord length of the extension is equal to Length. The direction of the extension is given as: - the u parametric direction of Surf, if InU equals true, or - the v parametric direction of Surf, if InU equals false. In this parametric direction, the extension is built on the side of: - the last parameter of Surf, if After equals true, or - the first parameter of Surf, if After equals false. The extension is performed according to a degree of continuity equal to Cont, which in its turn must be equal to 1, 2 or 3. This function converts the bounded surface Surf into a BSpline surface. Warning - Nothing is done, and Surf is not modified if Cont is not equal to 1, 2 or 3. - It is recommended that Length, the size of the extension should not be too large with respect to the size of the bounded surface Surf. - Surf must not be a periodic BSpline surface in the parametric direction corresponding to the direction of extension.
         """
     @staticmethod
-    def FuseIntervals_s(Interval1 : OCP.TColStd.TColStd_Array1OfReal,Interval2 : OCP.TColStd.TColStd_Array1OfReal,Fusion : OCP.TColStd.TColStd_SequenceOfReal,Confusion : float=1e-09) -> None: 
+    def FuseIntervals_s(Interval1 : OCP.TColStd.TColStd_Array1OfReal,Interval2 : OCP.TColStd.TColStd_Array1OfReal,Fusion : OCP.TColStd.TColStd_SequenceOfReal,Confusion : float=1e-09,IsAdjustToFirstInterval : bool=False) -> None: 
         """
-        None
+        This method fuse intervals Interval1 and Interval2 with specified Confusion
         """
     @staticmethod
     def GTransform_s(Curve : OCP.Geom2d.Geom2d_Curve,GTrsf : OCP.gp.gp_GTrsf2d) -> OCP.Geom2d.Geom2d_Curve: 
@@ -94,7 +94,7 @@ class GeomLib():
     @staticmethod
     def Inertia_s(Points : OCP.TColgp.TColgp_Array1OfPnt,Bary : OCP.gp.gp_Pnt,XDir : OCP.gp.gp_Dir,YDir : OCP.gp.gp_Dir) -> Tuple[float, float, float]: 
         """
-        Compute principale axes of inertia, and dispertion value of some points.
+        Compute principale axes of inertia, and dispersion value of some points.
         """
     @staticmethod
     def IsBSplUClosed_s(S : OCP.Geom.Geom_BSplineSurface,U1 : float,U2 : float,Tol : float) -> bool: 
@@ -129,7 +129,7 @@ class GeomLib():
     @staticmethod
     def RemovePointsFromArray_s(NumPoints : int,InParameters : OCP.TColStd.TColStd_Array1OfReal,OutParameters : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
-        Warning! This assume that the InParameter is an increasing sequence of real number and it will not check for that : Unpredictable result can happen if this is not satisfied. It is the caller responsability to check for that property.
+        Warning! This assume that the InParameter is an increasing sequence of real number and it will not check for that : Unpredictable result can happen if this is not satisfied. It is the caller responsibility to check for that property.
         """
     @staticmethod
     def SameRange_s(Tolerance : float,Curve2dPtr : OCP.Geom2d.Geom2d_Curve,First : float,Last : float,RequestedFirst : float,RequestedLast : float,NewCurve2dPtr : OCP.Geom2d.Geom2d_Curve) -> None: 
@@ -143,19 +143,19 @@ class GeomLib():
         """
     def __init__(self) -> None: ...
     @staticmethod
-    def buildC3dOnIsoLine_s(theC2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,theSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theFirst : float,theLast : float,theTolerance : float,theIsU : bool,theParam : float,theIsForward : bool) -> OCP.Geom.Geom_Curve: 
+    def buildC3dOnIsoLine_s(theC2D : OCP.Adaptor2d.Adaptor2d_Curve2d,theSurf : OCP.Adaptor3d.Adaptor3d_Surface,theFirst : float,theLast : float,theTolerance : float,theIsU : bool,theParam : float,theIsForward : bool) -> OCP.Geom.Geom_Curve: 
         """
         Builds 3D curve for a isoline. This method takes corresponding isoline from the input surface.
         """
     @staticmethod
-    def isIsoLine_s(theC2D : OCP.Adaptor2d.Adaptor2d_HCurve2d,theIsU : bool,theParam : float,theIsForward : bool) -> bool: 
+    def isIsoLine_s(theC2D : OCP.Adaptor2d.Adaptor2d_Curve2d,theIsU : bool,theParam : float,theIsForward : bool) -> bool: 
         """
         Checks whether the 2d curve is a isoline. It can be represented by b-spline, bezier, or geometric line. This line should have natural parameterization.
         """
     pass
 class GeomLib_Array1OfMat():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : GeomLib_Array1OfMat) -> GeomLib_Array1OfMat: 
         """
@@ -230,18 +230,18 @@ class GeomLib_Array1OfMat():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_Mat,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class GeomLib_Check2dBSplineCurve():
     """
-    Checks for the end tangents : wether or not those are reversed
+    Checks for the end tangents : whether or not those are reversed
     """
     def FixTangent(self,FirstFlag : bool,LastFlag : bool) -> None: 
         """
@@ -265,7 +265,7 @@ class GeomLib_Check2dBSplineCurve():
     pass
 class GeomLib_CheckBSplineCurve():
     """
-    Checks for the end tangents : wether or not those are reversed regarding the third or n-3rd control
+    Checks for the end tangents : whether or not those are reversed regarding the third or n-3rd control
     """
     def FixTangent(self,FirstFlag : bool,LastFlag : bool) -> None: 
         """
@@ -291,10 +291,6 @@ class GeomLib_CheckCurveOnSurface():
     """
     Computes the max distance between 3D-curve and 2D-curve in some surface.
     """
-    def Curve(self) -> OCP.Geom.Geom_Curve: 
-        """
-        Returns my3DCurve
-        """
     def ErrorStatus(self) -> int: 
         """
         Returns error status The possible values are: 0 - OK; 1 - null curve or surface or 2d curve; 2 - invalid parametric range; 3 - error in calculations.
@@ -304,10 +300,10 @@ class GeomLib_CheckCurveOnSurface():
         """
         Sets the data for the algorithm
 
-        Initializes all members by dafault values
+        Initializes all members by default values
         """
     @overload
-    def Init(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: ...
+    def Init(self,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theTolRange : float=9.999999999999999e-10) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the max distance has been found
@@ -320,22 +316,14 @@ class GeomLib_CheckCurveOnSurface():
         """
         Returns parameter in which the distance is maximal
         """
-    def Perform(self,thePCurve : OCP.Geom2d.Geom2d_Curve,isTheMultyTheradDisabled : bool=False) -> None: 
+    def Perform(self,theCurveOnSurface : OCP.Adaptor3d.Adaptor3d_CurveOnSurface,isMultiThread : bool=False) -> None: 
         """
-        Computes the max distance for the 3d curve <myCurve> and 2d curve <thePCurve> If isTheMultyTheadDisabled == TRUE then computation will be made without any parallelization.
-        """
-    def Range(self) -> Tuple[float, float]: 
-        """
-        Returns first and last parameter of the curves (2D- and 3D-curves are considered to have same range)
-        """
-    def Surface(self) -> OCP.Geom.Geom_Surface: 
-        """
-        Returns mySurface
+        Computes the max distance for the 3d curve <myCurve> and 2d curve <theCurveOnSurface> If isMultiThread == Standard_True then computation will be performed in parallel.
         """
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theCurve : OCP.Geom.Geom_Curve,theSurface : OCP.Geom.Geom_Surface,theFirst : float,theLast : float,theTolRange : float=9.999999999999999e-10) -> None: ...
+    def __init__(self,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theTolRange : float=9.999999999999999e-10) -> None: ...
     pass
 class GeomLib_DenominatorMultiplier():
     """
@@ -386,6 +374,7 @@ class GeomLib_InterpolationErrors():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -445,23 +434,23 @@ class GeomLib_MakeCurvefromApprox():
     this class is used to construct the BSpline curve from an Approximation ( ApproxAFunction from AdvApprox).
     """
     @overload
-    def Curve(self,Index3d : int) -> OCP.Geom.Geom_BSplineCurve: 
+    def Curve(self,Index1D : int,Index3D : int) -> OCP.Geom.Geom_BSplineCurve: 
         """
         returns a polynomial curve whose poles correspond to the Index3D 3D space if Index3D not in the Range [1,Nb3dSpaces] if the Approx is not Done
 
         returns a rational curve whose poles correspond to the index3D of the 3D space and whose weights correspond to the index1d 1D space. if Index1D not in the Range [1,Nb1dSpaces] if Index3D not in the Range [1,Nb3dSpaces] if the Approx is not Done
         """
     @overload
-    def Curve(self,Index1D : int,Index3D : int) -> OCP.Geom.Geom_BSplineCurve: ...
+    def Curve(self,Index3d : int) -> OCP.Geom.Geom_BSplineCurve: ...
     @overload
-    def Curve2d(self,Index1d : int,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def Curve2d(self,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         returns a polynomial curve whose poles correspond to the Index2d 2D space if Index2d not in the Range [1,Nb2dSpaces] if the Approx is not Done
 
         returns a rational curve whose poles correspond to the index2d of the 2D space and whose weights correspond to one dimensional space of index 1d if Index1d not in the Range [1,Nb1dSpaces] if Index2d not in the Range [1,Nb2dSpaces] if the Approx is not Done
         """
     @overload
-    def Curve2d(self,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
+    def Curve2d(self,Index1d : int,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     def Curve2dFromTwo1d(self,Index1d : int,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         returns a 2D curve building it from the 1D curve in x at Index1d and y at Index2d amongst the 1D curves if Index1d not in the Range [1,Nb1dSpaces] if Index2d not in the Range [1,Nb1dSpaces] if the Approx is not Done
@@ -514,7 +503,7 @@ class GeomLib_Tool():
     """
     @staticmethod
     @overload
-    def Parameter_s(Curve : OCP.Geom.Geom_Curve,Point : OCP.gp.gp_Pnt,MaxDist : float,U : float) -> bool: 
+    def Parameter_s(Curve : OCP.Geom2d.Geom2d_Curve,Point : OCP.gp.gp_Pnt2d,MaxDist : float,U : float) -> bool: 
         """
         Extracts the parameter of a 3D point lying on a 3D curve or at a distance less than the MaxDist value.
 
@@ -522,7 +511,7 @@ class GeomLib_Tool():
         """
     @staticmethod
     @overload
-    def Parameter_s(Curve : OCP.Geom2d.Geom2d_Curve,Point : OCP.gp.gp_Pnt2d,MaxDist : float,U : float) -> bool: ...
+    def Parameter_s(Curve : OCP.Geom.Geom_Curve,Point : OCP.gp.gp_Pnt,MaxDist : float,U : float) -> bool: ...
     @staticmethod
     def Parameters_s(Surface : OCP.Geom.Geom_Surface,Point : OCP.gp.gp_Pnt,MaxDist : float,U : float,V : float) -> bool: 
         """

@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
-import io
 import OCP.NCollection
-import OCP.Message
+import io
 import OCP.Standard
+import OCP.Message
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "Interface_Array1OfFileParameter",
 "Interface_Array1OfHAsciiString",
@@ -97,7 +97,7 @@ __all__  = [
 ]
 class Interface_Array1OfFileParameter():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Interface_Array1OfFileParameter) -> Interface_Array1OfFileParameter: 
         """
@@ -174,16 +174,16 @@ class Interface_Array1OfFileParameter():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : Interface_Array1OfFileParameter) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : Interface_FileParameter,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Interface_Array1OfFileParameter) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Interface_Array1OfHAsciiString():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Interface_Array1OfHAsciiString) -> Interface_Array1OfHAsciiString: 
         """
@@ -258,13 +258,13 @@ class Interface_Array1OfHAsciiString():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : OCP.TCollection.TCollection_HAsciiString,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Interface_Array1OfHAsciiString) -> None: ...
+    def __init__(self,theBegin : OCP.TCollection.TCollection_HAsciiString,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : Interface_Array1OfHAsciiString) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Interface_BitMap():
@@ -355,9 +355,9 @@ class Interface_BitMap():
     @overload
     def __init__(self,other : Interface_BitMap,copied : bool=False) -> None: ...
     @overload
-    def __init__(self,nbitems : int,resflags : int=0) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,nbitems : int,resflags : int=0) -> None: ...
     pass
 class Interface_Category():
     """
@@ -409,18 +409,18 @@ class Interface_Category():
         Sets/Changes Protocol
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theGTool : Interface_GTool) -> None: ...
     @overload
     def __init__(self,theProtocol : Interface_Protocol) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class Interface_Check(OCP.Standard.Standard_Transient):
     """
     Defines a Check, as a list of Fail or Warning Messages under a literal form, which can be empty. A Check can also bring an Entity, which is the Entity to which the messages apply (this Entity may be any Transient Object).Defines a Check, as a list of Fail or Warning Messages under a literal form, which can be empty. A Check can also bring an Entity, which is the Entity to which the messages apply (this Entity may be any Transient Object).Defines a Check, as a list of Fail or Warning Messages under a literal form, which can be empty. A Check can also bring an Entity, which is the Entity to which the messages apply (this Entity may be any Transient Object).
     """
     @overload
-    def AddFail(self,amess : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def AddFail(self,amess : OCP.TCollection.TCollection_HAsciiString,orig : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Records a new Fail message
 
@@ -431,11 +431,11 @@ class Interface_Check(OCP.Standard.Standard_Transient):
         Records a new Fail from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddFail(self,amess : OCP.TCollection.TCollection_HAsciiString,orig : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def AddFail(self,amess : str,orig : str='') -> None: ...
+    @overload
+    def AddFail(self,amess : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def AddFail(self,amsg : OCP.Message.Message_Msg) -> None: ...
-    @overload
-    def AddFail(self,amess : str,orig : str='') -> None: ...
     @overload
     def AddWarning(self,amsg : OCP.Message.Message_Msg) -> None: 
         """
@@ -448,9 +448,9 @@ class Interface_Check(OCP.Standard.Standard_Transient):
         Records a new Warning from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,amess : str,orig : str='') -> None: ...
-    @overload
     def AddWarning(self,amess : OCP.TCollection.TCollection_HAsciiString,orig : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    @overload
+    def AddWarning(self,amess : str,orig : str='') -> None: ...
     @overload
     def AddWarning(self,amess : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     def CFail(self,num : int,final : bool=True) -> str: 
@@ -467,7 +467,7 @@ class Interface_Check(OCP.Standard.Standard_Transient):
         """
     def Clear(self) -> None: 
         """
-        Clears a check, in order to receive informations from transfer (Messages and Entity)
+        Clears a check, in order to receive information from transfer (Messages and Entity)
         """
     def ClearFails(self) -> None: 
         """
@@ -555,23 +555,23 @@ class Interface_Check(OCP.Standard.Standard_Transient):
         Returns the list of Info Msg, for a frontal-engine logic Final forms by default, Original forms if <final> is False Can be empty
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Mend(self,pref : str,num : int=0) -> bool: 
         """
         Mends messages, according <pref> and <num> According to <num>, works on the whole list of Fails if = 0(D) or only one Fail message, given its rank If <pref> is empty, converts Fail(s) to Warning(s) Else, does the conversion but prefixes the new Warning(s) but <pref> followed by a semi-column Some reserved values of <pref> are : "FM" : standard prefix "Mended" (can be translated) "CF" : clears Fail(s) "CW" : clears Warning(s) : here, <num> refers to Warning list "CA" : clears all messages : here, <num> is ignored
@@ -676,14 +676,14 @@ class Interface_CheckIterator():
     @overload
     def CCheck(self,num : int) -> Interface_Check: ...
     @overload
-    def Check(self,ent : OCP.Standard.Standard_Transient) -> Interface_Check: 
+    def Check(self,num : int) -> Interface_Check: 
         """
         Returns the Check which was attached to an Entity given its Number in the Model. <num>=0 is for the Global Check. If no Check was recorded for this Number, returns an empty Check. Remark : Works apart from the iteration methods (no interference)
 
         Returns the Check attached to an Entity If no Check was recorded for this Entity, returns an empty Check. Remark : Works apart from the iteration methods (no interference)
         """
     @overload
-    def Check(self,num : int) -> Interface_Check: ...
+    def Check(self,ent : OCP.Standard.Standard_Transient) -> Interface_Check: ...
     def Checkeds(self,failsonly : bool,global_ : bool) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Returns the list of entities concerned by a Check Only fails if <failsonly> is True, else all non-empty checks If <global> is true, adds the model for a global check Else, global check is ignored
@@ -701,14 +701,14 @@ class Interface_CheckIterator():
         Clears data of iteration
         """
     @overload
-    def Extract(self,status : Interface_CheckStatus) -> Interface_CheckIterator: 
+    def Extract(self,mess : str,incl : int,status : Interface_CheckStatus) -> Interface_CheckIterator: 
         """
         Returns a CheckIterator which contains the checks which comply with a given status Each check is added completely (no split Warning/Fail)
 
         Returns a CheckIterator which contains the check which comply with a message, plus some conditions as follows : <incl> = 0 : <mess> exactly matches one of the messages <incl> < 0 : <mess> is contained by one of the messages <incl> > 0 : <mess> contains one of the messages For <status> : for CheckWarning and CheckFail, considers only resp. Warning or Check messages. for CheckAny, considers all other values are ignored (answer will be false) Each Check which complies is entirely taken
         """
     @overload
-    def Extract(self,mess : str,incl : int,status : Interface_CheckStatus) -> Interface_CheckIterator: ...
+    def Extract(self,status : Interface_CheckStatus) -> Interface_CheckIterator: ...
     def IsEmpty(self,failsonly : bool) -> bool: 
         """
         Returns True if : no Fail has been recorded if <failsonly> is True, no Check at all if <failsonly> is False
@@ -738,14 +738,14 @@ class Interface_CheckIterator():
         Returns Number of Entity for the Check currently iterated or 0 for GlobalCheck
         """
     @overload
-    def Print(self,S : io.BytesIO,model : Interface_InterfaceModel,failsonly : bool,final : int=0) -> None: 
+    def Print(self,S : io.BytesIO,failsonly : bool,final : int=0) -> None: 
         """
         Prints the list of Checks with their attached Numbers If <failsonly> is True, prints only Fail messages If <failsonly> is False, prints all messages If <final> = 0 (D), prints also original messages if different If <final> < 0, prints only original messages If <final> > 0, prints only final messages It uses the recorded Model if it is defined Remark : Works apart from the iteration methods (no interference)
 
         Works as Print without a model, but for entities which have no attached number (Number not positive), tries to compute this Number from <model> and displays "original" or "computed"
         """
     @overload
-    def Print(self,S : io.BytesIO,failsonly : bool,final : int=0) -> None: ...
+    def Print(self,S : io.BytesIO,model : Interface_InterfaceModel,failsonly : bool,final : int=0) -> None: ...
     def Remove(self,mess : str,incl : int,status : Interface_CheckStatus) -> bool: 
         """
         Removes the messages of all Checks, under these conditions : <incl> = 0 : <mess> exactly matches one of the messages <incl> < 0 : <mess> is contained by one of the messages <incl> > 0 : <mess> contains one of the messages For <status> : for CheckWarning and CheckFail, considers only resp. Warning or Check messages. for CheckAny, considers all other values are ignored (nothing is done) Returns True if at least one message has been removed, False else
@@ -768,12 +768,12 @@ class Interface_CheckIterator():
         """
     def Value(self) -> Interface_Check: 
         """
-        Returns Check currently Iterated It brings all other informations (status, messages, ...) The Number of the Entity in the Model is given by Number below
+        Returns Check currently Iterated It brings all other information (status, messages, ...) The Number of the Entity in the Model is given by Number below
         """
     @overload
-    def __init__(self,name : str) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,name : str) -> None: ...
     pass
 class Interface_CheckStatus():
     """
@@ -796,6 +796,7 @@ class Interface_CheckStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -826,7 +827,7 @@ class Interface_CheckTool():
     """
     def AnalyseCheckList(self) -> Interface_CheckIterator: 
         """
-        Returns list of errors dectected at Analyse time (syntactic) (note that GlobalCheck is not in this list)
+        Returns list of errors detected at Analyse time (syntactic) (note that GlobalCheck is not in this list)
         """
     def Check(self,num : int) -> Interface_Check: 
         """
@@ -838,11 +839,11 @@ class Interface_CheckTool():
         """
     def CheckSuccess(self,reset : bool=False) -> None: 
         """
-        Checks if any Error has been detected (CheckList not empty) Returns normally if none, raises exception if some exists. It reuses the last computations from other checking methods, unless the argument <resest> is given True
+        Checks if any Error has been detected (CheckList not empty) Returns normally if none, raises exception if some exists. It reuses the last computations from other checking methods, unless the argument <reset> is given True
         """
     def CompleteCheckList(self) -> Interface_CheckIterator: 
         """
-        Returns list of all "remarkable" informations, which include : - GlobalCheck, if not empty - Error Checks, for all Errors (Verify + Analyse) - also Corrected Entities - and Unknown Entities : for those, each Unknown Entity is associated to an empty Check (it is neither an Error nor a Correction, but a remarkable information)
+        Returns list of all "remarkable" information, which include : - GlobalCheck, if not empty - Error Checks, for all Errors (Verify + Analyse) - also Corrected Entities - and Unknown Entities : for those, each Unknown Entity is associated to an empty Check (it is neither an Error nor a Correction, but a remarkable information)
         """
     def FillCheck(self,ent : OCP.Standard.Standard_Transient,sh : Interface_ShareTool,ach : Interface_Check) -> Any: 
         """
@@ -870,13 +871,13 @@ class Interface_CheckTool():
         Returns list of Corrections (includes GlobalCheck if corrected)
         """
     @overload
-    def __init__(self,model : Interface_InterfaceModel) -> None: ...
-    @overload
     def __init__(self,model : Interface_InterfaceModel,protocol : Interface_Protocol) -> None: ...
     @overload
     def __init__(self,hgraph : Interface_HGraph) -> None: ...
     @overload
     def __init__(self,graph : Interface_Graph) -> None: ...
+    @overload
+    def __init__(self,model : Interface_InterfaceModel) -> None: ...
     pass
 class Interface_CopyControl(OCP.Standard.Standard_Transient):
     """
@@ -911,23 +912,23 @@ class Interface_CopyControl(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Search(self,ent : OCP.Standard.Standard_Transient,res : OCP.Standard.Standard_Transient) -> bool: 
         """
         Searches for the Result bound to a Startingf Entity identified by its Number. If Found, returns True and fills <res> Else, returns False and nullifies <res>
@@ -980,23 +981,23 @@ class Interface_CopyMap(Interface_CopyControl, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Model(self) -> Interface_InterfaceModel: 
         """
         Returns the InterfaceModel used at Creation time
@@ -1086,11 +1087,11 @@ class Interface_CopyTool():
         Transfers one Entity, if not yet bound to a result Remark : For an Entity which is reported in the Starting Model, the ReportEntity will also be copied with its Content if it has one (at least ShallowCopy; Complete Copy if the Protocol recognizes the Content : see method Copy)
         """
     @overload
+    def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol) -> None: ...
+    @overload
     def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib) -> None: ...
     @overload
     def __init__(self,amodel : Interface_InterfaceModel) -> None: ...
-    @overload
-    def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol) -> None: ...
     pass
 class Interface_DataMapOfTransientInteger(OCP.NCollection.NCollection_BaseMap):
     """
@@ -1121,14 +1122,14 @@ class Interface_DataMapOfTransientInteger(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : Interface_DataMapOfTransientInteger) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -1179,11 +1180,11 @@ class Interface_DataMapOfTransientInteger(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : Interface_DataMapOfTransientInteger) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Interface_DataState():
@@ -1209,6 +1210,7 @@ class Interface_DataState():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1267,36 +1269,36 @@ class Interface_EntityCluster(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbEntities(self) -> int: 
         """
         Returns total count of Entities (including Next)
         """
     @overload
-    def Remove(self,num : int) -> bool: 
+    def Remove(self,ent : OCP.Standard.Standard_Transient) -> bool: 
         """
         Removes an Entity from the Cluster. If it is not found, calls its Next one to do so. Returns True if it becomes itself empty, False else (thus, a Cluster which becomes empty is deleted from the list)
 
         Removes an Entity from the Cluster, given its rank. If <num> is greater than NbLocal, calls its Next with (num - NbLocal), Returns True if it becomes itself empty, False else
         """
     @overload
-    def Remove(self,ent : OCP.Standard.Standard_Transient) -> bool: ...
+    def Remove(self,num : int) -> bool: ...
     def SetValue(self,num : int,ent : OCP.Standard.Standard_Transient) -> None: 
         """
         Changes an Entity given its rank.
@@ -1310,11 +1312,11 @@ class Interface_EntityCluster(OCP.Standard.Standard_Transient):
         Returns the Entity identified by its rank in the list (including Next)
         """
     @overload
+    def __init__(self,ent : OCP.Standard.Standard_Transient) -> None: ...
+    @overload
     def __init__(self,ec : Interface_EntityCluster) -> None: ...
     @overload
     def __init__(self,ant : OCP.Standard.Standard_Transient,ec : Interface_EntityCluster) -> None: ...
-    @overload
-    def __init__(self,ent : OCP.Standard.Standard_Transient) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @staticmethod
@@ -1385,9 +1387,9 @@ class Interface_EntityIterator():
         Returns the current Entity iterated, to be used by Interface tools
         """
     @overload
-    def __init__(self,list : OCP.TColStd.TColStd_HSequenceOfTransient) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,list : OCP.TColStd.TColStd_HSequenceOfTransient) -> None: ...
     pass
 class Interface_EntityList():
     """
@@ -1446,7 +1448,7 @@ class Interface_EntityList():
     pass
 class Interface_FileParameter():
     """
-    Auxiliary class to store a litteral parameter in a file intermediate directory or in an UndefinedContent : a reference type Parameter detains an Integer which is used to address a record in the directory. FileParameter is intended to be stored in a ParamSet : hence memory management is performed by ParamSet, which calls Clear to work, while the Destructor (see Destroy) does nothing. Also a FileParameter can be read for consultation only, not to be read from a Structure to be included into another one.
+    Auxiliary class to store a literal parameter in a file intermediate directory or in an UndefinedContent : a reference type Parameter detains an Integer which is used to address a record in the directory. FileParameter is intended to be stored in a ParamSet : hence memory management is performed by ParamSet, which calls Clear to work, while the Destructor (see Destroy) does nothing. Also a FileParameter can be read for consultation only, not to be read from a Structure to be included into another one.
     """
     def CValue(self) -> str: 
         """
@@ -1488,7 +1490,7 @@ class Interface_FileReaderData(OCP.Standard.Standard_Transient):
     This class defines services which permit to access Data issued from a File, in a form which does not depend of physical format : thus, each Record has an attached ParamList (to be managed) and resulting Entity.This class defines services which permit to access Data issued from a File, in a form which does not depend of physical format : thus, each Record has an attached ParamList (to be managed) and resulting Entity.This class defines services which permit to access Data issued from a File, in a form which does not depend of physical format : thus, each Record has an attached ParamList (to be managed) and resulting Entity.
     """
     @overload
-    def AddParam(self,num : int,aval : str,atype : Interface_ParamType,nument : int=0) -> None: 
+    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : Interface_ParamType,nument : int=0) -> None: 
         """
         Adds a parameter to record no "num" and fills its fields (EntityNumber is optional) Warning : <aval> is assumed to be memory-managed elsewhere : it is NOT copied. This gives a best speed : strings remain stored in pages of characters
 
@@ -1499,7 +1501,7 @@ class Interface_FileReaderData(OCP.Standard.Standard_Transient):
     @overload
     def AddParam(self,num : int,FP : Interface_FileParameter) -> None: ...
     @overload
-    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : Interface_ParamType,nument : int=0) -> None: ...
+    def AddParam(self,num : int,aval : str,atype : Interface_ParamType,nument : int=0) -> None: ...
     def BindEntity(self,num : int,ent : OCP.Standard.Standard_Transient) -> None: 
         """
         Binds an entity to a record
@@ -1551,23 +1553,23 @@ class Interface_FileReaderData(OCP.Standard.Standard_Transient):
         Returns True if the status "Error Load" has been set (to True or False)
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsParamDefined(self,num : int,nump : int) -> bool: 
         """
         Returns True if parameter "nump" of record "num" is defined (it is not if its type is ParamVoid)
@@ -1598,7 +1600,7 @@ class Interface_FileReaderData(OCP.Standard.Standard_Transient):
         """
     def ParamFirstRank(self,num : int) -> int: 
         """
-        Returns the absolute rank of the beginning of a record (its lsit is from ParamFirstRank+1 to ParamFirstRank+NbParams)
+        Returns the absolute rank of the beginning of a record (its list is from ParamFirstRank+1 to ParamFirstRank+NbParams)
         """
     def ParamNumber(self,num : int,nump : int) -> int: 
         """
@@ -1653,7 +1655,7 @@ class Interface_FileReaderTool():
         """
     def Clear(self) -> None: 
         """
-        Clear filelds
+        Clear fields
         """
     def Data(self) -> Interface_FileReaderData: 
         """
@@ -1734,12 +1736,12 @@ class Interface_FileReaderTool():
     pass
 class Interface_FloatWriter():
     """
-    This class converts a floting number (Real) to a string It can be used if the standard C-C++ output functions (sprintf or std::cout<<) are not convenient. That is to say : - to suppress trailing '0' and 'E+00' (if desired) - to control exponant output and floating point output
+    This class converts a floating number (Real) to a string It can be used if the standard C-C++ output functions (sprintf or std::cout<<) are not convenient. That is to say : - to suppress trailing '0' and 'E+00' (if desired) - to control exponent output and floating point output
     """
     @staticmethod
     def Convert_s(val : float,text : str,zerosup : bool,Range1 : float,Range2 : float,mainform : str,rangeform : str) -> int: 
         """
-        This class method converts a Real Value to a string, given options given as arguments. It can be called independantly. Warning : even if declared in, content of <text> will be modified
+        This class method converts a Real Value to a string, given options given as arguments. It can be called independently. Warning : even if declared in, content of <text> will be modified
         """
     def FormatForRange(self) -> str: 
         """
@@ -1767,7 +1769,7 @@ class Interface_FloatWriter():
         """
     def SetZeroSuppress(self,mode : bool) -> None: 
         """
-        Sets Sending Real Parameters to suppress trailing Zeros and Null Exponant ("E+00"), if <mode> is given True, Resets this mode if <mode> is False (in addition to Real Forms) A call to SetRealFrom resets this mode to False ig <reset> is given True (Default from Creation is True)
+        Sets Sending Real Parameters to suppress trailing Zeros and Null Exponent ("E+00"), if <mode> is given True, Resets this mode if <mode> is False (in addition to Real Forms) A call to SetRealFrom resets this mode to False ig <reset> is given True (Default from Creation is True)
         """
     def Write(self,val : float,text : str) -> int: 
         """
@@ -1804,23 +1806,23 @@ class Interface_GTool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Lib(self) -> Interface_GeneralLib: 
         """
         Returns the GeneralLib itself
@@ -1979,23 +1981,23 @@ class Interface_GeneralModule(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ListImplied(self,model : Interface_InterfaceModel,CN : int,ent : OCP.Standard.Standard_Transient,iter : Interface_EntityIterator) -> None: 
         """
         List the Implied References of <ent> considered in the context of a Model <model> : i.e. the Entities which are Referenced while not considered as Shared (not copied if <ent> is, references not renewed by CopyCase but by ImpliedCase, only if referenced Entities have been Copied too) FillShared + ListImplied give the complete list of References Default calls ListImpliedCase (i.e. ignores the model) Can be redefined to use the model for working
@@ -2046,7 +2048,7 @@ class Interface_GeneralModule(OCP.Standard.Standard_Transient):
 class Interface_GlobalNodeOfGeneralLib(OCP.Standard.Standard_Transient):
     def Add(self,amodule : Interface_GeneralModule,aprotocol : Interface_Protocol) -> None: 
         """
-        Adds a Module bound with a Protocol to the list : does nothing if already in the list, THAT IS, Same Type (exact match) and Same State (that is, IsEqual is not required) Once added, stores its attached Protocol in correspondance
+        Adds a Module bound with a Protocol to the list : does nothing if already in the list, THAT IS, Same Type (exact match) and Same State (that is, IsEqual is not required) Once added, stores its attached Protocol in correspondence
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2069,23 +2071,23 @@ class Interface_GlobalNodeOfGeneralLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Module(self) -> Interface_GeneralModule: 
         """
         Returns the Module stored in a given GlobalNode
@@ -2117,7 +2119,7 @@ class Interface_GlobalNodeOfGeneralLib(OCP.Standard.Standard_Transient):
 class Interface_GlobalNodeOfReaderLib(OCP.Standard.Standard_Transient):
     def Add(self,amodule : Interface_ReaderModule,aprotocol : Interface_Protocol) -> None: 
         """
-        Adds a Module bound with a Protocol to the list : does nothing if already in the list, THAT IS, Same Type (exact match) and Same State (that is, IsEqual is not required) Once added, stores its attached Protocol in correspondance
+        Adds a Module bound with a Protocol to the list : does nothing if already in the list, THAT IS, Same Type (exact match) and Same State (that is, IsEqual is not required) Once added, stores its attached Protocol in correspondence
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2140,23 +2142,23 @@ class Interface_GlobalNodeOfReaderLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Module(self) -> Interface_ReaderModule: 
         """
         Returns the Module stored in a given GlobalNode
@@ -2253,17 +2255,17 @@ class Interface_Graph():
         Returns True if <ent> or the list of entities shared by <ent> (not redefined) contains items unknown from this Graph Remark : apart from the status HasShareError, these items are ignored
         """
     @overload
-    def IsPresent(self,num : int) -> bool: 
+    def IsPresent(self,ent : OCP.Standard.Standard_Transient) -> bool: 
         """
         Returns True if an Entity is noted as present in the graph (See methods Get... which determine this status) Returns False if <num> is out of range too
 
         Same as above but directly on an Entity <ent> : if it is not contained in the Model, returns False. Else calls IsPresent(num) with <num> given by EntityNumber
         """
     @overload
-    def IsPresent(self,ent : OCP.Standard.Standard_Transient) -> bool: ...
+    def IsPresent(self,num : int) -> bool: ...
     def ModeStat(self) -> bool: 
         """
-        Returns mode resposible for computation of statuses;
+        Returns mode responsible for computation of statuses;
         """
     def Model(self) -> Interface_InterfaceModel: 
         """
@@ -2326,15 +2328,15 @@ class Interface_Graph():
         Returns the list of sharings entities, AT ANY LEVEL, which are kind of a given type. A sharing entity kind of this type ends the exploration of its branch
         """
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol,theModeStats : bool=True) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,theModeStats : bool=True) -> None: ...
     @overload
     def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib,theModeStats : bool=True) -> None: ...
     @overload
-    def __init__(self,agraph : Interface_Graph,copied : bool=False) -> None: ...
-    @overload
-    def __init__(self,amodel : Interface_InterfaceModel,theModeStats : bool=True) -> None: ...
-    @overload
     def __init__(self,amodel : Interface_InterfaceModel,gtool : Interface_GTool,theModeStats : bool=True) -> None: ...
+    @overload
+    def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol,theModeStats : bool=True) -> None: ...
+    @overload
+    def __init__(self,agraph : Interface_Graph,copied : bool=False) -> None: ...
     pass
 class Interface_GraphContent(Interface_EntityIterator):
     """
@@ -2365,14 +2367,14 @@ class Interface_GraphContent(Interface_EntityIterator):
         Evaluates list of Entities to be iterated. Called by Start Default is set to doing nothing : intended to be redefined by each sub-class
         """
     @overload
-    def GetFromGraph(self,agraph : Interface_Graph) -> None: 
+    def GetFromGraph(self,agraph : Interface_Graph,stat : int) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : Interface_Graph,stat : int) -> None: ...
+    def GetFromGraph(self,agraph : Interface_Graph) -> None: ...
     def GetOneItem(self,anentity : OCP.Standard.Standard_Transient) -> None: 
         """
         same as AddItem (kept for compatibility)
@@ -2395,7 +2397,7 @@ class Interface_GraphContent(Interface_EntityIterator):
         """
     def Result(self) -> Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SelectType(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -2414,13 +2416,13 @@ class Interface_GraphContent(Interface_EntityIterator):
         Returns the current Entity iterated, to be used by Interface tools
         """
     @overload
-    def __init__(self,agraph : Interface_Graph) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,agraph : Interface_Graph,ent : OCP.Standard.Standard_Transient) -> None: ...
     @overload
     def __init__(self,agraph : Interface_Graph,stat : int) -> None: ...
+    @overload
+    def __init__(self,agraph : Interface_Graph) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Interface_HArray1OfHAsciiString(Interface_Array1OfHAsciiString, OCP.Standard.Standard_Transient):
     def Array1(self) -> Interface_Array1OfHAsciiString: 
@@ -2488,23 +2490,23 @@ class Interface_HArray1OfHAsciiString(Interface_Array1OfHAsciiString, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         Returns last element
@@ -2546,11 +2548,11 @@ class Interface_HArray1OfHAsciiString(Interface_Array1OfHAsciiString, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Interface_Array1OfHAsciiString) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2567,7 +2569,7 @@ class Interface_HArray1OfHAsciiString(Interface_Array1OfHAsciiString, OCP.Standa
     pass
 class Interface_HGraph(OCP.Standard.Standard_Transient):
     """
-    This class allows to store a redefinable Graph, via a Handle (usefull for an Object which can work on several successive Models, with the same general conditions)This class allows to store a redefinable Graph, via a Handle (usefull for an Object which can work on several successive Models, with the same general conditions)This class allows to store a redefinable Graph, via a Handle (usefull for an Object which can work on several successive Models, with the same general conditions)
+    This class allows to store a redefinable Graph, via a Handle (useful for an Object which can work on several successive Models, with the same general conditions)This class allows to store a redefinable Graph, via a Handle (useful for an Object which can work on several successive Models, with the same general conditions)This class allows to store a redefinable Graph, via a Handle (useful for an Object which can work on several successive Models, with the same general conditions)
     """
     def CGraph(self) -> Interface_Graph: 
         """
@@ -2591,44 +2593,44 @@ class Interface_HGraph(OCP.Standard.Standard_Transient):
         """
     def Graph(self) -> Interface_Graph: 
         """
-        Returns the Graph contained in <me>, for Read Only Operations Remark that it is returns as "const &" Getting it in a new variable instead of a reference would be a pitty, because all the graph's content would be duplicated
+        Returns the Graph contained in <me>, for Read Only Operations Remark that it is returns as "const &" Getting it in a new variable instead of a reference would be a pity, because all the graph's content would be duplicated
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,agraph : Interface_Graph) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib,theModeStats : bool=True) -> None: ...
     @overload
     def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol,theModeStats : bool=True) -> None: ...
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib,theModeStats : bool=True) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,theModeStats : bool=True) -> None: ...
     @overload
     def __init__(self,amodel : Interface_InterfaceModel,gtool : Interface_GTool,theModeStats : bool=True) -> None: ...
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,theModeStats : bool=True) -> None: ...
+    def __init__(self,agraph : Interface_Graph) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2720,23 +2722,23 @@ class Interface_SequenceOfCheck(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Interface_SequenceOfCheck) -> None: 
+    def Prepend(self,theItem : Interface_Check) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Interface_Check) -> None: ...
+    def Prepend(self,theSeq : Interface_SequenceOfCheck) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2764,9 +2766,9 @@ class Interface_SequenceOfCheck(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Interface_SequenceOfCheck) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Interface_SequenceOfCheck) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2791,14 +2793,14 @@ class Interface_IndexedMapOfAsciiString(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Contains
@@ -2860,9 +2862,9 @@ class Interface_IndexedMapOfAsciiString(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theOther : Interface_IndexedMapOfAsciiString) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : Interface_IndexedMapOfAsciiString) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -2892,7 +2894,7 @@ class Interface_IntList():
         """
     def IsRedefined(self,num : int=0) -> bool: 
         """
-        Returns True if the list for a number (default is taken as current) is "redefined" (usefull for empty list)
+        Returns True if the list for a number (default is taken as current) is "redefined" (useful for empty list)
         """
     def Length(self) -> int: 
         """
@@ -2935,11 +2937,11 @@ class Interface_IntList():
         Returns a reference number in the list for current number, according to its rank
         """
     @overload
+    def __init__(self,other : Interface_IntList,copied : bool) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,nbe : int) -> None: ...
-    @overload
-    def __init__(self,other : Interface_IntList,copied : bool) -> None: ...
     pass
 class Interface_IntVal(OCP.Standard.Standard_Transient):
     """
@@ -2966,23 +2968,23 @@ class Interface_IntVal(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3093,11 +3095,11 @@ class Interface_InterfaceModel(OCP.Standard.Standard_Transient):
         """
     def ClearLabels(self) -> None: 
         """
-        Erases informations about labels, if any : specific to each norm
+        Erases information about labels, if any : specific to each norm
         """
     def ClearReportEntity(self,num : int) -> bool: 
         """
-        Removes the ReportEntity attached to Entity <num>. Returns True if done, False if no ReportEntity was attached to <num>. Warning : the caller must assume that this clearing is meaningfull
+        Removes the ReportEntity attached to Entity <num>. Returns True if done, False if no ReportEntity was attached to <num>. Warning : the caller must assume that this clearing is meaningful
         """
     def Contains(self,anentity : OCP.Standard.Standard_Transient) -> bool: 
         """
@@ -3177,23 +3179,23 @@ class Interface_InterfaceModel(OCP.Standard.Standard_Transient):
         Returns True if <num> identifies an Error Entity : in this case, a ReportEntity brings Fail Messages and possibly an "undefined" Content, see IsRedefinedEntity
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRedefinedContent(self,num : int) -> bool: 
         """
         Returns True if <num> identifies an Entity which content is redefined through a ReportEntity (i.e. with literal data only) This happens when an entity is syntactically erroneous in the way that its basic content remains empty. For more details (such as content itself), see ReportEntity
@@ -3261,7 +3263,7 @@ class Interface_InterfaceModel(OCP.Standard.Standard_Transient):
         """
     def Reports(self,semantic : bool=False) -> Interface_EntityIterator: 
         """
-        Returns the list of all ReportEntities, i.e. data about Entities read with Error or Warning informations (each item has to be casted to Report Entity then it can be queried for Concerned Entity, Content, Check ...) By default, returns the main reports, is <semantic> is True it returns the list for sematic checks
+        Returns the list of all ReportEntities, i.e. data about Entities read with Error or Warning information (each item has to be casted to Report Entity then it can be queried for Concerned Entity, Content, Check ...) By default, returns the main reports, is <semantic> is True it returns the list for semantic checks
         """
     def Reservate(self,nbent : int) -> None: 
         """
@@ -3289,7 +3291,7 @@ class Interface_InterfaceModel(OCP.Standard.Standard_Transient):
         """
     def SetReportEntity(self,num : int,rep : Interface_ReportEntity) -> bool: 
         """
-        Sets or Replaces a ReportEntity for the Entity <num>. Returns True if Report is replaced, False if it has been replaced Warning : the caller must assume that this setting is meaningfull
+        Sets or Replaces a ReportEntity for the Entity <num>. Returns True if Report is replaced, False if it has been replaced Warning : the caller must assume that this setting is meaningful
         """
     @staticmethod
     def SetTemplate_s(name : str,model : Interface_InterfaceModel) -> bool: 
@@ -3364,9 +3366,9 @@ class Interface_LineBuffer():
         Adds a text made of only ONE Character
         """
     @overload
-    def Add(self,text : str) -> None: ...
-    @overload
     def Add(self,text : str,lntext : int) -> None: ...
+    @overload
+    def Add(self,text : str) -> None: ...
     def CanGet(self,more : int) -> bool: 
         """
         Returns True if there is room enough to add <more> characters Else, it is required to Dump the Buffer before refilling it <more> is recorded to manage SetKeep status
@@ -3420,7 +3422,7 @@ class Interface_MSG():
     """
     @staticmethod
     @overload
-    def Blanks_s(count : int) -> str: 
+    def Blanks_s(val : str,max : int) -> str: 
         """
         Returns a blank string, of length between 0 and <max>, to fill the printing of a numeric value <val>, i.e. : If val < 10 , max-1 blanks If val between 10 and 99, max-2 blanks ... etc...
 
@@ -3430,7 +3432,7 @@ class Interface_MSG():
         """
     @staticmethod
     @overload
-    def Blanks_s(val : str,max : int) -> str: ...
+    def Blanks_s(count : int) -> str: ...
     @staticmethod
     @overload
     def Blanks_s(val : int,max : int) -> str: ...
@@ -3466,7 +3468,7 @@ class Interface_MSG():
     @staticmethod
     def Print_s(S : io.BytesIO,val : str,max : int,just : int=-1) -> None: 
         """
-        Prints a String on an Output Stream, as follows : Accompagned with blanks, to give up to <max> charis at all, justified according just : -1 (D) : left 0 : center 1 : right Maximum 76 characters
+        Prints a String on an Output Stream, as follows : Accompanied with blanks, to give up to <max> charis at all, justified according just : -1 (D) : left 0 : center 1 : right Maximum 76 characters
         """
     @staticmethod
     @overload
@@ -3497,7 +3499,7 @@ class Interface_MSG():
     @staticmethod
     def TDate_s(text : str,yy : int,mm : int,dd : int,hh : int,mn : int,ss : int,format : str='') -> None: 
         """
-        Codes a date as a text, from its numeric value (-> seconds) : YYYY-MM-DD:HH-MN-SS fixed format, completed by leading zeros Another format can be provided, as follows : C:%d ... C like format, preceeded by C: S:... format to call system (not yet implemented)
+        Codes a date as a text, from its numeric value (-> seconds) : YYYY-MM-DD:HH-MN-SS fixed format, completed by leading zeros Another format can be provided, as follows : C:%d ... C like format, preceded by C: S:... format to call system (not yet implemented)
         """
     @staticmethod
     def Translated_s(key : str) -> str: 
@@ -3514,15 +3516,15 @@ class Interface_MSG():
         Writes the list of messages recorded to be translated, to a stream. Writes all the list (Default) or only keys which begin by <rootkey>. Returns the count of written messages
         """
     @overload
-    def __init__(self,key : str,i1 : int,i2 : int) -> None: ...
-    @overload
-    def __init__(self,key : str,i1 : int) -> None: ...
+    def __init__(self,key : str,ival : int,str : str) -> None: ...
     @overload
     def __init__(self,key : str) -> None: ...
     @overload
+    def __init__(self,key : str,i1 : int,i2 : int) -> None: ...
+    @overload
     def __init__(self,key : str,r1 : float,intervals : int=-1) -> None: ...
     @overload
-    def __init__(self,key : str,ival : int,str : str) -> None: ...
+    def __init__(self,key : str,i1 : int) -> None: ...
     @overload
     def __init__(self,key : str,str : str) -> None: ...
     pass
@@ -3568,23 +3570,23 @@ class Interface_NodeOfGeneralLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Module(self) -> Interface_GeneralModule: 
         """
         Returns the Module designated by a precise Node
@@ -3639,23 +3641,23 @@ class Interface_NodeOfReaderLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Module(self) -> Interface_ReaderModule: 
         """
         Returns the Module designated by a precise Node
@@ -3714,23 +3716,23 @@ class Interface_ParamList(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Length(self) -> int: 
         """
         Returns the number of elements of <me>.
@@ -3778,14 +3780,14 @@ class Interface_ParamSet(OCP.Standard.Standard_Transient):
     Defines an ordered set of FileParameters, in a way to be efficient as in memory requirement or in speedDefines an ordered set of FileParameters, in a way to be efficient as in memory requirement or in speedDefines an ordered set of FileParameters, in a way to be efficient as in memory requirement or in speed
     """
     @overload
-    def Append(self,val : str,lnval : int,typ : Interface_ParamType,nument : int) -> int: 
+    def Append(self,FP : Interface_FileParameter) -> int: 
         """
-        Adds a parameter defined as its Value (CString and length) and Type. Optionnal EntityNumber (for FileReaderData) can be given Allows a better memory management than Appending a complete FileParameter If <lnval> < 0, <val> is assumed to be managed elsewhere : its adress is stored as such. Else, <val> is copied in a locally (quickly) managed Page of Characters Returns new count of recorded Parameters
+        Adds a parameter defined as its Value (CString and length) and Type. Optional EntityNumber (for FileReaderData) can be given Allows a better memory management than Appending a complete FileParameter If <lnval> < 0, <val> is assumed to be managed elsewhere : its address is stored as such. Else, <val> is copied in a locally (quickly) managed Page of Characters Returns new count of recorded Parameters
 
         Adds a parameter at the end of the ParamSet (transparent about reservation and "Next") Returns new count of recorded Parameters
         """
     @overload
-    def Append(self,FP : Interface_FileParameter) -> int: ...
+    def Append(self,val : str,lnval : int,typ : Interface_ParamType,nument : int) -> int: ...
     def ChangeParam(self,num : int) -> Interface_FileParameter: 
         """
         Same as above, but in order to be modified on place
@@ -3812,23 +3814,23 @@ class Interface_ParamSet(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbParams(self) -> int: 
         """
         Returns the total count of parameters (including nexts)
@@ -3839,7 +3841,7 @@ class Interface_ParamSet(OCP.Standard.Standard_Transient):
         """
     def Params(self,num : int,nb : int) -> Interface_ParamList: 
         """
-        Builds and returns the sub-list correspinding to parameters, from "num" included, with count "nb" If <num> and <nb> are zero, returns the whole list
+        Builds and returns the sub-list corresponding to parameters, from "num" included, with count "nb" If <num> and <nb> are zero, returns the whole list
         """
     def SetParam(self,num : int,FP : Interface_FileParameter) -> None: 
         """
@@ -3892,6 +3894,7 @@ class Interface_ParamType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3968,23 +3971,23 @@ class Interface_Protocol(OCP.Standard.Standard_Transient):
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsSuitableModel(self,model : Interface_InterfaceModel) -> bool: 
         """
         Returns True if <model> is a Model of the considered Norm
@@ -4120,23 +4123,23 @@ class Interface_ReaderModule(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewRead(self,casenum : int,data : Interface_FileReaderData,num : int,ach : Interface_Check,ent : OCP.Standard.Standard_Transient) -> bool: 
         """
         Specific operator (create+read) defaulted to do nothing. It can be redefined when it is not possible to work in two steps (NewVoid then Read). This occurs when no default constructor is defined : hence the result <ent> must be created with an effective definition from the reader. Remark : if NewRead is defined, Copy has nothing to do.
@@ -4213,23 +4216,23 @@ class Interface_ReportEntity(OCP.Standard.Standard_Transient):
         Returns True for an Error Entity, i.e. if the Check brings at least one Fail message
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsUnknown(self) -> bool: 
         """
         Returns True for an Unknown Entity, i,e. if the Check is empty and Concerned equates Content
@@ -4259,7 +4262,7 @@ class Interface_ReportEntity(OCP.Standard.Standard_Transient):
     pass
 class Interface_STAT():
     """
-    This class manages statistics to be queried asynchronously. Way of use : An operator describes a STAT form then fills it according to its progression. This produces a state of advancement of the process. This state can then be queried asynchronously : typically it is summarised as a percentage. There are also an identification of the current state, and informations on processed volume.
+    This class manages statistics to be queried asynchronously. Way of use : An operator describes a STAT form then fills it according to its progression. This produces a state of advancement of the process. This state can then be queried asynchronously : typically it is summarised as a percentage. There are also an identification of the current state, and information on processed volume.
     """
     def AddPhase(self,weight : float,name : str='') -> None: 
         """
@@ -4281,7 +4284,7 @@ class Interface_STAT():
     @staticmethod
     def NextCycle_s(items : int) -> None: 
         """
-        Commands to resume the preceeding cycle and start a new one, with a count of items Ignored if count of cycles is already passed Then, first step is started (or default one) NextItem can be called for the first step, or NextStep to pass to the next one
+        Commands to resume the preceding cycle and start a new one, with a count of items Ignored if count of cycles is already passed Then, first step is started (or default one) NextItem can be called for the first step, or NextStep to pass to the next one
         """
     @staticmethod
     def NextItem_s(nbitems : int=1) -> None: 
@@ -4291,12 +4294,12 @@ class Interface_STAT():
     @staticmethod
     def NextPhase_s(items : int,cycles : int=1) -> None: 
         """
-        Commands to resume the preceeding phase and start a new one <items> and <cycles> as for Start, but for this new phase Ignored if count of phases is already passed If <cycles> is more than one, the first Cycle must then be started by NextCycle (NextStep/NextItem are ignored). If it is one, NextItem/NextStep can then be called
+        Commands to resume the preceding phase and start a new one <items> and <cycles> as for Start, but for this new phase Ignored if count of phases is already passed If <cycles> is more than one, the first Cycle must then be started by NextCycle (NextStep/NextItem are ignored). If it is one, NextItem/NextStep can then be called
         """
     @staticmethod
     def NextStep_s() -> None: 
         """
-        Commands to resume the preceeding step of the cycle Ignored if count of steps is already passed NextItem can be called for this step, NextStep passes to next
+        Commands to resume the preceding step of the cycle Ignored if count of steps is already passed NextItem can be called for this step, NextStep passes to next
         """
     @staticmethod
     def Percent_s(phase : bool=False) -> int: 
@@ -4327,9 +4330,9 @@ class Interface_STAT():
         Returns an identification of the STAT : <phase> True (D) : the name of the current phase <phase> False : the title of the current STAT
         """
     @overload
-    def __init__(self,other : Interface_STAT) -> None: ...
-    @overload
     def __init__(self,title : str='') -> None: ...
+    @overload
+    def __init__(self,other : Interface_STAT) -> None: ...
     pass
 class Interface_HSequenceOfCheck(Interface_SequenceOfCheck, OCP.NCollection.NCollection_BaseSequence, OCP.Standard.Standard_Transient):
     def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
@@ -4420,23 +4423,23 @@ class Interface_HSequenceOfCheck(Interface_SequenceOfCheck, OCP.NCollection.NCol
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Interface_Check: 
         """
         Last item access
@@ -4450,23 +4453,23 @@ class Interface_HSequenceOfCheck(Interface_SequenceOfCheck, OCP.NCollection.NCol
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Interface_SequenceOfCheck) -> None: 
+    def Prepend(self,theItem : Interface_Check) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Interface_Check) -> None: ...
+    def Prepend(self,theSeq : Interface_SequenceOfCheck) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -4500,9 +4503,9 @@ class Interface_HSequenceOfCheck(Interface_SequenceOfCheck, OCP.NCollection.NCol
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Interface_SequenceOfCheck) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Interface_SequenceOfCheck) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4545,19 +4548,19 @@ class Interface_ShareFlags():
         Returns the Entities which are not Shared (see their flags)
         """
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,gtool : Interface_GTool) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib) -> None: ...
+    @overload
+    def __init__(self,amodel : Interface_InterfaceModel) -> None: ...
     @overload
     def __init__(self,agraph : Interface_Graph) -> None: ...
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib) -> None: ...
-    @overload
     def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol) -> None: ...
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,gtool : Interface_GTool) -> None: ...
     pass
 class Interface_ShareTool():
     """
-    Builds the Graph of Dependancies, from the General Service "Shared" -> builds for each Entity of a Model, the Shared and Sharing Lists, and gives access to them. Allows to complete with Implied References (which are not regarded as Shared Entities, but are nevertheless Referenced), this can be usefull for Reference Checking
+    Builds the Graph of Dependencies, from the General Service "Shared" -> builds for each Entity of a Model, the Shared and Sharing Lists, and gives access to them. Allows to complete with Implied References (which are not regarded as Shared Entities, but are nevertheless Referenced), this can be useful for Reference Checking
     """
     def All(self,ent : OCP.Standard.Standard_Transient,rootlast : bool=True) -> Interface_EntityIterator: 
         """
@@ -4600,17 +4603,17 @@ class Interface_ShareTool():
         Returns the Sharing Entity of an Entity, which is Kind of a given Type. Allows to access a Sharing Entity of a given type when there is one and only one (current case)
         """
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,gtool : Interface_GTool) -> None: ...
-    @overload
-    def __init__(self,ahgraph : Interface_HGraph) -> None: ...
-    @overload
-    def __init__(self,agraph : Interface_Graph) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol) -> None: ...
     @overload
     def __init__(self,amodel : Interface_InterfaceModel) -> None: ...
     @overload
     def __init__(self,amodel : Interface_InterfaceModel,lib : Interface_GeneralLib) -> None: ...
     @overload
-    def __init__(self,amodel : Interface_InterfaceModel,protocol : Interface_Protocol) -> None: ...
+    def __init__(self,amodel : Interface_InterfaceModel,gtool : Interface_GTool) -> None: ...
+    @overload
+    def __init__(self,ahgraph : Interface_HGraph) -> None: ...
+    @overload
+    def __init__(self,agraph : Interface_Graph) -> None: ...
     pass
 class Interface_SignLabel():
     """
@@ -4683,16 +4686,16 @@ class Interface_TypedValue():
     @staticmethod
     def ParamTypeToValueType_s(typ : Interface_ParamType) -> MoniTool_ValueType: 
         """
-        Correspondance ParamType from Interface to ValueType from MoniTool
+        Correspondence ParamType from Interface to ValueType from MoniTool
         """
     def Type(self) -> Interface_ParamType: 
         """
-        Returns the type I.E. calls ValueType then makes correspondance between ParamType from Interface (which remains for compatibility reasons) and ValueType from MoniTool
+        Returns the type I.E. calls ValueType then makes correspondence between ParamType from Interface (which remains for compatibility reasons) and ValueType from MoniTool
         """
     @staticmethod
     def ValueTypeToParamType_s(typ : MoniTool_ValueType) -> Interface_ParamType: 
         """
-        Correspondance ParamType from Interface to ValueType from MoniTool
+        Correspondence ParamType from Interface to ValueType from MoniTool
         """
     def __init__(self,name : str,type : Interface_ParamType=Interface_ParamType.Interface_ParamText,init : str='') -> None: ...
     @staticmethod
@@ -4708,7 +4711,7 @@ class Interface_TypedValue():
     pass
 class Interface_Static(Interface_TypedValue):
     """
-    This class gives a way to manage meaningfull static variables, used as "global" parameters in various procedures.This class gives a way to manage meaningfull static variables, used as "global" parameters in various procedures.This class gives a way to manage meaningfull static variables, used as "global" parameters in various procedures.
+    This class gives a way to manage meaningful static variables, used as "global" parameters in various procedures.This class gives a way to manage meaningful static variables, used as "global" parameters in various procedures.This class gives a way to manage meaningful static variables, used as "global" parameters in various procedures.
     """
     @staticmethod
     def CDef_s(name : str,part : str) -> str: 
@@ -4772,7 +4775,7 @@ class Interface_Static(Interface_TypedValue):
     @staticmethod
     def ParamTypeToValueType_s(typ : Interface_ParamType) -> MoniTool_ValueType: 
         """
-        Correspondance ParamType from Interface to ValueType from MoniTool
+        Correspondence ParamType from Interface to ValueType from MoniTool
         """
     def PrintStatic(self,S : io.BytesIO) -> None: 
         """
@@ -4818,7 +4821,7 @@ class Interface_Static(Interface_TypedValue):
         """
     def Type(self) -> Interface_ParamType: 
         """
-        Returns the type I.E. calls ValueType then makes correspondance between ParamType from Interface (which remains for compatibility reasons) and ValueType from MoniTool
+        Returns the type I.E. calls ValueType then makes correspondence between ParamType from Interface (which remains for compatibility reasons) and ValueType from MoniTool
         """
     @staticmethod
     def Update_s(name : str) -> bool: 
@@ -4832,7 +4835,7 @@ class Interface_Static(Interface_TypedValue):
     @staticmethod
     def ValueTypeToParamType_s(typ : MoniTool_ValueType) -> Interface_ParamType: 
         """
-        Correspondance ParamType from Interface to ValueType from MoniTool
+        Correspondence ParamType from Interface to ValueType from MoniTool
         """
     def Wild(self) -> Interface_Static: 
         """
@@ -4894,23 +4897,23 @@ class Interface_UndefinedContent(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsParamEntity(self,num : int) -> bool: 
         """
         Returns True if a Parameter is recorded as an entity Error if num is not between 1 and NbParams
@@ -4937,7 +4940,7 @@ class Interface_UndefinedContent(OCP.Standard.Standard_Transient):
         """
     def ParamValue(self,num : int) -> OCP.TCollection.TCollection_HAsciiString: 
         """
-        Returns litteral value of a Parameter, given its rank
+        Returns literal value of a Parameter, given its rank
         """
     def RemoveParam(self,num : int) -> None: 
         """
@@ -4948,14 +4951,14 @@ class Interface_UndefinedContent(OCP.Standard.Standard_Transient):
         Manages reservation for parameters (internal use) (nb : total count of parameters, nblit : count of literals)
         """
     @overload
-    def SetEntity(self,num : int,ptype : Interface_ParamType,ent : OCP.Standard.Standard_Transient) -> None: 
+    def SetEntity(self,num : int,ent : OCP.Standard.Standard_Transient) -> None: 
         """
         Sets a new value for the Parameter <num>, to reference an Entity. To simply change the Entity, see the variant below
 
         Changes the Entity referenced by the Parameter <num> (with same ParamType)
         """
     @overload
-    def SetEntity(self,num : int,ent : OCP.Standard.Standard_Transient) -> None: ...
+    def SetEntity(self,num : int,ptype : Interface_ParamType,ent : OCP.Standard.Standard_Transient) -> None: ...
     def SetLiteral(self,num : int,ptype : Interface_ParamType,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         Sets a new value for the Parameter <num>, to a literal value (if it referenced formerly an Entity, this Entity is removed)

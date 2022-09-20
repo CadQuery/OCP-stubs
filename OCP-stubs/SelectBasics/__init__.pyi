@@ -6,9 +6,8 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import io
 import OCP.gp
-import OCP.TColgp
-import OCP.Graphic3d
 import OCP.SelectMgr
+import OCP.TColgp
 __all__  = [
 "SelectBasics",
 "SelectBasics_PickResult",
@@ -76,15 +75,15 @@ class SelectBasics_PickResult():
         Set picked point.
         """
     @overload
-    def SetSurfaceNormal(self,theNormal : OCP.Graphic3d.Graphic3d_Vec3) -> None: 
+    def SetSurfaceNormal(self,theNormal : OCP.gp.gp_Vec) -> None: 
         """
         Set surface normal at picked point.
 
         Set surface normal at picked point.
         """
     @overload
-    def SetSurfaceNormal(self,theNormal : OCP.gp.gp_Vec) -> None: ...
-    def SurfaceNormal(self) -> OCP.Graphic3d.Graphic3d_Vec3: ...
+    def SetSurfaceNormal(self,theNormal : OCP.gp.gp_Vec3f) -> None: ...
+    def SurfaceNormal(self) -> OCP.gp.gp_Vec3f: ...
     @overload
     def __init__(self,theDepth : float,theDistToCenter : float,theObjPickedPnt : OCP.gp.gp_Pnt) -> None: ...
     @overload
@@ -94,48 +93,9 @@ class SelectBasics_SelectingVolumeManager():
     """
     This class provides an interface for selecting volume manager, which is responsible for all overlap detection methods and calculation of minimum depth, distance to center of geometry and detected closest point on entity.
     """
-    class SelectionType_e():
-        """
-        Available selection types
-
-        Members:
-
-          Point
-
-          Box
-
-          Polyline
-
-          Unknown
-        """
-        def __eq__(self,other : object) -> bool: ...
-        def __getstate__(self) -> int: ...
-        def __hash__(self) -> int: ...
-        def __init__(self,value : int) -> None: ...
-        def __int__(self) -> int: ...
-        def __ne__(self,other : object) -> bool: ...
-        def __repr__(self) -> str: ...
-        def __setstate__(self,state : int) -> None: ...
-        @property
-        def name(self) -> None:
-            """
-            :type: None
-            """
-        @property
-        def value(self) -> int:
-            """
-            :type: int
-            """
-        Box: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Box: 1>
-        Point: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Point: 0>
-        Polyline: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Polyline: 2>
-        Unknown: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Unknown: 3>
-        __entries: dict # value = {'Point': (<SelectionType_e.Point: 0>, None), 'Box': (<SelectionType_e.Box: 1>, None), 'Polyline': (<SelectionType_e.Polyline: 2>, None), 'Unknown': (<SelectionType_e.Unknown: 3>, None)}
-        __members__: dict # value = {'Point': <SelectionType_e.Point: 0>, 'Box': <SelectionType_e.Box: 1>, 'Polyline': <SelectionType_e.Polyline: 2>, 'Unknown': <SelectionType_e.Unknown: 3>}
-        pass
     def DetectedPoint(self,theDepth : float) -> OCP.gp.gp_Pnt: 
         """
-        None
+        Return 3D point corresponding to specified depth within picking ray.
         """
     def DistToGeometryCenter(self,theCOG : OCP.gp.gp_Pnt) -> float: 
         """
@@ -147,7 +107,7 @@ class SelectBasics_SelectingVolumeManager():
         """
     def GetActiveSelectionType(self) -> int: 
         """
-        None
+        Return selection type.
         """
     def GetFarPickedPnt(self) -> OCP.gp.gp_Pnt: 
         """
@@ -155,7 +115,7 @@ class SelectBasics_SelectingVolumeManager():
         """
     def GetMousePosition(self) -> OCP.gp.gp_Pnt2d: 
         """
-        Return mouse coordinates for Point selection mode.
+        Returns mouse coordinates for Point selection mode.
         """
     def GetNearPickedPnt(self) -> OCP.gp.gp_Pnt: 
         """
@@ -165,46 +125,97 @@ class SelectBasics_SelectingVolumeManager():
         """
         Stores plane equation coefficients (in the following form: Ax + By + Cz + D = 0) to the given vector
         """
+    def GetViewRayDirection(self) -> OCP.gp.gp_Dir: 
+        """
+        Valid only for point and rectangular selection. Returns view ray direction
+        """
     def IsOverlapAllowed(self) -> bool: 
         """
+        Returns flag indicating if partial overlapping of entities is allowed or should be rejected.
+        """
+    def IsScalableActiveVolume(self) -> bool: 
+        """
+        Checks if it is possible to scale current active selecting volume
+        """
+    @overload
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
+        None
+
+        None
+
+        None
+
+        None
+
+        None
+
+        None
+
+        None
+
         None
         """
     @overload
-    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
+    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
+    @overload
+    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
+    @overload
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def OverlapsBox(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: 
         """
         Returns true if selecting volume is overlapped by box theBox
 
         Returns true if selecting volume is overlapped by axis-aligned bounding box with minimum corner at point theMinPt and maximum at point theMaxPt
+        """
+    @overload
+    def OverlapsBox(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
+    @overload
+    def OverlapsCylinder(self,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
+        Returns true if selecting volume is overlapped by cylinder (or cone) with radiuses theBottomRad and theTopRad, height theHeight and transformation to apply theTrsf.
 
+        Returns true if selecting volume is overlapped by cylinder (or cone) with radiuses theBottomRad and theTopRad, height theHeight and transformation to apply theTrsf.
+        """
+    @overload
+    def OverlapsCylinder(self,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,theInside : bool=None) -> bool: ...
+    @overload
+    def OverlapsPoint(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
         Returns true if selecting volume is overlapped by point thePnt
 
         Returns true if selecting volume is overlapped by point thePnt. Does not perform depth calculation, so this method is defined as helper function for inclusion test.
-
-        Returns true if selecting volume is overlapped by planar convex polygon, which points are stored in theArrayOfPts, taking into account sensitivity type theSensType
-
-        Returns true if selecting volume is overlapped by planar convex polygon, which points are stored in theArrayOfPts, taking into account sensitivity type theSensType
-
-        Returns true if selecting volume is overlapped by line segment with start point at thePt1 and end point at thePt2
-
-        Returns true if selecting volume is overlapped by triangle with vertices thePt1, thePt2 and thePt3, taking into account sensitivity type theSensType
         """
     @overload
-    def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    def OverlapsPoint(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
+    def OverlapsPolygon(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
+        Returns true if selecting volume is overlapped by planar convex polygon, which points are stored in theArrayOfPts, taking into account sensitivity type theSensType
+        """
+    def OverlapsSegment(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
+        Returns true if selecting volume is overlapped by line segment with start point at thePt1 and end point at thePt2
+        """
     @overload
-    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
+    def OverlapsSphere(self,theCenter : OCP.gp.gp_Pnt,theRadius : float,theInside : bool=None) -> bool: 
+        """
+        Returns true if selecting volume is overlapped by sphere with center theCenter and radius theRadius
+
+        Returns true if selecting volume is overlapped by sphere with center theCenter and radius theRadius
+        """
     @overload
-    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
-    @overload
-    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
-    def __init__(self) -> None: ...
-    Box: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Box: 1>
-    Point: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Point: 0>
-    Polyline: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Polyline: 2>
-    Unknown: OCP.SelectBasics.SelectionType_e # value = <SelectionType_e.Unknown: 3>
+    def OverlapsSphere(self,theCenter : OCP.gp.gp_Pnt,theRadius : float,thePickResult : SelectBasics_PickResult) -> bool: ...
+    def OverlapsTriangle(self,thePt1 : OCP.gp.gp_Pnt,thePt2 : OCP.gp.gp_Pnt,thePt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
+        Returns true if selecting volume is overlapped by triangle with vertices thePt1, thePt2 and thePt3, taking into account sensitivity type theSensType
+        """
     pass

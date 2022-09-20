@@ -5,17 +5,17 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.GProp
-import OCP.TColStd
-import OCP.math
-import OCP.gp
 import OCP.GeomAbs
 import OCP.TColgp
+import OCP.Poly
+import OCP.math
+import BRepGProp_MeshProps
+import OCP.BRepAdaptor
+import OCP.gp
+import OCP.TopLoc
 import OCP.TopAbs
 import OCP.TopoDS
-import OCP.BRepAdaptor
-import BRepGProp_MeshProps
-import OCP.TopLoc
-import OCP.Poly
+import OCP.TColStd
 __all__  = [
 "BRepGProp",
 "BRepGProp_Cinert",
@@ -41,42 +41,42 @@ class BRepGProp():
         """
     @staticmethod
     @overload
-    def SurfaceProperties_s(S : OCP.TopoDS.TopoDS_Shape,SProps : OCP.GProp.GProp_GProps,Eps : float,SkipShared : bool=False) -> float: 
+    def SurfaceProperties_s(S : OCP.TopoDS.TopoDS_Shape,SProps : OCP.GProp.GProp_GProps,SkipShared : bool=False,UseTriangulation : bool=False) -> None: 
         """
         Computes the surface global properties of the shape S, i.e. the global properties induced by each face of the shape S, and brings them together with the global properties still retained by the framework SProps. If the current system of SProps was empty, its global properties become equal to the surface global properties of S. For this computation, no surface density is attached to the faces. Consequently, the added mass corresponds to the sum of the areas of the faces of S. The density of the component systems, i.e. that of each component of the current system of SProps, and that of S which is considered to be equal to 1, must be coherent. Note that this coherence cannot be checked. You are advised to use a framework for each different value of density, and then to bring these frameworks together into a global one. The point relative to which the inertia of the system is computed is the reference point of the framework SProps. Note : if your programming ensures that the framework SProps retains only surface global properties, brought together, for example, by the function SurfaceProperties, for objects the density of which is equal to 1 (or is not defined), the function Mass will return the total area of faces of the system analysed by SProps. Warning No check is performed to verify that the shape S retains truly surface properties. If S is simply a vertex, an edge or a wire, it is not considered to present any additional global properties. SkipShared is a special flag, which allows taking in calculation shared topological entities or not. For ex., if SkipShared = True, faces, shared by two or more shells, are taken into calculation only once. UseTriangulation is a special flag, which defines preferable source of geometry data. If UseTriangulation = Standard_False, exact geometry objects (surfaces) are used, otherwise face triangulations are used first.
 
-        Updates <SProps> with the shape <S>, that contains its pricipal properties. The surface properties of all the faces in <S> are computed. Adaptive 2D Gauss integration is used. Parameter Eps sets maximal relative error of computed mass (area) for each face. Error is calculated as Abs((M(i+1)-M(i))/M(i+1)), M(i+1) and M(i) are values for two successive steps of adaptive integration. Method returns estimation of relative error reached for whole shape. WARNING: if Eps > 0.001 algorithm performs non-adaptive integration. SkipShared is a special flag, which allows taking in calculation shared topological entities or not For ex., if SkipShared = True, faces, shared by two or more shells, are taken into calculation only once.
+        Updates <SProps> with the shape <S>, that contains its principal properties. The surface properties of all the faces in <S> are computed. Adaptive 2D Gauss integration is used. Parameter Eps sets maximal relative error of computed mass (area) for each face. Error is calculated as Abs((M(i+1)-M(i))/M(i+1)), M(i+1) and M(i) are values for two successive steps of adaptive integration. Method returns estimation of relative error reached for whole shape. WARNING: if Eps > 0.001 algorithm performs non-adaptive integration. SkipShared is a special flag, which allows taking in calculation shared topological entities or not For ex., if SkipShared = True, faces, shared by two or more shells, are taken into calculation only once.
         """
     @staticmethod
     @overload
-    def SurfaceProperties_s(S : OCP.TopoDS.TopoDS_Shape,SProps : OCP.GProp.GProp_GProps,SkipShared : bool=False,UseTriangulation : bool=False) -> None: ...
+    def SurfaceProperties_s(S : OCP.TopoDS.TopoDS_Shape,SProps : OCP.GProp.GProp_GProps,Eps : float,SkipShared : bool=False) -> float: ...
     @staticmethod
     @overload
-    def VolumePropertiesGK_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,thePln : OCP.gp.gp_Pln,Eps : float=0.001,OnlyClosed : bool=False,IsUseSpan : bool=False,CGFlag : bool=False,IFlag : bool=False,SkipShared : bool=False) -> float: 
+    def VolumePropertiesGK_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,Eps : float=0.001,OnlyClosed : bool=False,IsUseSpan : bool=False,CGFlag : bool=False,IFlag : bool=False,SkipShared : bool=False) -> float: 
         """
-        Updates <VProps> with the shape <S>, that contains its pricipal properties. The volume properties of all the FORWARD and REVERSED faces in <S> are computed. If OnlyClosed is True then computed faces must belong to closed Shells. Adaptive 2D Gauss integration is used. Parameter IsUseSpan says if it is necessary to define spans on a face. This option has an effect only for BSpline faces. Parameter Eps sets maximal relative error of computed property for each face. Error is delivered by the adaptive Gauss-Kronrod method of integral computation that is used for properties computation. Method returns estimation of relative error reached for whole shape. Returns negative value if the computation is failed. SkipShared is a special flag, which allows taking in calculation shared topological entities or not. For ex., if SkipShared = True, the volumes formed by the equal (the same TShape, location and orientation) faces are taken into calculation only once.
+        Updates <VProps> with the shape <S>, that contains its principal properties. The volume properties of all the FORWARD and REVERSED faces in <S> are computed. If OnlyClosed is True then computed faces must belong to closed Shells. Adaptive 2D Gauss integration is used. Parameter IsUseSpan says if it is necessary to define spans on a face. This option has an effect only for BSpline faces. Parameter Eps sets maximal relative error of computed property for each face. Error is delivered by the adaptive Gauss-Kronrod method of integral computation that is used for properties computation. Method returns estimation of relative error reached for whole shape. Returns negative value if the computation is failed. SkipShared is a special flag, which allows taking in calculation shared topological entities or not. For ex., if SkipShared = True, the volumes formed by the equal (the same TShape, location and orientation) faces are taken into calculation only once.
 
         None
         """
     @staticmethod
     @overload
-    def VolumePropertiesGK_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,Eps : float=0.001,OnlyClosed : bool=False,IsUseSpan : bool=False,CGFlag : bool=False,IFlag : bool=False,SkipShared : bool=False) -> float: ...
+    def VolumePropertiesGK_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,thePln : OCP.gp.gp_Pln,Eps : float=0.001,OnlyClosed : bool=False,IsUseSpan : bool=False,CGFlag : bool=False,IFlag : bool=False,SkipShared : bool=False) -> float: ...
     @staticmethod
     @overload
-    def VolumeProperties_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,Eps : float,OnlyClosed : bool=False,SkipShared : bool=False) -> float: 
+    def VolumeProperties_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,OnlyClosed : bool=False,SkipShared : bool=False,UseTriangulation : bool=False) -> None: 
         """
         Computes the global volume properties of the solid S, and brings them together with the global properties still retained by the framework VProps. If the current system of VProps was empty, its global properties become equal to the global properties of S for volume. For this computation, no volume density is attached to the solid. Consequently, the added mass corresponds to the volume of S. The density of the component systems, i.e. that of each component of the current system of VProps, and that of S which is considered to be equal to 1, must be coherent to each other. Note that this coherence cannot be checked. You are advised to use a separate framework for each density, and then to bring these frameworks together into a global one. The point relative to which the inertia of the system is computed is the reference point of the framework VProps. Note: if your programming ensures that the framework VProps retains only global properties of volume (brought together for example, by the function VolumeProperties) for objects the density of which is equal to 1 (or is not defined), the function Mass will return the total volume of the solids of the system analysed by VProps. Warning The shape S must represent an object whose global volume properties can be computed. It may be a finite solid, or a series of finite solids all oriented in a coherent way. Nonetheless, S must be exempt of any free boundary. Note that these conditions of coherence are not checked by this algorithm, and results will be false if they are not respected. SkipShared a is special flag, which allows taking in calculation shared topological entities or not. For ex., if SkipShared = True, the volumes formed by the equal (the same TShape, location and orientation) faces are taken into calculation only once. UseTriangulation is a special flag, which defines preferable source of geometry data. If UseTriangulation = Standard_False, exact geometry objects (surfaces) are used, otherwise face triangulations are used first.
 
-        Updates <VProps> with the shape <S>, that contains its pricipal properties. The volume properties of all the FORWARD and REVERSED faces in <S> are computed. If OnlyClosed is True then computed faces must belong to closed Shells. Adaptive 2D Gauss integration is used. Parameter Eps sets maximal relative error of computed mass (volume) for each face. Error is calculated as Abs((M(i+1)-M(i))/M(i+1)), M(i+1) and M(i) are values for two successive steps of adaptive integration. Method returns estimation of relative error reached for whole shape. WARNING: if Eps > 0.001 algorithm performs non-adaptive integration. SkipShared is a special flag, which allows taking in calculation shared topological entities or not. For ex., if SkipShared = True, the volumes formed by the equal (the same TShape, location and orientation) faces are taken into calculation only once.
+        Updates <VProps> with the shape <S>, that contains its principal properties. The volume properties of all the FORWARD and REVERSED faces in <S> are computed. If OnlyClosed is True then computed faces must belong to closed Shells. Adaptive 2D Gauss integration is used. Parameter Eps sets maximal relative error of computed mass (volume) for each face. Error is calculated as Abs((M(i+1)-M(i))/M(i+1)), M(i+1) and M(i) are values for two successive steps of adaptive integration. Method returns estimation of relative error reached for whole shape. WARNING: if Eps > 0.001 algorithm performs non-adaptive integration. SkipShared is a special flag, which allows taking in calculation shared topological entities or not. For ex., if SkipShared = True, the volumes formed by the equal (the same TShape, location and orientation) faces are taken into calculation only once.
         """
     @staticmethod
     @overload
-    def VolumeProperties_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,OnlyClosed : bool=False,SkipShared : bool=False,UseTriangulation : bool=False) -> None: ...
+    def VolumeProperties_s(S : OCP.TopoDS.TopoDS_Shape,VProps : OCP.GProp.GProp_GProps,Eps : float,OnlyClosed : bool=False,SkipShared : bool=False) -> float: ...
     def __init__(self) -> None: ...
     pass
 class BRepGProp_Cinert(OCP.GProp.GProp_GProps):
     """
-    Computes the global properties of bounded curves in 3D space. The curve must have at least a continuity C1. It can be a curve as defined in the template CurveTool from package GProp. This template gives the minimum of methods required to evaluate the global properties of a curve 3D with the algorithmes of GProp.
+    Computes the global properties of bounded curves in 3D space. The curve must have at least a continuity C1. It can be a curve as defined in the template CurveTool from package GProp. This template gives the minimum of methods required to evaluate the global properties of a curve 3D with the algorithms of GProp.
     """
     def Add(self,Item : OCP.GProp.GProp_GProps,Density : float=1.0) -> None: 
         """
@@ -157,9 +157,9 @@ class BRepGProp_Domain():
         Returns the current edge.
         """
     @overload
-    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     pass
 class BRepGProp_EdgeTool():
     """
@@ -259,7 +259,7 @@ class BRepGProp_Face():
         Returns the parametric value of the end point of the current arc of curve.
         """
     @overload
-    def Load(self,E : OCP.TopoDS.TopoDS_Edge) -> bool: 
+    def Load(self,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         None
 
@@ -268,9 +268,9 @@ class BRepGProp_Face():
         Loading the boundary arc. This arc is either a top, bottom, left or right bound of a UV rectangle in which the parameters of surface are defined. If IsFirstParam is equal to Standard_True, the face is initialized by either left of bottom bound. Otherwise it is initialized by the top or right one. If theIsoType is equal to GeomAbs_IsoU, the face is initialized with either left or right bound. Otherwise - with either top or bottom one.
         """
     @overload
-    def Load(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def Load(self,IsFirstParam : bool,theIsoType : OCP.GeomAbs.GeomAbs_IsoType) -> None: ...
+    @overload
+    def Load(self,E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
     def NaturalRestriction(self) -> bool: 
         """
         Returns Standard_True if the face is not trimmed.
@@ -388,6 +388,7 @@ class BRepGProp_MeshProps(OCP.GProp.GProp_GProps):
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -438,7 +439,7 @@ class BRepGProp_MeshProps(OCP.GProp.GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,theNodes : OCP.TColgp.TColgp_Array1OfPnt,theTriangles : OCP.Poly.Poly_Array1OfTriangle,theOri : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Perform(self,theMesh : OCP.Poly.Poly_Triangulation,theOri : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         Computes the global properties of a surface mesh of 3D space. Calculation of surface properties is performed by numerical integration over triangle surfaces using Gauss cubature formulas. Depending on the mesh object type used in constructor this method can calculate the surface or volume properties of the mesh.
 
@@ -506,11 +507,11 @@ class BRepGProp_Sinert(OCP.GProp.GProp_GProps):
         None
         """
     @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
+    @overload
     def Perform(self,S : BRepGProp_Face,Eps : float) -> float: ...
     @overload
     def Perform(self,S : BRepGProp_Face) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
     def PrincipalProperties(self) -> OCP.GProp.GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -528,11 +529,11 @@ class BRepGProp_Sinert(OCP.GProp.GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,SLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    @overload
     def __init__(self,S : BRepGProp_Face,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,SLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,SLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
@@ -569,28 +570,28 @@ class BRepGProp_TFunction(OCP.math.math_Function):
         Setting the expected number of Kronrod points for the outer integral computation. This number is required for computation of a value of tolerance for inner integral computation. After GetStateNumber method call, this number is recomputed by the same law as in math_KronrodSingleIntegration, i.e. next number of points is equal to the current number plus a square root of the current number. If the law in math_KronrodSingleIntegration is changed, the modification algo should be modified accordingly.
         """
     @overload
-    def SetTolerance(self,theTolerance : float) -> None: 
+    def SetTolerance(self,aTol : float) -> None: 
         """
         Setting the tolerance for inner integration
 
         Setting the tolerance for inner integration
         """
     @overload
-    def SetTolerance(self,aTol : float) -> None: ...
+    def SetTolerance(self,theTolerance : float) -> None: ...
     @overload
-    def SetValueType(self,theType : OCP.GProp.GProp_ValueType) -> None: 
+    def SetValueType(self,aType : OCP.GProp.GProp_ValueType) -> None: 
         """
         Setting the type of the value to be returned. This parameter is directly passed to the UFunction.
 
         Setting the type of the value to be returned. This parameter is directly passed to the UFunction.
         """
     @overload
-    def SetValueType(self,aType : OCP.GProp.GProp_ValueType) -> None: ...
+    def SetValueType(self,theType : OCP.GProp.GProp_ValueType) -> None: ...
     def Value(self,X : float,F : float) -> bool: 
         """
         Returns a value of the function. The value represents an integral of UFunction. It is computed with the predefined tolerance using the adaptive Gauss-Kronrod method.
         """
-    def __init__(self,theSurface : BRepGProp_Face,theVertex : OCP.gp.gp_Pnt,IsByPoint : bool,theCoeffs : capsule,theUMin : float,theTolerance : float) -> None: ...
+    def __init__(self,theSurface : BRepGProp_Face,theVertex : OCP.gp.gp_Pnt,IsByPoint : bool,theCoeffs : float,theUMin : float,theTolerance : float) -> None: ...
     pass
 class BRepGProp_UFunction(OCP.math.math_Function):
     """
@@ -616,7 +617,7 @@ class BRepGProp_UFunction(OCP.math.math_Function):
         """
         Returns a value of the function.
         """
-    def __init__(self,theSurface : BRepGProp_Face,theVertex : OCP.gp.gp_Pnt,IsByPoint : bool,theCoeffs : capsule) -> None: ...
+    def __init__(self,theSurface : BRepGProp_Face,theVertex : OCP.gp.gp_Pnt,IsByPoint : bool,theCoeffs : float) -> None: ...
     pass
 class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
     """
@@ -647,7 +648,7 @@ class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln) -> None: 
+    def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,Eps : float) -> float: 
         """
         None
 
@@ -673,28 +674,28 @@ class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
 
         None
         """
-    @overload
-    def Perform(self,S : BRepGProp_Face) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,Eps : float) -> float: ...
     @overload
     def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Perform(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,Eps : float) -> float: ...
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,Eps : float) -> float: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln) -> None: ...
+    @overload
+    def Perform(self,S : BRepGProp_Face,D : BRepGProp_Domain) -> None: ...
     def PrincipalProperties(self) -> OCP.GProp.GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -714,29 +715,29 @@ class BRepGProp_Vinert(OCP.GProp.GProp_GProps):
     @overload
     def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
+    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,S : BRepGProp_Face,O : OCP.gp.gp_Pnt,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
     def __init__(self,S : BRepGProp_Face,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,S : BRepGProp_Face,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,S : BRepGProp_Face,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt,Eps : float) -> None: ...
+    def __init__(self,S : BRepGProp_Face,D : BRepGProp_Domain,Pl : OCP.gp.gp_Pln,VLocation : OCP.gp.gp_Pnt) -> None: ...
     pass
 class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
     """
@@ -782,15 +783,15 @@ class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
         Computes the global properties of a region of 3D space delimited with the surface bounded by the domain and the plane.
         """
     @overload
-    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
-    @overload
-    def Perform(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
-    @overload
-    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
-    @overload
     def Perform(self,theSurface : BRepGProp_Face,thePoint : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
     @overload
     def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePoint : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
+    @overload
+    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
+    @overload
+    def Perform(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
+    @overload
+    def Perform(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> float: ...
     def PrincipalProperties(self) -> OCP.GProp.GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -808,17 +809,17 @@ class BRepGProp_VinertGK(OCP.GProp.GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    def __init__(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     @overload
     def __init__(self,theSurface : BRepGProp_Face,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     @overload
-    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
-    @overload
-    def __init__(self,theSurface : BRepGProp_Face,thePoint : OCP.gp.gp_Pnt,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
-    @overload
-    def __init__(self,theSurface : BRepGProp_Face,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePoint : OCP.gp.gp_Pnt,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theSurface : BRepGProp_Face,thePoint : OCP.gp.gp_Pnt,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    @overload
+    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
+    @overload
+    def __init__(self,theSurface : BRepGProp_Face,theDomain : BRepGProp_Domain,thePlane : OCP.gp.gp_Pln,theLocation : OCP.gp.gp_Pnt,theTolerance : float=0.001,theCGFlag : bool=False,theIFlag : bool=False) -> None: ...
     pass

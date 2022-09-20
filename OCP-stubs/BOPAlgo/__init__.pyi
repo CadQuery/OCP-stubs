@@ -4,19 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import io
-import OCP.NCollection
-import OCP.Message
-import OCP.BOPTools
-import OCP.BRepTools
 import OCP.IntTools
+import OCP.TopTools
+import OCP.NCollection
+import OCP.BRepTools
+import OCP.BOPTools
+import io
 import OCP.gp
-import OCP.TopoDS
-import OCP.Bnd
 import OCP.BOPDS
 import OCP.Standard
 import OCP.TopAbs
+import OCP.TColStd
+import OCP.Message
+import OCP.TopoDS
+import OCP.Bnd
 __all__  = [
 "BOPAlgo_AlertAcquiredSelfIntersection",
 "BOPAlgo_AlertBOPNotAllowed",
@@ -58,6 +59,7 @@ __all__  = [
 "BOPAlgo_AlertUnableToTrim",
 "BOPAlgo_AlertUnknownShape",
 "BOPAlgo_AlertUnsupportedType",
+"BOPAlgo_AlertUserBreak",
 "BOPAlgo_Options",
 "BOPAlgo_Algo",
 "BOPAlgo_BuilderShape",
@@ -80,6 +82,8 @@ __all__  = [
 "BOPAlgo_MakerVolume",
 "BOPAlgo_Operation",
 "BOPAlgo_ArgumentAnalyzer",
+"BOPAlgo_PISteps",
+"BOPAlgo_ParallelAlgo",
 "BOPAlgo_CheckerSI",
 "BOPAlgo_RemoveFeatures",
 "BOPAlgo_Section",
@@ -149,23 +153,23 @@ class BOPAlgo_AlertAcquiredSelfIntersection(OCP.TopoDS.TopoDS_AlertWithShape, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -227,23 +231,23 @@ class BOPAlgo_AlertBOPNotAllowed(OCP.Message.Message_Alert, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -301,23 +305,23 @@ class BOPAlgo_AlertBOPNotSet(OCP.Message.Message_Alert, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -379,23 +383,23 @@ class BOPAlgo_AlertBadPositioning(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -457,23 +461,23 @@ class BOPAlgo_AlertBuilderFailed(OCP.Message.Message_Alert, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -535,23 +539,23 @@ class BOPAlgo_AlertBuildingPCurveFailed(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -617,23 +621,23 @@ class BOPAlgo_AlertEmptyShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Mess
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -699,23 +703,23 @@ class BOPAlgo_AlertFaceBuilderUnusedEdges(OCP.TopoDS.TopoDS_AlertWithShape, OCP.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -777,23 +781,23 @@ class BOPAlgo_AlertIntersectionFailed(OCP.Message.Message_Alert, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -855,23 +859,23 @@ class BOPAlgo_AlertIntersectionOfPairOfShapesFailed(OCP.TopoDS.TopoDS_AlertWithS
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -933,23 +937,23 @@ class BOPAlgo_AlertMultiDimensionalArguments(OCP.Message.Message_Alert, OCP.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1007,23 +1011,23 @@ class BOPAlgo_AlertMultipleArguments(OCP.Message.Message_Alert, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1081,23 +1085,23 @@ class BOPAlgo_AlertNoFacesToRemove(OCP.Message.Message_Alert, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1155,23 +1159,23 @@ class BOPAlgo_AlertNoFiller(OCP.Message.Message_Alert, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1229,23 +1233,23 @@ class BOPAlgo_AlertNoPeriodicityRequired(OCP.Message.Message_Alert, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1307,23 +1311,23 @@ class BOPAlgo_AlertNotSplittableEdge(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Messa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -1385,23 +1389,23 @@ class BOPAlgo_AlertNullInputShapes(OCP.Message.Message_Alert, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1459,23 +1463,23 @@ class BOPAlgo_AlertPostTreatFF(OCP.Message.Message_Alert, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1537,23 +1541,23 @@ class BOPAlgo_AlertRemovalOfIBForEdgesFailed(OCP.TopoDS.TopoDS_AlertWithShape, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -1619,23 +1623,23 @@ class BOPAlgo_AlertRemovalOfIBForFacesFailed(OCP.TopoDS.TopoDS_AlertWithShape, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -1701,23 +1705,23 @@ class BOPAlgo_AlertRemovalOfIBForMDimShapes(OCP.TopoDS.TopoDS_AlertWithShape, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -1783,23 +1787,23 @@ class BOPAlgo_AlertRemovalOfIBForSolidsFailed(OCP.TopoDS.TopoDS_AlertWithShape, 
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -1861,23 +1865,23 @@ class BOPAlgo_AlertRemoveFeaturesFailed(OCP.Message.Message_Alert, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -1939,23 +1943,23 @@ class BOPAlgo_AlertSelfInterferingShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2021,23 +2025,23 @@ class BOPAlgo_AlertShapeIsNotPeriodic(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Mess
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2103,23 +2107,23 @@ class BOPAlgo_AlertShellSplitterFailed(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Mes
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2181,23 +2185,23 @@ class BOPAlgo_AlertSolidBuilderFailed(OCP.Message.Message_Alert, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -2259,23 +2263,23 @@ class BOPAlgo_AlertSolidBuilderUnusedFaces(OCP.TopoDS.TopoDS_AlertWithShape, OCP
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2337,23 +2341,23 @@ class BOPAlgo_AlertTooFewArguments(OCP.Message.Message_Alert, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -2415,23 +2419,23 @@ class BOPAlgo_AlertTooSmallEdge(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2497,23 +2501,23 @@ class BOPAlgo_AlertUnableToGlue(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2579,23 +2583,23 @@ class BOPAlgo_AlertUnableToMakeClosedEdgeOnFace(OCP.TopoDS.TopoDS_AlertWithShape
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2661,23 +2665,23 @@ class BOPAlgo_AlertUnableToMakeIdentical(OCP.TopoDS.TopoDS_AlertWithShape, OCP.M
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2743,23 +2747,23 @@ class BOPAlgo_AlertUnableToMakePeriodic(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2825,23 +2829,23 @@ class BOPAlgo_AlertUnableToOrientTheShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2907,23 +2911,23 @@ class BOPAlgo_AlertUnableToRemoveTheFeature(OCP.TopoDS.TopoDS_AlertWithShape, OC
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -2989,23 +2993,23 @@ class BOPAlgo_AlertUnableToRepeat(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -3071,23 +3075,23 @@ class BOPAlgo_AlertUnableToTrim(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -3153,23 +3157,23 @@ class BOPAlgo_AlertUnknownShape(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message.Me
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -3235,23 +3239,23 @@ class BOPAlgo_AlertUnsupportedType(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -3280,9 +3284,83 @@ class BOPAlgo_AlertUnsupportedType(OCP.TopoDS.TopoDS_AlertWithShape, OCP.Message
         None
         """
     pass
+class BOPAlgo_AlertUserBreak(OCP.Message.Message_Alert, OCP.Standard.Standard_Transient):
+    """
+    Boolean operation was stopped by user
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetMessageKey(self) -> str: 
+        """
+        Return a C string to be used as a key for generating text user messages describing this alert. The messages are generated with help of Message_Msg class, in Message_Report::Dump(). Base implementation returns dynamic type name of the instance.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
+        """
+        If possible, merge data contained in this alert to theTarget.
+        """
+    def SupportsMerge(self) -> bool: 
+        """
+        Return true if this type of alert can be merged with other of the same type to avoid duplication. Basis implementation returns true.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
 class BOPAlgo_Options():
     """
-    The class provides the following options for the algorithms in Boolean Component: - *Memory allocation tool* - tool for memory allocations; - *Error and warning reporting* - allows recording warnings and errors occurred during the operation. Error means that the algorithm has failed. - *Parallel processing mode* - provides the possibility to perform operation in parallel mode; - *Fuzzy tolerance* - additional tolerance for the operation to detect touching or coinciding cases; - *Progress indicator* - provides interface to track the progress of operation and stop the operation by user's break. - *Using the Oriented Bounding Boxes* - Allows using the Oriented Bounding Boxes of the shapes for filtering the intersections.
+    The class provides the following options for the algorithms in Boolean Component: - *Memory allocation tool* - tool for memory allocations; - *Error and warning reporting* - allows recording warnings and errors occurred during the operation. Error means that the algorithm has failed. - *Parallel processing mode* - provides the possibility to perform operation in parallel mode; - *Fuzzy tolerance* - additional tolerance for the operation to detect touching or coinciding cases; - *Using the Oriented Bounding Boxes* - Allows using the Oriented Bounding Boxes of the shapes for filtering the intersections.
     """
     def AddError(self,theAlert : OCP.Message.Message_Alert) -> None: 
         """
@@ -3354,10 +3432,6 @@ class BOPAlgo_Options():
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
-        """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
         Set the flag of parallel processing if <theFlag> is true the parallel processing is switched on if <theFlag> is false the parallel processing is switched off
@@ -3371,9 +3445,9 @@ class BOPAlgo_Options():
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     pass
 class BOPAlgo_Algo(BOPAlgo_Options):
     """
@@ -3436,9 +3510,9 @@ class BOPAlgo_Algo(BOPAlgo_Options):
         """
         Returns true if algorithm has generated some warning alerts
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
-        None
+        The main method to implement the operation Providing the range allows to enable Progress indicator User break functionalities.
         """
     def RunParallel(self) -> bool: 
         """
@@ -3452,10 +3526,6 @@ class BOPAlgo_Algo(BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -3563,9 +3633,9 @@ class BOPAlgo_BuilderShape(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns the list of shapes Modified from the shape theS.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
-        None
+        The main method to implement the operation Providing the range allows to enable Progress indicator User break functionalities.
         """
     def RunParallel(self) -> bool: 
         """
@@ -3579,10 +3649,6 @@ class BOPAlgo_BuilderShape(BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -3630,14 +3696,14 @@ class BOPAlgo_Builder(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -3747,11 +3813,11 @@ class BOPAlgo_Builder(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation. The intersection will be performed also.
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -3783,10 +3849,6 @@ class BOPAlgo_Builder(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -3890,9 +3952,9 @@ class BOPAlgo_BuilderArea(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns the found loops
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
-        None
+        The main method to implement the operation Providing the range allows to enable Progress indicator User break functionalities.
         """
     def RunParallel(self) -> bool: 
         """
@@ -3914,10 +3976,6 @@ class BOPAlgo_BuilderArea(BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -4021,7 +4079,7 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         None
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the algorithm
         """
@@ -4050,10 +4108,6 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
-        """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
         Set the flag of parallel processing if <theFlag> is true the parallel processing is switched on if <theFlag> is false the parallel processing is switched off
@@ -4075,9 +4129,9 @@ class BOPAlgo_BuilderFace(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -4108,14 +4162,14 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -4225,11 +4279,11 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation. The intersection will be performed also.
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -4261,10 +4315,6 @@ class BOPAlgo_ToolsProvider(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo,
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -4380,7 +4430,7 @@ class BOPAlgo_BuilderSolid(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns the found loops
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the construction of the solids from the given faces
         """
@@ -4404,10 +4454,6 @@ class BOPAlgo_BuilderSolid(BOPAlgo_BuilderArea, BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -4467,14 +4513,14 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -4592,11 +4638,11 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation. The intersection will be performed also.
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -4641,10 +4687,6 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
-        """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
         Set the flag of parallel processing if <theFlag> is true the parallel processing is switched on if <theFlag> is false the parallel processing is switched off
@@ -4670,9 +4712,9 @@ class BOPAlgo_CellsBuilder(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, 
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_CheckResult():
     """
@@ -4785,6 +4827,7 @@ class BOPAlgo_CheckStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4908,7 +4951,7 @@ class BOPAlgo_PaveFiller(BOPAlgo_Algo, BOPAlgo_Options):
         """
         None
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
@@ -4940,10 +4983,6 @@ class BOPAlgo_PaveFiller(BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -5027,6 +5066,7 @@ class BOPAlgo_GlueEnum():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -5077,14 +5117,14 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -5163,11 +5203,11 @@ class BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo(OCP.NCollection.NCollection_Ba
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : BOPAlgo_IndexedDataMapOfShapeListOfEdgeInfo) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
@@ -5179,7 +5219,7 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : BOPAlgo_ListOfCheckResult) -> None: 
+    def Append(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: 
         """
         Append one item at the end
 
@@ -5188,9 +5228,9 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: ...
-    @overload
     def Append(self,theItem : BOPAlgo_CheckResult,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
     def Assign(self,theOther : BOPAlgo_ListOfCheckResult) -> BOPAlgo_ListOfCheckResult: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5238,14 +5278,14 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : BOPAlgo_ListOfCheckResult) -> None: 
+    def Prepend(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : BOPAlgo_CheckResult) -> BOPAlgo_CheckResult: ...
+    def Prepend(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -5263,11 +5303,11 @@ class BOPAlgo_ListOfCheckResult(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : BOPAlgo_ListOfCheckResult) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
@@ -5288,9 +5328,9 @@ class BOPAlgo_ListOfEdgeInfo(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> None: ...
-    @overload
     def Append(self,theItem : BOPAlgo_EdgeInfo) -> BOPAlgo_EdgeInfo: ...
+    @overload
+    def Append(self,theItem : BOPAlgo_EdgeInfo,theIter : Any) -> None: ...
     def Assign(self,theOther : BOPAlgo_ListOfEdgeInfo) -> BOPAlgo_ListOfEdgeInfo: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -5500,10 +5540,6 @@ class BOPAlgo_MakeConnected(BOPAlgo_Options):
         """
         Sets the global parallel mode
         """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
-        """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
         Set the flag of parallel processing if <theFlag> is true the parallel processing is switched on if <theFlag> is false the parallel processing is switched off
@@ -5684,10 +5720,6 @@ class BOPAlgo_MakePeriodic(BOPAlgo_Options):
         """
         Sets the periodicity parameters.
         """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
-        """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
         Set the flag of parallel processing if <theFlag> is true the parallel processing is switched on if <theFlag> is false the parallel processing is switched off
@@ -5798,14 +5830,14 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
         Returns the solid box <mySBox>.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -5933,11 +5965,11 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation.
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -5979,10 +6011,6 @@ class BOPAlgo_MakerVolume(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, B
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -6034,6 +6062,7 @@ class BOPAlgo_Operation():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -6139,7 +6168,7 @@ class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
         """
         returns ref
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         performs analysis
         """
@@ -6155,10 +6184,6 @@ class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -6266,6 +6291,123 @@ class BOPAlgo_ArgumentAnalyzer(BOPAlgo_Algo, BOPAlgo_Options):
     def TangentMode(self, arg1: bool) -> None:
         pass
     pass
+class BOPAlgo_PISteps():
+    """
+    Class for representing the relative contribution of each step of the operation to the whole progressClass for representing the relative contribution of each step of the operation to the whole progress
+    """
+    def ChangeSteps(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+        """
+        Returns modifiable steps
+        """
+    def GetStep(self,theOperation : int) -> float: 
+        """
+        Returns the step assigned to the operation
+        """
+    def SetStep(self,theOperation : int,theStep : float) -> None: 
+        """
+        Assign the value theStep to theOperation
+        """
+    def Steps(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+        """
+        Returns the steps
+        """
+    def __init__(self,theNbOp : int) -> None: ...
+    pass
+class BOPAlgo_ParallelAlgo(BOPAlgo_Algo, BOPAlgo_Options):
+    """
+    Additional root class to provide interface to be launched from parallel vector. It already has the range as a field, and has to be used with caution to create scope from the range only once.
+    """
+    def AddError(self,theAlert : OCP.Message.Message_Alert) -> None: 
+        """
+        Adds the alert as error (fail)
+        """
+    def AddWarning(self,theAlert : OCP.Message.Message_Alert) -> None: 
+        """
+        Adds the alert as warning
+        """
+    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
+        """
+        Returns allocator
+        """
+    def Clear(self) -> None: 
+        """
+        Clears all warnings and errors, and any data cached by the algorithm. User defined options are not cleared.
+        """
+    def ClearWarnings(self) -> None: 
+        """
+        Clears the warnings of the algorithm
+        """
+    def DumpErrors(self,theOS : io.BytesIO) -> None: 
+        """
+        Dumps the error status into the given stream
+        """
+    def DumpWarnings(self,theOS : io.BytesIO) -> None: 
+        """
+        Dumps the warning statuses into the given stream
+        """
+    def FuzzyValue(self) -> float: 
+        """
+        Returns the additional tolerance
+        """
+    @staticmethod
+    def GetParallelMode_s() -> bool: 
+        """
+        Gets the global parallel mode
+        """
+    def GetReport(self) -> OCP.Message.Message_Report: 
+        """
+        Returns report collecting all errors and warnings
+        """
+    def HasError(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if algorithm has generated error of specified type
+        """
+    def HasErrors(self) -> bool: 
+        """
+        Returns true if algorithm has failed
+        """
+    def HasWarning(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if algorithm has generated warning of specified type
+        """
+    def HasWarnings(self) -> bool: 
+        """
+        Returns true if algorithm has generated some warning alerts
+        """
+    def Perform(self) -> None: 
+        """
+        The main method to implement the operation
+        """
+    def RunParallel(self) -> bool: 
+        """
+        Returns the flag of parallel processing
+        """
+    def SetFuzzyValue(self,theFuzz : float) -> None: 
+        """
+        Sets the additional tolerance
+        """
+    @staticmethod
+    def SetParallelMode_s(theNewMode : bool) -> None: 
+        """
+        Sets the global parallel mode
+        """
+    def SetProgressRange(self,theRange : OCP.Message.Message_ProgressRange) -> None: 
+        """
+        Sets the range for a single run
+        """
+    def SetRunParallel(self,theFlag : bool) -> None: 
+        """
+        Set the flag of parallel processing if <theFlag> is true the parallel processing is switched on if <theFlag> is false the parallel processing is switched off
+        """
+    def SetUseOBB(self,theUseOBB : bool) -> None: 
+        """
+        Enables/Disables the usage of OBB
+        """
+    def UseOBB(self) -> bool: 
+        """
+        Returns the flag defining usage of OBB
+        """
+    pass
 class BOPAlgo_CheckerSI(BOPAlgo_PaveFiller, BOPAlgo_Algo, BOPAlgo_Options):
     """
     Checks the shape on self-interference.
@@ -6359,7 +6501,7 @@ class BOPAlgo_CheckerSI(BOPAlgo_PaveFiller, BOPAlgo_Algo, BOPAlgo_Options):
         """
         None
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
@@ -6395,10 +6537,6 @@ class BOPAlgo_CheckerSI(BOPAlgo_PaveFiller, BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -6527,7 +6665,7 @@ class BOPAlgo_RemoveFeatures(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options
         """
         Returns the list of shapes Modified from the shape theS.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation
         """
@@ -6543,10 +6681,6 @@ class BOPAlgo_RemoveFeatures(BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAlgo_Options
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -6599,14 +6733,14 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -6716,11 +6850,11 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation. The intersection will be performed also.
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -6752,10 +6886,6 @@ class BOPAlgo_Section(BOPAlgo_Builder, BOPAlgo_BuilderShape, BOPAlgo_Algo, BOPAl
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -6791,32 +6921,32 @@ class BOPAlgo_SectionAttribute():
     Class is a container of the flags used by intersection algorithm
     """
     @overload
-    def Approximation(self) -> bool: 
+    def Approximation(self,theApprox : bool) -> None: 
         """
         Sets the Approximation flag
 
         Returns the Approximation flag
         """
     @overload
-    def Approximation(self,theApprox : bool) -> None: ...
+    def Approximation(self) -> bool: ...
     @overload
-    def PCurveOnS1(self) -> bool: 
+    def PCurveOnS1(self,thePCurveOnS1 : bool) -> None: 
         """
         Sets the PCurveOnS1 flag
 
         Returns the PCurveOnS1 flag
         """
     @overload
-    def PCurveOnS1(self,thePCurveOnS1 : bool) -> None: ...
+    def PCurveOnS1(self) -> bool: ...
     @overload
-    def PCurveOnS2(self) -> bool: 
+    def PCurveOnS2(self,thePCurveOnS2 : bool) -> None: 
         """
         Sets the PCurveOnS2 flag
 
         Returns the PCurveOnS2 flag
         """
     @overload
-    def PCurveOnS2(self,thePCurveOnS2 : bool) -> None: ...
+    def PCurveOnS2(self) -> bool: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -6887,7 +7017,7 @@ class BOPAlgo_ShellSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         """
         Returns true if algorithm has generated some warning alerts
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         performs the algorithm
         """
@@ -6903,10 +7033,6 @@ class BOPAlgo_ShellSplitter(BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -6967,14 +7093,14 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -7084,11 +7210,11 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -7120,10 +7246,6 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -7158,19 +7280,14 @@ class BOPAlgo_Splitter(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderSh
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_Tools():
     """
     Provides tools used in the intersection part of Boolean operations
     """
-    @staticmethod
-    def ClassifyFaces_s(theFaces : OCP.TopTools.TopTools_ListOfShape,theSolids : OCP.TopTools.TopTools_ListOfShape,theRunParallel : bool,theContext : OCP.IntTools.IntTools_Context,theInParts : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theShapeBoxMap : OCP.TopTools.TopTools_DataMapOfShapeBox=OCP.TopTools.TopTools_DataMapOfShapeBox,theSolidsIF : OCP.TopTools.TopTools_DataMapOfShapeListOfShape=OCP.TopTools.TopTools_DataMapOfShapeListOfShape) -> None: 
-        """
-        Classifies the faces <theFaces> relatively solids <theSolids>. The IN faces for solids are stored into output data map <theInParts>.
-        """
     @staticmethod
     def ComputeToleranceOfCB_s(theCB : OCP.BOPDS.BOPDS_CommonBlock,theDS : OCP.BOPDS.BOPDS_DS,theContext : OCP.IntTools.IntTools_Context) -> float: 
         """
@@ -7237,14 +7354,14 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         Returns the list of arguments.
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theReport : OCP.Message.Message_Report) -> None: 
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: 
         """
         Builds the result shape according to the given states for the objects and tools. These states can be unambiguously converted into the Boolean operation type. Thus, it performs the Boolean operation on the given groups of shapes.
 
         Builds the result of Boolean operation of given type basing on the result of Builder operation (GF or any other).
         """
     @overload
-    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theObjState : OCP.TopAbs.TopAbs_State,theTools : OCP.TopTools.TopTools_ListOfShape,theToolsState : OCP.TopAbs.TopAbs_State,theReport : OCP.Message.Message_Report) -> None: ...
+    def BuildBOP(self,theObjects : OCP.TopTools.TopTools_ListOfShape,theTools : OCP.TopTools.TopTools_ListOfShape,theOperation : BOPAlgo_Operation,theRange : OCP.Message.Message_ProgressRange,theReport : OCP.Message.Message_Report) -> None: ...
     def CheckInverted(self) -> bool: 
         """
         Returns the flag defining whether the check for input solids on inverted status should be performed or not.
@@ -7358,11 +7475,11 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
         """
         Returns the PaveFiller, algorithm for sub-shapes intersection.
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
-    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller) -> None: 
+    def PerformWithFiller(self,theFiller : BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Performs the operation with the prepared filler. The intersection will not be performed in this case.
         """
@@ -7398,10 +7515,6 @@ class BOPAlgo_BOP(BOPAlgo_ToolsProvider, BOPAlgo_Builder, BOPAlgo_BuilderShape, 
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -7493,9 +7606,9 @@ class BOPAlgo_WireEdgeSet():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
     """
@@ -7567,7 +7680,7 @@ class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         """
         None
         """
-    def Perform(self) -> None: 
+    def Perform(self,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
@@ -7587,10 +7700,6 @@ class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
     def SetParallelMode_s(theNewMode : bool) -> None: 
         """
         Sets the global parallel mode
-        """
-    def SetProgressIndicator(self,theProgress : OCP.Message.Message_ProgressScope) -> None: 
-        """
-        Set the Progress Indicator object.
         """
     def SetRunParallel(self,theFlag : bool) -> None: 
         """
@@ -7618,9 +7727,9 @@ class BOPAlgo_WireSplitter(BOPAlgo_Algo, BOPAlgo_Options):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 BOPAlgo_BadType: OCP.BOPAlgo.BOPAlgo_CheckStatus # value = <BOPAlgo_CheckStatus.BOPAlgo_BadType: 1>
 BOPAlgo_COMMON: OCP.BOPAlgo.BOPAlgo_Operation # value = <BOPAlgo_Operation.BOPAlgo_COMMON: 0>

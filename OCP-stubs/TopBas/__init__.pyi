@@ -19,7 +19,7 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TopBas_ListOfTestInterference) -> None: 
+    def Append(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: 
         """
         Append one item at the end
 
@@ -28,9 +28,9 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TopBas_TestInterference,theIter : Any) -> None: ...
+    def Append(self,theOther : TopBas_ListOfTestInterference) -> None: ...
     @overload
-    def Append(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: ...
+    def Append(self,theItem : TopBas_TestInterference,theIter : Any) -> None: ...
     def Assign(self,theOther : TopBas_ListOfTestInterference) -> TopBas_ListOfTestInterference: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -50,14 +50,14 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: ...
+    def InsertAfter(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: 
         """
@@ -103,11 +103,11 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : TopBas_ListOfTestInterference) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TopBas_ListOfTestInterference) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopBas_TestInterference():
@@ -151,18 +151,18 @@ class TopBas_TestInterference():
     @overload
     def Orientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
-    def Transition(self,Tr : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Transition(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self) -> OCP.TopAbs.TopAbs_Orientation: ...
-    @overload
-    def __init__(self) -> None: ...
+    def Transition(self,Tr : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
     def __init__(self,Inters : float,Bound : int,Orient : OCP.TopAbs.TopAbs_Orientation,Trans : OCP.TopAbs.TopAbs_Orientation,BTrans : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def ChangeBoundary(self) -> int:
         """

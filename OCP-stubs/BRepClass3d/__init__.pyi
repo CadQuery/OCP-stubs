@@ -5,16 +5,16 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopTools
-import io
 import OCP.IntCurvesFace
 import OCP.NCollection
+import io
 import OCP.gp
-import OCP.TopoDS
-import OCP.Bnd
 import OCP.BRepAdaptor
-import OCP.IntCurveSurface
-import OCP.ShapeAnalysis
 import OCP.TopAbs
+import OCP.IntCurveSurface
+import OCP.TopoDS
+import OCP.ShapeAnalysis
+import OCP.Bnd
 __all__  = [
 "BRepClass3d",
 "BRepClass3d_Intersector3d",
@@ -69,9 +69,9 @@ class BRepClass3d_Intersector3d():
         """
     def State(self) -> OCP.TopAbs.TopAbs_State: 
         """
-        Returns the state of the point on the face. The values can be either TopAbs_IN ( the point is in the face) or TopAbs_ON ( the point is on a boudary of the face).
+        Returns the state of the point on the face. The values can be either TopAbs_IN ( the point is in the face) or TopAbs_ON ( the point is on a boundary of the face).
 
-        Returns the state of the point on the face. The values can be either TopAbs_IN ( the point is in the face) or TopAbs_ON ( the point is on a boudary of the face).
+        Returns the state of the point on the face. The values can be either TopAbs_IN ( the point is in the face) or TopAbs_ON ( the point is on a boundary of the face).
         """
     def Transition(self) -> OCP.IntCurveSurface.IntCurveSurface_TransitionOnCurve: 
         """
@@ -186,11 +186,11 @@ class BRepClass3d_MapOfInter(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : BRepClass3d_MapOfInter) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BRepClass3d_MapOfInter) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepClass3d_SClassifier():
@@ -222,9 +222,9 @@ class BRepClass3d_SClassifier():
         Returns the result of the classification.
         """
     @overload
-    def __init__(self,S : BRepClass3d_SolidExplorer,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : BRepClass3d_SolidExplorer,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
     pass
 class BRepClass3d_SolidClassifier(BRepClass3d_SClassifier):
     """
@@ -263,11 +263,11 @@ class BRepClass3d_SolidClassifier(BRepClass3d_SClassifier):
         Returns the result of the classification.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
     pass
 class BRepClass3d_SolidExplorer():
     """
@@ -311,19 +311,19 @@ class BRepClass3d_SolidExplorer():
         """
     @staticmethod
     @overload
-    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,Param : float) -> bool: ...
+    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float) -> bool: ...
     @staticmethod
     @overload
-    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,theVecD1U : OCP.gp.gp_Vec,theVecD1V : OCP.gp.gp_Vec) -> bool: ...
+    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,u : float,v : float) -> bool: ...
     @staticmethod
     @overload
     def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float) -> bool: ...
     @staticmethod
     @overload
-    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float) -> bool: ...
+    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,theVecD1U : OCP.gp.gp_Vec,theVecD1V : OCP.gp.gp_Vec) -> bool: ...
     @staticmethod
     @overload
-    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,u : float,v : float) -> bool: ...
+    def FindAPointInTheFace_s(F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,Param : float) -> bool: ...
     def GetFaceSegmentIndex(self) -> int: 
         """
         Returns the index of face for which last segment is calculated.
@@ -377,7 +377,7 @@ class BRepClass3d_SolidExplorer():
         Returns in <L>, <Par> a segment having at least one intersection with the shape boundary to compute intersections.
         """
     @overload
-    def PointInTheFace(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,Index : int,surf : OCP.BRepAdaptor.BRepAdaptor_HSurface,u1 : float,v1 : float,u2 : float,v2 : float) -> bool: 
+    def PointInTheFace(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,Index : int,surf : OCP.BRepAdaptor.BRepAdaptor_Surface,u1 : float,v1 : float,u2 : float,v2 : float) -> bool: 
         """
         None
 
@@ -388,7 +388,7 @@ class BRepClass3d_SolidExplorer():
     @overload
     def PointInTheFace(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,Index : int) -> bool: ...
     @overload
-    def PointInTheFace(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,Index : int,surf : OCP.BRepAdaptor.BRepAdaptor_HSurface,u1 : float,v1 : float,u2 : float,v2 : float,theVecD1U : OCP.gp.gp_Vec,theVecD1V : OCP.gp.gp_Vec) -> bool: ...
+    def PointInTheFace(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pnt,u : float,v : float,Param : float,Index : int,surf : OCP.BRepAdaptor.BRepAdaptor_Surface,u1 : float,v1 : float,u2 : float,v2 : float,theVecD1U : OCP.gp.gp_Vec,theVecD1V : OCP.gp.gp_Vec) -> bool: ...
     def Reject(self,P : OCP.gp.gp_Pnt) -> bool: 
         """
         Should return True if P outside of bounding vol. of the shape

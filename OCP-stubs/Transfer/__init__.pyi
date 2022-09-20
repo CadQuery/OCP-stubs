@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import io
 import OCP.NCollection
-import OCP.Message
-import OCP.Interface
+import io
 import OCP.Standard
+import OCP.Interface
+import OCP.Message
+import OCP.TColStd
 __all__  = [
 "Transfer_ActorOfProcessForTransient",
 "Transfer_ActorOfProcessForFinder",
@@ -84,23 +84,23 @@ class Transfer_ActorOfProcessForTransient(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -131,7 +131,7 @@ class Transfer_ActorOfProcessForTransient(OCP.Standard.Standard_Transient):
         """
     def Transferring(self,start : OCP.Standard.Standard_Transient,TP : Transfer_ProcessForTransient,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
-        Specific action of Transfer. The Result is stored in the returned Binder, or a Null Handle for "No result" (Default defined as doing nothing; should be deffered) "mutable" allows the Actor to record intermediate information, in addition to those of TransferProcess
+        Specific action of Transfer. The Result is stored in the returned Binder, or a Null Handle for "No result" (Default defined as doing nothing; should be deferred) "mutable" allows the Actor to record intermediate information, in addition to those of TransferProcess
         """
     def TransientResult(self,res : OCP.Standard.Standard_Transient) -> Transfer_SimpleBinderOfTransient: 
         """
@@ -171,23 +171,23 @@ class Transfer_ActorOfProcessForFinder(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -218,7 +218,7 @@ class Transfer_ActorOfProcessForFinder(OCP.Standard.Standard_Transient):
         """
     def Transferring(self,start : Transfer_Finder,TP : Transfer_ProcessForFinder,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Transfer_Binder: 
         """
-        Specific action of Transfer. The Result is stored in the returned Binder, or a Null Handle for "No result" (Default defined as doing nothing; should be deffered) "mutable" allows the Actor to record intermediate information, in addition to those of TransferProcess
+        Specific action of Transfer. The Result is stored in the returned Binder, or a Null Handle for "No result" (Default defined as doing nothing; should be deferred) "mutable" allows the Actor to record intermediate information, in addition to those of TransferProcess
         """
     def TransientResult(self,res : OCP.Standard.Standard_Transient) -> Transfer_SimpleBinderOfTransient: 
         """
@@ -261,23 +261,23 @@ class Transfer_ActorOfFinderProcess(Transfer_ActorOfProcessForFinder, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -371,23 +371,23 @@ class Transfer_ActorOfTransientProcess(Transfer_ActorOfProcessForTransient, OCP.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -473,23 +473,23 @@ class Transfer_ActorDispatch(Transfer_ActorOfTransientProcess, Transfer_ActorOfP
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -541,9 +541,9 @@ class Transfer_ActorDispatch(Transfer_ActorOfTransientProcess, Transfer_ActorOfP
     @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,lib : OCP.Interface.Interface_GeneralLib) -> None: ...
     @overload
-    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
-    @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> None: ...
+    @overload
+    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -561,7 +561,7 @@ class Transfer_Binder(OCP.Standard.Standard_Transient):
     """
     def AddFail(self,mess : str,orig : str='') -> None: 
         """
-        Used to declare an individual transfer as beeing erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
+        Used to declare an individual transfer as being erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
         """
     def AddResult(self,next : Transfer_Binder) -> None: 
         """
@@ -604,23 +604,23 @@ class Transfer_Binder(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMultiple(self) -> bool: 
         """
         Returns True if a Binder has several results, either by itself or because it has next results Can be defined by sub-classes.
@@ -678,7 +678,7 @@ class Transfer_SimpleBinderOfTransient(Transfer_Binder, OCP.Standard.Standard_Tr
     """
     def AddFail(self,mess : str,orig : str='') -> None: 
         """
-        Used to declare an individual transfer as beeing erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
+        Used to declare an individual transfer as being erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
         """
     def AddResult(self,next : Transfer_Binder) -> None: 
         """
@@ -726,23 +726,23 @@ class Transfer_SimpleBinderOfTransient(Transfer_Binder, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMultiple(self) -> bool: 
         """
         Returns True if a Binder has several results, either by itself or because it has next results Can be defined by sub-classes.
@@ -805,7 +805,7 @@ class Transfer_SimpleBinderOfTransient(Transfer_Binder, OCP.Standard.Standard_Tr
     pass
 class Transfer_DataInfo():
     """
-    Gives informations on an object Used as template to instantiate Mapper and SimpleBinder This class is for Transient
+    Gives information on an object Used as template to instantiate Mapper and SimpleBinder This class is for Transient
     """
     @staticmethod
     def TypeName_s(ent : OCP.Standard.Standard_Transient) -> str: 
@@ -852,23 +852,23 @@ class Transfer_DispatchControl(OCP.Interface.Interface_CopyControl, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Search(self,ent : OCP.Standard.Standard_Transient,res : OCP.Standard.Standard_Transient) -> bool: 
         """
         Searches for the Result bound to a Starting Entity If Found, returns True and fills <res> Else, returns False and nullifies <res>
@@ -943,7 +943,7 @@ class Transfer_Finder(OCP.Standard.Standard_Transient):
         """
     def Equates(self,other : Transfer_Finder) -> bool: 
         """
-        Specific testof equallity : to be defined by each sub-class, must be False if Finders have not the same true Type, else their contents must be compared
+        Specific testof equality : to be defined by each sub-class, must be False if Finders have not the same true Type, else their contents must be compared
         """
     def GetAttribute(self,name : str,type : OCP.Standard.Standard_Type,val : OCP.Standard.Standard_Transient) -> bool: 
         """
@@ -978,23 +978,23 @@ class Transfer_Finder(OCP.Standard.Standard_Transient):
         Returns an integer attribute from its name. 0 if not recorded
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RealAttribute(self,name : str) -> float: 
         """
         Returns a real attribute from its name. 0.0 if not recorded
@@ -1053,7 +1053,7 @@ class Transfer_Finder(OCP.Standard.Standard_Transient):
 class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
     def AbnormalResult(self) -> Transfer_IteratorOfProcessForFinder: 
         """
-        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondance in the iterator
+        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondence in the iterator
         """
     def Actor(self) -> Transfer_ActorOfProcessForFinder: 
         """
@@ -1077,14 +1077,14 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         Adds an item to a list of results bound to a starting object. Considers a category number, by default 0, for all results
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: 
+    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: 
         """
         Adds a Warning message to a starting entity (to the check of its Binder of category 0)
 
         Adds a Warning Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: ...
+    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: ...
     def Bind(self,start : Transfer_Finder,binder : Transfer_Binder) -> None: 
         """
         Creates a Link a starting Object with a Binder. This Binder can either bring a Result (effective Binding) or none (it can be set later : pre-binding). Considers a category number, by default 0
@@ -1123,7 +1123,7 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         """
     def CompleteResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForFinder: 
         """
-        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objets are also returned
+        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objects are also returned
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1182,23 +1182,23 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         Returns True if no check message is attached to a starting object. <level> interpreted as by ResultOne If <erronly> is True, checks with Warnings only are ignored
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLooping(self,alevel : int) -> bool: 
         """
         Returns True if we are surely in a DeadLoop. Evaluation is not exact, it is a "majorant" which must be computed fast. This "majorant" is : <alevel> greater than NbMapped.
@@ -1277,7 +1277,7 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         """
     def RootResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForFinder: 
         """
-        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objets are also returned
+        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objects are also returned
         """
     def SendFail(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: 
         """
@@ -1337,9 +1337,9 @@ class Transfer_ProcessForFinder(OCP.Standard.Standard_Transient):
         Removes the Binder linked with a starting object If this Binder brings a non-empty Check, it is replaced by a VoidBinder. Also removes from the list of Roots as required. Returns True if done, False if <start> was not bound Considers a category number, by default 0
         """
     @overload
-    def __init__(self,printer : OCP.Message.Message_Messenger,nb : int=10000) -> None: ...
-    @overload
     def __init__(self,nb : int=10000) -> None: ...
+    @overload
+    def __init__(self,printer : OCP.Message.Message_Messenger,nb : int=10000) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1360,14 +1360,14 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Transfer_Binder) -> None: 
+    def Append(self,theSeq : Transfer_SequenceOfBinder) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Transfer_SequenceOfBinder) -> None: ...
+    def Append(self,theItem : Transfer_Binder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfBinder) -> Transfer_SequenceOfBinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1406,14 +1406,14 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1440,14 +1440,14 @@ class Transfer_SequenceOfBinder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Transfer_Binder) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1494,14 +1494,14 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Transfer_SequenceOfFinder) -> None: 
+    def Append(self,theItem : Transfer_Finder) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Transfer_Finder) -> None: ...
+    def Append(self,theSeq : Transfer_SequenceOfFinder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfFinder) -> Transfer_SequenceOfFinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1540,14 +1540,14 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Transfer_Finder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Transfer_Finder) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1607,11 +1607,11 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Transfer_SequenceOfFinder) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1621,7 +1621,7 @@ class Transfer_SequenceOfFinder(OCP.NCollection.NCollection_BaseSequence):
     pass
 class Transfer_TransferIterator():
     """
-    Defines an Iterator on the result of a Transfer Available for Normal Results or not (Erroneous Transfer) It gives several kinds of Informations, and allows to consider various criteria (criteria are cumulative)
+    Defines an Iterator on the result of a Transfer Available for Normal Results or not (Erroneous Transfer) It gives several kinds of Information, and allows to consider various criteria (criteria are cumulative)
     """
     def AddItem(self,atr : Transfer_Binder) -> None: 
         """
@@ -1637,7 +1637,7 @@ class Transfer_TransferIterator():
         """
     def HasResult(self) -> bool: 
         """
-        Returns True if current Item brings a Result, Transient (Handle) or not or Multiple. That is to say, if it corresponds to a normally acheived Transfer, Transient Result is read by specific TransientResult below. Other kind of Result must be read specifically from its Binder
+        Returns True if current Item brings a Result, Transient (Handle) or not or Multiple. That is to say, if it corresponds to a normally achieved Transfer, Transient Result is read by specific TransientResult below. Other kind of Result must be read specifically from its Binder
         """
     def HasTransientResult(self) -> bool: 
         """
@@ -1665,7 +1665,7 @@ class Transfer_TransferIterator():
         """
     def ResultType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the Type of the Result of the current Item, if Unique. If No Unique Result (Error Transfert or Multiple Result), returns a Null Handle The Type is : the Dynamic Type for a Transient Result, the Type defined by the Binder Class else
+        Returns the Type of the Result of the current Item, if Unique. If No Unique Result (Error Transfer or Multiple Result), returns a Null Handle The Type is : the Dynamic Type for a Transient Result, the Type defined by the Binder Class else
         """
     def SelectBinder(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -1732,7 +1732,7 @@ class Transfer_IteratorOfProcessForTransient(Transfer_TransferIterator):
         """
     def HasResult(self) -> bool: 
         """
-        Returns True if current Item brings a Result, Transient (Handle) or not or Multiple. That is to say, if it corresponds to a normally acheived Transfer, Transient Result is read by specific TransientResult below. Other kind of Result must be read specifically from its Binder
+        Returns True if current Item brings a Result, Transient (Handle) or not or Multiple. That is to say, if it corresponds to a normally achieved Transfer, Transient Result is read by specific TransientResult below. Other kind of Result must be read specifically from its Binder
         """
     def HasStarting(self) -> bool: 
         """
@@ -1764,7 +1764,7 @@ class Transfer_IteratorOfProcessForTransient(Transfer_TransferIterator):
         """
     def ResultType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the Type of the Result of the current Item, if Unique. If No Unique Result (Error Transfert or Multiple Result), returns a Null Handle The Type is : the Dynamic Type for a Transient Result, the Type defined by the Binder Class else
+        Returns the Type of the Result of the current Item, if Unique. If No Unique Result (Error Transfer or Multiple Result), returns a Null Handle The Type is : the Dynamic Type for a Transient Result, the Type defined by the Binder Class else
         """
     def SelectBinder(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -1830,23 +1830,23 @@ class Transfer_MapContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetMapObjects(self,theMapObjects : Any) -> None: 
         """
         Set map already translated geometry objects.
@@ -1873,7 +1873,7 @@ class Transfer_MultipleBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
     """
     def AddFail(self,mess : str,orig : str='') -> None: 
         """
-        Used to declare an individual transfer as beeing erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
+        Used to declare an individual transfer as being erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
         """
     def AddResult(self,res : OCP.Standard.Standard_Transient) -> None: 
         """
@@ -1916,26 +1916,26 @@ class Transfer_MultipleBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMultiple(self) -> bool: 
         """
-        Returns True if a starting object is bound with SEVERAL results : Here, returns allways True
+        Returns True if a starting object is bound with SEVERAL results : Here, returns always True
         """
     def Merge(self,other : Transfer_Binder) -> None: 
         """
@@ -2007,7 +2007,7 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
     """
     def AbnormalResult(self) -> Transfer_IteratorOfProcessForFinder: 
         """
-        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondance in the iterator
+        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondence in the iterator
         """
     def Actor(self) -> Transfer_ActorOfProcessForFinder: 
         """
@@ -2031,14 +2031,14 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         Adds an item to a list of results bound to a starting object. Considers a category number, by default 0, for all results
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: 
+    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: 
         """
         Adds a Warning message to a starting entity (to the check of its Binder of category 0)
 
         Adds a Warning Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,start : Transfer_Finder,mess : str,orig : str='') -> None: ...
+    def AddWarning(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: ...
     def Bind(self,start : Transfer_Finder,binder : Transfer_Binder) -> None: 
         """
         Creates a Link a starting Object with a Binder. This Binder can either bring a Result (effective Binding) or none (it can be set later : pre-binding). Considers a category number, by default 0
@@ -2077,7 +2077,7 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         """
     def CompleteResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForFinder: 
         """
-        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objets are also returned
+        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objects are also returned
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2136,23 +2136,23 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         Returns True if no check message is attached to a starting object. <level> interpreted as by ResultOne If <erronly> is True, checks with Warnings only are ignored
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLooping(self,alevel : int) -> bool: 
         """
         Returns True if we are surely in a DeadLoop. Evaluation is not exact, it is a "majorant" which must be computed fast. This "majorant" is : <alevel> greater than NbMapped.
@@ -2243,7 +2243,7 @@ class Transfer_FinderProcess(Transfer_ProcessForFinder, OCP.Standard.Standard_Tr
         """
     def RootResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForFinder: 
         """
-        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objets are also returned
+        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objects are also returned
         """
     def SendFail(self,start : Transfer_Finder,amsg : OCP.Message.Message_Msg) -> None: 
         """
@@ -2328,7 +2328,7 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
     """
     def AbnormalResult(self) -> Transfer_IteratorOfProcessForTransient: 
         """
-        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondance in the iterator
+        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondence in the iterator
         """
     def Actor(self) -> Transfer_ActorOfProcessForTransient: 
         """
@@ -2339,27 +2339,27 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         (other name of AddFail, maintained for compatibility)
         """
     @overload
-    def AddFail(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: 
+    def AddFail(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: 
         """
         Adds an Error message to a starting entity (to the check of its Binder of category 0, as a Fail)
 
         Adds an Error Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddFail(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: ...
+    def AddFail(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: ...
     def AddMultiple(self,start : OCP.Standard.Standard_Transient,res : OCP.Standard.Standard_Transient) -> None: 
         """
         Adds an item to a list of results bound to a starting object. Considers a category number, by default 0, for all results
         """
     @overload
-    def AddWarning(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: 
+    def AddWarning(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: 
         """
         Adds a Warning message to a starting entity (to the check of its Binder of category 0)
 
         Adds a Warning Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: ...
+    def AddWarning(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: ...
     def Bind(self,start : OCP.Standard.Standard_Transient,binder : Transfer_Binder) -> None: 
         """
         Creates a Link a starting Object with a Binder. This Binder can either bring a Result (effective Binding) or none (it can be set later : pre-binding). Considers a category number, by default 0
@@ -2398,7 +2398,7 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         """
     def CompleteResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForTransient: 
         """
-        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objets are also returned
+        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objects are also returned
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2457,23 +2457,23 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         Returns True if no check message is attached to a starting object. <level> interpreted as by ResultOne If <erronly> is True, checks with Warnings only are ignored
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLooping(self,alevel : int) -> bool: 
         """
         Returns True if we are surely in a DeadLoop. Evaluation is not exact, it is a "majorant" which must be computed fast. This "majorant" is : <alevel> greater than NbMapped.
@@ -2552,7 +2552,7 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         """
     def RootResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForTransient: 
         """
-        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objets are also returned
+        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objects are also returned
         """
     def SendFail(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: 
         """
@@ -2612,9 +2612,9 @@ class Transfer_ProcessForTransient(OCP.Standard.Standard_Transient):
         Removes the Binder linked with a starting object If this Binder brings a non-empty Check, it is replaced by a VoidBinder. Also removes from the list of Roots as required. Returns True if done, False if <start> was not bound Considers a category number, by default 0
         """
     @overload
-    def __init__(self,nb : int=10000) -> None: ...
-    @overload
     def __init__(self,printer : OCP.Message.Message_Messenger,nb : int=10000) -> None: ...
+    @overload
+    def __init__(self,nb : int=10000) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2683,23 +2683,23 @@ class Transfer_ResultFromModel(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MainLabel(self) -> str: 
         """
         Returns the label in starting model attached to main entity (updated by Fill or SetMainResult, if Model is known)
@@ -2821,23 +2821,23 @@ class Transfer_ResultFromTransient(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbSubResults(self) -> int: 
         """
         Returns the count of recorded sub-results
@@ -2888,14 +2888,14 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Transfer_Binder) -> None: 
+    def Append(self,theSequence : Transfer_SequenceOfBinder) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : Transfer_SequenceOfBinder) -> None: ...
+    def Append(self,theItem : Transfer_Binder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfBinder) -> Transfer_SequenceOfBinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2958,36 +2958,36 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Transfer_Binder) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfBinder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Transfer_Binder: 
         """
         Last item access
@@ -3010,14 +3010,14 @@ class Transfer_HSequenceOfBinder(Transfer_SequenceOfBinder, OCP.NCollection.NCol
     @overload
     def Prepend(self,theItem : Transfer_Binder) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3077,14 +3077,14 @@ class Transfer_HSequenceOfFinder(Transfer_SequenceOfFinder, OCP.NCollection.NCol
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Transfer_Finder) -> None: 
+    def Append(self,theSequence : Transfer_SequenceOfFinder) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : Transfer_SequenceOfFinder) -> None: ...
+    def Append(self,theItem : Transfer_Finder) -> None: ...
     def Assign(self,theOther : Transfer_SequenceOfFinder) -> Transfer_SequenceOfFinder: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3147,36 +3147,36 @@ class Transfer_HSequenceOfFinder(Transfer_SequenceOfFinder, OCP.NCollection.NCol
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Transfer_Finder) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Transfer_Finder) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Transfer_SequenceOfFinder) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> Transfer_Finder: 
         """
         Last item access
@@ -3266,7 +3266,7 @@ class Transfer_BinderOfTransientInteger(Transfer_SimpleBinderOfTransient, Transf
     """
     def AddFail(self,mess : str,orig : str='') -> None: 
         """
-        Used to declare an individual transfer as beeing erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
+        Used to declare an individual transfer as being erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
         """
     def AddResult(self,next : Transfer_Binder) -> None: 
         """
@@ -3318,23 +3318,23 @@ class Transfer_BinderOfTransientInteger(Transfer_SimpleBinderOfTransient, Transf
         Returns the value set for the integer part
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMultiple(self) -> bool: 
         """
         Returns True if a Binder has several results, either by itself or because it has next results Can be defined by sub-classes.
@@ -3418,6 +3418,7 @@ class Transfer_StatusExec():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3456,6 +3457,7 @@ class Transfer_StatusResult():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3557,9 +3559,9 @@ class Transfer_TransferDispatch(OCP.Interface.Interface_CopyTool):
         Returns the content of Control Object, as a TransientProcess
         """
     @overload
-    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,lib : OCP.Interface.Interface_GeneralLib) -> None: ...
-    @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> None: ...
+    @overload
+    def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel,lib : OCP.Interface.Interface_GeneralLib) -> None: ...
     @overload
     def __init__(self,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
     pass
@@ -3583,7 +3585,7 @@ class Transfer_TransferInput():
         Takes the transient items stored in a TransferIterator
         """
     @overload
-    def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: 
+    def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: 
         """
         Fills an InterfaceModel with the Complete Result of a Transfer stored in a TransientProcess (Starting Objects are Transient) The complete result is exactly added to the model
 
@@ -3593,12 +3595,12 @@ class Transfer_TransferInput():
 
         Fills an InterfaceModel with results of the Transfer recorded in a TransientProcess (Starting Objects are Transient) : Root Result if <roots> is True (Default), Complete Result else The entities added to the model are determined from the result by by adding the referenced entities
         """
-    @overload
-    def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel,proto : OCP.Interface.Interface_Protocol,roots : bool=True) -> None: ...
     @overload
     def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel,proto : OCP.Interface.Interface_Protocol,roots : bool=True) -> None: ...
     @overload
-    def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
+    def FillModel(self,proc : Transfer_FinderProcess,amodel : OCP.Interface.Interface_InterfaceModel,proto : OCP.Interface.Interface_Protocol,roots : bool=True) -> None: ...
+    @overload
+    def FillModel(self,proc : Transfer_TransientProcess,amodel : OCP.Interface.Interface_InterfaceModel) -> None: ...
     def __init__(self) -> None: ...
     pass
 class Transfer_IteratorOfProcessForFinder(Transfer_TransferIterator):
@@ -3632,7 +3634,7 @@ class Transfer_IteratorOfProcessForFinder(Transfer_TransferIterator):
         """
     def HasResult(self) -> bool: 
         """
-        Returns True if current Item brings a Result, Transient (Handle) or not or Multiple. That is to say, if it corresponds to a normally acheived Transfer, Transient Result is read by specific TransientResult below. Other kind of Result must be read specifically from its Binder
+        Returns True if current Item brings a Result, Transient (Handle) or not or Multiple. That is to say, if it corresponds to a normally achieved Transfer, Transient Result is read by specific TransientResult below. Other kind of Result must be read specifically from its Binder
         """
     def HasStarting(self) -> bool: 
         """
@@ -3664,7 +3666,7 @@ class Transfer_IteratorOfProcessForFinder(Transfer_TransferIterator):
         """
     def ResultType(self) -> OCP.Standard.Standard_Type: 
         """
-        Returns the Type of the Result of the current Item, if Unique. If No Unique Result (Error Transfert or Multiple Result), returns a Null Handle The Type is : the Dynamic Type for a Transient Result, the Type defined by the Binder Class else
+        Returns the Type of the Result of the current Item, if Unique. If No Unique Result (Error Transfer or Multiple Result), returns a Null Handle The Type is : the Dynamic Type for a Transient Result, the Type defined by the Binder Class else
         """
     def SelectBinder(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -3748,11 +3750,11 @@ class Transfer_TransferOutput():
     pass
 class Transfer_TransientListBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
     """
-    This binder binds several (a list of) Transients with a starting entity, when this entity itself corresponds to a simple list of Transients. Each part is not seen as a sub-result of an independant componant, but as an item of a built-in listThis binder binds several (a list of) Transients with a starting entity, when this entity itself corresponds to a simple list of Transients. Each part is not seen as a sub-result of an independant componant, but as an item of a built-in listThis binder binds several (a list of) Transients with a starting entity, when this entity itself corresponds to a simple list of Transients. Each part is not seen as a sub-result of an independant componant, but as an item of a built-in list
+    This binder binds several (a list of) Transients with a starting entity, when this entity itself corresponds to a simple list of Transients. Each part is not seen as a sub-result of an independent component, but as an item of a built-in listThis binder binds several (a list of) Transients with a starting entity, when this entity itself corresponds to a simple list of Transients. Each part is not seen as a sub-result of an independent component, but as an item of a built-in listThis binder binds several (a list of) Transients with a starting entity, when this entity itself corresponds to a simple list of Transients. Each part is not seen as a sub-result of an independent component, but as an item of a built-in list
     """
     def AddFail(self,mess : str,orig : str='') -> None: 
         """
-        Used to declare an individual transfer as beeing erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
+        Used to declare an individual transfer as being erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
         """
     def AddResult(self,res : OCP.Standard.Standard_Transient) -> None: 
         """
@@ -3795,23 +3797,23 @@ class Transfer_TransientListBinder(Transfer_Binder, OCP.Standard.Standard_Transi
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMultiple(self) -> bool: 
         """
         None
@@ -3910,7 +3912,7 @@ class Transfer_TransientMapper(Transfer_Finder, OCP.Standard.Standard_Transient)
         """
     def Equates(self,other : Transfer_Finder) -> bool: 
         """
-        Specific testof equallity : defined as False if <other> has not the same true Type, else contents are compared (by C++ operator ==)
+        Specific testof equality : defined as False if <other> has not the same true Type, else contents are compared (by C++ operator ==)
         """
     def GetAttribute(self,name : str,type : OCP.Standard.Standard_Type,val : OCP.Standard.Standard_Transient) -> bool: 
         """
@@ -3945,23 +3947,23 @@ class Transfer_TransientMapper(Transfer_Finder, OCP.Standard.Standard_Transient)
         Returns an integer attribute from its name. 0 if not recorded
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RealAttribute(self,name : str) -> float: 
         """
         Returns a real attribute from its name. 0.0 if not recorded
@@ -4028,7 +4030,7 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
     """
     def AbnormalResult(self) -> Transfer_IteratorOfProcessForTransient: 
         """
-        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondance in the iterator
+        Returns Binders which are neither "Done" nor "Initial", that is Error,Loop or Run (abnormal states at end of Transfer) Starting Objects are given in correspondence in the iterator
         """
     def Actor(self) -> Transfer_ActorOfProcessForTransient: 
         """
@@ -4039,27 +4041,27 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         (other name of AddFail, maintained for compatibility)
         """
     @overload
-    def AddFail(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: 
+    def AddFail(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: 
         """
         Adds an Error message to a starting entity (to the check of its Binder of category 0, as a Fail)
 
         Adds an Error Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddFail(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: ...
+    def AddFail(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: ...
     def AddMultiple(self,start : OCP.Standard.Standard_Transient,res : OCP.Standard.Standard_Transient) -> None: 
         """
         Adds an item to a list of results bound to a starting object. Considers a category number, by default 0, for all results
         """
     @overload
-    def AddWarning(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: 
+    def AddWarning(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: 
         """
         Adds a Warning message to a starting entity (to the check of its Binder of category 0)
 
         Adds a Warning Message to a starting entity from the definition of a Msg (Original+Value)
         """
     @overload
-    def AddWarning(self,start : OCP.Standard.Standard_Transient,mess : str,orig : str='') -> None: ...
+    def AddWarning(self,start : OCP.Standard.Standard_Transient,amsg : OCP.Message.Message_Msg) -> None: ...
     def Bind(self,start : OCP.Standard.Standard_Transient,binder : Transfer_Binder) -> None: 
         """
         Creates a Link a starting Object with a Binder. This Binder can either bring a Result (effective Binding) or none (it can be set later : pre-binding). Considers a category number, by default 0
@@ -4098,7 +4100,7 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
     def CompleteResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForTransient: 
         """
-        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objets are also returned
+        Returns, as an Iterator, the entire log of transfer (list of created objects and Binders which can bring errors) If withstart is given True, Starting Objects are also returned
         """
     def Context(self) -> Any: ...
     def DecrementRefCounter(self) -> int: 
@@ -4182,23 +4184,23 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         Tells if an entity is well loaded from file (even if its data fail on checking, they are present). Mostly often, answers True. Else, there was a syntactic error in the file. A non-loaded entity MAY NOT BE transferred, unless its Report (in the model) is interpreted
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLooping(self,alevel : int) -> bool: 
         """
         Returns True if we are surely in a DeadLoop. Evaluation is not exact, it is a "majorant" which must be computed fast. This "majorant" is : <alevel> greater than NbMapped.
@@ -4285,7 +4287,7 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
     def RootResult(self,withstart : bool=False) -> Transfer_IteratorOfProcessForTransient: 
         """
-        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objets are also returned
+        Returns, as an iterator, the log of root transfer, i.e. the created objects and Binders bound to starting roots If withstart is given True, Starting Objects are also returned
         """
     def RootsForTransfer(self) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
@@ -4325,7 +4327,7 @@ class Transfer_TransientProcess(Transfer_ProcessForTransient, OCP.Standard.Stand
         """
     def SetModel(self,model : OCP.Interface.Interface_InterfaceModel) -> None: 
         """
-        Sets an InterfaceModel, used by StartTrace, CheckList, queries on Integrity, to give informations significant for each norm.
+        Sets an InterfaceModel, used by StartTrace, CheckList, queries on Integrity, to give information significant for each norm.
         """
     def SetRoot(self,start : OCP.Standard.Standard_Transient) -> None: 
         """
@@ -4393,6 +4395,7 @@ class Transfer_UndefMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4421,7 +4424,7 @@ class Transfer_VoidBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
     """
     def AddFail(self,mess : str,orig : str='') -> None: 
         """
-        Used to declare an individual transfer as beeing erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
+        Used to declare an individual transfer as being erroneous (Status is set to Void, StatusExec is set to Error, <errmess> is added to Check's list of Fails) It is possible to record several messages of error
         """
     def AddResult(self,next : Transfer_Binder) -> None: 
         """
@@ -4464,23 +4467,23 @@ class Transfer_VoidBinder(Transfer_Binder, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMultiple(self) -> bool: 
         """
         Returns True if a Binder has several results, either by itself or because it has next results Can be defined by sub-classes.

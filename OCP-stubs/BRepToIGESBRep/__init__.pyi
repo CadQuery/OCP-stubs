@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.IGESSolid
+import OCP.TopoDS
 import OCP.Transfer
 import OCP.IGESData
-import OCP.TopoDS
-import OCP.Standard
 import OCP.BRepToIGES
+import OCP.Standard
+import OCP.IGESSolid
 __all__  = [
 "BRepToIGESBRep_Entity"
 ]
@@ -22,27 +22,27 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Stores <myedge> in "myEdges" and <mycurve3d> in "myCurves". Returns the index of <myedge>.
         """
     @overload
-    def AddFail(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: 
+    def AddFail(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: 
         """
         Records a new Fail message
 
         Records a new Fail message
         """
     @overload
-    def AddFail(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: ...
+    def AddFail(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: ...
     def AddVertex(self,myvertex : OCP.TopoDS.TopoDS_Vertex) -> int: 
         """
         Stores <myvertex> in "myVertices" Returns the index of <myvertex>.
         """
     @overload
-    def AddWarning(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: 
+    def AddWarning(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: 
         """
         Records a new Warning message
 
         Records a new Warning message
         """
     @overload
-    def AddWarning(self,start : OCP.Standard.Standard_Transient,amess : str) -> None: ...
+    def AddWarning(self,start : OCP.TopoDS.TopoDS_Shape,amess : str) -> None: ...
     def Clear(self) -> None: 
         """
         Clears the contents of the fields
@@ -60,14 +60,14 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Returns mode for writing pcurves (value of parameter write.surfacecurve.mode)
         """
     @overload
-    def GetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape) -> OCP.Standard.Standard_Transient: 
+    def GetShapeResult(self,start : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: 
         """
         Returns the result of the transfer of the Shape "start" contained in "TheMap" . (if HasShapeResult is True).
 
         Returns the result of the transfer of the Transient "start" contained in "TheMap" . (if HasShapeResult is True).
         """
     @overload
-    def GetShapeResult(self,start : OCP.Standard.Standard_Transient) -> OCP.Standard.Standard_Transient: ...
+    def GetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape) -> OCP.Standard.Standard_Transient: ...
     def GetTransferProcess(self) -> OCP.Transfer.Transfer_FinderProcess: 
         """
         Returns the value of "TheMap"
@@ -77,14 +77,14 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Returns the value of the UnitFlag of the header of the model in meters.
         """
     @overload
-    def HasShapeResult(self,start : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def HasShapeResult(self,start : OCP.Standard.Standard_Transient) -> bool: 
         """
         Returns True if start was already treated and has a result in "TheMap" else returns False.
 
         Returns True if start was already treated and has a result in "TheMap" else returns False.
         """
     @overload
-    def HasShapeResult(self,start : OCP.Standard.Standard_Transient) -> bool: ...
+    def HasShapeResult(self,start : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def IndexEdge(self,myedge : OCP.TopoDS.TopoDS_Edge) -> int: 
         """
         Returns the index of <myedge> in "myEdges"
@@ -102,14 +102,14 @@ class BRepToIGESBRep_Entity(OCP.BRepToIGES.BRepToIGES_BREntity):
         Set the value of "TheModel"
         """
     @overload
-    def SetShapeResult(self,start : OCP.Standard.Standard_Transient,result : OCP.Standard.Standard_Transient) -> None: 
+    def SetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape,result : OCP.Standard.Standard_Transient) -> None: 
         """
         set in "TheMap" the result of the transfer of the Shape "start".
 
         set in "TheMap" the result of the transfer of the Transient "start".
         """
     @overload
-    def SetShapeResult(self,start : OCP.TopoDS.TopoDS_Shape,result : OCP.Standard.Standard_Transient) -> None: ...
+    def SetShapeResult(self,start : OCP.Standard.Standard_Transient,result : OCP.Standard.Standard_Transient) -> None: ...
     def SetTransferProcess(self,TP : OCP.Transfer.Transfer_FinderProcess) -> None: 
         """
         Set the value of "TheMap"

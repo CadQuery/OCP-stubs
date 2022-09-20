@@ -4,21 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Convert
-import OCP.Approx
-import OCP.TColGeom
-import OCP.math
-import OCP.NCollection
-import OCP.Law
-import OCP.TColgp
-import OCP.Geom
-import OCP.Standard
-import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.gp
 import OCP.GeomAbs
-import OCP.Geom2d
+import OCP.NCollection
 import OCP.AppBlend
+import OCP.Geom2d
+import OCP.Standard
+import OCP.TColStd
+import OCP.TColGeom
+import OCP.Adaptor3d
+import OCP.Law
+import OCP.Convert
+import OCP.TColgp
+import OCP.math
+import OCP.gp
+import OCP.Geom
+import OCP.Approx
 __all__  = [
 "GeomFill",
 "GeomFill_AppSurf",
@@ -284,9 +284,9 @@ class GeomFill_AppSurf(OCP.AppBlend.AppBlend_Approx):
         None
         """
     @overload
-    def __init__(self,Degmin : int,Degmax : int,Tol3d : float,Tol2d : float,NbIt : int,KnownParameters : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Degmin : int,Degmax : int,Tol3d : float,Tol2d : float,NbIt : int,KnownParameters : bool=False) -> None: ...
     pass
 class GeomFill_AppSweep(OCP.AppBlend.AppBlend_Approx):
     """
@@ -431,6 +431,7 @@ class GeomFill_ApproxStyle():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -453,7 +454,7 @@ class GeomFill_ApproxStyle():
     pass
 class GeomFill_Array1OfLocationLaw():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : GeomFill_Array1OfLocationLaw) -> GeomFill_Array1OfLocationLaw: 
         """
@@ -528,18 +529,18 @@ class GeomFill_Array1OfLocationLaw():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : GeomFill_Array1OfLocationLaw) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : GeomFill_LocationLaw,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class GeomFill_Array1OfSectionLaw():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : GeomFill_Array1OfSectionLaw) -> GeomFill_Array1OfSectionLaw: 
         """
@@ -614,13 +615,13 @@ class GeomFill_Array1OfSectionLaw():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : GeomFill_SectionLaw,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class GeomFill_BSplineCurves():
@@ -628,7 +629,7 @@ class GeomFill_BSplineCurves():
     An algorithm for constructing a BSpline surface filled from contiguous BSpline curves which form its boundaries. The algorithm accepts two, three or four BSpline curves as the boundaries of the target surface. A range of filling styles - more or less rounded, more or less flat - is available. A BSplineCurves object provides a framework for: - defining the boundaries, and the filling style of the surface - implementing the construction algorithm - consulting the result. Warning Some problems may show up with rational curves.
     """
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: 
+    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,C4 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: 
         """
         if the curves cannot be joined
 
@@ -637,7 +638,7 @@ class GeomFill_BSplineCurves():
         Initializes or reinitializes this algorithm with two, three, or four curves - C1, C2, C3, and C4 - and Type, one of the following filling styles: - GeomFill_Stretch - the style with the flattest patch - GeomFill_Coons - a rounded style of patch with less depth than that of Curved - GeomFill_Curved - the style with the most rounded patch. Exceptions Standard_ConstructionError if the curves are not contiguous.
         """
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,C4 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
     def Init(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     def Surface(self) -> OCP.Geom.Geom_BSplineSurface: 
@@ -651,16 +652,16 @@ class GeomFill_BSplineCurves():
     @overload
     def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C1 : OCP.Geom.Geom_BSplineCurve,C2 : OCP.Geom.Geom_BSplineCurve,C3 : OCP.Geom.Geom_BSplineCurve,Type : GeomFill_FillingStyle) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class GeomFill_BezierCurves():
     """
     This class provides an algorithm for constructing a Bezier surface filled from contiguous Bezier curves which form its boundaries. The algorithm accepts two, three or four Bezier curves as the boundaries of the target surface. A range of filling styles - more or less rounded, more or less flat - is available. A BezierCurves object provides a framework for: - defining the boundaries, and the filling style of the surface - implementing the construction algorithm - consulting the result. Warning Some problems may show up with rational curves.
     """
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: 
+    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: 
         """
         if the curves cannot be joined
 
@@ -671,7 +672,7 @@ class GeomFill_BezierCurves():
     @overload
     def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
-    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def Init(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     def Surface(self) -> OCP.Geom.Geom_BezierSurface: 
         """
         Returns the Bezier surface resulting from the computation performed by this algorithm.
@@ -679,13 +680,13 @@ class GeomFill_BezierCurves():
         Returns the Bezier surface resulting from the computation performed by this algorithm.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,C3 : OCP.Geom.Geom_BezierCurve,C4 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Geom.Geom_BezierCurve,C2 : OCP.Geom.Geom_BezierCurve,Type : GeomFill_FillingStyle) -> None: ...
     pass
 class GeomFill_Boundary(OCP.Standard.Standard_Transient):
     """
@@ -732,23 +733,23 @@ class GeomFill_Boundary(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Norm(self,U : float) -> OCP.gp.gp_Vec: 
         """
         None
@@ -843,23 +844,23 @@ class GeomFill_BoundWithSurf(GeomFill_Boundary, OCP.Standard.Standard_Transient)
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Norm(self,U : float) -> OCP.gp.gp_Vec: 
         """
         None
@@ -916,7 +917,7 @@ class GeomFill_CircularBlendFunc(OCP.Approx.Approx_SweepFunction, OCP.Standard.S
     """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditionned rational approximation.
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation.
         """
     def D0(self,Param : float,First : float,Last : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
@@ -944,7 +945,7 @@ class GeomFill_CircularBlendFunc(OCP.Approx.Approx_SweepFunction, OCP.Standard.S
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles of all sections. This information is usefull to perform well conditionned rational approximation.
+        Compute the minimal value of weight for each poles of all sections. This information is useful to perform well conditioned rational approximation.
         """
     def GetRefCount(self) -> int: 
         """
@@ -963,23 +964,23 @@ class GeomFill_CircularBlendFunc(OCP.Approx.Approx_SweepFunction, OCP.Standard.S
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -990,7 +991,7 @@ class GeomFill_CircularBlendFunc(OCP.Approx.Approx_SweepFunction, OCP.Standard.S
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the maximum section. This information is usefull to perform well conditionned rational approximation.
+        Returns the length of the maximum section. This information is useful to perform well conditioned rational approximation.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -1024,7 +1025,7 @@ class GeomFill_CircularBlendFunc(OCP.Approx.Approx_SweepFunction, OCP.Standard.S
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float,Polynomial : bool=False) -> None: ...
+    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_Curve,Curve1 : OCP.Adaptor3d.Adaptor3d_Curve,Curve2 : OCP.Adaptor3d.Adaptor3d_Curve,Radius : float,Polynomial : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1050,11 +1051,11 @@ class GeomFill_TrihedronLaw(OCP.Standard.Standard_Transient):
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1097,32 +1098,32 @@ class GeomFill_TrihedronLaw(OCP.Standard.Standard_Transient):
         Say if the law is Constant
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
-        Say if the law is defined, only by the 3d Geometry of the setted Curve Return False by Default.
+        Say if the law is defined, only by the 3d Geometry of the set Curve Return False by Default.
         """
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -1174,21 +1175,21 @@ class GeomFill_ConstrainedFilling():
         Internal use for Advmath approximation call.
         """
     @overload
-    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,B4 : GeomFill_Boundary,NoCheck : bool=False) -> None: 
+    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,NoCheck : bool=False) -> None: 
         """
         None
 
         Constructs a BSpline surface filled from the series of boundaries B1, B2, B3 and, if need be, B4, which serve: - as path constraints - and optionally, as tangency constraints if they are GeomFill_BoundWithSurf curves. The boundaries may be given in any order: they are classified and if necessary, reversed and reparameterized. The surface will also respect the following constraints: - its degree will not be greater than the maximum degree defined at the time of construction of this framework, and - the maximum number of segments MaxSeg which BSpline surfaces can have
         """
     @overload
-    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,NoCheck : bool=False) -> None: ...
+    def Init(self,B1 : GeomFill_Boundary,B2 : GeomFill_Boundary,B3 : GeomFill_Boundary,B4 : GeomFill_Boundary,NoCheck : bool=False) -> None: ...
     def ReBuild(self) -> None: 
         """
         Computes the new poles of the surface using the new blending functions set by several calls to SetDomain.
         """
     def SetDomain(self,l : float,B : GeomFill_BoundWithSurf) -> None: 
         """
-        Allows to modify domain on witch the blending function associated to the constrained boundary B will propag the influence of the field of tangency. Can be usefull to reduce influence of boundaries on whitch the Coons compatibility conditions are not respected. l is a relative value of the parametric range of B. Default value for l is 1 (used in Init). Warning: Must be called after Init with a constrained boundary used in the call to Init.
+        Allows to modify domain on witch the blending function associated to the constrained boundary B will propag the influence of the field of tangency. Can be useful to reduce influence of boundaries on which the Coons compatibility conditions are not respected. l is a relative value of the parametric range of B. Default value for l is 1 (used in Init). Warning: Must be called after Init with a constrained boundary used in the call to Init.
         """
     def Surface(self) -> OCP.Geom.Geom_BSplineSurface: 
         """
@@ -1276,23 +1277,23 @@ class GeomFill_CoonsAlgPatch(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetFunc(self,f1 : OCP.Law.Law_Function,f2 : OCP.Law.Law_Function) -> None: 
         """
         Set the blending functions.
@@ -1319,7 +1320,7 @@ class GeomFill_CoonsAlgPatch(OCP.Standard.Standard_Transient):
     pass
 class GeomFill_CornerState():
     """
-    Class (should be a structure) storing the informations about continuity, normals parallelism, coons conditions and bounds tangents angle on the corner of contour to be filled.
+    Class (should be a structure) storing the information about continuity, normals parallelism, coons conditions and bounds tangents angle on the corner of contour to be filled.
     """
     def Constraint(self) -> None: 
         """
@@ -1330,14 +1331,14 @@ class GeomFill_CornerState():
         None
         """
     @overload
-    def Gap(self) -> float: 
+    def Gap(self,G : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Gap(self,G : float) -> None: ...
+    def Gap(self) -> float: ...
     def HasConstraint(self) -> bool: 
         """
         None
@@ -1347,14 +1348,14 @@ class GeomFill_CornerState():
         None
         """
     @overload
-    def NorAng(self) -> float: 
+    def NorAng(self,Ang : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def NorAng(self,Ang : float) -> None: ...
+    def NorAng(self) -> float: ...
     @overload
     def TgtAng(self,Ang : float) -> None: 
         """
@@ -1380,11 +1381,11 @@ class GeomFill_CorrectedFrenet(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tran
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1431,23 +1432,23 @@ class GeomFill_CorrectedFrenet(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tran
         Say if the law is Constant.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
         Return True.
@@ -1456,7 +1457,7 @@ class GeomFill_CorrectedFrenet(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tran
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -1492,21 +1493,21 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: 
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: 
         """
         compute Location
 
         compute Location and 2d points
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
+        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,D2M : OCP.gp.gp_Mat,D2V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1528,7 +1529,7 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
         Get average value of M(t) and V(t) it is usfull to make fast approximation of rational surfaces.
         """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -1565,23 +1566,23 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRotation(self,Error : float) -> bool: 
         """
         Say if the Location Law, is a rotation of Location The default implementation is " returns False ".
@@ -1606,7 +1607,7 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -1616,7 +1617,7 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def SetTrsf(self,Transfo : OCP.gp.gp_Mat) -> None: 
         """
@@ -1628,7 +1629,7 @@ class GeomFill_LocationLaw(OCP.Standard.Standard_Transient):
         """
     def TraceNumber(self) -> int: 
         """
-        Give the number of trace (Curves 2d wich are not restriction) Returns 0 (default implementation)
+        Give the number of trace (Curves 2d which are not restriction) Returns 0 (default implementation)
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1646,7 +1647,7 @@ class GeomFill_Curved(GeomFill_Filling):
     None
     """
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         None
 
@@ -1656,12 +1657,12 @@ class GeomFill_Curved(GeomFill_Filling):
 
         None
         """
+    @overload
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
-    @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def NbUPoles(self) -> int: 
         """
         None
@@ -1707,11 +1708,11 @@ class GeomFill_Darboux(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1754,23 +1755,23 @@ class GeomFill_Darboux(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         Say if the law is Constant.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
         Return False.
@@ -1779,7 +1780,7 @@ class GeomFill_Darboux(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -1805,7 +1806,7 @@ class GeomFill_Darboux(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
     pass
 class GeomFill_DegeneratedBound(GeomFill_Boundary, OCP.Standard.Standard_Transient):
     """
-    Description of a degenerated boundary (a point). Class defining a degenerated boundary for a constrained filling with a point and no other constraint. Only used to simulate an ordinary bound, may not be usefull and desapear soon.Description of a degenerated boundary (a point). Class defining a degenerated boundary for a constrained filling with a point and no other constraint. Only used to simulate an ordinary bound, may not be usefull and desapear soon.Description of a degenerated boundary (a point). Class defining a degenerated boundary for a constrained filling with a point and no other constraint. Only used to simulate an ordinary bound, may not be usefull and desapear soon.
+    Description of a degenerated boundary (a point). Class defining a degenerated boundary for a constrained filling with a point and no other constraint. Only used to simulate an ordinary bound, may not be useful and desapear soon.Description of a degenerated boundary (a point). Class defining a degenerated boundary for a constrained filling with a point and no other constraint. Only used to simulate an ordinary bound, may not be useful and desapear soon.Description of a degenerated boundary (a point). Class defining a degenerated boundary for a constrained filling with a point and no other constraint. Only used to simulate an ordinary bound, may not be useful and desapear soon.
     """
     def Bounds(self) -> Tuple[float, float]: 
         """
@@ -1848,23 +1849,23 @@ class GeomFill_DegeneratedBound(GeomFill_Boundary, OCP.Standard.Standard_Transie
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Norm(self,U : float) -> OCP.gp.gp_Vec: 
         """
         None
@@ -1929,11 +1930,11 @@ class GeomFill_DiscreteTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tr
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation For the moment it returns null values for DTangent, DNormal and DBiNormal.
+        compute Trihedron and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation For the moment it returns null values for DTangent, DNormal and DBiNormal.
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation For the moment it returns null values for DTangent, DNormal DBiNormal, D2Tangent, D2Normal, D2BiNormal.
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation For the moment it returns null values for DTangent, DNormal DBiNormal, D2Tangent, D2Normal, D2BiNormal.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1980,23 +1981,23 @@ class GeomFill_DiscreteTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tr
         Say if the law is Constant.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
         Return True.
@@ -2005,7 +2006,7 @@ class GeomFill_DiscreteTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tr
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -2036,11 +2037,11 @@ class GeomFill_DraftTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Trans
         """
     def D0(self,Param : float,Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
@@ -2064,7 +2065,7 @@ class GeomFill_DraftTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Trans
         """
     def GetAverageLaw(self,ATangent : OCP.gp.gp_Vec,ANormal : OCP.gp.gp_Vec,ABiNormal : OCP.gp.gp_Vec) -> None: 
         """
-        Get average value of Tangent(t) and Normal(t) it is usefull to make fast approximation of rational surfaces.
+        Get average value of Tangent(t) and Normal(t) it is useful to make fast approximation of rational surfaces.
         """
     def GetInterval(self) -> Tuple[float, float]: 
         """
@@ -2087,23 +2088,23 @@ class GeomFill_DraftTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Trans
         Say if the law is Constant.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
         Return True.
@@ -2116,7 +2117,7 @@ class GeomFill_DraftTrihedron(GeomFill_TrihedronLaw, OCP.Standard.Standard_Trans
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -2150,7 +2151,7 @@ class GeomFill_SectionLaw(OCP.Standard.Standard_Transient):
         """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
         """
     def CirclSection(self,Param : float) -> OCP.Geom.Geom_Curve: 
         """
@@ -2166,11 +2167,11 @@ class GeomFill_SectionLaw(OCP.Standard.Standard_Transient):
         """
     def D1(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 aproximation
+        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 aproximation
+        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2194,7 +2195,7 @@ class GeomFill_SectionLaw(OCP.Standard.Standard_Transient):
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles in all sections. This information is usefull to control error in rational approximation. Warning: Used only if <me> IsRational
+        Compute the minimal value of weight for each poles in all sections. This information is useful to control error in rational approximation. Warning: Used only if <me> IsRational
         """
     def GetRefCount(self) -> int: 
         """
@@ -2221,23 +2222,23 @@ class GeomFill_SectionLaw(OCP.Standard.Standard_Transient):
         Say if all sections are equals
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the sections are rationnal or not
@@ -2256,7 +2257,7 @@ class GeomFill_SectionLaw(OCP.Standard.Standard_Transient):
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the greater section. This information is usefull to G1's control. Warning: With an little value, approximation can be slower.
+        Returns the length of the greater section. This information is useful to G1's control. Warning: With an little value, approximation can be slower.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -2276,7 +2277,7 @@ class GeomFill_SectionLaw(OCP.Standard.Standard_Transient):
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -2323,11 +2324,11 @@ class GeomFill_Coons(GeomFill_Filling):
         None
         """
     @overload
-    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     def isRational(self) -> bool: 
         """
         None
@@ -2348,6 +2349,7 @@ class GeomFill_FillingStyle():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2383,11 +2385,11 @@ class GeomFill_Fixed(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2430,32 +2432,32 @@ class GeomFill_Fixed(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         Return True.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
-        Say if the law is defined, only by the 3d Geometry of the setted Curve Return False by Default.
+        Say if the law is defined, only by the 3d Geometry of the set Curve Return False by Default.
         """
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -2493,11 +2495,11 @@ class GeomFill_Frenet(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2544,23 +2546,23 @@ class GeomFill_Frenet(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         Say if the law is Constant.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
         Return True.
@@ -2569,7 +2571,7 @@ class GeomFill_Frenet(GeomFill_TrihedronLaw, OCP.Standard.Standard_Transient):
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -2597,7 +2599,7 @@ class GeomFill_FunctionDraft(OCP.math.math_FunctionSetWithDerivatives, OCP.math.
     """
     None
     """
-    def Deriv2T(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,Param : float,W : float,d2N : OCP.gp.gp_Vec,teta : float,F : OCP.math.math_Vector) -> bool: 
+    def Deriv2T(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Param : float,W : float,d2N : OCP.gp.gp_Vec,teta : float,F : OCP.math.math_Vector) -> bool: 
         """
         returns the values <F> of the T2 derivatives for the parameter Param .
         """
@@ -2605,7 +2607,7 @@ class GeomFill_FunctionDraft(OCP.math.math_FunctionSetWithDerivatives, OCP.math.
         """
         returns the values <T> of the X2 derivatives for the parameter Param .
         """
-    def DerivT(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,Param : float,W : float,dN : OCP.gp.gp_Vec,teta : float,F : OCP.math.math_Vector) -> bool: 
+    def DerivT(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Param : float,W : float,dN : OCP.gp.gp_Vec,teta : float,F : OCP.math.math_Vector) -> bool: 
         """
         returns the values <F> of the T derivatives for the parameter Param .
         """
@@ -2637,7 +2639,7 @@ class GeomFill_FunctionDraft(OCP.math.math_FunctionSetWithDerivatives, OCP.math.
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class GeomFill_FunctionGuide(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -2675,7 +2677,7 @@ class GeomFill_FunctionGuide(OCP.math.math_FunctionSetWithDerivatives, OCP.math.
         """
         returns the values <F> of the functions and the derivatives <D> for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
-    def __init__(self,S : GeomFill_SectionLaw,Guide : OCP.Adaptor3d.Adaptor3d_HCurve,ParamOnLaw : float=0.0) -> None: ...
+    def __init__(self,S : GeomFill_SectionLaw,Guide : OCP.Adaptor3d.Adaptor3d_Curve,ParamOnLaw : float=0.0) -> None: ...
     pass
 class GeomFill_Profiler():
     """
@@ -2703,7 +2705,7 @@ class GeomFill_Profiler():
         """
     def KnotsAndMults(self,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
-        Raises if not yet perform Raises if the lengthes of <Knots> and <Mults> are not equal to NbKnots().
+        Raises if not yet perform Raises if the lengths of <Knots> and <Mults> are not equal to NbKnots().
         """
     def NbKnots(self) -> int: 
         """
@@ -2745,11 +2747,11 @@ class GeomFill_TrihedronWithGuide(GeomFill_TrihedronLaw, OCP.Standard.Standard_T
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        compute Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -2779,7 +2781,7 @@ class GeomFill_TrihedronWithGuide(GeomFill_TrihedronLaw, OCP.Standard.Standard_T
         """
         Get the reference counter of this object
         """
-    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -2796,26 +2798,26 @@ class GeomFill_TrihedronWithGuide(GeomFill_TrihedronLaw, OCP.Standard.Standard_T
         Say if the law is Constant
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
-        Say if the law is defined, only by the 3d Geometry of the setted Curve Return False by Default.
+        Say if the law is defined, only by the 3d Geometry of the set Curve Return False by Default.
         """
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
@@ -2825,7 +2827,7 @@ class GeomFill_TrihedronWithGuide(GeomFill_TrihedronLaw, OCP.Standard.Standard_T
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -2900,7 +2902,7 @@ class GeomFill_GuideTrihedronPlan(GeomFill_TrihedronWithGuide, GeomFill_Trihedro
         """
         Get the reference counter of this object
         """
-    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -2917,26 +2919,26 @@ class GeomFill_GuideTrihedronPlan(GeomFill_TrihedronWithGuide, GeomFill_Trihedro
         Say if the law is Constant
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
-        Say if the law is defined, only by the 3d Geometry of the setted Curve Return False by Default.
+        Say if the law is defined, only by the 3d Geometry of the set Curve Return False by Default.
         """
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
@@ -2946,7 +2948,7 @@ class GeomFill_GuideTrihedronPlan(GeomFill_TrihedronWithGuide, GeomFill_Trihedro
         """
         None
         """
-    def SetCurve(self,thePath : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,thePath : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -2958,7 +2960,7 @@ class GeomFill_GuideTrihedronPlan(GeomFill_TrihedronWithGuide, GeomFill_Trihedro
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,theGuide : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,theGuide : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3036,23 +3038,23 @@ class GeomFill_HArray1OfLocationLaw(GeomFill_Array1OfLocationLaw, OCP.Standard.S
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> GeomFill_LocationLaw: 
         """
         Returns last element
@@ -3094,9 +3096,9 @@ class GeomFill_HArray1OfLocationLaw(GeomFill_Array1OfLocationLaw, OCP.Standard.S
         Constant value access
         """
     @overload
-    def __init__(self,theOther : GeomFill_Array1OfLocationLaw) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : GeomFill_Array1OfLocationLaw) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -3179,23 +3181,23 @@ class GeomFill_HArray1OfSectionLaw(GeomFill_Array1OfSectionLaw, OCP.Standard.Sta
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> GeomFill_SectionLaw: 
         """
         Returns last element
@@ -3237,13 +3239,13 @@ class GeomFill_HArray1OfSectionLaw(GeomFill_Array1OfSectionLaw, OCP.Standard.Sta
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : GeomFill_SectionLaw) -> None: ...
+    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : GeomFill_Array1OfSectionLaw) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : GeomFill_SectionLaw) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3265,14 +3267,14 @@ class GeomFill_SequenceOfAx2(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Ax2) -> None: 
+    def Append(self,theSeq : GeomFill_SequenceOfAx2) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : GeomFill_SequenceOfAx2) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Ax2) -> None: ...
     def Assign(self,theOther : GeomFill_SequenceOfAx2) -> GeomFill_SequenceOfAx2: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3302,23 +3304,23 @@ class GeomFill_SequenceOfAx2(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3380,9 +3382,9 @@ class GeomFill_SequenceOfAx2(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : GeomFill_SequenceOfAx2) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : GeomFill_SequenceOfAx2) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3415,23 +3417,23 @@ class GeomFill_Line(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbPoints(self) -> int: 
         """
         None
@@ -3491,21 +3493,21 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         None
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: 
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: 
         """
         compute Location
 
         compute Location and 2d points
         """
     @overload
-    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
+    def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
+        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,D2M : OCP.gp.gp_Mat,D2V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -3531,7 +3533,7 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
         Get average value of M(t) and V(t) it is usfull to make fast approximation of rational surfaces.
         """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -3568,27 +3570,27 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsIntersec(self) -> bool: 
         """
         Say if the generatrice interset the surface
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRotation(self,Error : float) -> bool: 
         """
         Say if the Location Law, is a rotation of Location The default implementation is " returns False ".
@@ -3617,7 +3619,7 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -3625,13 +3627,13 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
         Sets the bounds of the parametric interval on the function This determines the derivatives in these values if the function is not Cn.
         """
-    def SetStopSurf(self,Surf : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: 
+    def SetStopSurf(self,Surf : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
         """
         None
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def SetTrsf(self,Transfo : OCP.gp.gp_Mat) -> None: 
         """
@@ -3643,7 +3645,7 @@ class GeomFill_LocationDraft(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def TraceNumber(self) -> int: 
         """
-        Give the number of trace (Curves 2d wich are not restriction) Returns 1 (default implementation)
+        Give the number of trace (Curves 2d which are not restriction) Returns 1 (default implementation)
         """
     def __init__(self,Direction : OCP.gp.gp_Dir,Angle : float) -> None: ...
     @staticmethod
@@ -3677,11 +3679,11 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
     def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
+        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,D2M : OCP.gp.gp_Mat,D2V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -3707,7 +3709,7 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
         Get average value of M(t) and V(t) it is usfull to make fast approximation of rational surfaces.
         """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -3727,7 +3729,7 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
         Get the reference counter of this object
         """
-    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -3748,23 +3750,23 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRotation(self,Error : float) -> bool: 
         """
         Say if the Location Law, is a rotation of Location The default implementation is " returns False ".
@@ -3797,7 +3799,7 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -3811,7 +3813,7 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def SetTrsf(self,Transfo : OCP.gp.gp_Mat) -> None: 
         """
@@ -3823,7 +3825,7 @@ class GeomFill_LocationGuide(GeomFill_LocationLaw, OCP.Standard.Standard_Transie
         """
     def TraceNumber(self) -> int: 
         """
-        Give the number of trace (Curves 2d wich are not restriction) Returns 1 (default implementation)
+        Give the number of trace (Curves 2d which are not restriction) Returns 1 (default implementation)
         """
     def __init__(self,Triedre : GeomFill_TrihedronWithGuide) -> None: ...
     @staticmethod
@@ -3856,11 +3858,11 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
     def D0(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec) -> bool: ...
     def D1(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 aproximation
+        compute location 2d points and associated first derivatives. Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,M : OCP.gp.gp_Mat,V : OCP.gp.gp_Vec,DM : OCP.gp.gp_Mat,DV : OCP.gp.gp_Vec,D2M : OCP.gp.gp_Mat,D2V : OCP.gp.gp_Vec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
-        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute location 2d points and associated first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -3882,7 +3884,7 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
         """
         Get average value of M(t) and V(t) it is usfull to make fast approximation of rational surfaces.
         """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -3919,23 +3921,23 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRotation(self,Error : float) -> bool: 
         """
         Say if the Location Law, is a rotation of Location The default implementation is " returns False ".
@@ -3960,7 +3962,7 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -3970,7 +3972,7 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def SetTrsf(self,Transfo : OCP.gp.gp_Mat) -> None: 
         """
@@ -3982,7 +3984,7 @@ class GeomFill_CurveAndTrihedron(GeomFill_LocationLaw, OCP.Standard.Standard_Tra
         """
     def TraceNumber(self) -> int: 
         """
-        Give the number of trace (Curves 2d wich are not restriction) Returns 0 (default implementation)
+        Give the number of trace (Curves 2d which are not restriction) Returns 0 (default implementation)
         """
     def __init__(self,Trihedron : GeomFill_TrihedronLaw) -> None: ...
     @staticmethod
@@ -4006,7 +4008,7 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
         """
     def CirclSection(self,Param : float) -> OCP.Geom.Geom_Curve: 
         """
@@ -4026,11 +4028,11 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         """
     def D1(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 aproximation
+        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 aproximation
+        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -4054,7 +4056,7 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles in all sections. This information is usefull to control error in rational approximation. Warning: Used only if <me> IsRational
+        Compute the minimal value of weight for each poles in all sections. This information is useful to control error in rational approximation. Warning: Used only if <me> IsRational
         """
     def GetRefCount(self) -> int: 
         """
@@ -4081,23 +4083,23 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         return True If the Law isConstant
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the sections are rationnal or not
@@ -4116,7 +4118,7 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the greater section. This information is usefull to G1's control. Warning: With an little value, approximation can be slower.
+        Returns the length of the greater section. This information is useful to G1's control. Warning: With an little value, approximation can be slower.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -4140,7 +4142,7 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -4149,9 +4151,11 @@ class GeomFill_NSections(GeomFill_SectionLaw, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
     @overload
-    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
+    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float) -> None: ...
     @overload
     def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float,VF : float,VL : float) -> None: ...
+    @overload
+    def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,NP : OCP.TColStd.TColStd_SequenceOfReal) -> None: ...
     @overload
     def __init__(self,NC : OCP.TColGeom.TColGeom_SequenceOfCurve,Trsfs : GeomFill_SequenceOfTrsf,NP : OCP.TColStd.TColStd_SequenceOfReal,UF : float,UL : float,VF : float,VL : float,Surf : OCP.Geom.Geom_BSplineSurface) -> None: ...
     @staticmethod
@@ -4195,7 +4199,7 @@ class GeomFill_Pipe():
     @overload
     def GenerateParticularCase(self,B : bool) -> None: ...
     @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: 
+    def Init(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_Curve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: 
         """
         None
 
@@ -4214,19 +4218,19 @@ class GeomFill_Pipe():
         Initializes this pipe algorithm to build the following surface: - a pipe with a constant circular section of radius Radius along the path Path, or - a pipe with constant section FirstSect along the path Path, or - a pipe where the section evolves from FirstSect to LastSect along the path Path. Use the function Perform to build the surface. Note: a description of the resulting surface is given under Constructors.
         """
     @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_HCurve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: ...
+    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def Init(self,Path : OCP.Adaptor3d.Adaptor3d_Curve,Curve1 : OCP.Adaptor3d.Adaptor3d_Curve,Curve2 : OCP.Adaptor3d.Adaptor3d_Curve,Radius : float) -> None: ...
+    @overload
+    def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,NSections : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Option : GeomFill_Trihedron=GeomFill_Trihedron.GeomFill_IsCorrectedFrenet) -> None: ...
     @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
-    @overload
-    def Init(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
+    def Init(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Dir : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def Init(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns whether approximation was done.
@@ -4249,25 +4253,25 @@ class GeomFill_Pipe():
         Returns the surface built by this algorithm. Warning Do not use this function before the surface is built (in this case the function will return a null handle).
         """
     @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Option : GeomFill_Trihedron=GeomFill_Trihedron.GeomFill_IsCorrectedFrenet) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,Curve1 : OCP.Geom.Geom_Curve,Curve2 : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
+    def __init__(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_Curve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: ...
     @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Dir : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,Guide : OCP.Adaptor3d.Adaptor3d_HCurve,FirstSect : OCP.Geom.Geom_Curve,ByACR : bool,rotat : bool) -> None: ...
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
     def __init__(self,Path : OCP.Geom2d.Geom2d_Curve,Support : OCP.Geom.Geom_Surface,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,Curve1 : OCP.Geom.Geom_Curve,Curve2 : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
     @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,NSections : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_Curve,Curve1 : OCP.Adaptor3d.Adaptor3d_Curve,Curve2 : OCP.Adaptor3d.Adaptor3d_Curve,Radius : float) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,Option : GeomFill_Trihedron=GeomFill_Trihedron.GeomFill_IsCorrectedFrenet) -> None: ...
     pass
 class GeomFill_PipeError():
     """
@@ -4286,6 +4290,7 @@ class GeomFill_PipeError():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4340,7 +4345,7 @@ class GeomFill_PlanFunc(OCP.math.math_FunctionWithDerivative, OCP.math.math_Func
         """
         computes the value <F> and the derivative <D> of the function for the variable <X>. Returns True if the calculation were successfully done, False otherwise.
         """
-    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     pass
 class GeomFill_PolynomialConvertor():
     """
@@ -4395,7 +4400,7 @@ class GeomFill_Generator(GeomFill_Profiler):
         """
     def KnotsAndMults(self,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
-        Raises if not yet perform Raises if the lengthes of <Knots> and <Mults> are not equal to NbKnots().
+        Raises if not yet perform Raises if the lengths of <Knots> and <Mults> are not equal to NbKnots().
         """
     def NbKnots(self) -> int: 
         """
@@ -4486,7 +4491,7 @@ class GeomFill_SectionGenerator(GeomFill_Profiler):
         """
     def KnotsAndMults(self,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
-        Raises if not yet perform Raises if the lengthes of <Knots> and <Mults> are not equal to NbKnots().
+        Raises if not yet perform Raises if the lengths of <Knots> and <Mults> are not equal to NbKnots().
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -4513,14 +4518,14 @@ class GeomFill_SectionGenerator(GeomFill_Profiler):
         returns in <Poles> the poles of the BSplineCurve from index <Index> adjusting to the current profile. Raises if not yet perform Raises if <Index> not in the range [1,NbCurves] if the length of <Poles> is not equal to NbPoles().
         """
     @overload
-    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
 
         None
         """
     @overload
-    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def SetParam(self,Params : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         None
@@ -4541,7 +4546,7 @@ class GeomFill_EvolvedSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
         """
     def CirclSection(self,Param : float) -> OCP.Geom.Geom_Curve: 
         """
@@ -4557,11 +4562,11 @@ class GeomFill_EvolvedSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def D1(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 aproximation
+        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 aproximation
+        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -4585,7 +4590,7 @@ class GeomFill_EvolvedSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles in all sections. This information is usefull to control error in rational approximation. Warning: Used only if <me> IsRational
+        Compute the minimal value of weight for each poles in all sections. This information is useful to control error in rational approximation. Warning: Used only if <me> IsRational
         """
     def GetRefCount(self) -> int: 
         """
@@ -4612,23 +4617,23 @@ class GeomFill_EvolvedSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         return True If the Law isConstant
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the sections are rationnal or not
@@ -4647,7 +4652,7 @@ class GeomFill_EvolvedSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the greater section. This information is usefull to G1's control. Warning: With an little value, approximation can be slower.
+        Returns the length of the greater section. This information is useful to G1's control. Warning: With an little value, approximation can be slower.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -4667,7 +4672,7 @@ class GeomFill_EvolvedSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -4703,7 +4708,7 @@ class GeomFill_SectionPlacement():
         """
     def ModifiedSection(self,WithTranslation : bool) -> OCP.Geom.Geom_Curve: 
         """
-        Compute the Section, in the coordinate syteme given by the Location Law. To have the Normal to section equal to the Location Law Normal. If <WithTranslation> contact beetween <Section> and <Path> is forced.
+        Compute the Section, in the coordinate system given by the Location Law. To have the Normal to section equal to the Location Law Normal. If <WithTranslation> contact between <Section> and <Path> is forced.
         """
     def ParameterOnPath(self) -> float: 
         """
@@ -4714,7 +4719,7 @@ class GeomFill_SectionPlacement():
         None
         """
     @overload
-    def Perform(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Tol : float) -> None: 
+    def Perform(self,Tol : float) -> None: 
         """
         None
 
@@ -4722,13 +4727,13 @@ class GeomFill_SectionPlacement():
 
         None
         """
+    @overload
+    def Perform(self,Path : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> None: ...
     @overload
     def Perform(self,ParamOnPath : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,Tol : float) -> None: ...
     def Section(self,WithTranslation : bool) -> OCP.Geom.Geom_Curve: 
         """
-        Compute the Section, in the coordinate syteme given by the Location Law. If <WithTranslation> contact beetween <Section> and <Path> is forced.
+        Compute the Section, in the coordinate system given by the Location Law. If <WithTranslation> contact between <Section> and <Path> is forced.
         """
     def SetLocation(self,L : GeomFill_LocationLaw) -> None: 
         """
@@ -4807,45 +4812,45 @@ class GeomFill_HSequenceOfAx2(GeomFill_SequenceOfAx2, OCP.NCollection.NCollectio
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfAx2) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Ax2) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> OCP.gp.gp_Ax2: 
         """
         Last item access
@@ -4909,9 +4914,9 @@ class GeomFill_HSequenceOfAx2(GeomFill_SequenceOfAx2, OCP.NCollection.NCollectio
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : GeomFill_SequenceOfAx2) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : GeomFill_SequenceOfAx2) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4938,14 +4943,14 @@ class GeomFill_SequenceOfTrsf(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.gp.gp_Trsf) -> None: 
+    def Append(self,theSeq : GeomFill_SequenceOfTrsf) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : GeomFill_SequenceOfTrsf) -> None: ...
+    def Append(self,theItem : OCP.gp.gp_Trsf) -> None: ...
     def Assign(self,theOther : GeomFill_SequenceOfTrsf) -> GeomFill_SequenceOfTrsf: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4984,14 +4989,14 @@ class GeomFill_SequenceOfTrsf(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : GeomFill_SequenceOfTrsf) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfTrsf) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Trsf) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.gp.gp_Trsf) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : GeomFill_SequenceOfTrsf) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5009,14 +5014,14 @@ class GeomFill_SequenceOfTrsf(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : GeomFill_SequenceOfTrsf) -> None: 
+    def Prepend(self,theItem : OCP.gp.gp_Trsf) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.gp.gp_Trsf) -> None: ...
+    def Prepend(self,theSeq : GeomFill_SequenceOfTrsf) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -5108,23 +5113,23 @@ class GeomFill_SimpleBound(GeomFill_Boundary, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Norm(self,U : float) -> OCP.gp.gp_Vec: 
         """
         None
@@ -5163,7 +5168,7 @@ class GeomFill_SimpleBound(GeomFill_Boundary, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_HCurve,Tol3d : float,Tolang : float) -> None: ...
+    def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,Tol3d : float,Tolang : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5175,7 +5180,7 @@ class GeomFill_SimpleBound(GeomFill_Boundary, OCP.Standard.Standard_Transient):
         None
         """
     pass
-class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
+class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Transient):
     """
     to represent function C'(t)^C''(t)
     """
@@ -5215,7 +5220,19 @@ class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if N < 1.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
     def Degree(self) -> int: 
+        """
+        None
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -5227,6 +5244,10 @@ class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         Returns the type of the curve in the current interval : Line, Circle, Ellipse, Hyperbola, Parabola, BezierCurve, BSplineCurve, OtherCurve.
@@ -5234,6 +5255,10 @@ class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
     def Hyperbola(self) -> OCP.gp.gp_Hypr: 
         """
         None
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
         """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
@@ -5243,6 +5268,24 @@ class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -5291,7 +5334,15 @@ class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def ShallowCopy(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
+        """
+        Shallow copy of adaptor
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion. If <First> >= <Last>
         """
@@ -5299,21 +5350,31 @@ class GeomFill_SnglrFunc(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         Computes the point of parameter U on the curve.
         """
-    def __init__(self,HC : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,HC : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class GeomFill_Stretch(GeomFill_Filling):
     """
     None
     """
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def Init(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def NbUPoles(self) -> int: 
         """
         None
@@ -5331,11 +5392,11 @@ class GeomFill_Stretch(GeomFill_Filling):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt,W1 : OCP.TColStd.TColStd_Array1OfReal,W2 : OCP.TColStd.TColStd_Array1OfReal,W3 : OCP.TColStd.TColStd_Array1OfReal,W4 : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self,P1 : OCP.TColgp.TColgp_Array1OfPnt,P2 : OCP.TColgp.TColgp_Array1OfPnt,P3 : OCP.TColgp.TColgp_Array1OfPnt,P4 : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def isRational(self) -> bool: 
         """
         None
@@ -5347,7 +5408,7 @@ class GeomFill_Sweep():
     """
     def Build(self,Section : GeomFill_SectionLaw,Methode : GeomFill_ApproxStyle=GeomFill_ApproxStyle.GeomFill_Location,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Degmax : int=10,Segmax : int=30) -> None: 
         """
-        Build the Sweeep Surface ApproxStyle defines Approximation Strategy - GeomFill_Section : The composed Function : Location X Section is directly approximed. - GeomFill_Location : The location law is approximed, and the SweepSurface is build algebric composition of approximed location law and section law This option is Ok, if Section.Surface() methode is effective. Continuity : The continuity in v waiting on the surface Degmax : The maximum degree in v requiered on the surface Segmax : The maximum number of span in v requiered on the surface
+        Build the Sweeep Surface ApproxStyle defines Approximation Strategy - GeomFill_Section : The composed Function : Location X Section is directly approximated. - GeomFill_Location : The location law is approximated, and the SweepSurface is build algebric composition of approximated location law and section law This option is Ok, if Section.Surface() methode is effective. Continuity : The continuity in v waiting on the surface Degmax : The maximum degree in v required on the surface Segmax : The maximum number of span in v required on the surface
         """
     def ErrorOnRestriction(self,IsFirst : bool) -> Tuple[float, float]: 
         """
@@ -5379,7 +5440,7 @@ class GeomFill_Sweep():
         """
     def SetDomain(self,First : float,Last : float,SectionFirst : float,SectionLast : float) -> None: 
         """
-        Set parametric information [<First>, <Last>] Sets the parametric bound of the sweeping surface to build. <SectionFirst>, <SectionLast> gives coresponding bounds parameter on the section law of <First> and <Last>
+        Set parametric information [<First>, <Last>] Sets the parametric bound of the sweeping surface to build. <SectionFirst>, <SectionLast> gives corresponding bounds parameter on the section law of <First> and <Last>
         """
     def SetForceApproxC1(self,ForceApproxC1 : bool) -> None: 
         """
@@ -5387,7 +5448,7 @@ class GeomFill_Sweep():
         """
     def SetTolerance(self,Tol3d : float,BoundTol : float=1.0,Tol2d : float=1e-05,TolAngular : float=1.0) -> None: 
         """
-        Set Approximation Tolerance Tol3d : Tolerance to surface approximation Tol2d : Tolerance used to perform curve approximation Normaly the 2d curve are approximated with a tolerance given by the resolution method define in <LocationLaw> but if this tolerance is too large Tol2d is used. TolAngular : Tolerance (in radian) to control the angle beetween tangents on the section law and tangent of iso-v on approximed surface
+        Set Approximation Tolerance Tol3d : Tolerance to surface approximation Tol2d : Tolerance used to perform curve approximation Normally the 2d curve are approximated with a tolerance given by the resolution method define in <LocationLaw> but if this tolerance is too large Tol2d is used. TolAngular : Tolerance (in radian) to control the angle between tangents on the section law and tangent of iso-v on approximated surface
         """
     def Surface(self) -> OCP.Geom.Geom_Surface: 
         """
@@ -5409,11 +5470,11 @@ class GeomFill_Sweep():
     pass
 class GeomFill_SweepFunction(OCP.Approx.Approx_SweepFunction, OCP.Standard.Standard_Transient):
     """
-    Function to approximate by SweepApproximation from Approx. To bulid general sweep Surface.Function to approximate by SweepApproximation from Approx. To bulid general sweep Surface.Function to approximate by SweepApproximation from Approx. To bulid general sweep Surface.
+    Function to approximate by SweepApproximation from Approx. To build general sweep Surface.Function to approximate by SweepApproximation from Approx. To build general sweep Surface.Function to approximate by SweepApproximation from Approx. To build general sweep Surface.
     """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditionned rational approximation. Warning: Used only if <me> IsRational
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
         """
     def D0(self,Param : float,First : float,Last : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
@@ -5441,7 +5502,7 @@ class GeomFill_SweepFunction(OCP.Approx.Approx_SweepFunction, OCP.Standard.Stand
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles of all sections. This information is usefull to perform well conditionned rational approximation. Warning: Used only if <me> IsRational
+        Compute the minimal value of weight for each poles of all sections. This information is useful to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
         """
     def GetRefCount(self) -> int: 
         """
@@ -5460,26 +5521,26 @@ class GeomFill_SweepFunction(OCP.Approx.Approx_SweepFunction, OCP.Standard.Stand
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
-        Returns if the section is rationnal or not
+        Returns if the section is rational or not
         """
     def Knots(self,TKnots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -5487,7 +5548,7 @@ class GeomFill_SweepFunction(OCP.Approx.Approx_SweepFunction, OCP.Standard.Stand
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the maximum section. This information is usefull to perform well conditionned rational approximation.
+        Returns the length of the maximum section. This information is useful to perform well conditioned rational approximation.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -5507,7 +5568,7 @@ class GeomFill_SweepFunction(OCP.Approx.Approx_SweepFunction, OCP.Standard.Stand
         """
     def SectionShape(self) -> Tuple[int, int, int]: 
         """
-        get the format of an section
+        get the format of a section
         """
     def SetInterval(self,First : float,Last : float) -> None: 
         """
@@ -5542,7 +5603,7 @@ class GeomFill_SweepSectionGenerator():
         None
         """
     @overload
-    def Init(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: 
+    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: 
         """
         None
 
@@ -5552,10 +5613,10 @@ class GeomFill_SweepSectionGenerator():
 
         None
         """
+    @overload
+    def Init(self,Path : OCP.Adaptor3d.Adaptor3d_Curve,Curve1 : OCP.Adaptor3d.Adaptor3d_Curve,Curve2 : OCP.Adaptor3d.Adaptor3d_Curve,Radius : float) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
-    @overload
-    def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
     def Init(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     def Knots(self,TKnots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
@@ -5594,15 +5655,15 @@ class GeomFill_SweepSectionGenerator():
         raised if <Index> not in the range [1,NbSections()]
         """
     @overload
+    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_Curve,Curve1 : OCP.Adaptor3d.Adaptor3d_Curve,Curve2 : OCP.Adaptor3d.Adaptor3d_Curve,Radius : float) -> None: ...
+    @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,Radius : float) -> None: ...
     @overload
     def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve,LastSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def __init__(self,Path : OCP.Adaptor3d.Adaptor3d_HCurve,Curve1 : OCP.Adaptor3d.Adaptor3d_HCurve,Curve2 : OCP.Adaptor3d.Adaptor3d_HCurve,Radius : float) -> None: ...
+    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.Geom.Geom_Curve,FirstSect : OCP.Geom.Geom_Curve) -> None: ...
     pass
 class GeomFill_Tensor():
     """
@@ -5654,23 +5715,23 @@ class GeomFill_TgtField(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsScalable(self) -> bool: 
         """
         None
@@ -5703,14 +5764,14 @@ class GeomFill_TgtOnCoons(GeomFill_TgtField, OCP.Standard.Standard_Transient):
     Defines an algorithmic tangents field on a boundary of a CoonsAlgPatch.Defines an algorithmic tangents field on a boundary of a CoonsAlgPatch.Defines an algorithmic tangents field on a boundary of a CoonsAlgPatch.
     """
     @overload
-    def D1(self,W : float) -> OCP.gp.gp_Vec: 
+    def D1(self,W : float,T : OCP.gp.gp_Vec,DT : OCP.gp.gp_Vec) -> None: 
         """
         Computes the derivative of the field of tangency at parameter W.
 
         Computes the value and the derivative of the field of tangency at parameter W.
         """
     @overload
-    def D1(self,W : float,T : OCP.gp.gp_Vec,DT : OCP.gp.gp_Vec) -> None: ...
+    def D1(self,W : float) -> OCP.gp.gp_Vec: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -5732,23 +5793,23 @@ class GeomFill_TgtOnCoons(GeomFill_TgtField, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsScalable(self) -> bool: 
         """
         None
@@ -5806,6 +5867,7 @@ class GeomFill_Trihedron():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -5848,11 +5910,11 @@ class GeomFill_ConstantBiNormal(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tra
         """
     def D1(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        Computes Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 aproximation
+        Computes Triedrhon and derivative Trihedron on curve at parameter <Param> Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Tangent : OCP.gp.gp_Vec,DTangent : OCP.gp.gp_Vec,D2Tangent : OCP.gp.gp_Vec,Normal : OCP.gp.gp_Vec,DNormal : OCP.gp.gp_Vec,D2Normal : OCP.gp.gp_Vec,BiNormal : OCP.gp.gp_Vec,DBiNormal : OCP.gp.gp_Vec,D2BiNormal : OCP.gp.gp_Vec) -> bool: 
         """
-        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 aproximation
+        compute Trihedron on curve first and seconde derivatives. Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -5895,23 +5957,23 @@ class GeomFill_ConstantBiNormal(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tra
         Says if the law is Constant.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
         Return True.
@@ -5920,7 +5982,7 @@ class GeomFill_ConstantBiNormal(GeomFill_TrihedronLaw, OCP.Standard.Standard_Tra
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -5996,7 +6058,7 @@ class GeomFill_GuideTrihedronAC(GeomFill_TrihedronWithGuide, GeomFill_TrihedronL
         """
         Get the reference counter of this object
         """
-    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def Guide(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         None
         """
@@ -6013,26 +6075,26 @@ class GeomFill_GuideTrihedronAC(GeomFill_TrihedronWithGuide, GeomFill_TrihedronL
         Say if the law is Constant
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnlyBy3dCurve(self) -> bool: 
         """
-        Say if the law is defined, only by the 3d Geometry of the setted Curve Return False by Default.
+        Say if the law is defined, only by the 3d Geometry of the set Curve Return False by Default.
         """
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
@@ -6042,7 +6104,7 @@ class GeomFill_GuideTrihedronAC(GeomFill_TrihedronWithGuide, GeomFill_TrihedronL
         """
         None
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         None
         """
@@ -6054,7 +6116,7 @@ class GeomFill_GuideTrihedronAC(GeomFill_TrihedronWithGuide, GeomFill_TrihedronL
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def __init__(self,guide : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: ...
+    def __init__(self,guide : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6076,7 +6138,7 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def BarycentreOfSurf(self) -> OCP.gp.gp_Pnt: 
         """
-        Get the barycentre of Surface. An very poor estimation is sufficent. This information is usefull to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
+        Get the barycentre of Surface. An very poor estimation is sufficient. This information is useful to perform well conditioned rational approximation. Warning: Used only if <me> IsRational
         """
     def CirclSection(self,Param : float) -> OCP.Geom.Geom_Curve: 
         """
@@ -6092,11 +6154,11 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def D1(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 aproximation
+        compute the first derivative in v direction of the section for v = param Warning : It used only for C1 or C2 approximation
         """
     def D2(self,Param : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
-        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 aproximation
+        compute the second derivative in v direction of the section for v = param Warning : It used only for C2 approximation
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -6120,7 +6182,7 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def GetMinimalWeight(self,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
-        Compute the minimal value of weight for each poles in all sections. This information is usefull to control error in rational approximation. Warning: Used only if <me> IsRational
+        Compute the minimal value of weight for each poles in all sections. This information is useful to control error in rational approximation. Warning: Used only if <me> IsRational
         """
     def GetRefCount(self) -> int: 
         """
@@ -6147,23 +6209,23 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         return True
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the sections are rationnal or not
@@ -6182,7 +6244,7 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def MaximalSection(self) -> float: 
         """
-        Returns the length of the greater section. This information is usefull to G1's control. Warning: With an little value, approximation can be slower.
+        Returns the length of the greater section. This information is useful to G1's control. Warning: With an little value, approximation can be slower.
         """
     def Mults(self,TMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -6202,7 +6264,7 @@ class GeomFill_UniformSection(GeomFill_SectionLaw, OCP.Standard.Standard_Transie
         """
     def SetTolerance(self,Tol3d : float,Tol2d : float) -> None: 
         """
-        Is usefull, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
+        Is useful, if (me) have to run numerical algorithm to perform D0, D1 or D2 The default implementation make nothing.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """

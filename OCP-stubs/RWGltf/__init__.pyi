@@ -5,21 +5,18 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TDF
-import OCP.TShort
-import OCP.TColgp
-import OCP.Bnd
-import OCP.Standard
-import OCP.Poly
+import OCP.TopTools
 import OCP.Quantity
+import OCP.Poly
 import OCP.TDocStd
-import OCP.XCAFDoc
-import OCP.TColStd
-import OCP.TCollection
-import io
-import OCP.Message
-import OCP.gp
-import OCP.Image
 import OCP.XCAFPrs
+import OCP.Image
+import OCP.Standard
+import OCP.TColStd
+import OCP.Message
+import OCP.BRepExtrema
+import OCP.XCAFDoc
+import OCP.TCollection
 __all__  = [
 "RWGltf_CafReader",
 "RWGltf_CafWriter",
@@ -31,6 +28,7 @@ __all__  = [
 "RWGltf_GltfBufferView",
 "RWGltf_GltfBufferViewTarget",
 "RWGltf_GltfFace",
+"RWGltf_GltfJsonParser",
 "RWGltf_GltfLatePrimitiveArray",
 "RWGltf_GltfMaterialMap",
 "RWGltf_GltfOStreamWriter",
@@ -38,10 +36,8 @@ __all__  = [
 "RWGltf_GltfPrimitiveMode",
 "RWGltf_GltfRootElement",
 "RWGltf_GltfSceneNodeMap",
-"RWGltf_GltfSharedIStream",
 "RWGltf_MaterialCommon",
 "RWGltf_MaterialMetallicRoughness",
-"RWGltf_PrimitiveArrayReader",
 "RWGltf_TriangulationReader",
 "RWGltf_WriterTrsfFormat",
 "RWGltf_GltfParseAccessorType",
@@ -121,6 +117,18 @@ class RWGltf_CafReader():
         """
         None
         """
+    def IsDoublePrecision(self) -> bool: 
+        """
+        Return flag to fill in triangulation using double or single precision; FALSE by default.
+        """
+    def SetDoublePrecision(self,theIsDouble : bool) -> None: 
+        """
+        Set flag to fill in triangulation using double or single precision.
+        """
+    def SetLoadAllScenes(self,theToLoadAll : bool) -> None: 
+        """
+        Set flag to flag to load all scenes in the document, FALSE by default which means only main (default) scene will be loaded.
+        """
     def SetMeshNameAsFallback(self,theToFallback : bool) -> None: 
         """
         Set flag to use Mesh name in case if Node name is empty.
@@ -133,13 +141,41 @@ class RWGltf_CafReader():
         """
         Set flag to ignore nodes without Geometry.
         """
+    def SetToKeepLateData(self,theToKeep : bool) -> None: 
+        """
+        Sets flag to keep information about deferred storage to load/unload data later.
+        """
+    def SetToPrintDebugMessages(self,theToPrint : bool) -> None: 
+        """
+        Sets flag to print debug information.
+        """
+    def SetToSkipLateDataLoading(self,theToSkip : bool) -> None: 
+        """
+        Sets flag to skip data loading.
+        """
+    def ToKeepLateData(self) -> bool: 
+        """
+        Returns TRUE if data should be loaded into itself without its transfering to new structure. It allows to keep information about deferred storage to load/unload this data later. TRUE by default.
+        """
+    def ToLoadAllScenes(self) -> bool: 
+        """
+        Return TRUE if all scenes in the document should be loaded, FALSE by default which means only main (default) scene will be loaded.
+        """
     def ToParallel(self) -> bool: 
         """
         Return TRUE if multithreaded optimizations are allowed; FALSE by default.
         """
+    def ToPrintDebugMessages(self) -> bool: 
+        """
+        Returns TRUE if additional debug information should be print; FALSE by default.
+        """
     def ToSkipEmptyNodes(self) -> bool: 
         """
         Return TRUE if Nodes without Geometry should be ignored, TRUE by default.
+        """
+    def ToSkipLateDataLoading(self) -> bool: 
+        """
+        Returns TRUE if data loading should be skipped and can be performed later; FALSE by default.
         """
     def ToUseMeshNameAsFallback(self) -> bool: 
         """
@@ -202,32 +238,40 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         Return TRUE to export UV coordinates even if there are no mapped texture; FALSE by default.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def MeshNameFormat(self) -> RWMesh_NameFormat: 
+        """
+        Return name format for exporting Meshes; RWMesh_NameFormat_Product by default.
+        """
+    def NodeNameFormat(self) -> RWMesh_NameFormat: 
+        """
+        Return name format for exporting Nodes; RWMesh_NameFormat_InstanceOrProduct by default.
+        """
     @overload
-    def Perform(self,theDocument : OCP.TDocStd.TDocStd_Document,theRootLabels : OCP.TDF.TDF_LabelSequence,theLabelFilter : OCP.TColStd.TColStd_MapOfAsciiString,theFileInfo : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theProgress : OCP.Message.Message_ProgressRange) -> bool: 
+    def Perform(self,theDocument : OCP.TDocStd.TDocStd_Document,theFileInfo : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theProgress : OCP.Message.Message_ProgressRange) -> bool: 
         """
         Write glTF file and associated binary file. Triangulation data should be precomputed within shapes!
 
         Write glTF file and associated binary file. Triangulation data should be precomputed within shapes!
         """
     @overload
-    def Perform(self,theDocument : OCP.TDocStd.TDocStd_Document,theFileInfo : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theProgress : OCP.Message.Message_ProgressRange) -> bool: ...
+    def Perform(self,theDocument : OCP.TDocStd.TDocStd_Document,theRootLabels : OCP.TDF.TDF_LabelSequence,theLabelFilter : OCP.TColStd.TColStd_MapOfAsciiString,theFileInfo : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theProgress : OCP.Message.Message_ProgressRange) -> bool: ...
     def SetCoordinateSystemConverter(self,theConverter : RWMesh_CoordinateSystemConverter) -> None: 
         """
         Set transformation from OCCT to glTF coordinate system.
@@ -240,6 +284,26 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         """
         Set flag to export UV coordinates even if there are no mapped texture; FALSE by default.
         """
+    def SetMergeFaces(self,theToMerge : bool) -> None: 
+        """
+        Set flag to merge faces within a single part. May reduce JSON size thanks to smaller number of primitive arrays.
+        """
+    def SetMeshNameFormat(self,theFormat : RWMesh_NameFormat) -> None: 
+        """
+        Set name format for exporting Meshes.
+        """
+    def SetNodeNameFormat(self,theFormat : RWMesh_NameFormat) -> None: 
+        """
+        Set name format for exporting Nodes.
+        """
+    def SetSplitIndices16(self,theToSplit : bool) -> None: 
+        """
+        Set flag to prefer keeping 16-bit indexes while merging face. Has effect only with ToMergeFaces() option turned ON. May reduce binary data size thanks to smaller triangle indexes.
+        """
+    def SetToEmbedTexturesInGlb(self,theToEmbedTexturesInGlb : bool) -> None: 
+        """
+        Set flag to write image textures into GLB file (binary gltf export).
+        """
     def SetTransformationFormat(self,theFormat : RWGltf_WriterTrsfFormat) -> None: 
         """
         Set preferred transformation format for writing into glTF file.
@@ -247,6 +311,18 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def ToEmbedTexturesInGlb(self) -> bool: 
+        """
+        Return flag to write image textures into GLB file (binary gltf export); TRUE by default. When set to FALSE, texture images will be written as separate files. Has no effect on writing into non-binary format.
+        """
+    def ToMergeFaces(self) -> bool: 
+        """
+        Return flag to merge faces within a single part; FALSE by default.
+        """
+    def ToSplitIndices16(self) -> bool: 
+        """
+        Return flag to prefer keeping 16-bit indexes while merging face; FALSE by default.
         """
     def TransformationFormat(self) -> RWGltf_WriterTrsfFormat: 
         """
@@ -309,6 +385,7 @@ class RWGltf_GltfAccessorCompType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -359,6 +436,7 @@ class RWGltf_GltfAccessorLayout():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -400,6 +478,7 @@ class RWGltf_GltfAlphaMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -448,6 +527,7 @@ class RWGltf_GltfArrayType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -504,6 +584,7 @@ class RWGltf_GltfBufferViewTarget():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -525,11 +606,63 @@ class RWGltf_GltfBufferViewTarget():
     __entries: dict # value = {'RWGltf_GltfBufferViewTarget_UNKNOWN': (<RWGltf_GltfBufferViewTarget.RWGltf_GltfBufferViewTarget_UNKNOWN: 0>, None), 'RWGltf_GltfBufferViewTarget_ARRAY_BUFFER': (<RWGltf_GltfBufferViewTarget.RWGltf_GltfBufferViewTarget_ARRAY_BUFFER: 34962>, None), 'RWGltf_GltfBufferViewTarget_ELEMENT_ARRAY_BUFFER': (<RWGltf_GltfBufferViewTarget.RWGltf_GltfBufferViewTarget_ELEMENT_ARRAY_BUFFER: 34963>, None)}
     __members__: dict # value = {'RWGltf_GltfBufferViewTarget_UNKNOWN': <RWGltf_GltfBufferViewTarget.RWGltf_GltfBufferViewTarget_UNKNOWN: 0>, 'RWGltf_GltfBufferViewTarget_ARRAY_BUFFER': <RWGltf_GltfBufferViewTarget.RWGltf_GltfBufferViewTarget_ARRAY_BUFFER: 34962>, 'RWGltf_GltfBufferViewTarget_ELEMENT_ARRAY_BUFFER': <RWGltf_GltfBufferViewTarget.RWGltf_GltfBufferViewTarget_ELEMENT_ARRAY_BUFFER: 34963>}
     pass
-class RWGltf_GltfFace():
+class RWGltf_GltfFace(OCP.Standard.Standard_Transient):
     """
     Low-level glTF data structure holding single Face (one primitive array) definition.
     """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns a type descriptor about this object.
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
     def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        Returns type descriptor of Standard_Transient class
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     @property
     def Indices(self) -> RWGltf_GltfAccessor:
         """
@@ -537,6 +670,14 @@ class RWGltf_GltfFace():
         """
     @Indices.setter
     def Indices(self, arg0: RWGltf_GltfAccessor) -> None:
+        pass
+    @property
+    def NbIndexedNodes(self) -> int:
+        """
+        :type: int
+        """
+    @NbIndexedNodes.setter
+    def NbIndexedNodes(self, arg0: int) -> None:
         pass
     @property
     def NodeNorm(self) -> RWGltf_GltfAccessor:
@@ -562,10 +703,92 @@ class RWGltf_GltfFace():
     @NodeUV.setter
     def NodeUV(self, arg0: RWGltf_GltfAccessor) -> None:
         pass
+    @property
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape:
+        """
+        :type: OCP.TopoDS.TopoDS_Shape
+        """
+    @Shape.setter
+    def Shape(self, arg0: OCP.TopoDS.TopoDS_Shape) -> None:
+        pass
+    @property
+    def Style(self) -> OCP.XCAFPrs.XCAFPrs_Style:
+        """
+        :type: OCP.XCAFPrs.XCAFPrs_Style
+        """
+    @Style.setter
+    def Style(self, arg0: OCP.XCAFPrs.XCAFPrs_Style) -> None:
+        pass
     pass
-class RWGltf_GltfLatePrimitiveArray(OCP.Poly.Poly_Triangulation, OCP.Standard.Standard_Transient):
+class RWGltf_GltfJsonParser():
     """
-    Mesh data wrapper for delayed primitive array loading from glTF file. Class inherits Poly_Triangulation so that it can be put temporarily into TopoDS_Face within assembly structure, to be replaced with proper Poly_Triangulation loaded later on.
+    INTERNAL tool for parsing glTF document (JSON structure).
+    """
+    def CoordinateSystemConverter(self) -> RWMesh_CoordinateSystemConverter: 
+        """
+        Return transformation from glTF to OCCT coordinate system.
+        """
+    def ErrorPrefix(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return prefix for reporting issues.
+        """
+    def FaceList(self) -> OCP.BRepExtrema.BRepExtrema_ShapeList: 
+        """
+        Return face list for loading triangulation.
+        """
+    def Parse(self,theProgress : OCP.Message.Message_ProgressRange) -> bool: 
+        """
+        Parse glTF document.
+        """
+    def SetAttributeMap(self,theAttribMap : Any) -> None: 
+        """
+        Set map for storing node attributes.
+        """
+    def SetBinaryFormat(self,theBinBodyOffset : int,theBinBodyLen : int) -> None: 
+        """
+        Initialize binary format.
+        """
+    def SetCoordinateSystemConverter(self,theConverter : RWMesh_CoordinateSystemConverter) -> None: 
+        """
+        Set transformation from glTF to OCCT coordinate system.
+        """
+    def SetErrorPrefix(self,theErrPrefix : OCP.TCollection.TCollection_AsciiString) -> None: 
+        """
+        Set prefix for reporting issues.
+        """
+    def SetExternalFiles(self,theExternalFiles : Any) -> None: 
+        """
+        Set list for storing external files.
+        """
+    def SetFilePath(self,theFilePath : OCP.TCollection.TCollection_AsciiString) -> None: 
+        """
+        Set file path.
+        """
+    def SetLoadAllScenes(self,theToLoadAll : bool) -> None: 
+        """
+        Set flag to flag to load all scenes in the document, FALSE by default which means only main (default) scene will be loaded.
+        """
+    def SetMeshNameAsFallback(self,theToFallback : bool) -> None: 
+        """
+        Set flag to use Mesh name in case if Node name is empty, TRUE by default.
+        """
+    def SetMetadata(self,theMetadata : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: 
+        """
+        Set metadata map.
+        """
+    def SetProbeHeader(self,theToProbe : bool) -> None: 
+        """
+        Set flag for probing file without complete reading.
+        """
+    def SetSkipEmptyNodes(self,theToSkip : bool) -> None: 
+        """
+        Set flag to ignore nodes without Geometry, TRUE by default.
+        """
+    def __init__(self,theRootShapes : OCP.TopTools.TopTools_SequenceOfShape) -> None: ...
+    pass
+class RWGltf_GltfLatePrimitiveArray():
+    """
+    Mesh data wrapper for delayed primitive array loading from glTF file.
     """
     def AddPrimArrayData(self,theType : RWGltf_GltfArrayType) -> RWGltf_GltfPrimArrayData: 
         """
@@ -575,113 +798,30 @@ class RWGltf_GltfLatePrimitiveArray(OCP.Poly.Poly_Triangulation, OCP.Standard.St
         """
         Return base color.
         """
-    def BoundingBox(self) -> OCP.Bnd.Bnd_Box: 
-        """
-        Return bounding box defined within glTF file, or VOID if not specified.
-        """
-    def ChangeNode(self,theIndex : int) -> OCP.gp.gp_Pnt: 
-        """
-        Give access to the node at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbNodes.
-        """
-    def ChangeNodes(self) -> OCP.TColgp.TColgp_Array1OfPnt: 
-        """
-        Returns the table of 3D nodes (3D points) for this triangulation. The returned array is shared. Therefore if the table is selected by reference, you can, by simply modifying it, directly modify the data structure of this triangulation.
-        """
-    def ChangeNormals(self) -> OCP.TShort.TShort_Array1OfShortReal: 
-        """
-        Gives access to the table of node normals.
-        """
-    def ChangeTriangle(self,theIndex : int) -> OCP.Poly.Poly_Triangle: 
-        """
-        Give access to the triangle at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbTriangles.
-        """
-    def ChangeTriangles(self) -> OCP.Poly.Poly_Array1OfTriangle: 
-        """
-        Returns the table of triangles for this triangulation. Function ChangeUVNodes shares the returned array. Therefore if the table is selected by reference, you can, by simply modifying it, directly modify the data structure of this triangulation.
-        """
-    def ChangeUVNode(self,theIndex : int) -> OCP.gp.gp_Pnt2d: 
-        """
-        Give access to the UVNode at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbNodes.
-        """
-    def ChangeUVNodes(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
-        """
-        Returns the table of 2D nodes (2D points) associated with each 3D node of this triangulation. Function ChangeUVNodes shares the returned array. Therefore if the table is selected by reference, you can, by simply modifying it, directly modify the data structure of this triangulation.
-        """
-    def Copy(self) -> OCP.Poly.Poly_Triangulation: 
-        """
-        Creates full copy of current triangulation
-        """
     def Data(self) -> Any: 
         """
         Return primitive array data elements.
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    @overload
-    def Deflection(self) -> float: 
-        """
-        Returns the deflection of this triangulation.
-
-        Sets the deflection of this triangulation to theDeflection. See more on deflection in Polygon2D
-        """
-    @overload
-    def Deflection(self,theDeflection : float) -> None: ...
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
         """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def GetRefCount(self) -> int: 
+    def HasDeferredData(self) -> bool: 
         """
-        Get the reference counter of this object
-        """
-    def HasNormals(self) -> bool: 
-        """
-        Returns Standard_True if nodal normals are defined.
+        Return TRUE if there is deferred storage and some triangulation data that can be loaded using LoadDeferredData().
         """
     def HasStyle(self) -> bool: 
         """
         Return true if primitive array has assigned material
         """
-    def HasUVNodes(self) -> bool: 
-        """
-        Returns Standard_True if 2D nodes are associated with 3D nodes for this triangulation.
-        """
     def Id(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Entity id.
         """
-    def IncrementRefCounter(self) -> None: 
+    def LoadStreamData(self) -> OCP.Poly.Poly_Triangulation: 
         """
-        Increments the reference counter of this object
+        Load primitive array saved as stream buffer to new triangulation object.
         """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
     def MaterialCommon(self) -> RWGltf_MaterialCommon: 
         """
         Return common (obsolete) material definition.
@@ -694,41 +834,9 @@ class RWGltf_GltfLatePrimitiveArray(OCP.Poly.Poly_Triangulation, OCP.Standard.St
         """
         Entity name.
         """
-    def NbNodes(self) -> int: 
-        """
-        Returns the number of nodes for this triangulation.
-        """
-    def NbTriangles(self) -> int: 
-        """
-        Returns the number of triangles for this triangulation.
-        """
-    def Node(self,theIndex : int) -> OCP.gp.gp_Pnt: 
-        """
-        Returns node at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbNodes.
-        """
-    def Nodes(self) -> OCP.TColgp.TColgp_Array1OfPnt: 
-        """
-        Returns the table of 3D nodes (3D points) for this triangulation.
-        """
-    def Normal(self,theIndex : int) -> OCP.gp.gp_Dir: 
-        """
-        Returns normal at the given index. Raises Standard_OutOfRange exception.
-        """
-    def Normals(self) -> OCP.TShort.TShort_Array1OfShortReal: 
-        """
-        Returns the table of node normals.
-        """
     def PrimitiveMode(self) -> RWGltf_GltfPrimitiveMode: 
         """
         Return type of primitive array.
-        """
-    def RemoveUVNodes(self) -> None: 
-        """
-        Deallocates the UV nodes.
-        """
-    def SetBoundingBox(self,theBox : OCP.Bnd.Bnd_Box) -> None: 
-        """
-        This method sets input bounding box and assigns a FAKE data to underlying Poly_Triangulation as Min/Max corners of bounding box, so that standard tools like BRepBndLib::Add() can be used transparently for computing bounding box of this face.
         """
     def SetMaterialCommon(self,theMat : RWGltf_MaterialCommon) -> None: 
         """
@@ -742,37 +850,9 @@ class RWGltf_GltfLatePrimitiveArray(OCP.Poly.Poly_Triangulation, OCP.Standard.St
         """
         Assign entity name.
         """
-    def SetNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: 
-        """
-        Changes normal at the given index. Raises Standard_OutOfRange exception.
-        """
-    def SetNormals(self,theNormals : OCP.TShort.TShort_HArray1OfShortReal) -> None: 
-        """
-        Sets the table of node normals. raises exception if length of theNormals != 3*NbNodes
-        """
     def SetPrimitiveMode(self,theMode : RWGltf_GltfPrimitiveMode) -> None: 
         """
         Set type of primitive array.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Triangle(self,theIndex : int) -> OCP.Poly.Poly_Triangle: 
-        """
-        Returns triangle at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbTriangles.
-        """
-    def Triangles(self) -> OCP.Poly.Poly_Array1OfTriangle: 
-        """
-        Returns the table of triangles for this triangulation.
-        """
-    def UVNode(self,theIndex : int) -> OCP.gp.gp_Pnt2d: 
-        """
-        Returns UVNode at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbNodes.
-        """
-    def UVNodes(self) -> OCP.TColgp.TColgp_Array1OfPnt2d: 
-        """
-        Returns the table of 2D nodes (2D points) associated with each 3D node of this triangulation. The function HasUVNodes checks if 2D nodes are associated with the 3D nodes of this triangulation. Const reference on the 2d nodes values.
         """
     def __init__(self,theId : OCP.TCollection.TCollection_AsciiString,theName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
@@ -792,7 +872,7 @@ class RWGltf_GltfMaterialMap():
     """
     def AddImages(self,theWriter : RWGltf_GltfOStreamWriter,theStyle : OCP.XCAFPrs.XCAFPrs_Style) -> Tuple[bool]: 
         """
-        Add material images.
+        Add material images in case of non-GLB file (an alternative to AddImagesToGlb() + FlushBufferViews() + FlushImagesGlb()).
         """
     def AddMaterial(self,theWriter : RWGltf_GltfOStreamWriter,theStyle : OCP.XCAFPrs.XCAFPrs_Style) -> Tuple[bool]: 
         """
@@ -801,6 +881,18 @@ class RWGltf_GltfMaterialMap():
     def AddTextures(self,theWriter : RWGltf_GltfOStreamWriter,theStyle : OCP.XCAFPrs.XCAFPrs_Style) -> Tuple[bool]: 
         """
         Add material textures.
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def FlushGlbBufferViews(self,theWriter : RWGltf_GltfOStreamWriter,theBinDataBufferId : int) -> Tuple[int]: 
+        """
+        Add bufferView's into RWGltf_GltfRootElement_BufferViews section with images collected by AddImagesToGlb().
+        """
+    def FlushGlbImages(self,theWriter : RWGltf_GltfOStreamWriter) -> None: 
+        """
+        Write RWGltf_GltfRootElement_Images section with images collected by AddImagesToGlb().
         """
     def NbImages(self) -> int: 
         """
@@ -816,6 +908,16 @@ class RWGltf_GltfMaterialMap():
         """
         Return base color texture.
         """
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class RWGltf_GltfOStreamWriter():
     """
@@ -828,9 +930,9 @@ class RWGltf_GltfPrimArrayData():
     An element within primitive array - vertex attribute or element indexes.
     """
     @overload
-    def __init__(self,theType : RWGltf_GltfArrayType) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theType : RWGltf_GltfArrayType) -> None: ...
     @property
     def Accessor(self) -> RWGltf_GltfAccessor:
         """
@@ -881,6 +983,7 @@ class RWGltf_GltfPrimitiveMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -958,6 +1061,7 @@ class RWGltf_GltfRootElement():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1007,20 +1111,6 @@ class RWGltf_GltfSceneNodeMap():
         """
     def __init__(self) -> None: ...
     pass
-class RWGltf_GltfSharedIStream():
-    """
-    The interface for shared file.
-    """
-    def __init__(self) -> None: ...
-    @property
-    def Path(self) -> OCP.TCollection.TCollection_AsciiString:
-        """
-        :type: OCP.TCollection.TCollection_AsciiString
-        """
-    @Path.setter
-    def Path(self, arg0: OCP.TCollection.TCollection_AsciiString) -> None:
-        pass
-    pass
 class RWGltf_MaterialCommon(OCP.Standard.Standard_Transient):
     """
     glTF 1.0 format common (obsolete) material definition.
@@ -1046,23 +1136,23 @@ class RWGltf_MaterialCommon(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1168,23 +1258,23 @@ class RWGltf_MaterialMetallicRoughness(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1225,12 +1315,12 @@ class RWGltf_MaterialMetallicRoughness(OCP.Standard.Standard_Transient):
     def BaseColor(self, arg0: OCP.Quantity.Quantity_ColorRGBA) -> None:
         pass
     @property
-    def EmissiveFactor(self) -> OCP.Graphic3d.Graphic3d_Vec3:
+    def EmissiveFactor(self) -> OCP.gp.gp_Vec3f:
         """
-        :type: OCP.Graphic3d.Graphic3d_Vec3
+        :type: OCP.gp.gp_Vec3f
         """
     @EmissiveFactor.setter
-    def EmissiveFactor(self, arg0: OCP.Graphic3d.Graphic3d_Vec3) -> None:
+    def EmissiveFactor(self, arg0: OCP.gp.gp_Vec3f) -> None:
         pass
     @property
     def Id(self) -> OCP.TCollection.TCollection_AsciiString:
@@ -1273,149 +1363,17 @@ class RWGltf_MaterialMetallicRoughness(OCP.Standard.Standard_Transient):
     def Roughness(self, arg0: float) -> None:
         pass
     pass
-class RWGltf_PrimitiveArrayReader(OCP.Standard.Standard_Transient):
+class RWGltf_TriangulationReader():
     """
-    Interface for reading primitive array from glTF buffer.
+    RWMesh_TriangulationReader implementation creating Poly_Triangulation.
     """
-    def CoordinateSystemConverter(self) -> RWMesh_CoordinateSystemConverter: 
-        """
-        Return transformation from glTF to OCCT coordinate system.
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
-    def ErrorPrefix(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def LoadStreamData(self,theSourceMesh : RWMesh_TriangulationSource,theDestMesh : OCP.Poly.Poly_Triangulation) -> bool: 
         """
-        Return prefix for reporting issues.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def Load(self,theMesh : RWGltf_GltfLatePrimitiveArray) -> OCP.Poly.Poly_Triangulation: 
-        """
-        Load primitive array.
-        """
-    def SetCoordinateSystemConverter(self,theConverter : RWMesh_CoordinateSystemConverter) -> None: 
-        """
-        Set transformation from glTF to OCCT coordinate system.
-        """
-    def SetErrorPrefix(self,theErrPrefix : OCP.TCollection.TCollection_AsciiString) -> None: 
-        """
-        Set prefix for reporting issues.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def __init__(self) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class RWGltf_TriangulationReader(RWGltf_PrimitiveArrayReader, OCP.Standard.Standard_Transient):
-    """
-    RWGltf_PrimitiveArrayReader implementation creating Poly_Triangulation.
-    """
-    def CoordinateSystemConverter(self) -> RWMesh_CoordinateSystemConverter: 
-        """
-        Return transformation from glTF to OCCT coordinate system.
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def ErrorPrefix(self) -> OCP.TCollection.TCollection_AsciiString: 
-        """
-        Return prefix for reporting issues.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def Load(self,theMesh : RWGltf_GltfLatePrimitiveArray) -> OCP.Poly.Poly_Triangulation: 
-        """
-        Load primitive array.
-        """
-    def SetCoordinateSystemConverter(self,theConverter : RWMesh_CoordinateSystemConverter) -> None: 
-        """
-        Set transformation from glTF to OCCT coordinate system.
-        """
-    def SetErrorPrefix(self,theErrPrefix : OCP.TCollection.TCollection_AsciiString) -> None: 
-        """
-        Set prefix for reporting issues.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        Loads only primitive arrays saved as stream buffer (it is primarily glTF data encoded in base64 saved to temporary buffer during glTF file reading).
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -1444,6 +1402,7 @@ class RWGltf_WriterTrsfFormat():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

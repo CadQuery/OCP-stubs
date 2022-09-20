@@ -5,19 +5,19 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TopTools
-import OCP.TColStd
-import io
-import OCP.NCollection
 import OCP.Law
-import OCP.gp
+import OCP.TopTools
 import OCP.GeomAbs
-import OCP.Geom
-import OCP.TopoDS
+import OCP.NCollection
 import OCP.BRepAdaptor
 import OCP.Geom2d
+import io
+import OCP.gp
 import OCP.Standard
 import OCP.TopAbs
+import OCP.Geom
+import OCP.TopoDS
+import OCP.TColStd
 __all__  = [
 "ChFiDS_ChamfMethod",
 "ChFiDS_ChamfMode",
@@ -29,7 +29,6 @@ __all__  = [
 "ChFiDS_FaceInterference",
 "ChFiDS_FilSpine",
 "ChFiDS_SequenceOfSurfData",
-"ChFiDS_HElSpine",
 "ChFiDS_IndexedDataMapOfVertexListOfStripe",
 "ChFiDS_ListOfHElSpine",
 "ChFiDS_ListOfStripe",
@@ -86,6 +85,7 @@ class ChFiDS_ChamfMethod():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -122,6 +122,7 @@ class ChFiDS_ChamfMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -148,7 +149,7 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
     Contains information necessary for construction of a 3D fillet or chamfer:Contains information necessary for construction of a 3D fillet or chamfer:Contains information necessary for construction of a 3D fillet or chamfer:
     """
     @overload
-    def Absc(self,U : float,I : int) -> float: 
+    def Absc(self,U : float) -> float: 
         """
         None
 
@@ -157,14 +158,14 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Absc(self,U : float) -> float: ...
+    def Absc(self,U : float,I : int) -> float: ...
     @overload
     def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
-    def AppendElSpine(self,Els : ChFiDS_HElSpine) -> None: 
+    def AppendElSpine(self,Els : ChFiDS_ElSpine) -> None: 
         """
         None
         """
-    def AppendOffsetElSpine(self,Els : ChFiDS_HElSpine) -> None: 
+    def AppendOffsetElSpine(self,Els : ChFiDS_ElSpine) -> None: 
         """
         None
         """
@@ -221,7 +222,7 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: 
+    def ElSpine(self,W : float) -> ChFiDS_ElSpine: 
         """
         None
 
@@ -230,9 +231,9 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_ElSpine: ...
     @overload
-    def ElSpine(self,W : float) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,IE : int) -> ChFiDS_ElSpine: ...
     def ErrorStatus(self) -> ChFiDS_ErrorStatus: 
         """
         None
@@ -296,23 +297,23 @@ class ChFiDS_Spine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -536,14 +537,14 @@ class ChFiDS_CircSection():
     @overload
     def Get(self,C : OCP.gp.gp_Lin) -> Tuple[float, float]: ...
     @overload
-    def Set(self,C : OCP.gp.gp_Circ,F : float,L : float) -> None: 
+    def Set(self,C : OCP.gp.gp_Lin,F : float,L : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,C : OCP.gp.gp_Lin,F : float,L : float) -> None: ...
+    def Set(self,C : OCP.gp.gp_Circ,F : float,L : float) -> None: ...
     def __init__(self) -> None: ...
     pass
 class ChFiDS_CommonPoint():
@@ -568,7 +569,7 @@ class ChFiDS_CommonPoint():
         """
     def Parameter(self) -> float: 
         """
-        Returns the parameter the paramter on the spine
+        Returns the parameter on the spine
         """
     def ParameterOnArc(self) -> float: 
         """
@@ -624,9 +625,9 @@ class ChFiDS_CommonPoint():
         """
     def __init__(self) -> None: ...
     pass
-class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
+class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Transient):
     """
-    Elementary Spine for cheminements and approximations.
+    Elementary Spine for cheminements and approximations.Elementary Spine for cheminements and approximations.
     """
     def AddVertexWithTangent(self,anAx1 : OCP.gp.gp_Ax1) -> None: 
         """
@@ -676,7 +677,19 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
     def Degree(self) -> int: 
+        """
+        None
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
         """
@@ -697,6 +710,10 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
     def GetSavedFirstParameter(self) -> float: 
         """
         None
@@ -713,6 +730,10 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         None
@@ -721,6 +742,24 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -814,7 +853,15 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         """
         None
         """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
+    def ShallowCopy(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
+        """
+        Shallow copy of adaptor
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_Curve: 
         """
         Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
         """
@@ -827,6 +874,16 @@ class ChFiDS_ElSpine(OCP.Adaptor3d.Adaptor3d_Curve):
         None
         """
     def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class ChFiDS_ErrorStatus():
     """
@@ -847,6 +904,7 @@ class ChFiDS_ErrorStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -965,7 +1023,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
     Provides data specific to the fillets - vector or rule of evolution (C2).Provides data specific to the fillets - vector or rule of evolution (C2).Provides data specific to the fillets - vector or rule of evolution (C2).
     """
     @overload
-    def Absc(self,U : float,I : int) -> float: 
+    def Absc(self,U : float) -> float: 
         """
         None
 
@@ -974,14 +1032,14 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Absc(self,U : float) -> float: ...
+    def Absc(self,U : float,I : int) -> float: ...
     @overload
     def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
-    def AppendElSpine(self,Els : ChFiDS_HElSpine) -> None: 
+    def AppendElSpine(self,Els : ChFiDS_ElSpine) -> None: 
         """
         None
         """
-    def AppendOffsetElSpine(self,Els : ChFiDS_HElSpine) -> None: 
+    def AppendOffsetElSpine(self,Els : ChFiDS_ElSpine) -> None: 
         """
         None
         """
@@ -1042,7 +1100,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: 
+    def ElSpine(self,W : float) -> ChFiDS_ElSpine: 
         """
         None
 
@@ -1051,9 +1109,9 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_ElSpine: ...
     @overload
-    def ElSpine(self,W : float) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,IE : int) -> ChFiDS_ElSpine: ...
     def ErrorStatus(self) -> ChFiDS_ErrorStatus: 
         """
         None
@@ -1126,23 +1184,23 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
     @overload
     def IsConstant(self,IE : int) -> bool: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -1172,7 +1230,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def Law(self,Els : ChFiDS_HElSpine) -> OCP.Law.Law_Composite: 
+    def Law(self,Els : ChFiDS_ElSpine) -> OCP.Law.Law_Composite: 
         """
         None
         """
@@ -1305,7 +1363,7 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         store offset edges composing the offset guideline
         """
     @overload
-    def SetRadius(self,Radius : float) -> None: 
+    def SetRadius(self,UandR : OCP.gp.gp_XY,IinC : int) -> None: 
         """
         initializes the constant vector on edge E.
 
@@ -1318,13 +1376,13 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         initializes the rule of evolution on all spine.
         """
     @overload
-    def SetRadius(self,C : OCP.Law.Law_Function,IinC : int) -> None: ...
+    def SetRadius(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
+    def SetRadius(self,Radius : float) -> None: ...
     @overload
     def SetRadius(self,Radius : float,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
-    def SetRadius(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
-    def SetRadius(self,UandR : OCP.gp.gp_XY,IinC : int) -> None: ...
+    def SetRadius(self,C : OCP.Law.Law_Function,IinC : int) -> None: ...
     @overload
     def SetReference(self,W : float) -> None: 
         """
@@ -1389,9 +1447,9 @@ class ChFiDS_FilSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Tol : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1449,23 +1507,23 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1483,14 +1541,14 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def Prepend(self,theItem : ChFiDS_SurfData) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : ChFiDS_SurfData) -> None: ...
+    def Prepend(self,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1527,262 +1585,14 @@ class ChFiDS_SequenceOfSurfData(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : ChFiDS_SequenceOfSurfData) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Static deleter to be passed to BaseSequence
-        """
-    pass
-class ChFiDS_HElSpine(OCP.Adaptor3d.Adaptor3d_HCurve, OCP.Standard.Standard_Transient):
-    def BSpline(self) -> OCP.Geom.Geom_BSplineCurve: 
-        """
-        None
-
-        None
-        """
-    def Bezier(self) -> OCP.Geom.Geom_BezierCurve: 
-        """
-        None
-
-        None
-        """
-    def ChangeCurve(self) -> ChFiDS_ElSpine: 
-        """
-        Returns the curve used to create the GenHCurve.
-        """
-    def Circle(self) -> OCP.gp.gp_Circ: 
-        """
-        None
-
-        None
-        """
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
-        """
-        None
-
-        None
-        """
-    def Curve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
-        """
-        Returns the curve used to create the GenHCurve. This is redefined from HCurve, cannot be inline.
-        """
-    def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
-        """
-        None
-
-        None
-        """
-    def D1(self,U : float,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D2(self,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def D3(self,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
-        """
-        None
-
-        None
-        """
-    def DN(self,U : float,N : int) -> OCP.gp.gp_Vec: 
-        """
-        None
-
-        None
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Degree(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def Ellipse(self) -> OCP.gp.gp_Elips: 
-        """
-        None
-
-        None
-        """
-    def FirstParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def GetCurve(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
-        """
-        Returns the curve used to create the GenHCurve. This is redefined from HCurve, cannot be inline.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def GetType(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
-        """
-        None
-
-        None
-        """
-    def Hyperbola(self) -> OCP.gp.gp_Hypr: 
-        """
-        None
-
-        None
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
-
-        Stores in <T> the parameters bounding the intervals of continuity <S>.
-        """
-    def IsClosed(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
-    def IsPeriodic(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def IsRational(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    def LastParameter(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Line(self) -> OCP.gp.gp_Lin: 
-        """
-        None
-
-        None
-        """
-    def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbKnots(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def NbPoles(self) -> int: 
-        """
-        None
-
-        None
-        """
-    def OffsetCurve(self) -> OCP.Geom.Geom_OffsetCurve: 
-        """
-        None
-
-        None
-        """
-    def Parabola(self) -> OCP.gp.gp_Parab: 
-        """
-        None
-
-        None
-        """
-    def Period(self) -> float: 
-        """
-        None
-
-        None
-        """
-    def Resolution(self,R3d : float) -> float: 
-        """
-        None
-
-        None
-        """
-    def Set(self,C : ChFiDS_ElSpine) -> None: 
-        """
-        Sets the field of the GenHCurve.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Trim(self,First : float,Last : float,Tol : float) -> OCP.Adaptor3d.Adaptor3d_HCurve: 
-        """
-        Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
-
-        Returns a curve equivalent of <me> between parameters <First> and <Last>. <Tol> is used to test for 3d points confusion.
-        """
-    def Value(self,U : float) -> OCP.gp.gp_Pnt: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C : ChFiDS_ElSpine) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
         """
     pass
 class ChFiDS_IndexedDataMapOfVertexListOfStripe(OCP.NCollection.NCollection_BaseMap):
@@ -1814,14 +1624,14 @@ class ChFiDS_IndexedDataMapOfVertexListOfStripe(OCP.NCollection.NCollection_Base
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Vertex) -> bool: 
         """
         Contains
@@ -1902,9 +1712,9 @@ class ChFiDS_IndexedDataMapOfVertexListOfStripe(OCP.NCollection.NCollection_Base
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : ChFiDS_IndexedDataMapOfVertexListOfStripe) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
@@ -1925,9 +1735,9 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : ChFiDS_HElSpine) -> ChFiDS_HElSpine: ...
+    def Append(self,theItem : ChFiDS_ElSpine,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : ChFiDS_HElSpine,theIter : Any) -> None: ...
+    def Append(self,theItem : ChFiDS_ElSpine) -> ChFiDS_ElSpine: ...
     def Assign(self,theOther : ChFiDS_ListOfHElSpine) -> ChFiDS_ListOfHElSpine: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1940,7 +1750,7 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
         """
         None
         """
-    def First(self) -> ChFiDS_HElSpine: 
+    def First(self) -> ChFiDS_ElSpine: 
         """
         First item
 
@@ -1954,7 +1764,7 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : ChFiDS_HElSpine,theIter : Any) -> ChFiDS_HElSpine: ...
+    def InsertAfter(self,theItem : ChFiDS_ElSpine,theIter : Any) -> ChFiDS_ElSpine: ...
     @overload
     def InsertBefore(self,theOther : ChFiDS_ListOfHElSpine,theIter : Any) -> None: 
         """
@@ -1963,19 +1773,19 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : ChFiDS_HElSpine,theIter : Any) -> ChFiDS_HElSpine: ...
+    def InsertBefore(self,theItem : ChFiDS_ElSpine,theIter : Any) -> ChFiDS_ElSpine: ...
     def IsEmpty(self) -> bool: 
         """
         None
         """
-    def Last(self) -> ChFiDS_HElSpine: 
+    def Last(self) -> ChFiDS_ElSpine: 
         """
         Last item
 
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : ChFiDS_HElSpine) -> ChFiDS_HElSpine: 
+    def Prepend(self,theItem : ChFiDS_ElSpine) -> ChFiDS_ElSpine: 
         """
         Prepend one item at the beginning
 
@@ -2000,11 +1810,11 @@ class ChFiDS_ListOfHElSpine(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : ChFiDS_ListOfHElSpine) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : ChFiDS_ListOfHElSpine) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
@@ -2016,7 +1826,7 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : ChFiDS_Stripe) -> ChFiDS_Stripe: 
+    def Append(self,theOther : ChFiDS_ListOfStripe) -> None: 
         """
         Append one item at the end
 
@@ -2025,9 +1835,9 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : ChFiDS_Stripe,theIter : Any) -> None: ...
+    def Append(self,theItem : ChFiDS_Stripe) -> ChFiDS_Stripe: ...
     @overload
-    def Append(self,theOther : ChFiDS_ListOfStripe) -> None: ...
+    def Append(self,theItem : ChFiDS_Stripe,theIter : Any) -> None: ...
     def Assign(self,theOther : ChFiDS_ListOfStripe) -> ChFiDS_ListOfStripe: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2100,11 +1910,11 @@ class ChFiDS_ListOfStripe(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : ChFiDS_ListOfStripe) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_Map():
@@ -2207,23 +2017,23 @@ class ChFiDS_Regularities(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : ChFiDS_Regularities,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: ...
+    def InsertAfter(self,theOther : ChFiDS_Regularities,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: 
+    def InsertBefore(self,theOther : ChFiDS_Regularities,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : ChFiDS_Regularities,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : ChFiDS_Regul,theIter : Any) -> ChFiDS_Regul: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2235,14 +2045,14 @@ class ChFiDS_Regularities(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : ChFiDS_Regul) -> ChFiDS_Regul: 
+    def Prepend(self,theOther : ChFiDS_Regularities) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : ChFiDS_Regularities) -> None: ...
+    def Prepend(self,theItem : ChFiDS_Regul) -> ChFiDS_Regul: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -2260,16 +2070,16 @@ class ChFiDS_Regularities(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : ChFiDS_Regularities) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : ChFiDS_Regularities) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_SecArray1():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : ChFiDS_SecArray1) -> ChFiDS_SecArray1: 
         """
@@ -2344,9 +2154,9 @@ class ChFiDS_SecArray1():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : ChFiDS_CircSection,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -2419,23 +2229,23 @@ class ChFiDS_SecHArray1(ChFiDS_SecArray1, OCP.Standard.Standard_Transient):
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> ChFiDS_CircSection: 
         """
         Returns last element
@@ -2479,9 +2289,9 @@ class ChFiDS_SecHArray1(ChFiDS_SecArray1, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : ChFiDS_CircSection) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : ChFiDS_SecArray1) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2505,14 +2315,14 @@ class ChFiDS_SequenceOfSpine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : ChFiDS_SequenceOfSpine) -> None: 
+    def Append(self,theItem : ChFiDS_Spine) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : ChFiDS_Spine) -> None: ...
+    def Append(self,theSeq : ChFiDS_SequenceOfSpine) -> None: ...
     def Assign(self,theOther : ChFiDS_SequenceOfSpine) -> ChFiDS_SequenceOfSpine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2576,14 +2386,14 @@ class ChFiDS_SequenceOfSpine(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : ChFiDS_SequenceOfSpine) -> None: 
+    def Prepend(self,theItem : ChFiDS_Spine) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : ChFiDS_Spine) -> None: ...
+    def Prepend(self,theSeq : ChFiDS_SequenceOfSpine) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -2618,11 +2428,11 @@ class ChFiDS_SequenceOfSpine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : ChFiDS_SequenceOfSpine) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : ChFiDS_SequenceOfSpine) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2697,45 +2507,45 @@ class ChFiDS_HData(ChFiDS_SequenceOfSurfData, OCP.NCollection.NCollection_BaseSe
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : ChFiDS_SurfData) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> ChFiDS_SurfData: 
         """
         Last item access
@@ -2749,14 +2559,14 @@ class ChFiDS_HData(ChFiDS_SequenceOfSurfData, OCP.NCollection.NCollection_BaseSe
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : ChFiDS_SequenceOfSurfData) -> None: 
+    def Prepend(self,theItem : ChFiDS_SurfData) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : ChFiDS_SurfData) -> None: ...
+    def Prepend(self,theSeq : ChFiDS_SequenceOfSurfData) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -2824,7 +2634,7 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
     Provides data specific to chamfers distances on each of faces.Provides data specific to chamfers distances on each of faces.Provides data specific to chamfers distances on each of faces.
     """
     @overload
-    def Absc(self,U : float,I : int) -> float: 
+    def Absc(self,U : float) -> float: 
         """
         None
 
@@ -2833,14 +2643,14 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Absc(self,U : float) -> float: ...
+    def Absc(self,U : float,I : int) -> float: ...
     @overload
     def Absc(self,V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
-    def AppendElSpine(self,Els : ChFiDS_HElSpine) -> None: 
+    def AppendElSpine(self,Els : ChFiDS_ElSpine) -> None: 
         """
         None
         """
-    def AppendOffsetElSpine(self,Els : ChFiDS_HElSpine) -> None: 
+    def AppendOffsetElSpine(self,Els : ChFiDS_ElSpine) -> None: 
         """
         None
         """
@@ -2901,7 +2711,7 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_HElSpine: 
+    def ElSpine(self,W : float) -> ChFiDS_ElSpine: 
         """
         None
 
@@ -2910,9 +2720,9 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ElSpine(self,IE : int) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,E : OCP.TopoDS.TopoDS_Edge) -> ChFiDS_ElSpine: ...
     @overload
-    def ElSpine(self,W : float) -> ChFiDS_HElSpine: ...
+    def ElSpine(self,IE : int) -> ChFiDS_ElSpine: ...
     def ErrorStatus(self) -> ChFiDS_ErrorStatus: 
         """
         None
@@ -2988,23 +2798,23 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -3216,9 +3026,9 @@ class ChFiDS_ChamfSpine(ChFiDS_Spine, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3253,6 +3063,7 @@ class ChFiDS_State():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3359,7 +3170,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Choix(self) -> int: 
+    def Choix(self,C : int) -> None: 
         """
         None
 
@@ -3370,7 +3181,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Choix(self,C : int) -> None: ...
+    def Choix(self) -> int: ...
     def Curve(self,First : bool) -> int: 
         """
         None
@@ -3463,23 +3274,23 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         Returns nb of SurfData's at end being in DS
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LastCurve(self) -> int: 
         """
         None
@@ -3493,7 +3304,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def LastPCurveOrientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def LastPCurveOrientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
@@ -3504,7 +3315,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def LastPCurveOrientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def LastPCurveOrientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def LastParameters(self) -> Tuple[float, float]: 
         """
         None
@@ -3512,29 +3323,16 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Orientation(self,First : bool) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,OnS : int) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
         None
         """
     @overload
-    def Orientation(self,OnS : int) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,First : bool) -> OCP.TopAbs.TopAbs_Orientation: ...
     @overload
-    def OrientationOnFace1(self,Or1 : OCP.TopAbs.TopAbs_Orientation) -> None: 
-        """
-        None
-
-        None
-
-        None
-
-        None
-        """
-    @overload
-    def OrientationOnFace1(self) -> OCP.TopAbs.TopAbs_Orientation: ...
-    @overload
-    def OrientationOnFace2(self) -> OCP.TopAbs.TopAbs_Orientation: 
+    def OrientationOnFace1(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
@@ -3545,7 +3343,20 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def OrientationOnFace2(self,Or2 : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def OrientationOnFace1(self,Or1 : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    @overload
+    def OrientationOnFace2(self,Or2 : OCP.TopAbs.TopAbs_Orientation) -> None: 
+        """
+        None
+
+        None
+
+        None
+
+        None
+        """
+    @overload
+    def OrientationOnFace2(self) -> OCP.TopAbs.TopAbs_Orientation: ...
     def PCurve(self,First : bool) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
@@ -3573,14 +3384,14 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,First : bool) -> None: 
+    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,OnS : int) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,OnS : int) -> None: ...
+    def SetOrientation(self,Or : OCP.TopAbs.TopAbs_Orientation,First : bool) -> None: ...
     def SetParameters(self,First : bool,Pdeb : float,Pfin : float) -> None: 
         """
         None
@@ -3617,7 +3428,7 @@ class ChFiDS_Stripe(OCP.Standard.Standard_Transient):
     pass
 class ChFiDS_StripeArray1():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : ChFiDS_StripeArray1) -> ChFiDS_StripeArray1: 
         """
@@ -3692,13 +3503,13 @@ class ChFiDS_StripeArray1():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : ChFiDS_Stripe,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : ChFiDS_StripeArray1) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ChFiDS_StripeMap():
@@ -3781,7 +3592,7 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         """
     def ChangeVertex(self,First : bool,OnS : int) -> ChFiDS_CommonPoint: 
         """
-        returns one of the four vertices wether First is true or wrong and OnS equals 1 or 2.
+        returns one of the four vertices whether First is true or wrong and OnS equals 1 or 2.
         """
     def ChangeVertexFirstOnS1(self) -> ChFiDS_CommonPoint: 
         """
@@ -3833,23 +3644,23 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
     @overload
     def FirstExtensionValue(self,Extend : float) -> None: ...
     @overload
-    def FirstSpineParam(self,Par : float) -> None: 
+    def FirstSpineParam(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def FirstSpineParam(self) -> float: ...
+    def FirstSpineParam(self,Par : float) -> None: ...
     @overload
-    def Get2dPoints(self,First : bool,OnS : int) -> OCP.gp.gp_Pnt2d: 
+    def Get2dPoints(self,P2df1 : OCP.gp.gp_Pnt2d,P2dl1 : OCP.gp.gp_Pnt2d,P2df2 : OCP.gp.gp_Pnt2d,P2dl2 : OCP.gp.gp_Pnt2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Get2dPoints(self,P2df1 : OCP.gp.gp_Pnt2d,P2dl1 : OCP.gp.gp_Pnt2d,P2df2 : OCP.gp.gp_Pnt2d,P2dl2 : OCP.gp.gp_Pnt2d) -> None: ...
+    def Get2dPoints(self,First : bool,OnS : int) -> OCP.gp.gp_Pnt2d: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -3909,23 +3720,23 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOnCurve(self,OnS : int) -> bool: 
         """
         None
@@ -3945,14 +3756,14 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def LastExtensionValue(self) -> float: 
+    def LastExtensionValue(self,Extend : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def LastExtensionValue(self,Extend : float) -> None: ...
+    def LastExtensionValue(self) -> float: ...
     @overload
     def LastSpineParam(self) -> float: 
         """
@@ -4013,7 +3824,7 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TwistOnS1(self,T : bool) -> None: 
+    def TwistOnS1(self) -> bool: 
         """
         None
 
@@ -4024,7 +3835,7 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def TwistOnS1(self) -> bool: ...
+    def TwistOnS1(self,T : bool) -> None: ...
     @overload
     def TwistOnS2(self,T : bool) -> None: 
         """
@@ -4040,7 +3851,7 @@ class ChFiDS_SurfData(OCP.Standard.Standard_Transient):
     def TwistOnS2(self) -> bool: ...
     def Vertex(self,First : bool,OnS : int) -> ChFiDS_CommonPoint: 
         """
-        returns one of the four vertices wether First is true or wrong and OnS equals 1 or 2.
+        returns one of the four vertices whether First is true or wrong and OnS equals 1 or 2.
         """
     def VertexFirstOnS1(self) -> ChFiDS_CommonPoint: 
         """
@@ -4097,6 +3908,7 @@ class ChFiDS_TypeOfConcavity():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

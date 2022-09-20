@@ -44,7 +44,7 @@ class LProp3d_CLProps():
         """
         Returns the normal direction <N>.
         """
-    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_HCurve) -> None: 
+    def SetCurve(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         Initializes the local properties of the curve for the new curve.
         """
@@ -61,48 +61,48 @@ class LProp3d_CLProps():
         Returns the Point.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,N : int,Resolution : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,N : int,Resolution : float) -> None: ...
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,N : int,Resolution : float) -> None: ...
     pass
 class LProp3d_CurveTool():
     """
     None
     """
     @staticmethod
-    def Continuity_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> int: 
+    def Continuity_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> int: 
         """
         returns the order of continuity of the HCurve <C>. returns 1 : first derivative only is computable returns 2 : first and second derivative only are computable. returns 3 : first, second and third are computable.
         """
     @staticmethod
-    def D1_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: 
+    def D1_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point <P> and first derivative <V1> of parameter <U> on the HCurve <C>.
         """
     @staticmethod
-    def D2_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
+    def D2_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point <P>, the first derivative <V1> and second derivative <V2> of parameter <U> on the HCurve <C>.
         """
     @staticmethod
-    def D3_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
+    def D3_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point <P>, the first derivative <V1>, the second derivative <V2> and third derivative <V3> of parameter <U> on the HCurve <C>.
         """
     @staticmethod
-    def FirstParameter_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def FirstParameter_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         returns the first parameter bound of the HCurve.
         """
     @staticmethod
-    def LastParameter_s(C : OCP.Adaptor3d.Adaptor3d_HCurve) -> float: 
+    def LastParameter_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: 
         """
         returns the last parameter bound of the HCurve. FirstParameter must be less than LastParamenter.
         """
     @staticmethod
-    def Value_s(C : OCP.Adaptor3d.Adaptor3d_HCurve,U : float,P : OCP.gp.gp_Pnt) -> None: 
+    def Value_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point <P> of parameter <U> on the HCurve <C>.
         """
@@ -180,7 +180,7 @@ class LProp3d_SLProps():
         """
         Initializes the local properties of the surface S for the new parameter values (<U>, <V>).
         """
-    def SetSurface(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: 
+    def SetSurface(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
         """
         Initializes the local properties of the surface S for the new surface.
         """
@@ -197,43 +197,43 @@ class LProp3d_SLProps():
         Returns the point.
         """
     @overload
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,U : float,V : float,N : int,Resolution : float) -> None: ...
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,N : int,Resolution : float) -> None: ...
     pass
 class LProp3d_SurfaceTool():
     """
     None
     """
     @staticmethod
-    def Bounds_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> Tuple[float, float, float, float]: 
+    def Bounds_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> Tuple[float, float, float, float]: 
         """
         returns the bounds of the HSurface.
         """
     @staticmethod
-    def Continuity_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> int: 
+    def Continuity_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> int: 
         """
         returns the order of continuity of the HSurface <S>. returns 1 : first derivative only is computable returns 2 : first and second derivative only are computable.
         """
     @staticmethod
-    def D1_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec) -> None: 
+    def D1_s(S : OCP.Adaptor3d.Adaptor3d_Surface,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point <P> and first derivative <D1*> of parameter <U> and <V> on the HSurface <S>.
         """
     @staticmethod
-    def D2_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,DUV : OCP.gp.gp_Vec) -> None: 
+    def D2_s(S : OCP.Adaptor3d.Adaptor3d_Surface,U : float,V : float,P : OCP.gp.gp_Pnt,D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,DUV : OCP.gp.gp_Vec) -> None: 
         """
         Computes the point <P>, the first derivative <D1*> and second derivative <D2*> of parameter <U> and <V> on the HSurface <S>.
         """
     @staticmethod
-    def DN_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,U : float,V : float,IU : int,IV : int) -> OCP.gp.gp_Vec: 
+    def DN_s(S : OCP.Adaptor3d.Adaptor3d_Surface,U : float,V : float,IU : int,IV : int) -> OCP.gp.gp_Vec: 
         """
         None
         """
     @staticmethod
-    def Value_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,U : float,V : float,P : OCP.gp.gp_Pnt) -> None: 
+    def Value_s(S : OCP.Adaptor3d.Adaptor3d_Surface,U : float,V : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point <P> of parameter <U> and <V> on the HSurface <S>.
         """

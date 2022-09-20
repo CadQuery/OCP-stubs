@@ -4,21 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.math
-import OCP.NCollection
-import OCP.IntSurf
-import OCP.Bnd
-import OCP.Standard
-import OCP.Adaptor3d
-import OCP.TColStd
-import OCP.Intf
-import OCP.Adaptor2d
-import OCP.gp
 import OCP.GeomAbs
-import IntPatch_ImpImpIntersection
-import OCP.IntAna
-import IntPatch_WLine
+import OCP.NCollection
 import OCP.Geom2d
+import OCP.Standard
+import OCP.TColStd
+import OCP.IntAna
+import IntPatch_ImpImpIntersection
+import OCP.Adaptor3d
+import OCP.Intf
+import OCP.IntSurf
+import OCP.Adaptor2d
+import OCP.math
+import OCP.gp
+import IntPatch_WLine
+import OCP.Bnd
 __all__  = [
 "IntPatch_Line",
 "IntPatch_ALineToWLine",
@@ -108,23 +108,23 @@ class IntPatch_Line(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTangent(self) -> bool: 
         """
         Returns TRUE if the intersection is a line of tangency between the 2 patches.
@@ -205,14 +205,14 @@ class IntPatch_ALineToWLine():
     None
     """
     @overload
-    def MakeWLine(self,aline : IntPatch_ALine,theLines : IntPatch_SequenceOfLine) -> None: 
+    def MakeWLine(self,aline : IntPatch_ALine,paraminf : float,paramsup : float,theLines : IntPatch_SequenceOfLine) -> None: 
         """
         Converts aline to the set of Walking-lines and adds them in theLines.
 
-        Converts aline (limitted by paraminf and paramsup) to the set of Walking-lines and adds them in theLines.
+        Converts aline (limited by paraminf and paramsup) to the set of Walking-lines and adds them in theLines.
         """
     @overload
-    def MakeWLine(self,aline : IntPatch_ALine,paraminf : float,paramsup : float,theLines : IntPatch_SequenceOfLine) -> None: ...
+    def MakeWLine(self,aline : IntPatch_ALine,theLines : IntPatch_SequenceOfLine) -> None: ...
     def SetTol3D(self,aT : float) -> None: 
         """
         None
@@ -237,13 +237,13 @@ class IntPatch_ALineToWLine():
         """
         None
         """
-    def __init__(self,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theNbPoints : int=200) -> None: ...
+    def __init__(self,theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theNbPoints : int=200) -> None: ...
     pass
 class IntPatch_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
     """
     None
     """
-    def Arc(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def Arc(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
 
@@ -274,7 +274,7 @@ class IntPatch_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_F
         None
         """
     @overload
-    def Set(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def Set(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
         """
         None
 
@@ -285,14 +285,14 @@ class IntPatch_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_F
         None
         """
     @overload
-    def Set(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def Set(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     def SetQuadric(self,Q : OCP.IntSurf.IntSurf_Quadric) -> None: 
         """
         None
 
         None
         """
-    def Surface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def Surface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         None
 
@@ -318,11 +318,11 @@ class IntPatch_CSFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.math.mat
     """
     this function is associated to the intersection between a curve on surface and a surface .
     """
-    def AuxillarCurve(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def AuxillarCurve(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
         """
-    def AuxillarSurface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def AuxillarSurface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         None
         """
@@ -358,7 +358,7 @@ class IntPatch_CSFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.math.mat
         """
         None
         """
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S2 : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor2d.Adaptor2d_Curve2d,S2 : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     pass
 class IntPatch_CurvIntSurf():
     """
@@ -413,9 +413,9 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         """
     def Circle(self) -> OCP.gp.gp_Circ: 
         """
-        Returns the Circ from gp corrsponding to the intersection when ArcType returns IntPatch_Circle.
+        Returns the Circ from gp corresponding to the intersection when ArcType returns IntPatch_Circle.
 
-        Returns the Circ from gp corrsponding to the intersection when ArcType returns IntPatch_Circle.
+        Returns the Circ from gp corresponding to the intersection when ArcType returns IntPatch_Circle.
         """
     def ComputeVertexParameters(self,Tol : float) -> None: 
         """
@@ -435,9 +435,9 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         """
     def Ellipse(self) -> OCP.gp.gp_Elips: 
         """
-        Returns the Elips from gp corrsponding to the intersection when ArcType returns IntPatch_Ellipse.
+        Returns the Elips from gp corresponding to the intersection when ArcType returns IntPatch_Ellipse.
 
-        Returns the Elips from gp corrsponding to the intersection when ArcType returns IntPatch_Ellipse.
+        Returns the Elips from gp corresponding to the intersection when ArcType returns IntPatch_Ellipse.
         """
     def FirstPoint(self) -> IntPatch_Point: 
         """
@@ -463,32 +463,32 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         """
     def Hyperbola(self) -> OCP.gp.gp_Hypr: 
         """
-        Returns the Hypr from gp corrsponding to the intersection when ArcType returns IntPatch_Hyperbola.
+        Returns the Hypr from gp corresponding to the intersection when ArcType returns IntPatch_Hyperbola.
 
-        Returns the Hypr from gp corrsponding to the intersection when ArcType returns IntPatch_Hyperbola.
+        Returns the Hypr from gp corresponding to the intersection when ArcType returns IntPatch_Hyperbola.
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTangent(self) -> bool: 
         """
         Returns TRUE if the intersection is a line of tangency between the 2 patches.
@@ -539,9 +539,9 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         """
     def Parabola(self) -> OCP.gp.gp_Parab: 
         """
-        Returns the Parab from gp corrsponding to the intersection when ArcType returns IntPatch_Parabola.
+        Returns the Parab from gp corresponding to the intersection when ArcType returns IntPatch_Parabola.
 
-        Returns the Parab from gp corrsponding to the intersection when ArcType returns IntPatch_Parabola.
+        Returns the Parab from gp corresponding to the intersection when ArcType returns IntPatch_Parabola.
         """
     def Replace(self,Index : int,Pnt : IntPatch_Point) -> None: 
         """
@@ -600,35 +600,35 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Returns the vertex of range Index on the line.
         """
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool) -> None: ...
+    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool) -> None: ...
+    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    @overload
+    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
+    @overload
+    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
-    @overload
-    def __init__(self,L : OCP.gp.gp_Lin,Tang : bool) -> None: ...
-    @overload
-    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool) -> None: ...
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin,Tang : bool) -> None: ...
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -645,122 +645,122 @@ class IntPatch_HCurve2dTool():
     None
     """
     @staticmethod
-    def BSpline_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def BSpline_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         None
         """
     @staticmethod
-    def Bezier_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.Geom2d.Geom2d_BezierCurve: 
+    def Bezier_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.Geom2d.Geom2d_BezierCurve: 
         """
         None
         """
     @staticmethod
-    def Circle_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Circ2d: 
+    def Circle_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Circ2d: 
         """
         None
         """
     @staticmethod
-    def Continuity_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
         """
     @staticmethod
-    def D0_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
+    def D0_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Computes the point of parameter U on the curve.
         """
     @staticmethod
-    def D1_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: 
+    def D1_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: 
         """
         Computes the point of parameter U on the curve with its first derivative. Raised if the continuity of the current interval is not C1.
         """
     @staticmethod
-    def D2_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
+    def D2_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
         """
         Returns the point P of parameter U, the first and second derivatives V1 and V2. Raised if the continuity of the current interval is not C2.
         """
     @staticmethod
-    def D3_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: 
+    def D3_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: 
         """
         Returns the point P of parameter U, the first, the second and the third derivative. Raised if the continuity of the current interval is not C3.
         """
     @staticmethod
-    def DN_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float,N : int) -> OCP.gp.gp_Vec2d: 
+    def DN_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float,N : int) -> OCP.gp.gp_Vec2d: 
         """
         The returned vector gives the value of the derivative for the order of derivation N. Raised if the continuity of the current interval is not CN. Raised if N < 1.
         """
     @staticmethod
-    def Ellipse_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Elips2d: 
+    def Ellipse_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Elips2d: 
         """
         None
         """
     @staticmethod
-    def FirstParameter_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def FirstParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
     @staticmethod
-    def GetType_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.GeomAbs.GeomAbs_CurveType: 
+    def GetType_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.GeomAbs.GeomAbs_CurveType: 
         """
         Returns the type of the curve in the current interval : Line, Circle, Ellipse, Hyperbola, Parabola, BezierCurve, BSplineCurve, OtherCurve.
         """
     @staticmethod
-    def Hyperbola_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Hypr2d: 
+    def Hyperbola_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Hypr2d: 
         """
         None
         """
     @staticmethod
-    def Intervals_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Intervals_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @staticmethod
-    def IsClosed_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> bool: 
+    def IsClosed_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> bool: 
         """
         None
         """
     @staticmethod
-    def IsPeriodic_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> bool: 
+    def IsPeriodic_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> bool: 
         """
         None
         """
     @staticmethod
-    def LastParameter_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def LastParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
     @staticmethod
-    def Line_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Lin2d: 
+    def Line_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Lin2d: 
         """
         None
         """
     @staticmethod
-    def NbIntervals_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
+    def NbIntervals_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(myclass) >= <S>
         """
     @staticmethod
-    def NbSamples_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U0 : float,U1 : float) -> int: 
+    def NbSamples_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,U1 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def Parabola_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.gp.gp_Parab2d: 
+    def Parabola_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.gp.gp_Parab2d: 
         """
         None
         """
     @staticmethod
-    def Period_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Period_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
     @staticmethod
-    def Resolution_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,R3d : float) -> float: 
+    def Resolution_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,R3d : float) -> float: 
         """
         Returns the parametric resolution corresponding to the real space resolution <R3d>.
         """
     @staticmethod
-    def Value_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,U : float) -> OCP.gp.gp_Pnt2d: 
+    def Value_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U : float) -> OCP.gp.gp_Pnt2d: 
         """
         Computes the point of parameter U on the curve.
         """
@@ -771,110 +771,110 @@ class IntPatch_HInterTool():
     Tool for the intersection between 2 surfaces. Regroupe pour l instant les methodes hors Adaptor3d...
     """
     @staticmethod
-    def Bounds_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> Tuple[float, float]: 
+    def Bounds_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> Tuple[float, float]: 
         """
         Returns the parametric limits on the arc C. These limits must be finite : they are either the real limits of the arc, for a finite arc, or a bounding box for an infinite arc.
         """
     @staticmethod
-    def HasBeenSeen_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> bool: 
+    def HasBeenSeen_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> bool: 
         """
         Returns True if all the intersection point and edges are known on the Arc. The intersection point are given as vertices. The intersection edges are given as intervals between two vertices.
         """
     @staticmethod
-    def HasFirstPoint_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Index : int,IndFirst : int) -> bool: 
+    def HasFirstPoint_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Index : int,IndFirst : int) -> bool: 
         """
         Returns True when the segment of range Index is not open at the left side. In that case, IndFirst is the range in the list intersection points (see NbPoints) of the one which defines the left bound of the segment. Otherwise, the method has to return False, and IndFirst has no meaning.
         """
     @staticmethod
-    def HasLastPoint_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Index : int,IndLast : int) -> bool: 
+    def HasLastPoint_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Index : int,IndLast : int) -> bool: 
         """
         Returns True when the segment of range Index is not open at the right side. In that case, IndLast is the range in the list intersection points (see NbPoints) of the one which defines the right bound of the segment. Otherwise, the method has to return False, and IndLast has no meaning.
         """
     @staticmethod
-    def IsAllSolution_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> bool: 
+    def IsAllSolution_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> bool: 
         """
         Returns True when the whole restriction is solution of the intersection problem.
         """
     @staticmethod
-    def IsVertex_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Index : int) -> bool: 
+    def IsVertex_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Index : int) -> bool: 
         """
         Returns True if the intersection point of range Index corresponds with a vertex on the arc A.
         """
     @staticmethod
-    def NbPoints_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> int: 
+    def NbPoints_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> int: 
         """
         Returns the number of intersection points on the arc A.
         """
-    def NbSamplePoints(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> int: 
+    def NbSamplePoints(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> int: 
         """
         None
         """
     @staticmethod
-    def NbSamplesOnArc_s(A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> int: 
+    def NbSamplesOnArc_s(A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> int: 
         """
         returns the number of points which is used to make a sample on the arc. this number is a function of the Surface and the CurveOnSurface complexity.
         """
     @staticmethod
-    def NbSamplesU_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,u1 : float,u2 : float) -> int: 
+    def NbSamplesU_s(S : OCP.Adaptor3d.Adaptor3d_Surface,u1 : float,u2 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def NbSamplesV_s(S : OCP.Adaptor3d.Adaptor3d_HSurface,v1 : float,v2 : float) -> int: 
+    def NbSamplesV_s(S : OCP.Adaptor3d.Adaptor3d_Surface,v1 : float,v2 : float) -> int: 
         """
         None
         """
     @staticmethod
-    def NbSegments_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> int: 
+    def NbSegments_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> int: 
         """
         returns the number of part of A solution of the of intersection problem.
         """
     @staticmethod
-    def Parameter_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Parameter_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         Returns the parameter of the vertex V on the arc A.
         """
     @staticmethod
-    def Project_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,P : OCP.gp.gp_Pnt2d,Paramproj : float,Ptproj : OCP.gp.gp_Pnt2d) -> bool: 
+    def Project_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,P : OCP.gp.gp_Pnt2d,Paramproj : float,Ptproj : OCP.gp.gp_Pnt2d) -> bool: 
         """
         Projects the point P on the arc C. If the methods returns Standard_True, the projection is successful, and Paramproj is the parameter on the arc of the projected point, Ptproj is the projected Point. If the method returns Standard_False, Param proj and Ptproj are not significant.
         """
-    def SamplePoint(self,S : OCP.Adaptor3d.Adaptor3d_HSurface,Index : int) -> Tuple[float, float]: 
+    def SamplePoint(self,S : OCP.Adaptor3d.Adaptor3d_Surface,Index : int) -> Tuple[float, float]: 
         """
         None
         """
     @staticmethod
-    def SingularOnUMax_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnUMax_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def SingularOnUMin_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnUMin_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def SingularOnVMax_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnVMax_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def SingularOnVMin_s(S : OCP.Adaptor3d.Adaptor3d_HSurface) -> bool: 
+    def SingularOnVMin_s(S : OCP.Adaptor3d.Adaptor3d_Surface) -> bool: 
         """
         None
         """
     @staticmethod
-    def Tolerance_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Tolerance_s(V : OCP.Adaptor3d.Adaptor3d_HVertex,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         Returns the parametric tolerance used to consider that the vertex and another point meet, i-e if Abs(parameter(Vertex) - parameter(OtherPnt))<= Tolerance, the points are "merged".
         """
     @staticmethod
-    def Value_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Index : int,Pt : OCP.gp.gp_Pnt) -> Tuple[float, float]: 
+    def Value_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Index : int,Pt : OCP.gp.gp_Pnt) -> Tuple[float, float]: 
         """
         Returns the value (Pt), the tolerance (Tol), and the parameter (U) on the arc A , of the intersection point of range Index.
         """
     @staticmethod
-    def Vertex_s(C : OCP.Adaptor2d.Adaptor2d_HCurve2d,Index : int,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
+    def Vertex_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Index : int,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
         """
         When IsVertex returns True, this method returns the vertex on the arc A.
         """
@@ -905,6 +905,7 @@ class IntPatch_IType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -950,6 +951,7 @@ class IntPatch_ImpImpIntersection():
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -1013,7 +1015,7 @@ class IntPatch_ImpImpIntersection():
 
         Returns True when the TangentFaces returns True and the normal vectors evaluated at a point on the first and the second surface are opposite. The exception DomainError is raised if TangentFaces returns False.
         """
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,theIsReqToKeepRLine : bool=False) -> None: 
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,theIsReqToKeepRLine : bool=False) -> None: 
         """
         Flag theIsReqToKeepRLine has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. When intersection result returns IntPatch_RLine and another IntPatch_Line (not restriction) we (in case of theIsReqToKeepRLine==TRUE) will always keep both lines even if they are coincided.
         """
@@ -1030,9 +1032,9 @@ class IntPatch_ImpImpIntersection():
         Returns True if the two patches are considered as entirely tangent, i.e every restriction arc of one patch is inside the geometric base of the other patch.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,theIsReqToKeepRLine : bool=False) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,theIsReqToKeepRLine : bool=False) -> None: ...
+    def __init__(self) -> None: ...
     IntStatus_Fail: OCP.IntPatch.IntStatus_e # value = <IntStatus_e.IntStatus_Fail: 2>
     IntStatus_InfiniteSectionCurve: OCP.IntPatch.IntStatus_e # value = <IntStatus_e.IntStatus_InfiniteSectionCurve: 1>
     IntStatus_OK: OCP.IntPatch.IntStatus_e # value = <IntStatus_e.IntStatus_OK: 0>
@@ -1043,9 +1045,9 @@ class IntPatch_ImpPrmIntersection():
     """
     def IsDone(self) -> bool: 
         """
-        Returns true if the calculus was succesfull.
+        Returns true if the calculus was successful.
 
-        Returns true if the calculus was succesfull.
+        Returns true if the calculus was successful.
         """
     def IsEmpty(self) -> bool: 
         """
@@ -1071,7 +1073,7 @@ class IntPatch_ImpPrmIntersection():
 
         Returns the number of "single" points.
         """
-    def Perform(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,Fleche : float,Pas : float) -> None: 
+    def Perform(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,Fleche : float,Pas : float) -> None: 
         """
         None
         """
@@ -1086,9 +1088,9 @@ class IntPatch_ImpPrmIntersection():
         to search for solution from the given point
         """
     @overload
-    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,Fleche : float,Pas : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,Fleche : float,Pas : float) -> None: ...
     pass
 class IntPatch_InterferencePolyhedron(OCP.Intf.Intf_Interference):
     """
@@ -1142,14 +1144,14 @@ class IntPatch_InterferencePolyhedron(OCP.Intf.Intf_Interference):
         Gives the number of zones of tangence in the interference.
         """
     @overload
-    def Perform(self,Obje : IntPatch_Polyhedron) -> None: 
+    def Perform(self,Obje1 : IntPatch_Polyhedron,Obje2 : IntPatch_Polyhedron) -> None: 
         """
         Computes the interference between the two Polyhedra.
 
         Computes the self interference of a Polyhedron.
         """
     @overload
-    def Perform(self,Obje1 : IntPatch_Polyhedron,Obje2 : IntPatch_Polyhedron) -> None: ...
+    def Perform(self,Obje : IntPatch_Polyhedron) -> None: ...
     def PntValue(self,Index : int) -> OCP.Intf.Intf_SectionPoint: 
         """
         Gives the point of intersection of address Index in the interference.
@@ -1163,17 +1165,17 @@ class IntPatch_InterferencePolyhedron(OCP.Intf.Intf_Interference):
         Gives the zone of tangence at address Index in the interference.
         """
     @overload
+    def __init__(self,Obje1 : IntPatch_Polyhedron,Obje2 : IntPatch_Polyhedron) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Obje : IntPatch_Polyhedron) -> None: ...
-    @overload
-    def __init__(self,Obje1 : IntPatch_Polyhedron,Obje2 : IntPatch_Polyhedron) -> None: ...
     pass
 class IntPatch_Intersection():
     """
     This class provides a generic algorithm to intersect 2 surfaces.
     """
-    def Dump(self,Mode : int,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: 
+    def Dump(self,Mode : int,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: 
         """
         Dump of each result line. Mode for more accurate dumps.
         """
@@ -1214,9 +1216,9 @@ class IntPatch_Intersection():
         Returns True when the TangentFaces returns True and the normal vectors evaluated at a point on the first and the second surface are opposite. The exception DomainError is raised if TangentFaces returns False.
         """
     @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,LOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S,isGeomInt : bool=True,theIsReqToKeepRLine : bool=False,theIsReqToPostWLProc : bool=True) -> None: 
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,U1 : float,V1 : float,U2 : float,V2 : float,TolArc : float,TolTang : float) -> None: 
         """
-        Flag theIsReqToKeepRLine has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. When intersection result returns IntPatch_RLine and another IntPatch_Line (not restriction) we (in case of theIsReqToKeepRLine==TRUE) will always keep both lines even if they are coincided. Flag theIsReqToPostWLProc has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. If theIsReqToPostWLProc == FALSE, then we will work with Walking-line obtained after intersection algorithm directly (wothout any post-processing).
+        Flag theIsReqToKeepRLine has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. When intersection result returns IntPatch_RLine and another IntPatch_Line (not restriction) we (in case of theIsReqToKeepRLine==TRUE) will always keep both lines even if they are coincided. Flag theIsReqToPostWLProc has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. If theIsReqToPostWLProc == FALSE, then we will work with Walking-line obtained after intersection algorithm directly (without any post-processing).
 
         If isGeomInt == Standard_False, then method Param-Param intersection will be used. Flag theIsReqToKeepRLine has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. When intersection result returns IntPatch_RLine and another IntPatch_Line (not restriction) we (in case of theIsReqToKeepRLine==TRUE) will always keep both lines even if they are coincided. Flag theIsReqToPostWLProc has been entered only for compatibility with TopOpeBRep package. It shall be deleted after deleting TopOpeBRep. If theIsReqToPostWLProc == FALSE, then we will work with Walking-line obtained after intersection algorithm directly (without any post-processing).
 
@@ -1225,11 +1227,11 @@ class IntPatch_Intersection():
         Uses for finding self-intersected surfaces.
         """
     @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,isGeomInt : bool=True,theIsReqToKeepRLine : bool=False,theIsReqToPostWLProc : bool=True) -> None: ...
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,isGeomInt : bool=True,theIsReqToKeepRLine : bool=False,theIsReqToPostWLProc : bool=True) -> None: ...
     @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,U1 : float,V1 : float,U2 : float,V2 : float,TolArc : float,TolTang : float) -> None: ...
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,LOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S,isGeomInt : bool=True,theIsReqToKeepRLine : bool=False,theIsReqToPostWLProc : bool=True) -> None: ...
     @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
     def Point(self,Index : int) -> IntPatch_Point: 
         """
         Returns the point of range Index. An exception is raised if Index<=0 or Index>NbPnt.
@@ -1251,11 +1253,11 @@ class IntPatch_Intersection():
         Returns True if the two patches are considered as entirely tangent, i-e every restriction arc of one patch is inside the geometric base of the other patch.
         """
     @overload
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
-    @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
     pass
 class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
     """
@@ -1312,9 +1314,9 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
     def FindParameter(self,P : OCP.gp.gp_Pnt,theParams : OCP.TColStd.TColStd_ListOfReal) -> None: ...
     def FirstParameter(self,IsIncluded : bool) -> float: 
         """
-        Returns the first parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to FirstParamater. Otherwise, the parameter must be greater than FirstParameter.
+        Returns the first parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to FirstParameter. Otherwise, the parameter must be greater than FirstParameter.
 
-        Returns the first parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to FirstParamater. Otherwise, the parameter must be greater than FirstParameter.
+        Returns the first parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to FirstParameter. Otherwise, the parameter must be greater than FirstParameter.
         """
     def FirstPoint(self) -> IntPatch_Point: 
         """
@@ -1343,23 +1345,23 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTangent(self) -> bool: 
         """
         Returns TRUE if the intersection is a line of tangency between the 2 patches.
@@ -1392,9 +1394,9 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
         """
     def LastParameter(self,IsIncluded : bool) -> float: 
         """
-        Returns the last parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to LastParamater. Otherwise, the parameter must be less than LastParameter.
+        Returns the last parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to LastParameter. Otherwise, the parameter must be less than LastParameter.
 
-        Returns the last parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to LastParamater. Otherwise, the parameter must be less than LastParameter.
+        Returns the last parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to LastParameter. Otherwise, the parameter must be less than LastParameter.
         """
     def LastPoint(self) -> IntPatch_Point: 
         """
@@ -1473,9 +1475,9 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Returns the vertex of range Index on the line.
         """
     @overload
-    def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
-    @overload
     def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
+    @overload
+    def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool) -> None: ...
     @staticmethod
@@ -1501,7 +1503,7 @@ class IntPatch_LineConstructor():
         """
         None
         """
-    def Perform(self,SL : IntPatch_SequenceOfLine,L : IntPatch_Line,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Tol : float) -> None: 
+    def Perform(self,SL : IntPatch_SequenceOfLine,L : IntPatch_Line,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Tol : float) -> None: 
         """
         None
         """
@@ -1509,15 +1511,15 @@ class IntPatch_LineConstructor():
     pass
 class IntPatch_Point():
     """
-    Definition of an intersection point between two surfaces. Such a point is contains geometrical informations (see the Value method) and logical informations.
+    Definition of an intersection point between two surfaces. Such a point is contains geometrical information (see the Value method) and logical information.
     """
-    def ArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def ArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the arc of restriction containing the vertex. The exception DomainError is raised if IsOnDomS1 returns False.
 
         Returns the arc of restriction containing the vertex. The exception DomainError is raised if IsOnDomS1 returns False.
         """
-    def ArcOnS2(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def ArcOnS2(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the arc of restriction containing the vertex. The exception DomainError is raised if IsOnDomS2 returns False.
 
@@ -1609,7 +1611,7 @@ class IntPatch_Point():
         """
         None
         """
-    def SetArc(self,OnFirst : bool,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: 
+    def SetArc(self,OnFirst : bool,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Param : float,TLine : OCP.IntSurf.IntSurf_Transition,TArc : OCP.IntSurf.IntSurf_Transition) -> None: 
         """
         Sets the values of a point which is on one of the domain, when both surfaces are implicit ones. If OnFirst is True, the point is on the domain of the first patch, otherwise the point is on the domain of the second surface.
         """
@@ -1633,7 +1635,7 @@ class IntPatch_Point():
         None
         """
     @overload
-    def SetValue(self,thePOn2S : OCP.IntSurf.IntSurf_PntOn2S) -> None: 
+    def SetValue(self,Pt : OCP.gp.gp_Pnt,Tol : float,Tangent : bool) -> None: 
         """
         Sets the values of a point which is on no domain, when both surfaces are implicit ones. If Tangent is True, the point is a point of tangency between the surfaces.
 
@@ -1646,9 +1648,9 @@ class IntPatch_Point():
         Sets the value of <pt> member
         """
     @overload
-    def SetValue(self,Pt : OCP.gp.gp_Pnt,Tol : float,Tangent : bool) -> None: ...
-    @overload
     def SetValue(self,Pt : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def SetValue(self,thePOn2S : OCP.IntSurf.IntSurf_PntOn2S) -> None: ...
     def SetVertex(self,OnFirst : bool,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
         """
         Sets the values of a point which is a vertex on the initial facet of restriction of one of the surface. If OnFirst is True, the point is on the domain of the first patch, otherwise the point is on the domain of the second surface.
@@ -1726,7 +1728,7 @@ class IntPatch_PointLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Removes vertices from the line
         """
     @staticmethod
-    def CurvatureRadiusOfIntersLine_s(theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theUVPoint : OCP.IntSurf.IntSurf_PntOn2S) -> float: 
+    def CurvatureRadiusOfIntersLine_s(theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theUVPoint : OCP.IntSurf.IntSurf_PntOn2S) -> float: 
         """
         Returns the radius of curvature of the intersection line in given point. Returns negative value if computation is not possible.
         """
@@ -1755,23 +1757,23 @@ class IntPatch_PointLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOutBox(self,P : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if P is out of the box built from 3D-points.
@@ -1993,9 +1995,9 @@ class IntPatch_PolyLine(IntPatch_Polygo, OCP.Intf.Intf_Polygon2d):
         None
         """
     @overload
-    def __init__(self,InitDefle : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,InitDefle : float) -> None: ...
     pass
 class IntPatch_PolyArc(IntPatch_Polygo, OCP.Intf.Intf_Polygon2d):
     """
@@ -2055,7 +2057,7 @@ class IntPatch_PolyArc(IntPatch_Polygo, OCP.Intf.Intf_Polygon2d):
         """
         None
         """
-    def __init__(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,NbSample : int,Pfirst : float,Plast : float,BoxOtherPolygon : OCP.Bnd.Bnd_Box2d) -> None: ...
+    def __init__(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d,NbSample : int,Pfirst : float,Plast : float,BoxOtherPolygon : OCP.Bnd.Bnd_Box2d) -> None: ...
     pass
 class IntPatch_Polyhedron():
     """
@@ -2071,9 +2073,9 @@ class IntPatch_Polyhedron():
         """
     def Contain(self,Triang : int,ThePnt : OCP.gp.gp_Pnt) -> bool: 
         """
-        Give the plane equation of the triangle of addresse Triang.
+        Give the plane equation of the triangle of address Triang.
         """
-    def DeflectionOnTriangle(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Index : int) -> float: 
+    def DeflectionOnTriangle(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Index : int) -> float: 
         """
         None
         """
@@ -2112,7 +2114,7 @@ class IntPatch_Polyhedron():
         """
     def PlaneEquation(self,Triang : int,NormalVector : OCP.gp.gp_XYZ) -> Tuple[float]: 
         """
-        Give the plane equation of the triangle of addresse Triang.
+        Give the plane equation of the triangle of address Triang.
         """
     @overload
     def Point(self,Index : int) -> OCP.gp.gp_Pnt: 
@@ -2128,29 +2130,29 @@ class IntPatch_Polyhedron():
     @overload
     def Point(self,Index : int,U : float,V : float) -> OCP.gp.gp_Pnt: ...
     @overload
-    def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: ...
-    @overload
     def Point(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: ...
     def Size(self) -> Tuple[int, int]: 
         """
         Get the size of the MaTriangle.
         """
     def TriConnex(self,Triang : int,Pivot : int,Pedge : int,TriCon : int,OtherP : int) -> int: 
         """
-        Give the addresse Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
+        Give the address Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
         """
     def Triangle(self,Index : int) -> Tuple[int, int, int]: 
         """
-        Give the 3 points of the triangle of addresse Index in the double array of triangles.
+        Give the 3 points of the triangle of address Index in the double array of triangles.
         """
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,nbdU : int,nbdV : int) -> None: ...
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,nbdU : int,nbdV : int) -> None: ...
     pass
 class IntPatch_PolyhedronTool():
     """
-    Describe the signature of a polyedral surface with only triangular facets and the necessary informations to compute the interferences.
+    Describe the signature of a polyhedral surface with only triangular facets and the necessary information to compute the interferences.
     """
     @staticmethod
     def Bounding_s(thePolyh : IntPatch_Polyhedron) -> OCP.Bnd.Bnd_Box: 
@@ -2170,17 +2172,17 @@ class IntPatch_PolyhedronTool():
     @staticmethod
     def NbTriangles_s(thePolyh : IntPatch_Polyhedron) -> int: 
         """
-        Give the number of triangles in this polyedral surface.
+        Give the number of triangles in this polyhedral surface.
         """
     @staticmethod
     def Point_s(thePolyh : IntPatch_Polyhedron,Index : int) -> OCP.gp.gp_Pnt: 
         """
-        Give the point of index i in the polyedral surface.
+        Give the point of index i in the polyhedral surface.
         """
     @staticmethod
     def TriConnex_s(thePolyh : IntPatch_Polyhedron,Triang : int,Pivot : int,Pedge : int,TriCon : int,OtherP : int) -> int: 
         """
-        Gives the addresse Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
+        Gives the address Tricon of the triangle connexe to the triangle of address Triang by the edge Pivot Pedge and the third point of this connexe triangle. When we are on a free edge TriCon==0 but the function return the value of the triangle in the other side of Pivot on the free edge. Used to turn around a vertex.
         """
     @staticmethod
     def Triangle_s(thePolyh : IntPatch_Polyhedron,Index : int) -> Tuple[int, int, int]: 
@@ -2194,14 +2196,14 @@ class IntPatch_PrmPrmIntersection():
     Implementation of the Intersection between two bi-parametrised surfaces.
     """
     @overload
-    def CodeReject(self,x1 : float,y1 : float,z1 : float,x2 : float,y2 : float,z2 : float,x3 : float,y3 : float,z3 : float) -> int: 
+    def CodeReject(self,x0 : float,y0 : float,z0 : float,x1 : float,y1 : float,z1 : float,x : float,y : float,z : float) -> int: 
         """
         None
 
         None
         """
     @overload
-    def CodeReject(self,x0 : float,y0 : float,z0 : float,x1 : float,y1 : float,z1 : float,x : float,y : float,z : float) -> int: ...
+    def CodeReject(self,x1 : float,y1 : float,z1 : float,x2 : float,y2 : float,z2 : float,x3 : float,y3 : float,z3 : float) -> int: ...
     def DansGrille(self,t : int) -> int: 
         """
         None
@@ -2225,9 +2227,9 @@ class IntPatch_PrmPrmIntersection():
     def IntegerGrille(self,tt : int) -> Tuple[int, int, int]: ...
     def IsDone(self) -> bool: 
         """
-        Returns true if the calculus was succesfull.
+        Returns true if the calculus was successful.
 
-        Returns true if the calculus was succesfull.
+        Returns true if the calculus was successful.
         """
     def IsEmpty(self) -> bool: 
         """
@@ -2256,12 +2258,12 @@ class IntPatch_PrmPrmIntersection():
 
         None
         """
-    def NewLine(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,IndexLine : int,LowPoint : int,HighPoint : int,NbPoints : int) -> IntPatch_Line: 
+    def NewLine(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,IndexLine : int,LowPoint : int,HighPoint : int,NbPoints : int) -> IntPatch_Line: 
         """
         Computes about <NbPoints> Intersection Points on the Line <IndexLine> between the Points of Index <LowPoint> and <HighPoint>.
         """
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: 
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: 
         """
         Performs the intersection between <Caro1> and <Caro2>. Associated Polyhedrons <Polyhedron1> and <Polyhedron2> are given.
 
@@ -2280,20 +2282,20 @@ class IntPatch_PrmPrmIntersection():
         Performs the intersection between <Caro1> and <Caro2>.
         """
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ListOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,U1 : float,V1 : float,U2 : float,V2 : float,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ListOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,U1 : float,V1 : float,U2 : float,V2 : float,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ClearFlag : bool=True) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_HSurface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ClearFlag : bool=True) -> None: ...
-    def PointDepart(self,LineOn2S : OCP.IntSurf.IntSurf_LineOn2S,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,SU1 : int,SV1 : int,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,SU2 : int,SV2 : int) -> Any: 
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def PointDepart(self,LineOn2S : OCP.IntSurf.IntSurf_LineOn2S,S1 : OCP.Adaptor3d.Adaptor3d_Surface,SU1 : int,SV1 : int,S2 : OCP.Adaptor3d.Adaptor3d_Surface,SU2 : int,SV2 : int) -> Any: 
         """
         None
         """
@@ -2366,13 +2368,13 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         """
     @overload
     def AddVertex(self,thePnt : IntPatch_Point,theIsPrepend : bool) -> None: ...
-    def ArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def ArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the concerned arc.
 
         Returns the concerned arc.
         """
-    def ArcOnS2(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def ArcOnS2(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the concerned arc.
 
@@ -2399,7 +2401,7 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Set the parameters of all the vertex on the line. if a vertex is already in the line, its parameter is modified else a new point in the line is inserted.
         """
     @staticmethod
-    def CurvatureRadiusOfIntersLine_s(theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theUVPoint : OCP.IntSurf.IntSurf_PntOn2S) -> float: 
+    def CurvatureRadiusOfIntersLine_s(theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theUVPoint : OCP.IntSurf.IntSurf_PntOn2S) -> float: 
         """
         Returns the radius of curvature of the intersection line in given point. Returns negative value if computation is not possible.
         """
@@ -2467,23 +2469,23 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Returns True if the intersection is on the domain of the first patch. Returns False if the intersection is on the domain of the second patch.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOutBox(self,theP : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if theP is out of the box built from 3D-points.
@@ -2570,11 +2572,11 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
 
         Replaces the element of range Index in the list of points.
         """
-    def SetArcOnS1(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def SetArcOnS1(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
         """
-    def SetArcOnS2(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def SetArcOnS2(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
         """
@@ -2639,11 +2641,11 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Returns the vertex of range Index on the line.
         """
     @overload
-    def __init__(self,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
-    @overload
     def __init__(self,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2660,7 +2662,7 @@ class IntPatch_RstInt():
     trouver les points d intersection entre la ligne de cheminement et les arcs de restriction
     """
     @staticmethod
-    def PutVertexOnLine_s(L : IntPatch_Line,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,OtherSurf : OCP.Adaptor3d.Adaptor3d_HSurface,OnFirst : bool,Tol : float) -> None: 
+    def PutVertexOnLine_s(L : IntPatch_Line,Surf : OCP.Adaptor3d.Adaptor3d_Surface,Domain : OCP.Adaptor3d.Adaptor3d_TopolTool,OtherSurf : OCP.Adaptor3d.Adaptor3d_Surface,OnFirst : bool,Tol : float) -> None: 
         """
         None
         """
@@ -2712,23 +2714,23 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2746,23 +2748,23 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
+    def Prepend(self,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: ...
+    def Prepend(self,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2790,9 +2792,9 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2809,14 +2811,14 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntPatch_SequenceOfLine) -> None: 
+    def Append(self,theItem : IntPatch_Line) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntPatch_Line) -> None: ...
+    def Append(self,theSeq : IntPatch_SequenceOfLine) -> None: ...
     def Assign(self,theOther : IntPatch_SequenceOfLine) -> IntPatch_SequenceOfLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2846,23 +2848,23 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPatch_Line) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IntPatch_Line) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPatch_Line) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntPatch_Line) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2889,14 +2891,14 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : IntPatch_Line) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2922,11 +2924,11 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : IntPatch_SequenceOfLine) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2943,14 +2945,14 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: 
+    def Append(self,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: ...
+    def Append(self,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
     def Assign(self,theOther : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> IntPatch_SequenceOfPathPointOfTheSOnBounds: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2980,23 +2982,23 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3056,11 +3058,11 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3123,14 +3125,14 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfPoint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : IntPatch_Point) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPatch_Point) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3157,14 +3159,14 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : IntPatch_SequenceOfPoint) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3192,9 +3194,9 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : IntPatch_SequenceOfPoint) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3211,14 +3213,14 @@ class IntPatch_SequenceOfSegmentOfTheSOnBounds(OCP.NCollection.NCollection_BaseS
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: 
+    def Append(self,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: ...
+    def Append(self,theSeq : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: ...
     def Assign(self,theOther : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> IntPatch_SequenceOfSegmentOfTheSOnBounds: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3257,14 +3259,14 @@ class IntPatch_SequenceOfSegmentOfTheSOnBounds(OCP.NCollection.NCollection_BaseS
     @overload
     def InsertAfter(self,theIndex : int,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3282,23 +3284,23 @@ class IntPatch_SequenceOfSegmentOfTheSOnBounds(OCP.NCollection.NCollection_BaseS
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: 
+    def Prepend(self,theSeq : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: ...
+    def Prepend(self,theItem : IntPatch_TheSegmentOfTheSOnBounds) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3324,11 +3326,11 @@ class IntPatch_SequenceOfSegmentOfTheSOnBounds(OCP.NCollection.NCollection_BaseS
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3357,6 +3359,7 @@ class IntPatch_SpecPntType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3386,17 +3389,17 @@ class IntPatch_SpecialPoints():
     None
     """
     @staticmethod
-    def AddCrossUVIsoPoint_s(theQSurf : OCP.Adaptor3d.Adaptor3d_HSurface,thePSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theRefPt : OCP.IntSurf.IntSurf_PntOn2S,theTol3d : float,theAddedPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False) -> bool: 
+    def AddCrossUVIsoPoint_s(theQSurf : OCP.Adaptor3d.Adaptor3d_Surface,thePSurf : OCP.Adaptor3d.Adaptor3d_Surface,theRefPt : OCP.IntSurf.IntSurf_PntOn2S,theTol3d : float,theAddedPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False) -> bool: 
         """
         Adds the point defined as intersection of two isolines (U = 0 and V = 0) on theQSurf in theLine. theRefPt is used to correct adjusting parameters. If theIsReversed is TRUE then theQSurf correspond to the second (otherwise, the first) surface while forming intersection point IntSurf_PntOn2S.
         """
     @staticmethod
-    def AddPointOnUorVIso_s(theQSurf : OCP.Adaptor3d.Adaptor3d_HSurface,thePSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theRefPt : OCP.IntSurf.IntSurf_PntOn2S,theIsU : bool,theIsoParameter : float,theToler : OCP.math.math_Vector,theInitPoint : OCP.math.math_Vector,theInfBound : OCP.math.math_Vector,theSupBound : OCP.math.math_Vector,theAddedPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False) -> bool: 
+    def AddPointOnUorVIso_s(theQSurf : OCP.Adaptor3d.Adaptor3d_Surface,thePSurf : OCP.Adaptor3d.Adaptor3d_Surface,theRefPt : OCP.IntSurf.IntSurf_PntOn2S,theIsU : bool,theIsoParameter : float,theToler : OCP.math.math_Vector,theInitPoint : OCP.math.math_Vector,theInfBound : OCP.math.math_Vector,theSupBound : OCP.math.math_Vector,theAddedPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False) -> bool: 
         """
         Adds the point lain strictly in the isoline U = 0 or V = 0 of theQSurf, in theLine. theRefPt is used to correct adjusting parameters. If theIsReversed is TRUE then theQSurf corresponds to the second (otherwise, the first) surface while forming intersection point IntSurf_PntOn2S. All math_Vector-objects must be filled as follows: [1] - U-parameter of thePSurf; [2] - V-parameter of thePSurf; [3] - U- (if V-isoline is considered) or V-parameter (if U-isoline is considered) of theQSurf.
         """
     @staticmethod
-    def AddSingularPole_s(theQSurf : OCP.Adaptor3d.Adaptor3d_HSurface,thePSurf : OCP.Adaptor3d.Adaptor3d_HSurface,thePtIso : OCP.IntSurf.IntSurf_PntOn2S,theVertex : IntPatch_Point,theAddedPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False,theIsReqRefCheck : bool=False) -> bool: 
+    def AddSingularPole_s(theQSurf : OCP.Adaptor3d.Adaptor3d_Surface,thePSurf : OCP.Adaptor3d.Adaptor3d_Surface,thePtIso : OCP.IntSurf.IntSurf_PntOn2S,theVertex : IntPatch_Point,theAddedPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False,theIsReqRefCheck : bool=False) -> bool: 
         """
         Computes the pole of sphere to add it in the intersection line. Stores the result in theAddedPoint variable (does not add in the line). At that, cone and sphere (with singularity) must be set in theQSurf parameter. By default (if theIsReversed == FALSE), theQSurf is the first surface of the Walking line. If it is not, theIsReversed parameter must be set to TRUE. theIsReqRefCheck is TRUE if and only if 3D-point of theRefPt must be pole or apex for check (e.g. if it is vertex). thePtIso is the reference point for obtaining isoline where must be placed the Apex/Pole.
         """
@@ -3406,7 +3409,7 @@ class IntPatch_SpecialPoints():
         Sets theNewPoint parameters in 2D-space the closest to theRefPoint with help of adding/subtracting corresponding periods. theArrPeriods must be filled as follows: {<U-period of 1st surface>, <V-period of 1st surface>, <U-period of 2nd surface>, <V-period of 2nd surface>}. If theVertex != 0 then its parameters will be filled as corresponding parameters of theNewPoint.
         """
     @staticmethod
-    def ContinueAfterSpecialPoint_s(theQSurf : OCP.Adaptor3d.Adaptor3d_HSurface,thePSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theRefPt : OCP.IntSurf.IntSurf_PntOn2S,theSPType : IntPatch_SpecPntType,theTol2D : float,theNewPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False) -> bool: 
+    def ContinueAfterSpecialPoint_s(theQSurf : OCP.Adaptor3d.Adaptor3d_Surface,thePSurf : OCP.Adaptor3d.Adaptor3d_Surface,theRefPt : OCP.IntSurf.IntSurf_PntOn2S,theSPType : IntPatch_SpecPntType,theTol2D : float,theNewPoint : OCP.IntSurf.IntSurf_PntOn2S,theIsReversed : bool=False) -> bool: 
         """
         Special point has already been added in the line. Now, we need in correct prolongation of the line or in start new line. This function returns new point.
         """
@@ -3435,14 +3438,14 @@ class IntPatch_TheIWLineOfTheIWalking(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def AddStatusLast(self,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: 
+    def AddStatusLast(self,HasLast : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddStatusLast(self,HasLast : bool) -> None: ...
+    def AddStatusLast(self,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: ...
     def Cut(self,Index : int) -> None: 
         """
         Cut the line at the point of rank Index.
@@ -3488,23 +3491,23 @@ class IntPatch_TheIWLineOfTheIWalking(OCP.Standard.Standard_Transient):
         Returns True if the line is closed.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTangentAtBegining(self) -> bool: 
         """
         None
@@ -3594,14 +3597,14 @@ class IntPatch_TheIWalking():
         Returns the number of points belonging to Pnts on which no line starts or ends. An exception is raised if IsDone returns False.
         """
     @overload
-    def Perform(self,Pnts1 : OCP.IntSurf.IntSurf_SequenceOfPathPoint,Func : IntPatch_TheSurfFunction,S : OCP.Adaptor3d.Adaptor3d_HSurface,Reversed : bool=False) -> None: 
+    def Perform(self,Pnts1 : OCP.IntSurf.IntSurf_SequenceOfPathPoint,Pnts2 : OCP.IntSurf.IntSurf_SequenceOfInteriorPoint,Func : IntPatch_TheSurfFunction,S : OCP.Adaptor3d.Adaptor3d_Surface,Reversed : bool=False) -> None: 
         """
         Searches a set of polylines starting on a point of Pnts1 or Pnts2. Each point on a resulting polyline verifies F(u,v)=0
 
         Searches a set of polylines starting on a point of Pnts1. Each point on a resulting polyline verifies F(u,v)=0
         """
     @overload
-    def Perform(self,Pnts1 : OCP.IntSurf.IntSurf_SequenceOfPathPoint,Pnts2 : OCP.IntSurf.IntSurf_SequenceOfInteriorPoint,Func : IntPatch_TheSurfFunction,S : OCP.Adaptor3d.Adaptor3d_HSurface,Reversed : bool=False) -> None: ...
+    def Perform(self,Pnts1 : OCP.IntSurf.IntSurf_SequenceOfPathPoint,Func : IntPatch_TheSurfFunction,S : OCP.Adaptor3d.Adaptor3d_Surface,Reversed : bool=False) -> None: ...
     def SetTolerance(self,Epsilon : float,Deflection : float,Step : float) -> None: 
         """
         Deflection is the maximum deflection admitted between two consecutive points on a resulting polyline. Step is the maximum increment admitted between two consecutive points (in 2d space). Epsilon is the tolerance beyond which 2 points are confused
@@ -3620,7 +3623,7 @@ class IntPatch_ThePathPointOfTheSOnBounds():
     """
     None
     """
-    def Arc(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def Arc(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
         """
@@ -3633,14 +3636,14 @@ class IntPatch_ThePathPointOfTheSOnBounds():
         None
         """
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,Tol : float,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Parameter : float) -> None: 
+    def SetValue(self,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Parameter : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Parameter : float) -> None: ...
+    def SetValue(self,P : OCP.gp.gp_Pnt,Tol : float,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Parameter : float) -> None: ...
     def Tolerance(self) -> float: 
         """
         None
@@ -3654,11 +3657,11 @@ class IntPatch_ThePathPointOfTheSOnBounds():
         None
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Parameter : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,A : OCP.Adaptor2d.Adaptor2d_HCurve2d,Parameter : float) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Parameter : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Parameter : float) -> None: ...
     pass
 class IntPatch_TheSOnBounds():
     """
@@ -3707,28 +3710,28 @@ class IntPatch_TheSearchInside():
         Returns the number of points. The exception NotDone if raised if IsDone returns False.
         """
     @overload
-    def Perform(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: 
+    def Perform(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_Surface,UStart : float,VStart : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,UStart : float,VStart : float) -> None: ...
+    def Perform(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_Surface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
     def Value(self,Index : int) -> OCP.IntSurf.IntSurf_InteriorPoint: 
         """
         Returns the point of range Index. The exception NotDone if raised if IsDone returns False. The exception OutOfRange if raised if Index <= 0 or Index > NbPoints.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_Surface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
     @overload
-    def __init__(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_HSurface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class IntPatch_TheSegmentOfTheSOnBounds():
     """
     None
     """
-    def Curve(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def Curve(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the geometric curve on the surface 's domain which is solution.
         """
@@ -3752,7 +3755,7 @@ class IntPatch_TheSegmentOfTheSOnBounds():
         """
         Defines the first point or the last point, depending on the value of the boolean First.
         """
-    def SetValue(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def SetValue(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         Defines the concerned arc.
         """
@@ -3794,7 +3797,7 @@ class IntPatch_TheSurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.mat
         """
         None
         """
-    def PSurface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def PSurface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         None
         """
@@ -3807,14 +3810,14 @@ class IntPatch_TheSurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.mat
         None
         """
     @overload
-    def Set(self,Tolerance : float) -> None: 
+    def Set(self,PS : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,PS : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def Set(self,Tolerance : float) -> None: ...
     def SetImplicitSurface(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: 
         """
         None
@@ -3832,7 +3835,7 @@ class IntPatch_TheSurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.mat
         None
         """
     @overload
-    def __init__(self,PS : OCP.Adaptor3d.Adaptor3d_HSurface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
+    def __init__(self,PS : OCP.Adaptor3d.Adaptor3d_Surface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     @overload
     def __init__(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     @overload
@@ -3859,6 +3862,7 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -3882,14 +3886,14 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         __members__: dict # value = {'IntPatch_WLUnknown': <IntPatch_WLType_e.IntPatch_WLUnknown: 0>, 'IntPatch_WLImpImp': <IntPatch_WLType_e.IntPatch_WLImpImp: 1>, 'IntPatch_WLImpPrm': <IntPatch_WLType_e.IntPatch_WLImpPrm: 2>, 'IntPatch_WLPrmPrm': <IntPatch_WLType_e.IntPatch_WLPrmPrm: 3>}
         pass
     @overload
-    def AddVertex(self,thePnt : IntPatch_Point,theIsPrepend : bool) -> None: 
+    def AddVertex(self,Pnt : IntPatch_Point,theIsPrepend : bool=False) -> None: 
         """
         Adds a vertex in the list. If theIsPrepend == TRUE the new vertex will be added before the first element of vertices sequence. Otherwise, to the end of the sequence
 
         Adds a vertex in the list. If theIsPrepend == TRUE the new vertex will be added before the first element of vertices sequence. Otherwise, to the end of the sequence
         """
     @overload
-    def AddVertex(self,Pnt : IntPatch_Point,theIsPrepend : bool=False) -> None: ...
+    def AddVertex(self,thePnt : IntPatch_Point,theIsPrepend : bool) -> None: ...
     def ArcType(self) -> IntPatch_IType: 
         """
         Returns the type of geometry 3d (Line, Circle, Parabola, Hyperbola, Ellipse, Analytic, Walking, Restriction)
@@ -3913,7 +3917,7 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Set the parameters of all the vertex on the line. if a vertex is already in the line, its parameter is modified else a new point in the line is inserted.
         """
     @staticmethod
-    def CurvatureRadiusOfIntersLine_s(theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theUVPoint : OCP.IntSurf.IntSurf_PntOn2S) -> float: 
+    def CurvatureRadiusOfIntersLine_s(theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theUVPoint : OCP.IntSurf.IntSurf_PntOn2S) -> float: 
         """
         Returns the radius of curvature of the intersection line in given point. Returns negative value if computation is not possible.
         """
@@ -3939,7 +3943,7 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Allows or forbids purging of existing WLine
         """
     @overload
-    def FirstPoint(self,Indfirst : int) -> IntPatch_Point: 
+    def FirstPoint(self) -> IntPatch_Point: 
         """
         Returns the Point corresponding to the FirstPoint. Indfirst is the index of the first in the list of vertices.
 
@@ -3950,12 +3954,12 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Returns the Point corresponding to the FirstPoint.
         """
     @overload
-    def FirstPoint(self) -> IntPatch_Point: ...
-    def GetArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def FirstPoint(self,Indfirst : int) -> IntPatch_Point: ...
+    def GetArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
         """
-    def GetArcOnS2(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def GetArcOnS2(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
         """
@@ -3998,23 +4002,23 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOutBox(self,theP : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if theP is out of the box built from 3D-points.
@@ -4104,11 +4108,11 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
 
         Replaces the element of range Index in the list of points. The exception OutOfRange is raised when Index <= 0 or Index > NbVertex.
         """
-    def SetArcOnS1(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def SetArcOnS1(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
         """
-    def SetArcOnS2(self,A : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: 
+    def SetArcOnS2(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
         """
@@ -4218,17 +4222,17 @@ class IntPatch_WLineTool():
     IntPatch_WLineTool provides set of static methods related to walking lines.
     """
     @staticmethod
-    def ComputePurgedWLine_s(theWLine : IntPatch_WLine,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theDom1 : OCP.Adaptor3d.Adaptor3d_TopolTool,theDom2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> IntPatch_WLine: 
+    def ComputePurgedWLine_s(theWLine : IntPatch_WLine,theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theDom1 : OCP.Adaptor3d.Adaptor3d_TopolTool,theDom2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> IntPatch_WLine: 
         """
         I Removes equal points (leave one of equal points) from theWLine and recompute vertex parameters.
         """
     @staticmethod
-    def ExtendTwoWLines_s(theSlin : IntPatch_SequenceOfLine,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theToler3D : float,theArrPeriods : float,theBoxS1 : OCP.Bnd.Bnd_Box2d,theBoxS2 : OCP.Bnd.Bnd_Box2d,theListOfCriticalPoints : Any) -> None: 
+    def ExtendTwoWLines_s(theSlin : IntPatch_SequenceOfLine,theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theToler3D : float,theArrPeriods : float,theBoxS1 : OCP.Bnd.Bnd_Box2d,theBoxS2 : OCP.Bnd.Bnd_Box2d,theListOfCriticalPoints : Any) -> None: 
         """
         Extends every line from theSlin (if it is possible) to be started/finished in strictly determined point (in the place of joint of two lines). As result, some gaps between two lines will vanish. The Walking lines are supposed (algorithm will do nothing for not-Walking line) to be computed as a result of intersection. Both theS1 and theS2 must be quadrics. Other cases are not supported. theArrPeriods must be filled as follows (every value must not be negative; if the surface is not periodic the period must be equal to 0.0 strictly): {<U-period of 1st surface>, <V-period of 1st surface>, <U-period of 2nd surface>, <V-period of 2nd surface>}. theListOfCriticalPoints must contain 3D-points where joining is disabled.
         """
     @staticmethod
-    def JoinWLines_s(theSlin : IntPatch_SequenceOfLine,theSPnt : IntPatch_SequenceOfPoint,theS1 : OCP.Adaptor3d.Adaptor3d_HSurface,theS2 : OCP.Adaptor3d.Adaptor3d_HSurface,theTol3D : float) -> None: 
+    def JoinWLines_s(theSlin : IntPatch_SequenceOfLine,theSPnt : IntPatch_SequenceOfPoint,theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theTol3D : float) -> None: 
         """
         Joins all WLines from theSlin to one if it is possible and records the result into theSlin again. Lines will be kept to be split if: a) they are separated (has no common points); b) resulted line (after joining) go through seam-edges or surface boundaries.
         """

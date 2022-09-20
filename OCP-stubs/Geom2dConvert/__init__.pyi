@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import io
-import OCP.TColGeom2d
 import OCP.Adaptor2d
 import OCP.GeomAbs
+import OCP.TColGeom2d
+import io
 import OCP.Geom2d
+import OCP.TColStd
 __all__  = [
 "Geom2dConvert",
 "Geom2dConvert_ApproxCurve",
@@ -19,11 +19,11 @@ __all__  = [
 ]
 class Geom2dConvert():
     """
-    This package provides an implementation of algorithmes to do the conversion between equivalent geometric entities from package Geom2d. It gives the possibility : . to obtain the B-spline representation of bounded curves. . to split a B-spline curve into several B-spline curves with some constraints of continuity, . to convert a B-spline curve into several Bezier curves or surfaces. All the geometric entities used in this package are bounded. References : . Generating the Bezier Points of B-spline curves and surfaces (Wolfgang Bohm) CAGD volume 13 number 6 november 1981 . On NURBS: A Survey (Leslie Piegl) IEEE Computer Graphics and Application January 1991 . Curve and surface construction using rational B-splines (Leslie Piegl and Wayne Tiller) CAD Volume 19 number 9 november 1987 . A survey of curve and surface methods in CAGD (Wolfgang BOHM) CAGD 1 1984
+    This package provides an implementation of algorithms to do the conversion between equivalent geometric entities from package Geom2d. It gives the possibility : . to obtain the B-spline representation of bounded curves. . to split a B-spline curve into several B-spline curves with some constraints of continuity, . to convert a B-spline curve into several Bezier curves or surfaces. All the geometric entities used in this package are bounded. References : . Generating the Bezier Points of B-spline curves and surfaces (Wolfgang Bohm) CAGD volume 13 number 6 november 1981 . On NURBS: A Survey (Leslie Piegl) IEEE Computer Graphics and Application January 1991 . Curve and surface construction using rational B-splines (Leslie Piegl and Wayne Tiller) CAD Volume 19 number 9 november 1987 . A survey of curve and surface methods in CAGD (Wolfgang BOHM) CAGD 1 1984
     """
     @staticmethod
     @overload
-    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,tabBS : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,Tolerance : float) -> None: 
+    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,tabBS : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,AngularTolerance : float,Tolerance : float) -> None: 
         """
         This Method reduces as far as it is possible the multiplicities of the knots of the BSpline BS.(keeping the geometry). It returns an array of BSpline C1. Tolerance is a geometrical tolerance
 
@@ -31,7 +31,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,tabBS : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,AngularTolerance : float,Tolerance : float) -> None: ...
+    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,tabBS : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,Tolerance : float) -> None: ...
     @staticmethod
     def C0BSplineToC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,Tolerance : float) -> None: 
         """
@@ -60,7 +60,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         -- Convert a curve to BSpline by Approximation
 
@@ -68,7 +68,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
+    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     def __init__(self) -> None: ...
     pass
 class Geom2dConvert_ApproxCurve():
@@ -89,7 +89,7 @@ class Geom2dConvert_ApproxCurve():
         """
     def IsDone(self) -> bool: 
         """
-        returns Standard_True if the approximation has been done with within requiered tolerance
+        returns Standard_True if the approximation has been done with within required tolerance
         """
     def MaxError(self) -> float: 
         """
@@ -98,7 +98,7 @@ class Geom2dConvert_ApproxCurve():
     @overload
     def __init__(self,Curve : OCP.Geom2d.Geom2d_Curve,Tol2d : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> None: ...
     @overload
-    def __init__(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d,Tol2d : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> None: ...
+    def __init__(self,Curve : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol2d : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> None: ...
     pass
 class Geom2dConvert_BSplineCurveKnotSplitting():
     """
@@ -139,9 +139,9 @@ class Geom2dConvert_BSplineCurveToBezierCurve():
         Returns the number of BezierCurve arcs. If at the creation time you have decomposed the basis curve between the parametric values UFirst, ULast the number of BezierCurve arcs depends on the number of knots included inside the interval [UFirst, ULast]. If you have decomposed the whole basis B-spline curve the number of BezierCurve arcs NbArcs is equal to the number of knots less one.
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
-    @overload
     def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BSplineCurve,U1 : float,U2 : float,ParametricTolerance : float) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
     pass
 class Geom2dConvert_CompCurveToBSplineCurve():
     """
@@ -149,7 +149,7 @@ class Geom2dConvert_CompCurveToBSplineCurve():
     """
     def Add(self,NewCurve : OCP.Geom2d.Geom2d_BoundedCurve,Tolerance : float,After : bool=False) -> bool: 
         """
-        Append a curve in the BSpline Return False if the curve is not G0 with the BSplineCurve. Tolerance is used to check continuity and decrease Multiplicty at the common Knot After is usefull if BasisCurve is a closed curve .
+        Append a curve in the BSpline Return False if the curve is not G0 with the BSplineCurve. Tolerance is used to check continuity and decrease Multiplicty at the common Knot After is useful if BasisCurve is a closed curve .
         """
     def BSplineCurve(self) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """

@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.gp
-import OCP.NCollection
 import OCP.TColgp
+import OCP.NCollection
 import OCP.TColStd
 __all__  = [
 "Convert_ConicToBSplineCurve",
@@ -25,7 +25,6 @@ __all__  = [
 "Convert_SequenceOfArray1OfPoles",
 "Convert_SphereToBSplineSurface",
 "Convert_TorusToBSplineSurface",
-"BuildPolynomialCosAndSin",
 "Convert_Polynomial",
 "Convert_QuasiAngular",
 "Convert_RationalC1",
@@ -40,14 +39,14 @@ class Convert_ConicToBSplineCurve():
     Root class for algorithms which convert a conic curve into a BSpline curve (CircleToBSplineCurve, EllipseToBSplineCurve, HyperbolaToBSplineCurve, ParabolaToBSplineCurve). These algorithms all work on 2D curves from the gp package and compute all the data needed to construct a BSpline curve equivalent to the conic curve. This data consists of: - the degree of the curve, - the periodic characteristics of the curve, - a poles table with associated weights, - a knots table with associated multiplicities. The abstract class ConicToBSplineCurve provides a framework for storing and consulting this computed data. The data may then be used to construct a Geom2d_BSplineCurve curvSuper class of the following classes : This abstract class implements the methods to get the geometric representation of the B-spline curve equivalent to the conic. The B-spline is computed at the creation time in the sub classes. The B-spline curve is defined with its degree, its control points (Poles), its weights, its knots and their multiplicity. All the geometric entities used in this package are defined in 2D space. KeyWords : Convert, Conic, BSplineCurve, 2D.
     """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
         """
         None
 
         None
         """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
     def Degree(self) -> int: 
         """
         Returns the degree of the BSpline curve whose data is computed in this framework.
@@ -182,15 +181,15 @@ class Convert_CompPolynomialToPoles():
         returns the poles of the n-dimensional BSpline in the following format : [1..NumPoles][1..Dimension]
         """
     @overload
+    def __init__(self,Dimension : int,MaxDegree : int,Degree : int,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array1OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
     def __init__(self,NumCurves : int,Dimension : int,MaxDegree : int,Continuity : OCP.TColStd.TColStd_Array1OfInteger,NumCoeffPerCurve : OCP.TColStd.TColStd_Array1OfInteger,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array2OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def __init__(self,NumCurves : int,Continuity : int,Dimension : int,MaxDegree : int,NumCoeffPerCurve : OCP.TColStd.TColStd_HArray1OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_HArray2OfReal,TrueIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
-    @overload
-    def __init__(self,Dimension : int,MaxDegree : int,Degree : int,Coefficients : OCP.TColStd.TColStd_Array1OfReal,PolynomialIntervals : OCP.TColStd.TColStd_Array1OfReal,TrueIntervals : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
 class Convert_ElementarySurfaceToBSplineSurface():
     """
-    Root class for algorithms which convert an elementary surface (cylinder, cone, sphere or torus) into a BSpline surface (CylinderToBSplineSurface, ConeToBSplineSurface, SphereToBSplineSurface, TorusToBSplineSurface). These algorithms all work on elementary surfaces from the gp package and compute all the data needed to construct a BSpline surface equivalent to the cylinder, cone, sphere or torus. This data consists of the following: - degrees in the u and v parametric directions, - periodic characteristics in the u and v parametric directions, - a poles table with associated weights, - a knots table (for the u and v parametric directions) with associated multiplicities. The abstract class ElementarySurfaceToBSplineSurface provides a framework for storing and consulting this computed data. This data may then be used to construct a Geom_BSplineSurface surface, for example. All those classes define algorithmes to convert an ElementarySurface into a B-spline surface. This abstract class implements the methods to get the geometric representation of the B-spline surface. The B-spline representation is computed at the creation time in the sub classes. The B-spline surface is defined with its degree in the parametric U and V directions, its control points (Poles), its weights, its knots and their multiplicity. KeyWords : Convert, ElementarySurface, BSplineSurface.
+    Root class for algorithms which convert an elementary surface (cylinder, cone, sphere or torus) into a BSpline surface (CylinderToBSplineSurface, ConeToBSplineSurface, SphereToBSplineSurface, TorusToBSplineSurface). These algorithms all work on elementary surfaces from the gp package and compute all the data needed to construct a BSpline surface equivalent to the cylinder, cone, sphere or torus. This data consists of the following: - degrees in the u and v parametric directions, - periodic characteristics in the u and v parametric directions, - a poles table with associated weights, - a knots table (for the u and v parametric directions) with associated multiplicities. The abstract class ElementarySurfaceToBSplineSurface provides a framework for storing and consulting this computed data. This data may then be used to construct a Geom_BSplineSurface surface, for example. All those classes define algorithms to convert an ElementarySurface into a B-spline surface. This abstract class implements the methods to get the geometric representation of the B-spline surface. The B-spline representation is computed at the creation time in the sub classes. The B-spline surface is defined with its degree in the parametric U and V directions, its control points (Poles), its weights, its knots and their multiplicity. KeyWords : Convert, ElementarySurface, BSplineSurface.
     """
     def IsUPeriodic(self) -> bool: 
         """
@@ -254,14 +253,14 @@ class Convert_CircleToBSplineCurve(Convert_ConicToBSplineCurve):
     This algorithm converts a circle into a rational B-spline curve. The circle is a Circ2d from package gp and its parametrization is : P (U) = Loc + R * (Cos(U) * Xdir + Sin(U) * YDir) where Loc is the center of the circle Xdir and Ydir are the normalized directions of the local cartesian coordinate system of the circle. The parametrization range for the circle is U [0, 2Pi].
     """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
         """
         None
 
         None
         """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
     def Degree(self) -> int: 
         """
         Returns the degree of the BSpline curve whose data is computed in this framework.
@@ -295,9 +294,9 @@ class Convert_CircleToBSplineCurve(Convert_ConicToBSplineCurve):
         Returns the weight of the pole of index Index to the poles table of the BSpline curve whose data is computed in this framework. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table of the BSpline curve whose data is computed in this framework.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d,U1 : float,U2 : float,Parameterisation : Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
-    @overload
     def __init__(self,C : OCP.gp.gp_Circ2d,Parameterisation : Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ2d,U1 : float,U2 : float,Parameterisation : Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
     pass
 class Convert_CylinderToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     """
@@ -360,9 +359,9 @@ class Convert_CylinderToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
-    def __init__(self,Cyl : OCP.gp.gp_Cylinder,V1 : float,V2 : float) -> None: ...
-    @overload
     def __init__(self,Cyl : OCP.gp.gp_Cylinder,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
+    @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder,V1 : float,V2 : float) -> None: ...
     pass
 class Convert_ConeToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     """
@@ -434,14 +433,14 @@ class Convert_EllipseToBSplineCurve(Convert_ConicToBSplineCurve):
     This algorithm converts a ellipse into a rational B-spline curve. The ellipse is represented an Elips2d from package gp with the parametrization : P (U) = Loc + (MajorRadius * Cos(U) * Xdir + MinorRadius * Sin(U) * Ydir) where Loc is the center of the ellipse, Xdir and Ydir are the normalized directions of the local cartesian coordinate system of the ellipse. The parametrization range is U [0, 2PI]. KeyWords : Convert, Ellipse, BSplineCurve, 2D .
     """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
         """
         None
 
         None
         """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
     def Degree(self) -> int: 
         """
         Returns the degree of the BSpline curve whose data is computed in this framework.
@@ -536,23 +535,23 @@ class Convert_GridPolynomialToPoles():
         Multiplicities of the knots in the V direction
         """
     @overload
-    def __init__(self,NbUSurfaces : int,NBVSurfaces : int,UContinuity : int,VContinuity : int,MaxUDegree : int,MaxVDegree : int,NumCoeffPerSurface : OCP.TColStd.TColStd_HArray2OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialUIntervals : OCP.TColStd.TColStd_HArray1OfReal,PolynomialVIntervals : OCP.TColStd.TColStd_HArray1OfReal,TrueUIntervals : OCP.TColStd.TColStd_HArray1OfReal,TrueVIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
-    @overload
     def __init__(self,MaxUDegree : int,MaxVDegree : int,NumCoeff : OCP.TColStd.TColStd_HArray1OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialUIntervals : OCP.TColStd.TColStd_HArray1OfReal,PolynomialVIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
+    @overload
+    def __init__(self,NbUSurfaces : int,NBVSurfaces : int,UContinuity : int,VContinuity : int,MaxUDegree : int,MaxVDegree : int,NumCoeffPerSurface : OCP.TColStd.TColStd_HArray2OfInteger,Coefficients : OCP.TColStd.TColStd_HArray1OfReal,PolynomialUIntervals : OCP.TColStd.TColStd_HArray1OfReal,PolynomialVIntervals : OCP.TColStd.TColStd_HArray1OfReal,TrueUIntervals : OCP.TColStd.TColStd_HArray1OfReal,TrueVIntervals : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     pass
 class Convert_HyperbolaToBSplineCurve(Convert_ConicToBSplineCurve):
     """
     This algorithm converts a hyperbola into a rational B-spline curve. The hyperbola is an Hypr2d from package gp with the parametrization : P (U) = Loc + (MajorRadius * Cosh(U) * Xdir + MinorRadius * Sinh(U) * Ydir) where Loc is the location point of the hyperbola, Xdir and Ydir are the normalized directions of the local cartesian coordinate system of the hyperbola. KeyWords : Convert, Hyperbola, BSplineCurve, 2D .
     """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
         """
         None
 
         None
         """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
     def Degree(self) -> int: 
         """
         Returns the degree of the BSpline curve whose data is computed in this framework.
@@ -592,14 +591,14 @@ class Convert_ParabolaToBSplineCurve(Convert_ConicToBSplineCurve):
     This algorithm converts a parabola into a non rational B-spline curve. The parabola is a Parab2d from package gp with the parametrization P (U) = Loc + F * (U*U * Xdir + 2 * U * Ydir) where Loc is the apex of the parabola, Xdir is the normalized direction of the symmetry axis of the parabola, Ydir is the normalized direction of the directrix and F is the focal length. KeyWords : Convert, Parabola, BSplineCurve, 2D .
     """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: 
         """
         None
 
         None
         """
     @overload
-    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,UFirst : float,ULast : float,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
+    def BuildCosAndSin(self,Parametrisation : Convert_ParameterisationType,CosNumerator : OCP.TColStd.TColStd_HArray1OfReal,SinNumerator : OCP.TColStd.TColStd_HArray1OfReal,Denominator : OCP.TColStd.TColStd_HArray1OfReal,Knots : OCP.TColStd.TColStd_HArray1OfReal,Mults : OCP.TColStd.TColStd_HArray1OfInteger) -> Tuple[int]: ...
     def Degree(self) -> int: 
         """
         Returns the degree of the BSpline curve whose data is computed in this framework.
@@ -659,6 +658,7 @@ class Convert_ParameterisationType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -731,14 +731,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Convert_SequenceOfArray1OfPoles) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: 
         """
@@ -774,14 +774,14 @@ class Convert_SequenceOfArray1OfPoles(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -880,11 +880,11 @@ class Convert_SphereToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
         Returns the weight of the pole of index (UIndex,VIndex) to the poles table of the BSpline surface whose data is computed in this framework. Exceptions Standard_OutOfRange if, for the BSpline surface whose data is computed in this framework: - UIndex is outside the bounds of the poles table in the u parametric direction, or - VIndex is outside the bounds of the poles table in the v parametric direction.
         """
     @overload
-    def __init__(self,Sph : OCP.gp.gp_Sphere,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
-    @overload
     def __init__(self,Sph : OCP.gp.gp_Sphere) -> None: ...
     @overload
     def __init__(self,Sph : OCP.gp.gp_Sphere,Param1 : float,Param2 : float,UTrim : bool=True) -> None: ...
+    @overload
+    def __init__(self,Sph : OCP.gp.gp_Sphere,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
     pass
 class Convert_TorusToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     """
@@ -953,10 +953,6 @@ class Convert_TorusToBSplineSurface(Convert_ElementarySurfaceToBSplineSurface):
     @overload
     def __init__(self,T : OCP.gp.gp_Torus,U1 : float,U2 : float,V1 : float,V2 : float) -> None: ...
     pass
-def BuildPolynomialCosAndSin(arg0 : float,arg1 : float,arg2 : int,arg3 : OCP.TColStd.TColStd_HArray1OfReal,arg4 : OCP.TColStd.TColStd_HArray1OfReal,arg5 : OCP.TColStd.TColStd_HArray1OfReal) -> None:
-    """
-    None
-    """
 Convert_Polynomial: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_Polynomial: 7>
 Convert_QuasiAngular: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_QuasiAngular: 5>
 Convert_RationalC1: OCP.Convert.Convert_ParameterisationType # value = <Convert_ParameterisationType.Convert_RationalC1: 6>

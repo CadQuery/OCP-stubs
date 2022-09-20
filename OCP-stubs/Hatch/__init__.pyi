@@ -22,14 +22,14 @@ class Hatch_Hatcher():
     The Hatcher is an algorithm to compute cross hatchings in a 2d plane. It is mainly dedicated to display purpose.
     """
     @overload
-    def AddLine(self,D : OCP.gp.gp_Dir2d,Dist : float) -> None: 
+    def AddLine(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm=Hatch_LineForm.Hatch_ANYLINE) -> None: 
         """
         Add a line <L> to be trimmed. <T> the type is only kept from information. It is not used in the computation.
 
         Add an infinite line on direction <D> at distance <Dist> from the origin to be trimmed. <Dist> may be negative.
         """
     @overload
-    def AddLine(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm=Hatch_LineForm.Hatch_ANYLINE) -> None: ...
+    def AddLine(self,D : OCP.gp.gp_Dir2d,Dist : float) -> None: ...
     def AddXLine(self,X : float) -> None: 
         """
         Add an infinite line parallel to the Y-axis at abciss <X>.
@@ -105,7 +105,7 @@ class Hatch_Hatcher():
     @overload
     def Tolerance(self,Tol : float) -> None: ...
     @overload
-    def Trim(self,L : OCP.gp.gp_Lin2d,Index : int=0) -> None: 
+    def Trim(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,Index : int=0) -> None: 
         """
         Trims the lines at intersections with <L>.
 
@@ -114,7 +114,7 @@ class Hatch_Hatcher():
         Trims the line at intersection with the oriented segment P1,P2.
         """
     @overload
-    def Trim(self,P1 : OCP.gp.gp_Pnt2d,P2 : OCP.gp.gp_Pnt2d,Index : int=0) -> None: ...
+    def Trim(self,L : OCP.gp.gp_Lin2d,Index : int=0) -> None: ...
     @overload
     def Trim(self,L : OCP.gp.gp_Lin2d,Start : float,End : float,Index : int=0) -> None: ...
     def __init__(self,Tol : float,Oriented : bool=True) -> None: ...
@@ -128,9 +128,9 @@ class Hatch_Line():
         Insert a new intersection in the sorted list.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,L : OCP.gp.gp_Lin2d,T : Hatch_LineForm) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Hatch_LineForm():
     """
@@ -147,6 +147,7 @@ class Hatch_LineForm():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -173,9 +174,9 @@ class Hatch_Parameter():
     Stores an intersection on a line represented by :
     """
     @overload
-    def __init__(self,Par1 : float,Start : bool,Index : int=0,Par2 : float=0.0) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Par1 : float,Start : bool,Index : int=0,Par2 : float=0.0) -> None: ...
     pass
 class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -186,14 +187,14 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Hatch_Line) -> None: 
+    def Append(self,theSeq : Hatch_SequenceOfLine) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Hatch_SequenceOfLine) -> None: ...
+    def Append(self,theItem : Hatch_Line) -> None: ...
     def Assign(self,theOther : Hatch_SequenceOfLine) -> Hatch_SequenceOfLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -232,14 +233,14 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Hatch_SequenceOfLine) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Hatch_Line) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Hatch_SequenceOfLine) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Hatch_SequenceOfLine) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Hatch_Line) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -257,23 +258,23 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Hatch_SequenceOfLine) -> None: 
+    def Prepend(self,theItem : Hatch_Line) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Hatch_Line) -> None: ...
+    def Prepend(self,theSeq : Hatch_SequenceOfLine) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -301,9 +302,9 @@ class Hatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Hatch_SequenceOfLine) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -320,14 +321,14 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Hatch_Parameter) -> None: 
+    def Append(self,theSeq : Hatch_SequenceOfParameter) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Hatch_SequenceOfParameter) -> None: ...
+    def Append(self,theItem : Hatch_Parameter) -> None: ...
     def Assign(self,theOther : Hatch_SequenceOfParameter) -> Hatch_SequenceOfParameter: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -400,14 +401,14 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Hatch_SequenceOfParameter) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -433,9 +434,9 @@ class Hatch_SequenceOfParameter(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Hatch_SequenceOfParameter) -> None: ...
     def __iter__(self) -> Iterator: ...

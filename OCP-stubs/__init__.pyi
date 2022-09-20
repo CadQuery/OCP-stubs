@@ -295,6 +295,7 @@ __all__  = [
 "Voxel",
 "Vrml",
 "VrmlAPI",
+"WNT",
 "XBRepMesh",
 "XCAFApp",
 "XCAFDimTolObjects",
@@ -314,7 +315,6 @@ __all__  = [
 "XmlObjMgt",
 "XmlTObjDrivers",
 "XmlXCAFDrivers",
-"Xw",
 "gce",
 "gp",
 "math"

@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColGeom
-import OCP.TColGeom2d
 import OCP.GeomAbs
-import OCP.ShapeAnalysis
-import OCP.Geom
-import OCP.TopoDS
+import OCP.ShapeFix
+import OCP.TColGeom2d
 import OCP.Geom2d
 import OCP.Standard
-import OCP.ShapeFix
+import OCP.Geom
 import OCP.ShapeExtend
+import OCP.TopoDS
+import OCP.ShapeAnalysis
+import OCP.TColGeom
 __all__  = [
 "ShapeAlgo",
 "ShapeAlgo_AlgoContainer",
@@ -42,23 +42,23 @@ class ShapeAlgo():
     pass
 class ShapeAlgo_AlgoContainer(OCP.Standard.Standard_Transient):
     @overload
-    def ApproxBSplineCurve(self,bspline : OCP.Geom.Geom_BSplineCurve,seq : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: 
+    def ApproxBSplineCurve(self,bspline : OCP.Geom2d.Geom2d_BSplineCurve,seq : OCP.TColGeom2d.TColGeom2d_SequenceOfCurve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ApproxBSplineCurve(self,bspline : OCP.Geom2d.Geom2d_BSplineCurve,seq : OCP.TColGeom2d.TColGeom2d_SequenceOfCurve) -> None: ...
+    def ApproxBSplineCurve(self,bspline : OCP.Geom.Geom_BSplineCurve,seq : OCP.TColGeom.TColGeom_SequenceOfCurve) -> None: ...
     @overload
-    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom.Geom_BSplineCurve,seqBS : OCP.TColGeom.TColGeom_HSequenceOfBoundedCurve) -> bool: 
+    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom2d.Geom2d_BSplineCurve,seqBS : OCP.TColGeom2d.TColGeom2d_HSequenceOfBoundedCurve) -> bool: 
         """
         None
 
         Converts C0 B-Spline curve into sequence of C1 B-Spline curves. Calls ShapeUpgrade::C0BSplineToSequenceOfC1BSplineCurve.
         """
     @overload
-    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom2d.Geom2d_BSplineCurve,seqBS : OCP.TColGeom2d.TColGeom2d_HSequenceOfBoundedCurve) -> bool: ...
+    def C0BSplineToSequenceOfC1BSplineCurve(self,BS : OCP.Geom.Geom_BSplineCurve,seqBS : OCP.TColGeom.TColGeom_HSequenceOfBoundedCurve) -> bool: ...
     def C0ShapeToC1Shape(self,shape : OCP.TopoDS.TopoDS_Shape,tol : float) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Converts a shape on C0 geometry into the shape on C1 geometry.
@@ -108,23 +108,23 @@ class ShapeAlgo_AlgoContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def OuterWire(self,face : OCP.TopoDS.TopoDS_Face) -> OCP.TopoDS.TopoDS_Wire: 
         """
         Returns the outer wire on the face <Face>.
@@ -190,23 +190,23 @@ class ShapeAlgo_ToolContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

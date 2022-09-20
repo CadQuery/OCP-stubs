@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Bisector
-import OCP.TColStd
-import io
 import OCP.MAT
+import OCP.Bisector
 import OCP.NCollection
 import OCP.TColGeom2d
+import io
+import OCP.Geom2d
 import OCP.gp
 import OCP.TopoDS
-import OCP.Geom2d
+import OCP.TColStd
 __all__  = [
 "BRepMAT2d_BisectingLocus",
 "BRepMAT2d_DataMapOfBasicEltShape",
@@ -37,14 +37,14 @@ class BRepMAT2d_BisectingLocus():
         Returns the geometry of type <Bissec> linked to the arc <ARC>. <Reverse> is False when the FirstNode of <anArc> correspond to the first point of geometry.
         """
     @overload
-    def GeomElt(self,aBasicElt : OCP.MAT.MAT_BasicElt) -> OCP.Geom2d.Geom2d_Geometry: 
+    def GeomElt(self,aNode : OCP.MAT.MAT_Node) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the geometry linked to the <BasicElt>.
 
         Returns the geometry of type <gp> linked to the <Node>.
         """
     @overload
-    def GeomElt(self,aNode : OCP.MAT.MAT_Node) -> OCP.gp.gp_Pnt2d: ...
+    def GeomElt(self,aBasicElt : OCP.MAT.MAT_BasicElt) -> OCP.Geom2d.Geom2d_Geometry: ...
     def Graph(self) -> OCP.MAT.MAT_Graph: 
         """
         Returns <theGraph> of <me>.
@@ -96,14 +96,14 @@ class BRepMAT2d_DataMapOfBasicEltShape(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : BRepMAT2d_DataMapOfBasicEltShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -113,14 +113,14 @@ class BRepMAT2d_DataMapOfBasicEltShape(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.MAT.MAT_BasicElt) -> OCP.TopoDS.TopoDS_Shape: 
+    def Find(self,theKey : OCP.MAT.MAT_BasicElt,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.MAT.MAT_BasicElt,theValue : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    def Find(self,theKey : OCP.MAT.MAT_BasicElt) -> OCP.TopoDS.TopoDS_Shape: ...
     def IsBound(self,theKey : OCP.MAT.MAT_BasicElt) -> bool: 
         """
         IsBound
@@ -248,11 +248,11 @@ class BRepMAT2d_DataMapOfShapeSequenceOfBasicElt(OCP.NCollection.NCollection_Bas
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
     def __init__(self,theOther : BRepMAT2d_DataMapOfShapeSequenceOfBasicElt) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepMAT2d_Explorer():
@@ -318,7 +318,7 @@ class BRepMAT2d_Explorer():
     pass
 class BRepMAT2d_LinkTopoBilo():
     """
-    Constucts links between the Wire or the Face of the explorer and the BasicElts contained in the bisecting locus.
+    Constructs links between the Wire or the Face of the explorer and the BasicElts contained in the bisecting locus.
     """
     def GeneratingShape(self,aBE : OCP.MAT.MAT_BasicElt) -> OCP.TopoDS.TopoDS_Shape: 
         """

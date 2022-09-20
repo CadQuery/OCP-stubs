@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
-import io
 import OCP.NCollection
-import OCP.OSD.OSD_MemInfo
+import io
 import OCP.Standard
+import OCP.OSD.OSD_MemInfo
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "Message",
 "Message_Alert",
@@ -166,6 +166,7 @@ __all__  = [
 "Message_MetricType_ProcessCPUUserTime",
 "Message_MetricType_ThreadCPUSystemTime",
 "Message_MetricType_ThreadCPUUserTime",
+"Message_MetricType_WallClock",
 "Message_None",
 "Message_Trace",
 "Message_WARN",
@@ -251,7 +252,7 @@ class Message():
     def SendAlarm_s() -> Any: ...
     @staticmethod
     @overload
-    def SendFail_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def SendFail_s() -> Any: 
         """
         None
 
@@ -259,10 +260,10 @@ class Message():
         """
     @staticmethod
     @overload
-    def SendFail_s() -> Any: ...
+    def SendFail_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     @overload
-    def SendInfo_s() -> Any: 
+    def SendInfo_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
 
@@ -270,10 +271,10 @@ class Message():
         """
     @staticmethod
     @overload
-    def SendInfo_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SendInfo_s() -> Any: ...
     @staticmethod
     @overload
-    def SendTrace_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def SendTrace_s() -> Any: 
         """
         None
 
@@ -281,7 +282,7 @@ class Message():
         """
     @staticmethod
     @overload
-    def SendTrace_s() -> Any: ...
+    def SendTrace_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     @overload
     def SendWarning_s() -> Any: 
@@ -295,13 +296,13 @@ class Message():
     def SendWarning_s(theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     @overload
-    def Send_s(theMessage : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: 
+    def Send_s(theGravity : Message_Gravity) -> Any: 
         """
         None
         """
     @staticmethod
     @overload
-    def Send_s(theGravity : Message_Gravity) -> Any: ...
+    def Send_s(theMessage : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: ...
     @staticmethod
     def ToMessageMetric_s(theMemInfo : OCP.OSD.OSD_MemInfo.Counter_e,theMetric : Message_MetricType) -> bool: 
         """
@@ -316,7 +317,7 @@ class Message():
     pass
 class Message_Alert(OCP.Standard.Standard_Transient):
     """
-    Base class of the hierarchy of classes describing various situations occurring during execution of some algorithm or procedure.Base class of the hierarchy of classes describing various situations occurring during execution of some algorithm or procedure.Base class of the hierarchy of classes describing various situations occurring during execution of some algorithm or procedure.
+    Base class of the hierarchy of classes describing various situations occurring during execution of some algorithm or procedure.Base class of the hierarchy of classes describing various situations occurring during execution of some algorithm or procedure.
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -347,23 +348,23 @@ class Message_Alert(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget.
@@ -434,23 +435,23 @@ class Message_AlertExtended(Message_Alert, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Merge(self,theTarget : Message_Alert) -> bool: 
         """
         If possible, merge data contained in this alert to theTarget. Base implementation always returns false.
@@ -543,23 +544,23 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     @overload
     def PrepareReport_s(theReportSeq : OCP.TColStd.TColStd_SequenceOfHExtendedString,theMaxCount : int) -> OCP.TCollection.TCollection_ExtendedString: 
@@ -584,7 +585,7 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
         Sets messenger to algorithm
         """
     @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: 
+    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool) -> None: 
         """
         Sets status with no parameter
 
@@ -611,27 +612,27 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
         Sets status with string parameter If noRepetitions is True, the parameter will be added only if it has not been yet recorded for the same status flag
         """
     @overload
-    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theMsg : Message_Msg) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
-    @overload
-    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool) -> None: ...
     @overload
     def SetStatus(self,theStat : Message_Status,theInt : int) -> None: ...
     @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HExtendedString,noRepetitions : bool=True) -> None: ...
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool=True) -> None: ...
     @overload
     def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool=True) -> None: ...
     @overload
-    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HAsciiString,noRepetitions : bool) -> None: ...
+    def SetStatus(self,theStat : Message_Status,theStr : str,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_HExtendedString,noRepetitions : bool=True) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theMsg : Message_Msg) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_ExtendedString,noRepetitions : bool) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status,theStr : OCP.TCollection.TCollection_AsciiString,noRepetitions : bool) -> None: ...
+    @overload
+    def SetStatus(self,theStat : Message_Status) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -650,7 +651,7 @@ class Message_Algorithm(OCP.Standard.Standard_Transient):
     pass
 class Message_ArrayOfMsg():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Message_ArrayOfMsg) -> Message_ArrayOfMsg: 
         """
@@ -725,11 +726,11 @@ class Message_ArrayOfMsg():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Message_ArrayOfMsg) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theBegin : Any,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -771,23 +772,23 @@ class Message_Attribute(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets the custom name of alert
@@ -849,23 +850,23 @@ class Message_AttributeMeter(Message_Attribute, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMetricValid(self,theMetric : Message_MetricType) -> bool: 
         """
         Returns true when both values of the metric are set.
@@ -873,7 +874,7 @@ class Message_AttributeMeter(Message_Attribute, OCP.Standard.Standard_Transient)
     @staticmethod
     def SetAlertMetrics_s(theAlert : Message_AlertExtended,theStartValue : bool) -> None: 
         """
-        Sets current values of default report metrics into the alert. Processed oly alert with Message_AttributeMeter attribute
+        Sets current values of default report metrics into the alert. Processed only alert with Message_AttributeMeter attribute
         """
     def SetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -963,23 +964,23 @@ class Message_AttributeObject(Message_Attribute, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Object(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns object
@@ -1045,23 +1046,23 @@ class Message_AttributeStream(Message_Attribute, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetName(self,theName : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets the custom name of alert
@@ -1103,7 +1104,7 @@ class Message_CompositeAlerts(OCP.Standard.Standard_Transient):
         Returns list of collected alerts with specified gravity
         """
     @overload
-    def Clear(self,theGravity : Message_Gravity) -> None: 
+    def Clear(self,theType : OCP.Standard.Standard_Type) -> None: 
         """
         Clears all collected alerts
 
@@ -1114,7 +1115,7 @@ class Message_CompositeAlerts(OCP.Standard.Standard_Transient):
     @overload
     def Clear(self) -> None: ...
     @overload
-    def Clear(self,theType : OCP.Standard.Standard_Type) -> None: ...
+    def Clear(self,theGravity : Message_Gravity) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1149,23 +1150,23 @@ class Message_CompositeAlerts(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RemoveAlert(self,theGravity : Message_Gravity,theAlert : Message_Alert) -> bool: 
         """
         Removes alert with specified gravity.
@@ -1213,6 +1214,7 @@ class Message_ConsoleColor():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1261,6 +1263,7 @@ class Message_ExecStatus():
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -1404,6 +1407,7 @@ class Message_Gravity():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1485,14 +1489,14 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : Message_Alert,theIter : Any) -> Message_Alert: 
+    def InsertAfter(self,theOther : Message_ListOfAlert,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : Message_ListOfAlert,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : Message_Alert,theIter : Any) -> Message_Alert: ...
     @overload
     def InsertBefore(self,theOther : Message_ListOfAlert,theIter : Any) -> None: 
         """
@@ -1538,11 +1542,11 @@ class Message_ListOfAlert(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Message_ListOfAlert) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
@@ -1554,7 +1558,7 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Message_Msg,theIter : Any) -> None: 
+    def Append(self,theOther : Message_ListOfMsg) -> None: 
         """
         Append one item at the end
 
@@ -1563,9 +1567,9 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : Message_Msg) -> Message_Msg: ...
+    def Append(self,theItem : Message_Msg,theIter : Any) -> None: ...
     @overload
-    def Append(self,theOther : Message_ListOfMsg) -> None: ...
+    def Append(self,theItem : Message_Msg) -> Message_Msg: ...
     def Assign(self,theOther : Message_ListOfMsg) -> Message_ListOfMsg: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1594,14 +1598,14 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : Message_ListOfMsg,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : Message_ListOfMsg,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : Message_Msg,theIter : Any) -> Message_Msg: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : Message_Msg,theIter : Any) -> Message_Msg: ...
+    def InsertBefore(self,theOther : Message_ListOfMsg,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1613,14 +1617,14 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : Message_Msg) -> Message_Msg: 
+    def Prepend(self,theOther : Message_ListOfMsg) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : Message_ListOfMsg) -> None: ...
+    def Prepend(self,theItem : Message_Msg) -> Message_Msg: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1638,9 +1642,9 @@ class Message_ListOfMsg(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Message_ListOfMsg) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1682,23 +1686,23 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Printers(self) -> Message_SequenceOfPrinters: 
         """
         Returns current sequence of printers
@@ -1712,7 +1716,7 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         Removes printers of specified type (including derived classes) from the messenger. Returns number of removed printers.
         """
     @overload
-    def Send(self,theStream : Any,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: 
+    def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: 
         """
         Dispatch a message to all the printers in the list. Three versions of string representations are accepted for convenience, by default all are converted to ExtendedString.
 
@@ -1727,24 +1731,24 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
         See above
         """
     @overload
-    def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
-    @overload
-    def Send(self,theString : str,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
-    @overload
     def Send(self,theGravity : Message_Gravity) -> Any: ...
-    @overload
-    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
     @overload
     def Send(self,theObject : OCP.Standard.Standard_Transient,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
     @overload
-    def SendAlarm(self) -> Any: 
+    def Send(self,theString : str,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
+    @overload
+    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
+    @overload
+    def Send(self,theStream : Any,theGravity : Message_Gravity=Message_Gravity.Message_Warning) -> None: ...
+    @overload
+    def SendAlarm(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Create string buffer for sending Alarm message
 
         Short-cut to Send (theMessage, Message_Alarm)
         """
     @overload
-    def SendAlarm(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SendAlarm(self) -> Any: ...
     @overload
     def SendFail(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -1755,14 +1759,14 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
     @overload
     def SendFail(self) -> Any: ...
     @overload
-    def SendInfo(self) -> Any: 
+    def SendInfo(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Create string buffer for sending Info message
 
         Short-cut to Send (theMessage, Message_Info)
         """
     @overload
-    def SendInfo(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SendInfo(self) -> Any: ...
     @overload
     def SendTrace(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -1773,22 +1777,22 @@ class Message_Messenger(OCP.Standard.Standard_Transient):
     @overload
     def SendTrace(self) -> Any: ...
     @overload
-    def SendWarning(self) -> Any: 
+    def SendWarning(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Create string buffer for sending Warning message
 
         Short-cut to Send (theMessage, Message_Warning)
         """
     @overload
-    def SendWarning(self,theMessage : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SendWarning(self) -> Any: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,thePrinter : Message_Printer) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePrinter : Message_Printer) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1816,6 +1820,8 @@ class Message_MetricType():
 
       Message_MetricType_ProcessCPUSystemTime
 
+      Message_MetricType_WallClock
+
       Message_MetricType_MemPrivate
 
       Message_MetricType_MemVirtual
@@ -1833,6 +1839,7 @@ class Message_MetricType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1848,27 +1855,28 @@ class Message_MetricType():
         """
         :type: int
         """
-    Message_MetricType_MemHeapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemHeapUsage: 11>
-    Message_MetricType_MemPrivate: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemPrivate: 5>
-    Message_MetricType_MemSwapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsage: 9>
-    Message_MetricType_MemSwapUsagePeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsagePeak: 10>
-    Message_MetricType_MemVirtual: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemVirtual: 6>
-    Message_MetricType_MemWorkingSet: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSet: 7>
-    Message_MetricType_MemWorkingSetPeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSetPeak: 8>
+    Message_MetricType_MemHeapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemHeapUsage: 12>
+    Message_MetricType_MemPrivate: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemPrivate: 6>
+    Message_MetricType_MemSwapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsage: 10>
+    Message_MetricType_MemSwapUsagePeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsagePeak: 11>
+    Message_MetricType_MemVirtual: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemVirtual: 7>
+    Message_MetricType_MemWorkingSet: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSet: 8>
+    Message_MetricType_MemWorkingSetPeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSetPeak: 9>
     Message_MetricType_None: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_None: 0>
     Message_MetricType_ProcessCPUSystemTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ProcessCPUSystemTime: 4>
     Message_MetricType_ProcessCPUUserTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ProcessCPUUserTime: 3>
     Message_MetricType_ThreadCPUSystemTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ThreadCPUSystemTime: 2>
     Message_MetricType_ThreadCPUUserTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ThreadCPUUserTime: 1>
-    __entries: dict # value = {'Message_MetricType_None': (<Message_MetricType.Message_MetricType_None: 0>, None), 'Message_MetricType_ThreadCPUUserTime': (<Message_MetricType.Message_MetricType_ThreadCPUUserTime: 1>, None), 'Message_MetricType_ThreadCPUSystemTime': (<Message_MetricType.Message_MetricType_ThreadCPUSystemTime: 2>, None), 'Message_MetricType_ProcessCPUUserTime': (<Message_MetricType.Message_MetricType_ProcessCPUUserTime: 3>, None), 'Message_MetricType_ProcessCPUSystemTime': (<Message_MetricType.Message_MetricType_ProcessCPUSystemTime: 4>, None), 'Message_MetricType_MemPrivate': (<Message_MetricType.Message_MetricType_MemPrivate: 5>, None), 'Message_MetricType_MemVirtual': (<Message_MetricType.Message_MetricType_MemVirtual: 6>, None), 'Message_MetricType_MemWorkingSet': (<Message_MetricType.Message_MetricType_MemWorkingSet: 7>, None), 'Message_MetricType_MemWorkingSetPeak': (<Message_MetricType.Message_MetricType_MemWorkingSetPeak: 8>, None), 'Message_MetricType_MemSwapUsage': (<Message_MetricType.Message_MetricType_MemSwapUsage: 9>, None), 'Message_MetricType_MemSwapUsagePeak': (<Message_MetricType.Message_MetricType_MemSwapUsagePeak: 10>, None), 'Message_MetricType_MemHeapUsage': (<Message_MetricType.Message_MetricType_MemHeapUsage: 11>, None)}
-    __members__: dict # value = {'Message_MetricType_None': <Message_MetricType.Message_MetricType_None: 0>, 'Message_MetricType_ThreadCPUUserTime': <Message_MetricType.Message_MetricType_ThreadCPUUserTime: 1>, 'Message_MetricType_ThreadCPUSystemTime': <Message_MetricType.Message_MetricType_ThreadCPUSystemTime: 2>, 'Message_MetricType_ProcessCPUUserTime': <Message_MetricType.Message_MetricType_ProcessCPUUserTime: 3>, 'Message_MetricType_ProcessCPUSystemTime': <Message_MetricType.Message_MetricType_ProcessCPUSystemTime: 4>, 'Message_MetricType_MemPrivate': <Message_MetricType.Message_MetricType_MemPrivate: 5>, 'Message_MetricType_MemVirtual': <Message_MetricType.Message_MetricType_MemVirtual: 6>, 'Message_MetricType_MemWorkingSet': <Message_MetricType.Message_MetricType_MemWorkingSet: 7>, 'Message_MetricType_MemWorkingSetPeak': <Message_MetricType.Message_MetricType_MemWorkingSetPeak: 8>, 'Message_MetricType_MemSwapUsage': <Message_MetricType.Message_MetricType_MemSwapUsage: 9>, 'Message_MetricType_MemSwapUsagePeak': <Message_MetricType.Message_MetricType_MemSwapUsagePeak: 10>, 'Message_MetricType_MemHeapUsage': <Message_MetricType.Message_MetricType_MemHeapUsage: 11>}
+    Message_MetricType_WallClock: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_WallClock: 5>
+    __entries: dict # value = {'Message_MetricType_None': (<Message_MetricType.Message_MetricType_None: 0>, None), 'Message_MetricType_ThreadCPUUserTime': (<Message_MetricType.Message_MetricType_ThreadCPUUserTime: 1>, None), 'Message_MetricType_ThreadCPUSystemTime': (<Message_MetricType.Message_MetricType_ThreadCPUSystemTime: 2>, None), 'Message_MetricType_ProcessCPUUserTime': (<Message_MetricType.Message_MetricType_ProcessCPUUserTime: 3>, None), 'Message_MetricType_ProcessCPUSystemTime': (<Message_MetricType.Message_MetricType_ProcessCPUSystemTime: 4>, None), 'Message_MetricType_WallClock': (<Message_MetricType.Message_MetricType_WallClock: 5>, None), 'Message_MetricType_MemPrivate': (<Message_MetricType.Message_MetricType_MemPrivate: 6>, None), 'Message_MetricType_MemVirtual': (<Message_MetricType.Message_MetricType_MemVirtual: 7>, None), 'Message_MetricType_MemWorkingSet': (<Message_MetricType.Message_MetricType_MemWorkingSet: 8>, None), 'Message_MetricType_MemWorkingSetPeak': (<Message_MetricType.Message_MetricType_MemWorkingSetPeak: 9>, None), 'Message_MetricType_MemSwapUsage': (<Message_MetricType.Message_MetricType_MemSwapUsage: 10>, None), 'Message_MetricType_MemSwapUsagePeak': (<Message_MetricType.Message_MetricType_MemSwapUsagePeak: 11>, None), 'Message_MetricType_MemHeapUsage': (<Message_MetricType.Message_MetricType_MemHeapUsage: 12>, None)}
+    __members__: dict # value = {'Message_MetricType_None': <Message_MetricType.Message_MetricType_None: 0>, 'Message_MetricType_ThreadCPUUserTime': <Message_MetricType.Message_MetricType_ThreadCPUUserTime: 1>, 'Message_MetricType_ThreadCPUSystemTime': <Message_MetricType.Message_MetricType_ThreadCPUSystemTime: 2>, 'Message_MetricType_ProcessCPUUserTime': <Message_MetricType.Message_MetricType_ProcessCPUUserTime: 3>, 'Message_MetricType_ProcessCPUSystemTime': <Message_MetricType.Message_MetricType_ProcessCPUSystemTime: 4>, 'Message_MetricType_WallClock': <Message_MetricType.Message_MetricType_WallClock: 5>, 'Message_MetricType_MemPrivate': <Message_MetricType.Message_MetricType_MemPrivate: 6>, 'Message_MetricType_MemVirtual': <Message_MetricType.Message_MetricType_MemVirtual: 7>, 'Message_MetricType_MemWorkingSet': <Message_MetricType.Message_MetricType_MemWorkingSet: 8>, 'Message_MetricType_MemWorkingSetPeak': <Message_MetricType.Message_MetricType_MemWorkingSetPeak: 9>, 'Message_MetricType_MemSwapUsage': <Message_MetricType.Message_MetricType_MemSwapUsage: 10>, 'Message_MetricType_MemSwapUsagePeak': <Message_MetricType.Message_MetricType_MemSwapUsagePeak: 11>, 'Message_MetricType_MemHeapUsage': <Message_MetricType.Message_MetricType_MemHeapUsage: 12>}
     pass
 class Message_Msg():
     """
     This class provides a tool for constructing the parametrized message basing on resources loaded by Message_MsgFile tool.
     """
     @overload
-    def Arg(self,theString : str) -> Message_Msg: 
+    def Arg(self,theString : OCP.TCollection.TCollection_AsciiString) -> Message_Msg: 
         """
         Set a value for %..s conversion
 
@@ -1891,17 +1899,17 @@ class Message_Msg():
         Set a value for %..s conversion
         """
     @overload
+    def Arg(self,theString : str) -> Message_Msg: ...
+    @overload
     def Arg(self,theInt : int) -> Message_Msg: ...
-    @overload
-    def Arg(self,theString : OCP.TCollection.TCollection_ExtendedString) -> Message_Msg: ...
-    @overload
-    def Arg(self,theReal : float) -> Message_Msg: ...
-    @overload
-    def Arg(self,theString : OCP.TCollection.TCollection_HAsciiString) -> Message_Msg: ...
     @overload
     def Arg(self,theString : OCP.TCollection.TCollection_HExtendedString) -> Message_Msg: ...
     @overload
-    def Arg(self,theString : OCP.TCollection.TCollection_AsciiString) -> Message_Msg: ...
+    def Arg(self,theReal : float) -> Message_Msg: ...
+    @overload
+    def Arg(self,theString : OCP.TCollection.TCollection_ExtendedString) -> Message_Msg: ...
+    @overload
+    def Arg(self,theString : OCP.TCollection.TCollection_HAsciiString) -> Message_Msg: ...
     def Get(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Return the resulting message string with all parameters filled. If some parameters were not yet filled by calls to methods Arg (or <<), these parameters are filled by the word UNKNOWN
@@ -1982,7 +1990,7 @@ class Message_MsgFile():
         """
         None
 
-        Gives the text for the message identified by the keyword <key> If there are no messages with such keyword defined, the error message is returned. In that case reference to static string is returned, it can be chenged with next call(s) to Msg(). Note: The error message is constructed like 'Unknown message: <key>', and can itself be customized by defining message with key Message_Msg_BadKeyword.
+        Gives the text for the message identified by the keyword <key>. If there are no messages with such keyword defined, the error message is returned. In that case reference to static string is returned, it can be changed with next call(s) to Msg(). Note: The error message is constructed like 'Unknown message: <key>', and can itself be customized by defining message with key Message_Msg_BadKeyword.
         """
     @staticmethod
     @overload
@@ -2018,25 +2026,25 @@ class Message_Printer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity) -> None: 
+    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
 
@@ -2044,10 +2052,10 @@ class Message_Printer(OCP.Standard.Standard_Transient):
 
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
         """
+    @overload
+    def Send(self,theString : str,theGravity : Message_Gravity) -> None: ...
     @overload
     def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity) -> None: ...
-    @overload
-    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: ...
     def SendObject(self,theObject : OCP.Standard.Standard_Transient,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The object is converted to string in format: <object kind> : <object pointer>. Default implementation calls first method Send().
@@ -2112,25 +2120,25 @@ class Message_PrinterOStream(Message_Printer, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity) -> None: 
+    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
 
@@ -2138,10 +2146,10 @@ class Message_PrinterOStream(Message_Printer, OCP.Standard.Standard_Transient):
 
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
         """
+    @overload
+    def Send(self,theString : str,theGravity : Message_Gravity) -> None: ...
     @overload
     def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity) -> None: ...
-    @overload
-    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: ...
     def SendObject(self,theObject : OCP.Standard.Standard_Transient,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The object is converted to string in format: <object kind> : <object pointer>. Default implementation calls first method Send().
@@ -2172,9 +2180,9 @@ class Message_PrinterOStream(Message_Printer, OCP.Standard.Standard_Transient):
         Returns TRUE if text output into console should be colorized depending on message gravity; TRUE by default.
         """
     @overload
-    def __init__(self,theFileName : str,theDoAppend : bool,theTraceLevel : Message_Gravity=Message_Gravity.Message_Info) -> None: ...
-    @overload
     def __init__(self,theTraceLevel : Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    @overload
+    def __init__(self,theFileName : str,theDoAppend : bool,theTraceLevel : Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2215,25 +2223,25 @@ class Message_PrinterSystemLog(Message_Printer, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity) -> None: 
+    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
 
@@ -2241,10 +2249,10 @@ class Message_PrinterSystemLog(Message_Printer, OCP.Standard.Standard_Transient)
 
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
         """
+    @overload
+    def Send(self,theString : str,theGravity : Message_Gravity) -> None: ...
     @overload
     def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity) -> None: ...
-    @overload
-    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: ...
     def SendObject(self,theObject : OCP.Standard.Standard_Transient,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The object is converted to string in format: <object kind> : <object pointer>. Default implementation calls first method Send().
@@ -2302,29 +2310,29 @@ class Message_PrinterToReport(Message_Printer, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Report(self) -> Message_Report: 
         """
         Returns the current or default report
         """
     @overload
-    def Send(self,theString : str,theGravity : Message_Gravity) -> None: 
+    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
 
@@ -2332,10 +2340,10 @@ class Message_PrinterToReport(Message_Printer, OCP.Standard.Standard_Transient):
 
         Send a string message with specified trace level. The last Boolean argument is deprecated and unused. Default implementation redirects to send().
         """
+    @overload
+    def Send(self,theString : str,theGravity : Message_Gravity) -> None: ...
     @overload
     def Send(self,theString : OCP.TCollection.TCollection_ExtendedString,theGravity : Message_Gravity) -> None: ...
-    @overload
-    def Send(self,theString : OCP.TCollection.TCollection_AsciiString,theGravity : Message_Gravity) -> None: ...
     def SendObject(self,theObject : OCP.Standard.Standard_Transient,theGravity : Message_Gravity) -> None: 
         """
         Send a string message with specified trace level. The object is converted to string in format: <object kind> : <object pointer>. The parameter theToPutEol specified whether end-of-line should be added to the end of the message. Default implementation calls first method Send().
@@ -2397,23 +2405,23 @@ class Message_ProgressIndicator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Start(self) -> Message_ProgressRange: 
         """
         Resets the indicator to zero, calls Reset(), and returns the range. This range refers to the scope that has no name and is initialized with max value 1 and step 1. Use this method to get the top level range for progress indication.
@@ -2504,14 +2512,14 @@ class Message_ProgressScope():
         Returns the name of the scope (may be null). Scopes with null name (e.g. root scope) should be bypassed when reporting progress to the user.
         """
     @overload
-    def Next(self,theStep : float) -> Message_ProgressRange: 
+    def Next(self,theStep : float=1.0) -> Message_ProgressRange: 
         """
         Advances position by specified step and returns the range covering this step
 
         Advances position by specified step and returns the range covering this step
         """
     @overload
-    def Next(self,theStep : float=1.0) -> Message_ProgressRange: ...
+    def Next(self,theStep : float) -> Message_ProgressRange: ...
     def Parent(self) -> Message_ProgressScope: 
         """
         Returns parent scope (null for top-level scope)
@@ -2578,14 +2586,14 @@ class Message_ProgressSentry(Message_ProgressScope):
         Returns the name of the scope (may be null). Scopes with null name (e.g. root scope) should be bypassed when reporting progress to the user.
         """
     @overload
-    def Next(self,theStep : float) -> Message_ProgressRange: 
+    def Next(self,theStep : float=1.0) -> Message_ProgressRange: 
         """
         Advances position by specified step and returns the range covering this step
 
         Advances position by specified step and returns the range covering this step
         """
     @overload
-    def Next(self,theStep : float=1.0) -> Message_ProgressRange: ...
+    def Next(self,theStep : float) -> Message_ProgressRange: ...
     def Parent(self) -> Message_ProgressScope: 
         """
         Returns parent scope (null for top-level scope)
@@ -2639,7 +2647,7 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Add new level of alerts
         """
     @overload
-    def Clear(self,theGravity : Message_Gravity) -> None: 
+    def Clear(self,theType : OCP.Standard.Standard_Type) -> None: 
         """
         Clears all collected alerts
 
@@ -2648,9 +2656,9 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Clears collected alerts with specified type
         """
     @overload
-    def Clear(self,theType : OCP.Standard.Standard_Type) -> None: ...
-    @overload
     def Clear(self) -> None: ...
+    @overload
+    def Clear(self,theGravity : Message_Gravity) -> None: ...
     def ClearMetrics(self) -> None: 
         """
         Removes all activated metrics
@@ -2664,14 +2672,14 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Dump(self,theOS : io.BytesIO,theGravity : Message_Gravity) -> None: 
+    def Dump(self,theOS : io.BytesIO) -> None: 
         """
         Dumps all collected alerts to stream
 
         Dumps collected alerts with specified gravity to stream
         """
     @overload
-    def Dump(self,theOS : io.BytesIO) -> None: ...
+    def Dump(self,theOS : io.BytesIO,theGravity : Message_Gravity) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -2706,36 +2714,36 @@ class Message_Report(OCP.Standard.Standard_Transient):
         Returns true if a report printer for the current report is registered in the messenger
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Limit(self) -> int: 
         """
         Returns maximum number of collecting alerts. If the limit is achieved, first alert is removed, the new alert is added in the container.
         """
     @overload
-    def Merge(self,theOther : Message_Report,theGravity : Message_Gravity) -> None: 
+    def Merge(self,theOther : Message_Report) -> None: 
         """
         Merges data from theOther report into this
 
         Merges alerts with specified gravity from theOther report into this
         """
     @overload
-    def Merge(self,theOther : Message_Report) -> None: ...
+    def Merge(self,theOther : Message_Report,theGravity : Message_Gravity) -> None: ...
     def RemoveLevel(self,theLevel : Message_Level) -> None: 
         """
         Remove level of alerts
@@ -2786,14 +2794,14 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Message_SequenceOfPrinters) -> None: 
+    def Append(self,theItem : Message_Printer) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Message_Printer) -> None: ...
+    def Append(self,theSeq : Message_SequenceOfPrinters) -> None: ...
     def Assign(self,theOther : Message_SequenceOfPrinters) -> Message_SequenceOfPrinters: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2823,14 +2831,14 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Message_SequenceOfPrinters) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Message_Printer) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Message_Printer) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Message_SequenceOfPrinters) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Message_Printer) -> None: 
         """
@@ -2866,14 +2874,14 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Message_SequenceOfPrinters) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2899,11 +2907,11 @@ class Message_SequenceOfPrinters(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : Message_SequenceOfPrinters) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3178,6 +3186,7 @@ class Message_Status():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3342,6 +3351,7 @@ class Message_StatusType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3475,18 +3485,19 @@ Message_Fail7: OCP.Message.Message_Status # value = <Message_Status.Message_Fail
 Message_Fail8: OCP.Message.Message_Status # value = <Message_Status.Message_Fail8: 2055>
 Message_Fail9: OCP.Message.Message_Status # value = <Message_Status.Message_Fail9: 2056>
 Message_Info: OCP.Message.Message_Gravity # value = <Message_Gravity.Message_Info: 1>
-Message_MetricType_MemHeapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemHeapUsage: 11>
-Message_MetricType_MemPrivate: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemPrivate: 5>
-Message_MetricType_MemSwapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsage: 9>
-Message_MetricType_MemSwapUsagePeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsagePeak: 10>
-Message_MetricType_MemVirtual: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemVirtual: 6>
-Message_MetricType_MemWorkingSet: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSet: 7>
-Message_MetricType_MemWorkingSetPeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSetPeak: 8>
+Message_MetricType_MemHeapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemHeapUsage: 12>
+Message_MetricType_MemPrivate: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemPrivate: 6>
+Message_MetricType_MemSwapUsage: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsage: 10>
+Message_MetricType_MemSwapUsagePeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemSwapUsagePeak: 11>
+Message_MetricType_MemVirtual: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemVirtual: 7>
+Message_MetricType_MemWorkingSet: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSet: 8>
+Message_MetricType_MemWorkingSetPeak: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_MemWorkingSetPeak: 9>
 Message_MetricType_None: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_None: 0>
 Message_MetricType_ProcessCPUSystemTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ProcessCPUSystemTime: 4>
 Message_MetricType_ProcessCPUUserTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ProcessCPUUserTime: 3>
 Message_MetricType_ThreadCPUSystemTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ThreadCPUSystemTime: 2>
 Message_MetricType_ThreadCPUUserTime: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_ThreadCPUUserTime: 1>
+Message_MetricType_WallClock: OCP.Message.Message_MetricType # value = <Message_MetricType.Message_MetricType_WallClock: 5>
 Message_None: OCP.Message.Message_Status # value = <Message_Status.Message_None: 0>
 Message_Trace: OCP.Message.Message_Gravity # value = <Message_Gravity.Message_Trace: 0>
 Message_WARN: OCP.Message.Message_StatusType # value = <Message_StatusType.Message_WARN: 512>

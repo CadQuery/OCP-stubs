@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Approx
-import OCP.TColStd
-import OCP.Extrema
-import OCP.Geom2dInt
-import OCP.gp
 import OCP.TColgp
+import OCP.Extrema
+import OCP.gp
 import OCP.Geom2d
+import OCP.TColStd
+import OCP.Geom2dInt
 __all__  = [
 "Geom2dAPI_ExtremaCurveCurve",
 "Geom2dAPI_InterCurveCurve",
@@ -94,11 +94,11 @@ class Geom2dAPI_InterCurveCurve():
         Use this syntax only to get solutions of tangential intersection between two curves. Output values Curve1 and Curve2 are the intersection segments on the first curve and on the second curve accordingly. Parameter Index defines a number of computed solution. An intersection segment is a portion of an initial curve limited by two points. The distance from each point of this segment to the other curve is less or equal to the tolerance value assigned at the time of construction or in function Init (this value is defaulted to 1.0e-6). Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbSegments ], where NbSegments is the number of computed tangential intersections. Standard_NullObject if the algorithm is initialized for the computing of self-intersections on a curve.
         """
     @overload
-    def __init__(self,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,Tol : float=1e-06) -> None: ...
+    def __init__(self,C1 : OCP.Geom2d.Geom2d_Curve,Tol : float=1e-06) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Geom2d.Geom2d_Curve,Tol : float=1e-06) -> None: ...
+    def __init__(self,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,Tol : float=1e-06) -> None: ...
     pass
 class Geom2dAPI_Interpolate():
     """
@@ -126,9 +126,9 @@ class Geom2dAPI_Interpolate():
         Computes the constrained BSpline curve. Use the function IsDone to verify that the computation is successful, and then the function Curve to obtain the result.
         """
     @overload
-    def __init__(self,Points : OCP.TColgp.TColgp_HArray1OfPnt2d,Parameters : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
-    @overload
     def __init__(self,Points : OCP.TColgp.TColgp_HArray1OfPnt2d,PeriodicFlag : bool,Tolerance : float) -> None: ...
+    @overload
+    def __init__(self,Points : OCP.TColgp.TColgp_HArray1OfPnt2d,Parameters : OCP.TColStd.TColStd_HArray1OfReal,PeriodicFlag : bool,Tolerance : float) -> None: ...
     pass
 class Geom2dAPI_PointsToBSpline():
     """
@@ -152,29 +152,29 @@ class Geom2dAPI_PointsToBSpline():
         Approximate a BSpline Curve passing through an array of Point using variational smoothing algorithm, which tries to minimize additional criterium: Weight1*CurveLength + Weight2*Curvature + Weight3*Torsion
         """
     @overload
-    def Init(self,YValues : OCP.TColStd.TColStd_Array1OfReal,X0 : float,DX : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=1e-06) -> None: ...
-    @overload
-    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
-    @overload
     def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,Parameters : OCP.TColStd.TColStd_Array1OfReal,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
     @overload
     def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
+    @overload
+    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
+    @overload
+    def Init(self,YValues : OCP.TColStd.TColStd_Array1OfReal,X0 : float,DX : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=1e-06) -> None: ...
     def IsDone(self) -> bool: 
         """
         None
         """
     @overload
-    def __init__(self,YValues : OCP.TColStd.TColStd_Array1OfReal,X0 : float,DX : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=1e-06) -> None: ...
+    def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
     def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
-    @overload
-    def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,Parameters : OCP.TColStd.TColStd_Array1OfReal,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=1e-06) -> None: ...
     @overload
-    def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
+    def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt2d,Parameters : OCP.TColStd.TColStd_Array1OfReal,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=0.001) -> None: ...
+    @overload
+    def __init__(self,YValues : OCP.TColStd.TColStd_Array1OfReal,X0 : float,DX : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol2D : float=1e-06) -> None: ...
     pass
 class Geom2dAPI_ProjectPointOnCurve():
     """
@@ -191,14 +191,14 @@ class Geom2dAPI_ProjectPointOnCurve():
         return the algorithmic object from Extrema
         """
     @overload
-    def Init(self,P : OCP.gp.gp_Pnt2d,Curve : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Init(self,P : OCP.gp.gp_Pnt2d,Curve : OCP.Geom2d.Geom2d_Curve,Umin : float,Usup : float) -> None: 
         """
         Initializes this algorithm with the given arguments, and computes the orthogonal projections of a point <P> on a curve <Curve>
 
         Initializes this algorithm with the given arguments, and computes the orthogonal projections of the point P onto the portion of the curve Curve limited by the two points of parameter Umin and Usup.
         """
     @overload
-    def Init(self,P : OCP.gp.gp_Pnt2d,Curve : OCP.Geom2d.Geom2d_Curve,Umin : float,Usup : float) -> None: ...
+    def Init(self,P : OCP.gp.gp_Pnt2d,Curve : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def LowerDistance(self) -> float: 
         """
         Computes the distance between the point and its nearest orthogonal projection on the curve. Exceptions StdFail_NotDone if this algorithm fails.
@@ -216,14 +216,14 @@ class Geom2dAPI_ProjectPointOnCurve():
         Returns the nearest orthogonal projection of the point on the curve. Exceptions StdFail_NotDone if this algorithm fails.
         """
     @overload
-    def Parameter(self,Index : int) -> Tuple[float]: 
+    def Parameter(self,Index : int) -> float: 
         """
         Returns the parameter on the curve of a point which is the orthogonal projection. Index is a number of a computed projected point. Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbPoints ], where NbPoints is the number of solution points.
 
         Returns the parameter on the curve of a point which is the orthogonal projection. Index is a number of a computed projected point. Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbPoints ], where NbPoints is the number of solution points
         """
     @overload
-    def Parameter(self,Index : int) -> float: ...
+    def Parameter(self,Index : int) -> Tuple[float]: ...
     def Point(self,Index : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the orthogonal projection on the curve. Index is a number of a computed point. Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbPoints ], where NbPoints is the number of solution points.

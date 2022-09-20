@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import io
-import OCP.math
-import OCP.gp
 import OCP.TColgp
+import OCP.math
+import io
 import OCP.Geom2d
+import OCP.gp
+import OCP.TColStd
 __all__  = [
 "FairCurve_AnalysisCode",
 "FairCurve_Batten",
@@ -45,6 +45,7 @@ class FairCurve_AnalysisCode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -377,17 +378,17 @@ class FairCurve_Energy(OCP.math.math_MultipleVarFunctionWithHessian, OCP.math.ma
         computes the values of the Energys E for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: 
         """
         computes the Energy <E> and the gradient <G> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
 
         computes the Energy <E>, the gradient <G> and the Hessian <H> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
     def Variable(self,X : OCP.math.math_Vector) -> bool: 
         """
-        compute the variables <X> wich correspond with the field <MyPoles>
+        compute the variables <X> which correspond with the field <MyPoles>
         """
     pass
 class FairCurve_EnergyOfBatten(FairCurve_Energy, OCP.math.math_MultipleVarFunctionWithHessian, OCP.math.math_MultipleVarFunctionWithGradient, OCP.math.math_MultipleVarFunction):
@@ -431,17 +432,17 @@ class FairCurve_EnergyOfBatten(FairCurve_Energy, OCP.math.math_MultipleVarFuncti
         computes the values of the Energys E for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: 
         """
         computes the Energy <E> and the gradient <G> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
 
         computes the Energy <E>, the gradient <G> and the Hessian <H> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
     def Variable(self,X : OCP.math.math_Vector) -> bool: 
         """
-        compute the variables <X> wich correspond with the field <MyPoles>
+        compute the variables <X> which correspond with the field <MyPoles>
         """
     def __init__(self,BSplOrder : int,FlatKnots : OCP.TColStd.TColStd_HArray1OfReal,Poles : OCP.TColgp.TColgp_HArray1OfPnt2d,ContrOrder1 : int,ContrOrder2 : int,Law : FairCurve_BattenLaw,LengthSliding : float,FreeSliding : bool=True,Angle1 : float=0.0,Angle2 : float=0.0) -> None: ...
     pass
@@ -486,17 +487,17 @@ class FairCurve_EnergyOfMVC(FairCurve_Energy, OCP.math.math_MultipleVarFunctionW
         computes the values of the Energys E for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: 
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: 
         """
         computes the Energy <E> and the gradient <G> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
 
         computes the Energy <E>, the gradient <G> and the Hessian <H> of the energy for the variable <X>. Returns True if the computation was done successfully, False otherwise.
         """
     @overload
-    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector) -> bool: ...
+    def Values(self,X : OCP.math.math_Vector,E : float,G : OCP.math.math_Vector,H : OCP.math.math_Matrix) -> bool: ...
     def Variable(self,X : OCP.math.math_Vector) -> bool: 
         """
-        compute the variables <X> wich correspond with the field <MyPoles>
+        compute the variables <X> which correspond with the field <MyPoles>
         """
     def __init__(self,BSplOrder : int,FlatKnots : OCP.TColStd.TColStd_HArray1OfReal,Poles : OCP.TColgp.TColgp_HArray1OfPnt2d,ContrOrder1 : int,ContrOrder2 : int,Law : FairCurve_BattenLaw,PhysicalRatio : float,LengthSliding : float,FreeSliding : bool=True,Angle1 : float=0.0,Angle2 : float=0.0,Curvature1 : float=0.0,Curvature2 : float=0.0) -> None: ...
     pass
@@ -684,9 +685,9 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
         """
     def GetStatus(self) -> OCP.math.math_Status: 
         """
-        Returns the Status of computation. The exception NotDone is raised if an error has occured.
+        Returns the Status of computation. The exception NotDone is raised if an error has occurred.
 
-        Returns the Status of computation. The exception NotDone is raised if an error has occured.
+        Returns the Status of computation. The exception NotDone is raised if an error has occurred.
         """
     @overload
     def Gradient(self,Grad : OCP.math.math_Vector) -> None: 
@@ -695,9 +696,9 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
 
         outputs the gradient vector at the minimum in Grad. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Grad is not equal to the range of the StartingPoint.
 
-        returns the gradient vector at the minimum. Exception NotDone is raised if an error has occured.the minimum was not found.
+        returns the gradient vector at the minimum. Exception NotDone is raised if an error has occurred. The minimum was not found.
 
-        returns the gradient vector at the minimum. Exception NotDone is raised if an error has occured.the minimum was not found.
+        returns the gradient vector at the minimum. Exception NotDone is raised if an error has occurred. The minimum was not found.
         """
     @overload
     def Gradient(self) -> OCP.math.math_Vector: ...
@@ -707,20 +708,20 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
         """
     def IsDone(self) -> bool: 
         """
-        Tests if an error has occured.
+        Tests if an error has occurred.
 
-        Tests if an error has occured.
+        Tests if an error has occurred.
         """
     @overload
     def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
-        outputs the location vector of the minimum in Loc. Exception NotDone is raised if an error has occured. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
+        outputs the location vector of the minimum in Loc. Exception NotDone is raised if an error has occurred. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
-        outputs the location vector of the minimum in Loc. Exception NotDone is raised if an error has occured. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
+        outputs the location vector of the minimum in Loc. Exception NotDone is raised if an error has occurred. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
-        returns the location vector of the minimum. Exception NotDone is raised if an error has occured.
+        returns the location vector of the minimum. Exception NotDone is raised if an error has occurred.
 
-        returns the location vector of the minimum. Exception NotDone is raised if an error has occured.
+        returns the location vector of the minimum. Exception NotDone is raised if an error has occurred.
         """
     @overload
     def Location(self) -> OCP.math.math_Vector: ...
@@ -732,9 +733,9 @@ class FairCurve_Newton(OCP.math.math_NewtonMinimum):
         """
     def NbIterations(self) -> int: 
         """
-        returns the number of iterations really done in the calculation of the minimum. The exception NotDone is raised if an error has occured.
+        returns the number of iterations really done in the calculation of the minimum. The exception NotDone is raised if an error has occurred.
 
-        returns the number of iterations really done in the calculation of the minimum. The exception NotDone is raised if an error has occured.
+        returns the number of iterations really done in the calculation of the minimum. The exception NotDone is raised if an error has occurred.
         """
     def Perform(self,theFunction : OCP.math.math_MultipleVarFunctionWithHessian,theStartingPoint : OCP.math.math_Vector) -> None: 
         """

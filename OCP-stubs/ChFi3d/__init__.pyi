@@ -4,26 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopOpeBRepBuild
-import OCP.GeomAdaptor
-import OCP.math
-import OCP.Law
-import OCP.BRepBlend
-import OCP.Geom
-import OCP.IntSurf
-import OCP.TopoDS
-import OCP.Bnd
-import OCP.GeomFill
-import OCP.BRepAdaptor
-import OCP.TopAbs
 import OCP.Adaptor3d
+import OCP.Law
+import OCP.IntSurf
 import OCP.TopTools
-import OCP.TColStd
 import OCP.GeomAbs
-import OCP.gp
-import OCP.TopOpeBRepDS
-import OCP.Geom2d
 import OCP.ChFiDS
+import OCP.math
+import OCP.BRepAdaptor
+import OCP.gp
+import OCP.TopAbs
+import OCP.Geom
+import OCP.BRepBlend
+import OCP.TopOpeBRepBuild
+import OCP.TopoDS
 __all__  = [
 "ChFi3d",
 "ChFi3d_Builder",
@@ -31,64 +25,8 @@ __all__  = [
 "ChFi3d_FilBuilder",
 "ChFi3d_FilletShape",
 "ChFi3d_SearchSing",
-"ChFi3d_AngleEdge",
-"ChFi3d_BoundFac",
-"ChFi3d_BoundSrf",
-"ChFi3d_BoundSurf",
-"ChFi3d_BuildPCurve",
-"ChFi3d_CheckSameParameter",
-"ChFi3d_ChercheBordsLibres",
-"ChFi3d_CircularSpine",
-"ChFi3d_Coefficient",
-"ChFi3d_ComputeArete",
-"ChFi3d_ComputeCurves",
-"ChFi3d_ComputePCurv",
-"ChFi3d_ComputesIntPC",
-"ChFi3d_ConvTol2dToTol3d",
-"ChFi3d_Couture",
-"ChFi3d_CoutureOnVertex",
-"ChFi3d_EdgeFromV1",
-"ChFi3d_EdgeState",
-"ChFi3d_EnlargeBox",
-"ChFi3d_EvalTolReached",
-"ChFi3d_ExtrSpineCarac",
 "ChFi3d_FilCommonPoint",
-"ChFi3d_FilCurveInDS",
-"ChFi3d_FilDS",
-"ChFi3d_FilPointInDS",
-"ChFi3d_FilVertexInDS",
-"ChFi3d_IndexOfSurfData",
-"ChFi3d_IndexPointInDS",
-"ChFi3d_IntCS",
-"ChFi3d_IntTraces",
-"ChFi3d_InterPlaneEdge",
-"ChFi3d_IsInFront",
-"ChFi3d_IsPseudoSeam",
-"ChFi3d_IsSmooth",
-"ChFi3d_KParticular",
-"ChFi3d_NbNotDegeneratedEdges",
-"ChFi3d_NumberOfEdges",
-"ChFi3d_NumberOfSharpEdges",
-"ChFi3d_Parameters",
 "ChFi3d_PerformElSpine",
-"ChFi3d_ProjectPCurv",
-"ChFi3d_ReparamPcurv",
-"ChFi3d_SameParameter",
-"ChFi3d_SearchFD",
-"ChFi3d_SolidIndex",
-"ChFi3d_Spine",
-"ChFi3d_StripeEdgeInter",
-"ChFi3d_TrimCurve",
-"ChFi3d_TrsfTrans",
-"ChFi3d_cherche_edge",
-"ChFi3d_cherche_element",
-"ChFi3d_cherche_face1",
-"ChFi3d_cherche_vertex",
-"ChFi3d_conexfaces",
-"ChFi3d_edge_common_faces",
-"ChFi3d_evalconti",
-"ChFi3d_mkbound",
-"ChFi3d_nbface",
 "ChFi3d_Polynomial",
 "ChFi3d_QuasiAngular",
 "ChFi3d_Rational"
@@ -114,7 +52,7 @@ class ChFi3d():
         """
     @staticmethod
     @overload
-    def NextSide_s(Or : OCP.TopAbs.TopAbs_Orientation,OrSave : OCP.TopAbs.TopAbs_Orientation,OrFace : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def NextSide_s(Or1 : OCP.TopAbs.TopAbs_Orientation,Or2 : OCP.TopAbs.TopAbs_Orientation,OrSave1 : OCP.TopAbs.TopAbs_Orientation,OrSave2 : OCP.TopAbs.TopAbs_Orientation,ChoixSauv : int) -> int: 
         """
         Same as ConcaveSide, but the orientations are logically deduced from the result of the call of ConcaveSide on the first pair of faces of the fillet or chamnfer.
 
@@ -122,7 +60,7 @@ class ChFi3d():
         """
     @staticmethod
     @overload
-    def NextSide_s(Or1 : OCP.TopAbs.TopAbs_Orientation,Or2 : OCP.TopAbs.TopAbs_Orientation,OrSave1 : OCP.TopAbs.TopAbs_Orientation,OrSave2 : OCP.TopAbs.TopAbs_Orientation,ChoixSauv : int) -> int: ...
+    def NextSide_s(Or : OCP.TopAbs.TopAbs_Orientation,OrSave : OCP.TopAbs.TopAbs_Orientation,OrFace : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @staticmethod
     def SameSide_s(Or : OCP.TopAbs.TopAbs_Orientation,OrSave1 : OCP.TopAbs.TopAbs_Orientation,OrSave2 : OCP.TopAbs.TopAbs_Orientation,OrFace1 : OCP.TopAbs.TopAbs_Orientation,OrFace2 : OCP.TopAbs.TopAbs_Orientation) -> bool: 
         """
@@ -233,7 +171,7 @@ class ChFi3d_Builder():
         """
     def Reset(self) -> None: 
         """
-        Reset all results of compute and returns the algorythm in the state of the last acquisition to enable modification of contours or areas.
+        Reset all results of compute and returns the algorithm in the state of the last acquisition to enable modification of contours or areas.
         """
     def SetContinuity(self,InternalContinuity : OCP.GeomAbs.GeomAbs_Shape,AngularTolerance : float) -> None: 
         """
@@ -247,7 +185,7 @@ class ChFi3d_Builder():
         """
         if (Isdone()) makes the result. if (!Isdone())
         """
-    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
+    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
         """
         Method, implemented in the inheritants, calculates the elements of construction of the surface (fillet or chamfer).
         """
@@ -391,7 +329,7 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         None
         """
     @overload
-    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP1 : bool,RecRst1 : bool,RecP2 : bool,RecRst2 : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, bool, float, float]: 
+    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,MaxStep : float,Fleche : float,TolGuide : float,First : float,Last : float,Inside : bool,Appro : bool,Forward : bool,RecOnS1 : bool,RecOnS2 : bool,Soldep : OCP.math.math_Vector,Intf : int,Intl : int) -> bool: 
         """
         Methode, implemented in inheritants, calculates the elements of construction of the surface (fillet or chamfer).
 
@@ -402,11 +340,11 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         Method, implemented in inheritants, calculates the elements of construction of the surface (fillet or chamfer) contact edge/edge.
         """
     @overload
-    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
+    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
     @overload
-    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,MaxStep : float,Fleche : float,TolGuide : float,First : float,Last : float,Inside : bool,Appro : bool,Forward : bool,RecOnS1 : bool,RecOnS2 : bool,Soldep : OCP.math.math_Vector,Intf : int,Intl : int) -> bool: ...
+    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP1 : bool,RecRst1 : bool,RecP2 : bool,RecRst2 : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, bool, float, float]: ...
     @overload
-    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
+    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
     def PerformTwoCornerbyInter(self,Index : int) -> bool: 
         """
         None
@@ -421,7 +359,7 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         """
     def Reset(self) -> None: 
         """
-        Reset all results of compute and returns the algorythm in the state of the last acquisition to enable modification of contours or areas.
+        Reset all results of compute and returns the algorithm in the state of the last acquisition to enable modification of contours or areas.
         """
     def ResetContour(self,IC : int) -> None: 
         """
@@ -460,7 +398,7 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         if (Isdone()) makes the result. if (!Isdone())
         """
     @overload
-    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: 
+    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: 
         """
         None
 
@@ -469,14 +407,14 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         None
         """
     @overload
-    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP1 : bool,RecRst1 : bool,RecP2 : bool,RecRst2 : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, bool, float, float]: ...
+    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
     @overload
-    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_HSurface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_HCurve2d,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
+    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP1 : bool,RecRst1 : bool,RecP2 : bool,RecRst2 : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, bool, float, float]: ...
     def Simulate(self,IC : int) -> None: 
         """
         None
         """
-    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
+    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
         """
         Method, implemented in the inheritants, calculates the elements of construction of the surface (fillet or chamfer).
         """
@@ -499,14 +437,14 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         returns the abscissa of the vertex V on the contour of index IC.
         """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Add(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         initialisation of a contour with the first edge (the following are found by propagation). Attention, you need to start with SetRadius.
 
         initialisation of the constant vector the corresponding 1st edge.
         """
     @overload
-    def Add(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def BadShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         if (HasResult()) returns partial result if (!HasResult())
@@ -573,14 +511,14 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         returns True if a partial result has been calculated
         """
     @overload
-    def IsConstant(self,IC : int) -> bool: 
+    def IsConstant(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
-        Returns true the contour is flaged as edge constant.
+        Returns true the contour is flagged as edge constant.
 
         Returns true E is flagged as edge constant.
         """
     @overload
-    def IsConstant(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
+    def IsConstant(self,IC : int) -> bool: ...
     def IsDone(self) -> bool: 
         """
         returns True if the computation is success
@@ -636,7 +574,7 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         """
     def Reset(self) -> None: 
         """
-        Reset all results of compute and returns the algorythm in the state of the last acquisition to enable modification of contours or areas.
+        Reset all results of compute and returns the algorithm in the state of the last acquisition to enable modification of contours or areas.
         """
     def ResetContour(self,IC : int) -> None: 
         """
@@ -687,7 +625,7 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         """
         None
         """
-    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_HSurface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
+    def SplitKPart(self,Data : OCP.ChFiDS.ChFiDS_SurfData,SetData : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Spine : OCP.ChFiDS.ChFiDS_Spine,Iedge : int,S1 : OCP.Adaptor3d.Adaptor3d_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Intf : bool,Intl : bool) -> bool: 
         """
         Method, implemented in the inheritants, calculates the elements of construction of the surface (fillet or chamfer).
         """
@@ -696,14 +634,14 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         for the stripe IC ,indication on the cause of failure WalkingFailure,TwistedSurface,Error, Ok
         """
     @overload
-    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Extracts the flag constant and the vector of edge E.
 
         Extracts the vector of the vertex V.
         """
     @overload
-    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def Value(self,I : int) -> OCP.ChFiDS.ChFiDS_Spine: 
         """
         gives the n'th set of edges (contour) if I >NbElements()
@@ -725,6 +663,7 @@ class ChFi3d_FilletShape():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -768,311 +707,11 @@ class ChFi3d_SearchSing(OCP.math.math_FunctionWithDerivative, OCP.math.math_Func
         """
     def __init__(self,C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve) -> None: ...
     pass
-def ChFi3d_AngleEdge(Vtx : OCP.TopoDS.TopoDS_Vertex,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge) -> float:
-    """
-    None
-    """
-def ChFi3d_BoundFac(S : OCP.BRepAdaptor.BRepAdaptor_Surface,umin : float,umax : float,vmin : float,vmax : float,checknaturalbounds : bool=True) -> None:
-    """
-    None
-    """
-def ChFi3d_BoundSrf(S : OCP.GeomAdaptor.GeomAdaptor_Surface,umin : float,umax : float,vmin : float,vmax : float,checknaturalbounds : bool=True) -> None:
-    """
-    None
-    """
-def ChFi3d_BoundSurf(DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,Fd1 : OCP.ChFiDS.ChFiDS_SurfData,IFaCo1 : int,IFaArc1 : int) -> OCP.GeomAdaptor.GeomAdaptor_HSurface:
-    """
-    None
-    """
-@overload
-def ChFi3d_BuildPCurve(Surf : OCP.Adaptor3d.Adaptor3d_HSurface,p1 : OCP.gp.gp_Pnt2d,v1 : OCP.gp.gp_Vec,p2 : OCP.gp.gp_Pnt2d,v2 : OCP.gp.gp_Vec,redresse : bool=False) -> OCP.Geom2d.Geom2d_Curve:
-    """
-    None
-
-    None
-
-    None
-    """
-@overload
-def ChFi3d_BuildPCurve(Surf : OCP.Adaptor3d.Adaptor3d_HSurface,p1 : OCP.gp.gp_Pnt2d,v1 : OCP.gp.gp_Vec2d,p2 : OCP.gp.gp_Pnt2d,v2 : OCP.gp.gp_Vec2d,redresse : bool=False) -> OCP.Geom2d.Geom2d_Curve:
-    pass
-@overload
-def ChFi3d_BuildPCurve(p1 : OCP.gp.gp_Pnt2d,d1 : OCP.gp.gp_Dir2d,p2 : OCP.gp.gp_Pnt2d,d2 : OCP.gp.gp_Dir2d,redresse : bool=True) -> OCP.Geom2d.Geom2d_Curve:
-    pass
-def ChFi3d_CheckSameParameter(C3d : OCP.Adaptor3d.Adaptor3d_HCurve,Pcurv : OCP.Geom2d.Geom2d_Curve,S : OCP.Adaptor3d.Adaptor3d_HSurface,tol3d : float,tolreached : float) -> bool:
-    """
-    None
-    """
-def ChFi3d_ChercheBordsLibres(myVEMap : OCP.ChFiDS.ChFiDS_Map,V1 : OCP.TopoDS.TopoDS_Vertex,bordlibre : bool,edgelibre1 : OCP.TopoDS.TopoDS_Edge,edgelibre2 : OCP.TopoDS.TopoDS_Edge) -> None:
-    """
-    None
-    """
-def ChFi3d_CircularSpine(WFirst : float,WLast : float,Pdeb : OCP.gp.gp_Pnt,Vdeb : OCP.gp.gp_Vec,Pfin : OCP.gp.gp_Pnt,Vfin : OCP.gp.gp_Vec,rad : float) -> OCP.Geom.Geom_Circle:
-    """
-    None
-    """
-def ChFi3d_Coefficient(V3d : OCP.gp.gp_Vec,D1u : OCP.gp.gp_Vec,D1v : OCP.gp.gp_Vec,DU : float,DV : float) -> None:
-    """
-    None
-    """
-def ChFi3d_ComputeArete(P1 : OCP.ChFiDS.ChFiDS_CommonPoint,UV1 : OCP.gp.gp_Pnt2d,P2 : OCP.ChFiDS.ChFiDS_CommonPoint,UV2 : OCP.gp.gp_Pnt2d,Surf : OCP.Geom.Geom_Surface,C3d : OCP.Geom.Geom_Curve,Pcurv : OCP.Geom2d.Geom2d_Curve,Pardeb : float,Parfin : float,tol3d : float,tol2d : float,tolreached : float,IFlag : int) -> None:
-    """
-    None
-    """
-def ChFi3d_ComputeCurves(S1 : OCP.Adaptor3d.Adaptor3d_HSurface,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,Pardeb : OCP.TColStd.TColStd_Array1OfReal,Parfin : OCP.TColStd.TColStd_Array1OfReal,C3d : OCP.Geom.Geom_Curve,Pc1 : OCP.Geom2d.Geom2d_Curve,Pc2 : OCP.Geom2d.Geom2d_Curve,tol3d : float,tol2d : float,tolreached : float,wholeCurv : bool=True) -> bool:
-    """
-    None
-    """
-@overload
-def ChFi3d_ComputePCurv(UV1 : OCP.gp.gp_Pnt2d,UV2 : OCP.gp.gp_Pnt2d,Pcurv : OCP.Geom2d.Geom2d_Curve,Pardeb : float,Parfin : float,reverse : bool=False) -> None:
-    """
-    None
-
-    None
-
-    None
-    """
-@overload
-def ChFi3d_ComputePCurv(C3d : OCP.Adaptor3d.Adaptor3d_HCurve,UV1 : OCP.gp.gp_Pnt2d,UV2 : OCP.gp.gp_Pnt2d,Pcurv : OCP.Geom2d.Geom2d_Curve,S : OCP.Adaptor3d.Adaptor3d_HSurface,Pardeb : float,Parfin : float,tol3d : float,tolreached : float,reverse : bool=False) -> None:
-    pass
-@overload
-def ChFi3d_ComputePCurv(C3d : OCP.Geom.Geom_Curve,UV1 : OCP.gp.gp_Pnt2d,UV2 : OCP.gp.gp_Pnt2d,Pcurv : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,Pardeb : float,Parfin : float,tol3d : float,tolreached : float,reverse : bool=False) -> None:
-    pass
-@overload
-def ChFi3d_ComputesIntPC(Fi1 : OCP.ChFiDS.ChFiDS_FaceInterference,Fi2 : OCP.ChFiDS.ChFiDS_FaceInterference,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,UInt1 : float,UInt2 : float,P : OCP.gp.gp_Pnt) -> None:
-    """
-    None
-
-    None
-    """
-@overload
-def ChFi3d_ComputesIntPC(Fi1 : OCP.ChFiDS.ChFiDS_FaceInterference,Fi2 : OCP.ChFiDS.ChFiDS_FaceInterference,HS1 : OCP.GeomAdaptor.GeomAdaptor_HSurface,HS2 : OCP.GeomAdaptor.GeomAdaptor_HSurface,UInt1 : float,UInt2 : float) -> None:
-    pass
-def ChFi3d_ConvTol2dToTol3d(S : OCP.Adaptor3d.Adaptor3d_HSurface,tol2d : float) -> float:
-    """
-    None
-    """
-def ChFi3d_Couture(F : OCP.TopoDS.TopoDS_Face,couture : bool,edgecouture : OCP.TopoDS.TopoDS_Edge) -> None:
-    """
-    None
-    """
-def ChFi3d_CoutureOnVertex(F : OCP.TopoDS.TopoDS_Face,V : OCP.TopoDS.TopoDS_Vertex,couture : bool,edgecouture : OCP.TopoDS.TopoDS_Edge) -> None:
-    """
-    None
-    """
-def ChFi3d_EdgeFromV1(V1 : OCP.TopoDS.TopoDS_Vertex,CD : OCP.ChFiDS.ChFiDS_Stripe,sens : int) -> OCP.TopoDS.TopoDS_Edge:
-    """
-    None
-    """
-def ChFi3d_EdgeState(E : OCP.TopoDS.TopoDS_Edge,EFMap : OCP.ChFiDS.ChFiDS_Map) -> OCP.ChFiDS.ChFiDS_State:
-    """
-    None
-    """
-@overload
-def ChFi3d_EnlargeBox(E : OCP.TopoDS.TopoDS_Edge,LF : OCP.TopTools.TopTools_ListOfShape,w : float,box : OCP.Bnd.Bnd_Box) -> None:
-    """
-    None
-
-    None
-
-    None
-
-    None
-    """
-@overload
-def ChFi3d_EnlargeBox(C : OCP.Geom.Geom_Curve,wd : float,wf : float,box1 : OCP.Bnd.Bnd_Box,box2 : OCP.Bnd.Bnd_Box) -> None:
-    pass
-@overload
-def ChFi3d_EnlargeBox(DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,st : OCP.ChFiDS.ChFiDS_Stripe,sd : OCP.ChFiDS.ChFiDS_SurfData,b1 : OCP.Bnd.Bnd_Box,b2 : OCP.Bnd.Bnd_Box,isfirst : bool) -> None:
-    pass
-@overload
-def ChFi3d_EnlargeBox(S : OCP.Adaptor3d.Adaptor3d_HSurface,PC : OCP.Geom2d.Geom2d_Curve,wd : float,wf : float,box1 : OCP.Bnd.Bnd_Box,box2 : OCP.Bnd.Bnd_Box) -> None:
-    pass
-def ChFi3d_EvalTolReached(S1 : OCP.Adaptor3d.Adaptor3d_HSurface,pc1 : OCP.Geom2d.Geom2d_Curve,S2 : OCP.Adaptor3d.Adaptor3d_HSurface,pc2 : OCP.Geom2d.Geom2d_Curve,C : OCP.Geom.Geom_Curve) -> float:
-    """
-    None
-    """
-def ChFi3d_ExtrSpineCarac(DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,cd : OCP.ChFiDS.ChFiDS_Stripe,i : int,p : float,jf : int,sens : int,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec,R : float) -> None:
-    """
-    None
-    """
 def ChFi3d_FilCommonPoint(SP : OCP.BRepBlend.BRepBlend_Extremity,TransLine : OCP.IntSurf.IntSurf_TypeTrans,Start : bool,CP : OCP.ChFiDS.ChFiDS_CommonPoint,Tol : float) -> None:
     """
     None
     """
-def ChFi3d_FilCurveInDS(Icurv : int,Isurf : int,Pcurv : OCP.Geom2d.Geom2d_Curve,Et : OCP.TopAbs.TopAbs_Orientation) -> OCP.TopOpeBRepDS.TopOpeBRepDS_SurfaceCurveInterference:
-    """
-    None
-    """
-def ChFi3d_FilDS(SolidIndex : int,CorDat : OCP.ChFiDS.ChFiDS_Stripe,DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,reglist : OCP.ChFiDS.ChFiDS_Regularities,tol3d : float,tol2d : float) -> None:
-    """
-    None
-    """
-def ChFi3d_FilPointInDS(Et : OCP.TopAbs.TopAbs_Orientation,Ic : int,Ip : int,Par : float,IsVertex : bool=False) -> OCP.TopOpeBRepDS.TopOpeBRepDS_CurvePointInterference:
-    """
-    None
-    """
-def ChFi3d_FilVertexInDS(Et : OCP.TopAbs.TopAbs_Orientation,Ic : int,Ip : int,Par : float) -> OCP.TopOpeBRepDS.TopOpeBRepDS_CurvePointInterference:
-    """
-    None
-    """
-def ChFi3d_IndexOfSurfData(V1 : OCP.TopoDS.TopoDS_Vertex,CD : OCP.ChFiDS.ChFiDS_Stripe,sens : int) -> int:
-    """
-    None
-    """
-def ChFi3d_IndexPointInDS(P1 : OCP.ChFiDS.ChFiDS_CommonPoint,DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure) -> int:
-    """
-    None
-    """
-def ChFi3d_IntCS(S : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,p2dS : OCP.gp.gp_Pnt2d,wc : float) -> bool:
-    """
-    None
-    """
-def ChFi3d_IntTraces(fd1 : OCP.ChFiDS.ChFiDS_SurfData,pref1 : float,p1 : float,jf1 : int,sens1 : int,fd2 : OCP.ChFiDS.ChFiDS_SurfData,pref2 : float,p2 : float,jf2 : int,sens2 : int,RefP2d : OCP.gp.gp_Pnt2d,Check2dDistance : bool=False,enlarge : bool=False) -> bool:
-    """
-    None
-    """
-def ChFi3d_InterPlaneEdge(Plan : OCP.Adaptor3d.Adaptor3d_HSurface,C : OCP.Adaptor3d.Adaptor3d_HCurve,W : float,Sens : bool,tolc : float) -> bool:
-    """
-    None
-    """
-def ChFi3d_IsInFront(DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,cd1 : OCP.ChFiDS.ChFiDS_Stripe,cd2 : OCP.ChFiDS.ChFiDS_Stripe,i1 : int,i2 : int,sens1 : int,sens2 : int,p1 : float,p2 : float,face : OCP.TopoDS.TopoDS_Face,sameside : bool,jf1 : int,jf2 : int,visavis : bool,Vtx : OCP.TopoDS.TopoDS_Vertex,Check2dDistance : bool=False,enlarge : bool=False) -> bool:
-    """
-    None
-    """
-def ChFi3d_IsPseudoSeam(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> bool:
-    """
-    None
-    """
-def ChFi3d_IsSmooth(C : OCP.Geom.Geom_Curve) -> bool:
-    """
-    None
-    """
-def ChFi3d_KParticular(Spine : OCP.ChFiDS.ChFiDS_Spine,IE : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface) -> bool:
-    """
-    None
-    """
-def ChFi3d_NbNotDegeneratedEdges(Vtx : OCP.TopoDS.TopoDS_Vertex,VEMap : OCP.ChFiDS.ChFiDS_Map) -> int:
-    """
-    None
-    """
-def ChFi3d_NumberOfEdges(Vtx : OCP.TopoDS.TopoDS_Vertex,VEMap : OCP.ChFiDS.ChFiDS_Map) -> int:
-    """
-    None
-    """
-def ChFi3d_NumberOfSharpEdges(Vtx : OCP.TopoDS.TopoDS_Vertex,VEMap : OCP.ChFiDS.ChFiDS_Map,EFmap : OCP.ChFiDS.ChFiDS_Map) -> int:
-    """
-    None
-    """
-def ChFi3d_Parameters(S : OCP.Geom.Geom_Surface,p3d : OCP.gp.gp_Pnt,u : float,v : float) -> None:
-    """
-    None
-    """
-def ChFi3d_PerformElSpine(HES : OCP.ChFiDS.ChFiDS_HElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,continuity : OCP.GeomAbs.GeomAbs_Shape,tol : float,IsOffset : bool=False) -> None:
-    """
-    None
-    """
-def ChFi3d_ProjectPCurv(HCg : OCP.Adaptor3d.Adaptor3d_HCurve,HSg : OCP.Adaptor3d.Adaptor3d_HSurface,Pcurv : OCP.Geom2d.Geom2d_Curve,tol3d : float,tolreached : float) -> None:
-    """
-    None
-    """
-def ChFi3d_ReparamPcurv(Uf : float,Ul : float,Pcurv : OCP.Geom2d.Geom2d_Curve) -> None:
-    """
-    None
-    """
-@overload
-def ChFi3d_SameParameter(C3d : OCP.Adaptor3d.Adaptor3d_HCurve,Pcurv : OCP.Geom2d.Geom2d_Curve,S : OCP.Adaptor3d.Adaptor3d_HSurface,tol3d : float,tolreached : float) -> bool:
-    """
-    None
-
-    None
-    """
-@overload
-def ChFi3d_SameParameter(C3d : OCP.Geom.Geom_Curve,Pcurv : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,Pardeb : float,Parfin : float,tol3d : float,tolreached : float) -> bool:
-    pass
-def ChFi3d_SearchFD(DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,cd1 : OCP.ChFiDS.ChFiDS_Stripe,cd2 : OCP.ChFiDS.ChFiDS_Stripe,sens1 : int,sens2 : int,i1 : int,i2 : int,p1 : float,p2 : float,ind1 : int,ind2 : int,face : OCP.TopoDS.TopoDS_Face,sameside : bool,jf1 : int,jf2 : int) -> bool:
-    """
-    None
-    """
-def ChFi3d_SolidIndex(sp : OCP.ChFiDS.ChFiDS_Spine,DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,MapESo : OCP.ChFiDS.ChFiDS_Map,MapESh : OCP.ChFiDS.ChFiDS_Map) -> int:
-    """
-    None
-    """
-def ChFi3d_Spine(pd : OCP.gp.gp_Pnt,vd : OCP.gp.gp_Vec,pf : OCP.gp.gp_Pnt,vf : OCP.gp.gp_Vec,R : float) -> OCP.Geom.Geom_BezierCurve:
-    """
-    None
-    """
-def ChFi3d_StripeEdgeInter(theStripe1 : OCP.ChFiDS.ChFiDS_Stripe,theStripe2 : OCP.ChFiDS.ChFiDS_Stripe,DStr : OCP.TopOpeBRepDS.TopOpeBRepDS_DataStructure,tol2d : float) -> None:
-    """
-    None
-    """
-def ChFi3d_TrimCurve(gc : OCP.Geom.Geom_Curve,FirstP : OCP.gp.gp_Pnt,LastP : OCP.gp.gp_Pnt,gtc : OCP.Geom.Geom_TrimmedCurve) -> None:
-    """
-    None
-    """
-def ChFi3d_TrsfTrans(T1 : OCP.IntSurf.IntSurf_TypeTrans) -> OCP.TopAbs.TopAbs_Orientation:
-    """
-    None
-    """
-def ChFi3d_cherche_edge(V : OCP.TopoDS.TopoDS_Vertex,E1 : OCP.TopTools.TopTools_Array1OfShape,F1 : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge,Vtx : OCP.TopoDS.TopoDS_Vertex) -> None:
-    """
-    None
-    """
-def ChFi3d_cherche_element(V : OCP.TopoDS.TopoDS_Vertex,E1 : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,E : OCP.TopoDS.TopoDS_Edge,Vtx : OCP.TopoDS.TopoDS_Vertex) -> None:
-    """
-    None
-    """
-def ChFi3d_cherche_face1(map : OCP.TopTools.TopTools_ListOfShape,F1 : OCP.TopoDS.TopoDS_Face,F : OCP.TopoDS.TopoDS_Face) -> None:
-    """
-    None
-    """
-def ChFi3d_cherche_vertex(E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,vertex : OCP.TopoDS.TopoDS_Vertex,trouve : bool) -> None:
-    """
-    None
-    """
-def ChFi3d_conexfaces(E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,EFMap : OCP.ChFiDS.ChFiDS_Map) -> None:
-    """
-    None
-    """
-def ChFi3d_edge_common_faces(mapEF : OCP.TopTools.TopTools_ListOfShape,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> None:
-    """
-    None
-    """
-def ChFi3d_evalconti(E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape:
-    """
-    None
-    """
-@overload
-def ChFi3d_mkbound(s : OCP.Geom.Geom_Surface,p1 : OCP.gp.gp_Pnt2d,p2 : OCP.gp.gp_Pnt2d,t3d : float,ta : float,isfreeboundary : bool=False) -> OCP.GeomFill.GeomFill_Boundary:
-    """
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-    """
-@overload
-def ChFi3d_mkbound(Surf : OCP.Adaptor3d.Adaptor3d_HSurface,curv : OCP.Geom2d.Geom2d_Curve,sens1 : int,p1 : OCP.gp.gp_Pnt2d,v1 : OCP.gp.gp_Vec,sens2 : int,p2 : OCP.gp.gp_Pnt2d,v2 : OCP.gp.gp_Vec,t3d : float,ta : float) -> OCP.GeomFill.GeomFill_Boundary:
-    pass
-@overload
-def ChFi3d_mkbound(HS : OCP.Adaptor3d.Adaptor3d_HSurface,curv : OCP.Geom2d.Geom2d_Curve,t3d : float,ta : float,isfreeboundary : bool=False) -> OCP.GeomFill.GeomFill_Boundary:
-    pass
-@overload
-def ChFi3d_mkbound(Fac : OCP.Adaptor3d.Adaptor3d_HSurface,curv : OCP.Geom2d.Geom2d_Curve,p1 : OCP.gp.gp_Pnt2d,p2 : OCP.gp.gp_Pnt2d,t3d : float,ta : float,isfreeboundary : bool=False) -> OCP.GeomFill.GeomFill_Boundary:
-    pass
-@overload
-def ChFi3d_mkbound(HS : OCP.Adaptor3d.Adaptor3d_HSurface,p1 : OCP.gp.gp_Pnt2d,p2 : OCP.gp.gp_Pnt2d,t3d : float,ta : float,isfreeboundary : bool=False) -> OCP.GeomFill.GeomFill_Boundary:
-    pass
-@overload
-def ChFi3d_mkbound(Fac : OCP.Adaptor3d.Adaptor3d_HSurface,curv : OCP.Geom2d.Geom2d_Curve,sens1 : int,pfac1 : OCP.gp.gp_Pnt2d,vfac1 : OCP.gp.gp_Vec2d,sens2 : int,pfac2 : OCP.gp.gp_Pnt2d,vfac2 : OCP.gp.gp_Vec2d,t3d : float,ta : float) -> OCP.GeomFill.GeomFill_Boundary:
-    pass
-def ChFi3d_nbface(mapVF : OCP.TopTools.TopTools_ListOfShape) -> int:
+def ChFi3d_PerformElSpine(HES : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,continuity : OCP.GeomAbs.GeomAbs_Shape,tol : float,IsOffset : bool=False) -> None:
     """
     None
     """

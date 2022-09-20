@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Geom
 import OCP.Geom2d
+import OCP.Geom
 __all__  = [
 "Hermit"
 ]

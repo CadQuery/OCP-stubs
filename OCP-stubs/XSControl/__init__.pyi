@@ -5,17 +5,17 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopTools
-import OCP.TColStd
-import OCP.TCollection
-import io
-import OCP.Transfer
 import OCP.OpenGl
-import OCP.IFSelect
+import OCP.Transfer
+import io
 import OCP.gp
-import OCP.Interface
-import OCP.TopoDS
 import OCP.Standard
 import OCP.TopAbs
+import OCP.IFSelect
+import OCP.Interface
+import OCP.TopoDS
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "XSControl",
 "XSControl_ConnectedShapes",
@@ -114,23 +114,23 @@ class XSControl_ConnectedShapes(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelec
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "(Recursive)" or "(Level nn)" plus specific criterium returned by ExploreLabel (see below)
@@ -157,7 +157,7 @@ class XSControl_ConnectedShapes(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelec
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
     def __init__(self) -> None: ...
@@ -223,23 +223,23 @@ class XSControl_Controller(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsModeWrite(self,modetrans : int,shape : bool=True) -> bool: 
         """
         Tells if a value of <modetrans> is a good value(within bounds) Actually only for shapes
@@ -254,7 +254,7 @@ class XSControl_Controller(OCP.Standard.Standard_Transient):
         """
     def Name(self,rsc : bool=False) -> str: 
         """
-        Returns a name, as given when initializing : rsc = False (D) : True Name attached to the Norm (long name) rsc = True : Name of the ressource set (i.e. short name)
+        Returns a name, as given when initializing : rsc = False (D) : True Name attached to the Norm (long name) rsc = True : Name of the resource set (i.e. short name)
         """
     def NewModel(self) -> OCP.Interface.Interface_InterfaceModel: 
         """
@@ -326,7 +326,7 @@ class XSControl_Controller(OCP.Standard.Standard_Transient):
     pass
 class XSControl_FuncShape():
     """
-    Defines additionnal commands for XSControl to : - control of initialisation (xinit, xnorm, newmodel) - analyse of the result of a transfer (recorded in a TransientProcess for Read, FinderProcess for Write) : statistics, various lists (roots,complete,abnormal), what about one specific entity, producing a model with the abnormal result
+    Defines additional commands for XSControl to : - control of initialisation (xinit, xnorm, newmodel) - analyse of the result of a transfer (recorded in a TransientProcess for Read, FinderProcess for Write) : statistics, various lists (roots,complete,abnormal), what about one specific entity, producing a model with the abnormal result
     """
     @staticmethod
     def FileAndVar_s(session : XSControl_WorkSession,file : str,var : str,def_ : str,resfile : OCP.TCollection.TCollection_AsciiString,resvar : OCP.TCollection.TCollection_AsciiString) -> bool: 
@@ -369,14 +369,14 @@ class XSControl_Reader():
         Gives statistics about Transfer
         """
     @overload
-    def GiveList(self,first : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
+    def GiveList(self,first : str='',second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Returns a list of entities from the IGES or STEP file according to the following rules: - if first and second are empty strings, the whole file is selected. - if first is an entity number or label, the entity referred to is selected. - if first is a list of entity numbers/labels separated by commas, the entities referred to are selected, - if first is the name of a selection in the worksession and second is not defined, the list contains the standard output for that selection. - if first is the name of a selection and second is defined, the criterion defined by second is applied to the result of the first selection. A selection is an operator which computes a list of entities from a list given in input according to its type. If no list is specified, the selection computes its list of entities from the whole model. A selection can be: - A predefined selection (xst-transferrable-mode) - A filter based on a signature A Signature is an operator which returns a string from an entity according to its type. For example: - "xst-type" (CDL) - "iges-level" - "step-type". For example, if you wanted to select only the advanced_faces in a STEP file you would use the following code: Example Reader.GiveList("xst-transferrable-roots","step-type(ADVANCED_FACE)"); Warning If the value given to second is incorrect, it will simply be ignored.
 
-        Computes a List of entities from the model as follows <first> beeing a Selection, <ent> beeing an entity or a list of entities (as a HSequenceOfTransient) : the standard result of this selection applied to this list if <first> is erroneous, a null handle is returned
+        Computes a List of entities from the model as follows <first> being a Selection, <ent> being an entity or a list of entities (as a HSequenceOfTransient) : the standard result of this selection applied to this list if <first> is erroneous, a null handle is returned
         """
     @overload
-    def GiveList(self,first : str='',second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
+    def GiveList(self,first : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
     def Model(self) -> OCP.Interface.Interface_InterfaceModel: 
         """
         Returns the model. It can then be consulted (header, product)
@@ -403,23 +403,23 @@ class XSControl_Reader():
     @overload
     def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
     @overload
-    def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities. Only fail messages are displayed if failsonly is true. All messages are displayed if failsonly is false. mode determines the contents and the order of the messages according to the terms of the IFSelect_PrintCount enumeration.
 
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities.
         """
     @overload
-    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
     @overload
-    def PrintStatsTransfer(self,what : int,mode : int=0) -> None: 
+    def PrintStatsTransfer(self,theStream : io.BytesIO,what : int,mode : int=0) -> None: 
         """
         Displays the statistics for the last translation. what defines the kind of statistics that are displayed as follows: - 0 gives general statistics (number of translated roots, number of warnings, number of fail messages), - 1 gives root results, - 2 gives statistics for all checked entities, - 3 gives the list of translated entities, - 4 gives warning and fail messages, - 5 gives fail messages only. The use of mode depends on the value of what. If what is 0, mode is ignored. If what is 1, 2 or 3, mode defines the following: - 0 lists the numbers of IGES or STEP entities in the respective model - 1 gives the number, identifier, type and result type for each IGES or STEP entity and/or its status (fail, warning, etc.) - 2 gives maximum information for each IGES or STEP entity (i.e. checks) - 3 gives the number of entities per type of IGES or STEP entity - 4 gives the number of IGES or STEP entities per result type and/or status - 5 gives the number of pairs (IGES or STEP or result type and status) - 6 gives the number of pairs (IGES or STEP or result type and status) AND the list of entity numbers in the IGES or STEP model. If what is 4 or 5, mode defines the warning and fail messages as follows: - if mode is 0 all warnings and checks per entity are returned - if mode is 2 the list of entities per warning is returned. If mode is not set, only the list of all entities per warning is given.
 
         Displays the statistics for the last translation.
         """
     @overload
-    def PrintStatsTransfer(self,theStream : io.BytesIO,what : int,mode : int=0) -> None: ...
+    def PrintStatsTransfer(self,what : int,mode : int=0) -> None: ...
     def ReadFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Loads a file and returns the read status Zero for a Model which compies with the Controller
@@ -469,9 +469,9 @@ class XSControl_Reader():
         Returns the session used in <me>
         """
     @overload
-    def __init__(self,norm : str) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,norm : str) -> None: ...
     @overload
     def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
@@ -540,23 +540,23 @@ class XSControl_SelectForTransfer(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSel
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "Picked" or "Removed", plus the specific criterium returned by ExtractLabel (see below)
@@ -599,12 +599,12 @@ class XSControl_SelectForTransfer(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSel
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     @overload
-    def __init__(self,TR : XSControl_TransferReader) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,TR : XSControl_TransferReader) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -692,9 +692,9 @@ class XSControl_SignTransferStatus(OCP.IFSelect.IFSelect_Signature, OCP.Interfac
         Returns the Signature for a Transient object, as its transfer status
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,TR : XSControl_TransferReader) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -796,23 +796,23 @@ class XSControl_TransferReader(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMarked(self,theEnt : OCP.Standard.Standard_Transient) -> bool: 
         """
         Returns True if an entity has been asked for transfert, hence it is marked, as : Recorded (a computation has ran, with or without an effective result), or Skipped (case ignored)
@@ -988,23 +988,23 @@ class XSControl_TransferWriter(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def PrintStats(self,theWhat : int,theMode : int=0) -> None: 
         """
         Prints statistics on current Trace File, according what,mode See PrintStatsProcess for details
@@ -1192,14 +1192,14 @@ class XSControl_Utils():
     @overload
     def ToEString(self,strval : OCP.TCollection.TCollection_ExtendedString) -> str: ...
     @overload
-    def ToHString(self,strcon : str) -> OCP.TCollection.TCollection_HAsciiString: 
+    def ToHString(self,strcon : str) -> OCP.TCollection.TCollection_HExtendedString: 
         """
         None
 
         None
         """
     @overload
-    def ToHString(self,strcon : str) -> OCP.TCollection.TCollection_HExtendedString: ...
+    def ToHString(self,strcon : str) -> OCP.TCollection.TCollection_HAsciiString: ...
     def ToXString(self,strcon : str) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         None
@@ -1247,23 +1247,23 @@ class XSControl_Vars(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Set(self,name : str,val : OCP.Standard.Standard_Transient) -> None: 
         """
         None
@@ -1342,7 +1342,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def ClearFile(self) -> None: 
         """
-        Erases all stored data from the File Evaluation (i.e. ALL former naming informations are lost)
+        Erases all stored data from the File Evaluation (i.e. ALL former naming information are lost)
         """
     def ClearFinalModifiers(self) -> None: 
         """
@@ -1358,7 +1358,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def CombineAdd(self,selcomb : OCP.IFSelect.IFSelect_Selection,seladd : OCP.IFSelect.IFSelect_Selection,atnum : int=0) -> int: 
         """
-        Adds an input selection to a SelectCombine (Union or Inters.). Returns new count of inputs for this SelectCombine if Done or 0 if <sel> is not kind of SelectCombine, or if <seladd> or <sel> is not in the WorkSession By default, adding is done at the end of the list Else, it is an insertion to rank <atnum> (usefull for Un-ReDo)
+        Adds an input selection to a SelectCombine (Union or Inters.). Returns new count of inputs for this SelectCombine if Done or 0 if <sel> is not kind of SelectCombine, or if <seladd> or <sel> is not in the WorkSession By default, adding is done at the end of the list Else, it is an insertion to rank <atnum> (useful for Un-ReDo)
         """
     def CombineRemove(self,selcomb : OCP.IFSelect.IFSelect_Selection,selrem : OCP.IFSelect.IFSelect_Selection) -> bool: 
         """
@@ -1366,7 +1366,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def ComputeCheck(self,enforce : bool=False) -> bool: 
         """
-        Computes the CheckList for the Model currently loaded It can then be used for displays, querries ... Returns True if OK, False else (i.e. no Protocol set, or Model absent). If <enforce> is False, works only if not already done or if a new Model has been loaded from last call. Remark : computation is enforced by every call to SetModel or RunTransformer
+        Computes the CheckList for the Model currently loaded It can then be used for displays, queries ... Returns True if OK, False else (i.e. no Protocol set, or Model absent). If <enforce> is False, works only if not already done or if a new Model has been loaded from last call. Remark : computation is enforced by every call to SetModel or RunTransformer
         """
     def ComputeCounter(self,counter : OCP.IFSelect.IFSelect_SignCounter,forced : bool=False) -> bool: 
         """
@@ -1505,21 +1505,21 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         Extracts File Root Name from a given complete file name (uses OSD_Path)
         """
     @overload
-    def GiveList(self,obj : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
+    def GiveList(self,first : str,second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Determines a list of entities from an object : <obj> already HSequenceOfTransient : returned itself <obj> Selection : its Result of Evaluation is returned <obj> an entity of the Model : a HSequence which contains it else, an empty HSequence <obj> the Model it self : ALL its content (not only the roots)
 
-        Computes a List of entities from two alphanums, first and second, as follows : if <first> is a Number or Label of an entity : this entity if <first> is a list of Numbers/Labels : the list of entities if <first> is the name of a Selection in <WS>, and <second> not defined, the standard result of this Selection else, let's consider "first second" : this whole phrase is splitted by blanks, as follows (RECURSIVE CALL) : - the leftest term is the final selection - the other terms define the result of the selection - and so on (the "leftest minus one" is a selection, of which the input is given by the remaining ...)
+        Computes a List of entities from two alphanums, first and second, as follows : if <first> is a Number or Label of an entity : this entity if <first> is a list of Numbers/Labels : the list of entities if <first> is the name of a Selection in <WS>, and <second> not defined, the standard result of this Selection else, let's consider "first second" : this whole phrase is split by blanks, as follows (RECURSIVE CALL) : - the leftest term is the final selection - the other terms define the result of the selection - and so on (the "leftest minus one" is a selection, of which the input is given by the remaining ...)
         """
     @overload
-    def GiveList(self,first : str,second : str='') -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
+    def GiveList(self,obj : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: ...
     def GiveListCombined(self,l1 : OCP.TColStd.TColStd_HSequenceOfTransient,l2 : OCP.TColStd.TColStd_HSequenceOfTransient,mode : int) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
         Combines two lists and returns the result, according to mode : <mode> < 0 : entities in <l1> AND NOT in <l2> <mode> = 0 : entities in <l1> AND in <l2> <mode> > 0 : entities in <l1> OR in <l2>
         """
     def GiveListFromList(self,selname : str,ent : OCP.Standard.Standard_Transient) -> OCP.TColStd.TColStd_HSequenceOfTransient: 
         """
-        Computes a List of entities from the model as follows <first> beeing a Selection or a combination of Selections, <ent> beeing an entity or a list of entities (as a HSequenceOfTransient) : the standard result of this selection applied to this list if <ent> is Null, the standard definition of the selection is used (which contains a default input selection) if <selname> is erroneous, a null handle is returned
+        Computes a List of entities from the model as follows <first> being a Selection or a combination of Selections, <ent> being an entity or a list of entities (as a HSequenceOfTransient) : the standard result of this selection applied to this list if <ent> is Null, the standard definition of the selection is used (which contains a default input selection) if <selname> is erroneous, a null handle is returned
         """
     def GiveSelection(self,selname : str) -> OCP.IFSelect.IFSelect_Selection: 
         """
@@ -1558,23 +1558,23 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         Returns Integer Value of an IntParam
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLoaded(self) -> bool: 
         """
         Returns True if a Model is defined and really loaded (not empty), a Protocol is set and a Graph has been computed. In this case, the WorkSession can start to work
@@ -1661,7 +1661,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def ModifierRank(self,item : OCP.IFSelect.IFSelect_GeneralModifier) -> int: 
         """
-        Returns the Rank of a Modifier given its Ident. Model or File Modifier according its type (ModelModifier or not) Remember that Modifiers are applied sequencially following their Rank : first Model Modifiers then File Modifiers Rank is given by rank of call to AddItem and can be changed by ChangeModifierRank
+        Returns the Rank of a Modifier given its Ident. Model or File Modifier according its type (ModelModifier or not) Remember that Modifiers are applied sequentially following their Rank : first Model Modifiers then File Modifiers Rank is given by rank of call to AddItem and can be changed by ChangeModifierRank
         """
     def Name(self,item : OCP.Standard.Standard_Transient) -> OCP.TCollection.TCollection_HAsciiString: 
         """
@@ -1676,7 +1676,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
         Returns the Item which corresponds to a Variable, given its Name (whatever the type of this Item). Returns a Null Handle if this Name is not recorded
 
-        Same as above, but <name> is given through a Handle Especially Usefull with methods SelectionNames, etc...
+        Same as above, but <name> is given through a Handle Especially useful with methods SelectionNames, etc...
         """
     @overload
     def NamedItem(self,name : str) -> OCP.Standard.Standard_Transient: ...
@@ -1702,7 +1702,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def NewModel(self) -> OCP.Interface.Interface_InterfaceModel: 
         """
-        produces and returns a new Model well conditionned It is produced by the Norm Controller It can be Null (if this function is not implemented)
+        produces and returns a new Model well conditioned It is produced by the Norm Controller It can be Null (if this function is not implemented)
         """
     def NewParamFromStatic(self,statname : str,name : str='') -> OCP.Standard.Standard_Transient: 
         """
@@ -1738,7 +1738,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def PrintEntityStatus(self,ent : OCP.Standard.Standard_Transient,S : io.BytesIO) -> None: 
         """
-        Prints main informations about an entity : its number, type, validity (and checks if any), category, shareds and sharings.. mutable because it can recompute checks as necessary
+        Prints main information about an entity : its number, type, validity (and checks if any), category, shareds and sharings.. mutable because it can recompute checks as necessary
         """
     def PrintSignatureList(self,S : io.BytesIO,signlist : OCP.IFSelect.IFSelect_SignatureList,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
@@ -1746,7 +1746,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def PrintTransferStatus(self,theNum : int,theWri : bool,theS : io.BytesIO) -> bool: 
         """
-        Prints the transfer status of a transferred item, as beeing the Mapped n0 <num>, from MapWriter if <wri> is True, or from MapReader if <wri> is False Returns True when done, False else (i.e. num out of range)
+        Prints the transfer status of a transferred item, as being the Mapped n0 <num>, from MapWriter if <wri> is True, or from MapReader if <wri> is False Returns True when done, False else (i.e. num out of range)
         """
     def Protocol(self) -> OCP.Interface.Interface_Protocol: 
         """
@@ -1918,7 +1918,7 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         """
     def SetModeStat(self,theMode : bool) -> None: 
         """
-        Set value of mode responsible for precence of selections after loading If mode set to true that different selections will be accessible after loading else selections will be not accessible after loading( for economy memory in applicatios)
+        Set value of mode responsible for presence of selections after loading If mode set to true that different selections will be accessible after loading else selections will be not accessible after loading( for economy memory in applications)
         """
     def SetModel(self,model : OCP.Interface.Interface_InterfaceModel,clearpointed : bool=True) -> None: 
         """
@@ -2085,14 +2085,14 @@ class XSControl_WorkSession(OCP.IFSelect.IFSelect_WorkSession, OCP.Standard.Stan
         Returns the WorkLibrary. Null Handle if not yet set should be C++ : return const &
         """
     @overload
-    def WriteFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def WriteFile(self,filename : str,sel : OCP.IFSelect.IFSelect_Selection) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Writes the current Interface Model globally to a File, and returns a write status which can be : Done OK, Fail file could not be written, Error no norm is selected Remark : It is a simple, one-file writing, other operations are available (such as splitting ...) which calls SendAll
 
         Writes a sub-part of the current Interface Model to a File, as defined by a Selection <sel>, recomputes the Graph, and returns a write status which can be : Done OK, Fail file could not be written, Error no norm is selected Remark : It is a simple, one-file writing, other operations are available (such as splitting ...) which calls SendSelected
         """
     @overload
-    def WriteFile(self,filename : str,sel : OCP.IFSelect.IFSelect_Selection) -> OCP.IFSelect.IFSelect_ReturnStatus: ...
+    def WriteFile(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2138,9 +2138,9 @@ class XSControl_Writer():
         Writes the produced model
         """
     @overload
-    def __init__(self,norm : str) -> None: ...
-    @overload
     def __init__(self,WS : XSControl_WorkSession,scratch : bool=True) -> None: ...
+    @overload
+    def __init__(self,norm : str) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass

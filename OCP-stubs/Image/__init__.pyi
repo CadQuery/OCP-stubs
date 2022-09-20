@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Quantity
-import OCP.TColStd
-import OCP.TCollection
-import io
 import OCP.NCollection
+import io
 import OCP.Standard
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "Image_PixMap",
 "Image_ColorBGR",
@@ -54,8 +54,10 @@ __all__  = [
 "Image_Format_RGB32",
 "Image_Format_RGBA",
 "Image_Format_RGBAF",
+"Image_Format_RGBAF_half",
 "Image_Format_RGBF",
 "Image_Format_RGF",
+"Image_Format_RGF_half",
 "Image_Format_UNKNOWN"
 ]
 class Image_PixMap(OCP.Standard.Standard_Transient):
@@ -78,6 +80,16 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
         Method correctly deallocate internal buffer.
         """
+    @staticmethod
+    def ConvertFromHalfFloat_s(theHalf : int) -> float: 
+        """
+        Convert 16-bit half-float value into 32-bit float (simple conversion).
+        """
+    @staticmethod
+    def ConvertToHalfFloat_s(theFloat : float) -> int: 
+        """
+        Convert 32-bit float value into IEEE-754 16-bit floating-point format without infinity: 1-5-10, exp-15, +-131008.0, +-6.1035156E-5, +-5.9604645E-8, 3.311 digits.
+        """
     def Data(self) -> int: 
         """
         Returns data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
@@ -99,6 +111,11 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
         None
         """
+    @staticmethod
+    def FlipY_s(theImage : Image_PixMap) -> bool: 
+        """
+        Reverse line order as it draws it from bottom to top.
+        """
     def Format(self) -> Image_Format: 
         """
         None
@@ -111,6 +128,17 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
         Returns image height in pixels
         """
+    @staticmethod
+    @overload
+    def ImageFormatToString_s(theFormat : Image_CompressedFormat) -> str: 
+        """
+        Return string representation of pixel format.
+
+        Return string representation of compressed pixel format.
+        """
+    @staticmethod
+    @overload
+    def ImageFormatToString_s(theFormat : Image_Format) -> str: ...
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -141,23 +169,23 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         Returns true if data is NULL.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Returns TRUE if image data is stored from Top to the Down. By default Bottom Up order is used instead (topmost scanlines starts from the bottom in memory). which is most image frameworks naturally support.
@@ -630,6 +658,7 @@ class Image_CompressedFormat():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -645,13 +674,13 @@ class Image_CompressedFormat():
         """
         :type: int
         """
-    Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 17>
-    Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 18>
-    Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 19>
-    Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 16>
+    Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>
+    Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>
+    Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>
+    Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>
     Image_CompressedFormat_UNKNOWN: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>
-    __entries: dict # value = {'Image_CompressedFormat_UNKNOWN': (<Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, None), 'Image_CompressedFormat_RGB_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 16>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 17>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT3': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 18>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT5': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 19>, None)}
-    __members__: dict # value = {'Image_CompressedFormat_UNKNOWN': <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, 'Image_CompressedFormat_RGB_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 16>, 'Image_CompressedFormat_RGBA_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 17>, 'Image_CompressedFormat_RGBA_S3TC_DXT3': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 18>, 'Image_CompressedFormat_RGBA_S3TC_DXT5': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 19>}
+    __entries: dict # value = {'Image_CompressedFormat_UNKNOWN': (<Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, None), 'Image_CompressedFormat_RGB_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT3': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT5': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>, None)}
+    __members__: dict # value = {'Image_CompressedFormat_UNKNOWN': <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, 'Image_CompressedFormat_RGB_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>, 'Image_CompressedFormat_RGBA_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>, 'Image_CompressedFormat_RGBA_S3TC_DXT3': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>, 'Image_CompressedFormat_RGBA_S3TC_DXT5': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>}
     pass
 class Image_CompressedPixMap(OCP.Standard.Standard_Transient):
     """
@@ -702,23 +731,23 @@ class Image_CompressedPixMap(OCP.Standard.Standard_Transient):
         Return TRUE if complete mip map level set (up to 1x1 resolution).
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Return TRUE if image layout is top-down (always true).
@@ -802,7 +831,7 @@ class Image_DDSParser():
     pass
 class Image_Diff(OCP.Standard.Standard_Transient):
     """
-    This class compares two images pixel-by-pixel. It uses the following methods to ignore the difference between images: - Black/White comparison. It makes the images 2-colored before the comparison. - Equality with tolerance. Colors of two pixels are considered the same if the differnce of their color is less than a tolerance. - Border filter. The algorithm ignores alone independent pixels, which are different on both images, ignores the "border effect" - the difference caused by triangles located at angle about 0 or 90 degrees to the user.This class compares two images pixel-by-pixel. It uses the following methods to ignore the difference between images: - Black/White comparison. It makes the images 2-colored before the comparison. - Equality with tolerance. Colors of two pixels are considered the same if the differnce of their color is less than a tolerance. - Border filter. The algorithm ignores alone independent pixels, which are different on both images, ignores the "border effect" - the difference caused by triangles located at angle about 0 or 90 degrees to the user.
+    This class compares two images pixel-by-pixel. It uses the following methods to ignore the difference between images: - Black/White comparison. It makes the images 2-colored before the comparison. - Equality with tolerance. Colors of two pixels are considered the same if the difference of their color is less than a tolerance. - Border filter. The algorithm ignores alone independent pixels, which are different on both images, ignores the "border effect" - the difference caused by triangles located at angle about 0 or 90 degrees to the user.This class compares two images pixel-by-pixel. It uses the following methods to ignore the difference between images: - Black/White comparison. It makes the images 2-colored before the comparison. - Equality with tolerance. Colors of two pixels are considered the same if the difference of their color is less than a tolerance. - Border filter. The algorithm ignores alone independent pixels, which are different on both images, ignores the "border effect" - the difference caused by triangles located at angle about 0 or 90 degrees to the user.
     """
     def ColorTolerance(self) -> float: 
         """
@@ -833,42 +862,42 @@ class Image_Diff(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theImageRef : Image_PixMap,theImageNew : Image_PixMap,theToBlackWhite : bool=False) -> bool: 
+    def Init(self,theImgPathRef : OCP.TCollection.TCollection_AsciiString,theImgPathNew : OCP.TCollection.TCollection_AsciiString,theToBlackWhite : bool=False) -> bool: 
         """
         Initialize algorithm by two images.
 
         Initialize algorithm by two images (will be loaded from files).
         """
     @overload
-    def Init(self,theImgPathRef : OCP.TCollection.TCollection_AsciiString,theImgPathNew : OCP.TCollection.TCollection_AsciiString,theToBlackWhite : bool=False) -> bool: ...
+    def Init(self,theImageRef : Image_PixMap,theImageNew : Image_PixMap,theToBlackWhite : bool=False) -> bool: ...
     def IsBorderFilterOn(self) -> bool: 
         """
         Returns a flag of taking into account (ignoring) a border effect in comparison of images.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
     def SaveDiffImage(self,theDiffImage : Image_PixMap) -> bool: 
         """
-        Saves a difference between two images as white pixels on black backgroud.
+        Saves a difference between two images as white pixels on black background.
 
-        Saves a difference between two images as white pixels on black backgroud.
+        Saves a difference between two images as white pixels on black background.
         """
     @overload
     def SaveDiffImage(self,theDiffPath : OCP.TCollection.TCollection_AsciiString) -> bool: ...
@@ -933,10 +962,15 @@ class Image_Format():
       Image_Format_RGBAF
 
       Image_Format_BGRAF
+
+      Image_Format_RGF_half
+
+      Image_Format_RGBAF_half
     """
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -965,11 +999,13 @@ class Image_Format():
     Image_Format_RGB32: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB32: 5>
     Image_Format_RGBA: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBA: 7>
     Image_Format_RGBAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF: 14>
+    Image_Format_RGBAF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF_half: 17>
     Image_Format_RGBF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBF: 12>
     Image_Format_RGF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF: 11>
+    Image_Format_RGF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF_half: 16>
     Image_Format_UNKNOWN: OCP.Image.Image_Format # value = <Image_Format.Image_Format_UNKNOWN: 0>
-    __entries: dict # value = {'Image_Format_UNKNOWN': (<Image_Format.Image_Format_UNKNOWN: 0>, None), 'Image_Format_Gray': (<Image_Format.Image_Format_Gray: 1>, None), 'Image_Format_Alpha': (<Image_Format.Image_Format_Alpha: 2>, None), 'Image_Format_RGB': (<Image_Format.Image_Format_RGB: 3>, None), 'Image_Format_BGR': (<Image_Format.Image_Format_BGR: 4>, None), 'Image_Format_RGB32': (<Image_Format.Image_Format_RGB32: 5>, None), 'Image_Format_BGR32': (<Image_Format.Image_Format_BGR32: 6>, None), 'Image_Format_RGBA': (<Image_Format.Image_Format_RGBA: 7>, None), 'Image_Format_BGRA': (<Image_Format.Image_Format_BGRA: 8>, None), 'Image_Format_GrayF': (<Image_Format.Image_Format_GrayF: 9>, None), 'Image_Format_AlphaF': (<Image_Format.Image_Format_AlphaF: 10>, None), 'Image_Format_RGF': (<Image_Format.Image_Format_RGF: 11>, None), 'Image_Format_RGBF': (<Image_Format.Image_Format_RGBF: 12>, None), 'Image_Format_BGRF': (<Image_Format.Image_Format_BGRF: 13>, None), 'Image_Format_RGBAF': (<Image_Format.Image_Format_RGBAF: 14>, None), 'Image_Format_BGRAF': (<Image_Format.Image_Format_BGRAF: 15>, None)}
-    __members__: dict # value = {'Image_Format_UNKNOWN': <Image_Format.Image_Format_UNKNOWN: 0>, 'Image_Format_Gray': <Image_Format.Image_Format_Gray: 1>, 'Image_Format_Alpha': <Image_Format.Image_Format_Alpha: 2>, 'Image_Format_RGB': <Image_Format.Image_Format_RGB: 3>, 'Image_Format_BGR': <Image_Format.Image_Format_BGR: 4>, 'Image_Format_RGB32': <Image_Format.Image_Format_RGB32: 5>, 'Image_Format_BGR32': <Image_Format.Image_Format_BGR32: 6>, 'Image_Format_RGBA': <Image_Format.Image_Format_RGBA: 7>, 'Image_Format_BGRA': <Image_Format.Image_Format_BGRA: 8>, 'Image_Format_GrayF': <Image_Format.Image_Format_GrayF: 9>, 'Image_Format_AlphaF': <Image_Format.Image_Format_AlphaF: 10>, 'Image_Format_RGF': <Image_Format.Image_Format_RGF: 11>, 'Image_Format_RGBF': <Image_Format.Image_Format_RGBF: 12>, 'Image_Format_BGRF': <Image_Format.Image_Format_BGRF: 13>, 'Image_Format_RGBAF': <Image_Format.Image_Format_RGBAF: 14>, 'Image_Format_BGRAF': <Image_Format.Image_Format_BGRAF: 15>}
+    __entries: dict # value = {'Image_Format_UNKNOWN': (<Image_Format.Image_Format_UNKNOWN: 0>, None), 'Image_Format_Gray': (<Image_Format.Image_Format_Gray: 1>, None), 'Image_Format_Alpha': (<Image_Format.Image_Format_Alpha: 2>, None), 'Image_Format_RGB': (<Image_Format.Image_Format_RGB: 3>, None), 'Image_Format_BGR': (<Image_Format.Image_Format_BGR: 4>, None), 'Image_Format_RGB32': (<Image_Format.Image_Format_RGB32: 5>, None), 'Image_Format_BGR32': (<Image_Format.Image_Format_BGR32: 6>, None), 'Image_Format_RGBA': (<Image_Format.Image_Format_RGBA: 7>, None), 'Image_Format_BGRA': (<Image_Format.Image_Format_BGRA: 8>, None), 'Image_Format_GrayF': (<Image_Format.Image_Format_GrayF: 9>, None), 'Image_Format_AlphaF': (<Image_Format.Image_Format_AlphaF: 10>, None), 'Image_Format_RGF': (<Image_Format.Image_Format_RGF: 11>, None), 'Image_Format_RGBF': (<Image_Format.Image_Format_RGBF: 12>, None), 'Image_Format_BGRF': (<Image_Format.Image_Format_BGRF: 13>, None), 'Image_Format_RGBAF': (<Image_Format.Image_Format_RGBAF: 14>, None), 'Image_Format_BGRAF': (<Image_Format.Image_Format_BGRAF: 15>, None), 'Image_Format_RGF_half': (<Image_Format.Image_Format_RGF_half: 16>, None), 'Image_Format_RGBAF_half': (<Image_Format.Image_Format_RGBAF_half: 17>, None)}
+    __members__: dict # value = {'Image_Format_UNKNOWN': <Image_Format.Image_Format_UNKNOWN: 0>, 'Image_Format_Gray': <Image_Format.Image_Format_Gray: 1>, 'Image_Format_Alpha': <Image_Format.Image_Format_Alpha: 2>, 'Image_Format_RGB': <Image_Format.Image_Format_RGB: 3>, 'Image_Format_BGR': <Image_Format.Image_Format_BGR: 4>, 'Image_Format_RGB32': <Image_Format.Image_Format_RGB32: 5>, 'Image_Format_BGR32': <Image_Format.Image_Format_BGR32: 6>, 'Image_Format_RGBA': <Image_Format.Image_Format_RGBA: 7>, 'Image_Format_BGRA': <Image_Format.Image_Format_BGRA: 8>, 'Image_Format_GrayF': <Image_Format.Image_Format_GrayF: 9>, 'Image_Format_AlphaF': <Image_Format.Image_Format_AlphaF: 10>, 'Image_Format_RGF': <Image_Format.Image_Format_RGF: 11>, 'Image_Format_RGBF': <Image_Format.Image_Format_RGBF: 12>, 'Image_Format_BGRF': <Image_Format.Image_Format_BGRF: 13>, 'Image_Format_RGBAF': <Image_Format.Image_Format_RGBAF: 14>, 'Image_Format_BGRAF': <Image_Format.Image_Format_BGRAF: 15>, 'Image_Format_RGF_half': <Image_Format.Image_Format_RGF_half: 16>, 'Image_Format_RGBAF_half': <Image_Format.Image_Format_RGBAF_half: 17>}
     pass
 class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
     """
@@ -995,6 +1031,16 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
         Method correctly deallocate internal buffer.
         """
+    @staticmethod
+    def ConvertFromHalfFloat_s(theHalf : int) -> float: 
+        """
+        Convert 16-bit half-float value into 32-bit float (simple conversion).
+        """
+    @staticmethod
+    def ConvertToHalfFloat_s(theFloat : float) -> int: 
+        """
+        Convert 32-bit float value into IEEE-754 16-bit floating-point format without infinity: 1-5-10, exp-15, +-131008.0, +-6.1035156E-5, +-5.9604645E-8, 3.311 digits.
+        """
     def Data(self) -> int: 
         """
         Returns data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
@@ -1016,6 +1062,11 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
         None
         """
+    @staticmethod
+    def FlipY_s(theImage : Image_PixMap) -> bool: 
+        """
+        Reverse line order as it draws it from bottom to top.
+        """
     def Format(self) -> Image_Format: 
         """
         None
@@ -1028,6 +1079,17 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
         Returns image height in pixels
         """
+    @staticmethod
+    @overload
+    def ImageFormatToString_s(theFormat : Image_CompressedFormat) -> str: 
+        """
+        Return string representation of pixel format.
+
+        Return string representation of compressed pixel format.
+        """
+    @staticmethod
+    @overload
+    def ImageFormatToString_s(theFormat : Image_Format) -> str: ...
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -1038,7 +1100,7 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def InitTrash(self,thePixelFormat : Image_Format,theSizeX : int,theSizeY : int,theSizeRowBytes : int=0) -> bool: 
         """
-        Initialize image plane with required dimensions. thePixelFormat - if specified pixel format doesn't supported by image library than nearest supported will be used instead! theSizeRowBytes - may be ignored by this class and required alignemnt will be used instead!
+        Initialize image plane with required dimensions. thePixelFormat - if specified pixel format doesn't supported by image library than nearest supported will be used instead! theSizeRowBytes - may be ignored by this class and required alignment will be used instead!
         """
     def InitWrapper(self,thePixelFormat : Image_Format,theDataPtr : int,theSizeX : int,theSizeY : int,theSizeRowBytes : int=0) -> bool: 
         """
@@ -1058,23 +1120,23 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         Returns true if data is NULL.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Returns TRUE if image data is stored from Top to the Down. By default Bottom Up order is used instead (topmost scanlines starts from the bottom in memory). which is most image frameworks naturally support.
@@ -1253,23 +1315,23 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MaxRowAligmentBytes(self) -> int: 
         """
         Compute the maximal row alignment for current row size.
@@ -1359,14 +1421,14 @@ class Image_SupportedFormats(OCP.Standard.Standard_Transient):
     Structure holding information about supported texture formats.
     """
     @overload
-    def Add(self,theFormat : Image_CompressedFormat) -> None: 
+    def Add(self,theFormat : Image_Format) -> None: 
         """
         Set if image format is supported or not.
 
         Set if compressed image format is supported or not.
         """
     @overload
-    def Add(self,theFormat : Image_Format) -> None: ...
+    def Add(self,theFormat : Image_CompressedFormat) -> None: ...
     def Clear(self) -> None: 
         """
         Reset flags.
@@ -1396,32 +1458,32 @@ class Image_SupportedFormats(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsSupported(self,theFormat : Image_Format) -> bool: 
+    def IsSupported(self,theFormat : Image_CompressedFormat) -> bool: 
         """
         Return TRUE if image format is supported.
 
         Return TRUE if compressed image format is supported.
         """
     @overload
-    def IsSupported(self,theFormat : Image_CompressedFormat) -> bool: ...
+    def IsSupported(self,theFormat : Image_Format) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1493,23 +1555,27 @@ class Image_Texture(OCP.Standard.Standard_Transient):
         Matching two instances, for Map interface.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def MimeType(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Return mime-type of image file based on ProbeImageFileFormat().
+        """
     def ProbeImageFileFormat(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Return image file format.
@@ -1530,16 +1596,21 @@ class Image_Texture(OCP.Standard.Standard_Transient):
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
-    def WriteImage(self,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    @overload
+    def WriteImage(self,theStream : io.BytesIO,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Write image to specified file without decoding data.
+
+        Write image to specified stream without decoding data.
         """
+    @overload
+    def WriteImage(self,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOffset : int,theLength : int) -> None: ...
     @overload
-    def __init__(self,theBuffer : OCP.NCollection.NCollection_Buffer,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self,theBuffer : OCP.NCollection.NCollection_Buffer,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1556,14 +1627,14 @@ class Image_VideoParams():
     Auxiliary structure defining video parameters. Please refer to FFmpeg documentation for defining text values.
     """
     @overload
-    def SetFramerate(self,theNumerator : int,theDenominator : int) -> None: 
+    def SetFramerate(self,theValue : int) -> None: 
         """
         Setup playback FPS.
 
         Setup playback FPS. For fixed-fps content, timebase should be 1/framerate and timestamp increments should be identical to 1.
         """
     @overload
-    def SetFramerate(self,theValue : int) -> None: ...
+    def SetFramerate(self,theNumerator : int,theDenominator : int) -> None: ...
     def __init__(self) -> None: ...
     @property
     def Format(self) -> OCP.TCollection.TCollection_AsciiString:
@@ -1667,23 +1738,23 @@ class Image_VideoRecorder(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Open(self,theFileName : str,theParams : Image_VideoParams) -> bool: 
         """
         Open output stream - initialize recorder.
@@ -1708,11 +1779,11 @@ class Image_VideoRecorder(OCP.Standard.Standard_Transient):
         None
         """
     pass
-Image_CompressedFormat_NB = 20
-Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 17>
-Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 18>
-Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 19>
-Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 16>
+Image_CompressedFormat_NB = 22
+Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>
+Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>
+Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>
+Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>
 Image_CompressedFormat_UNKNOWN: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>
 Image_Format_Alpha: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Alpha: 2>
 Image_Format_AlphaF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_AlphaF: 10>
@@ -1723,11 +1794,13 @@ Image_Format_BGRAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_
 Image_Format_BGRF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_BGRF: 13>
 Image_Format_Gray: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Gray: 1>
 Image_Format_GrayF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_GrayF: 9>
-Image_Format_NB = 16
+Image_Format_NB = 18
 Image_Format_RGB: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB: 3>
 Image_Format_RGB32: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB32: 5>
 Image_Format_RGBA: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBA: 7>
 Image_Format_RGBAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF: 14>
+Image_Format_RGBAF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF_half: 17>
 Image_Format_RGBF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBF: 12>
 Image_Format_RGF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF: 11>
+Image_Format_RGF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF_half: 16>
 Image_Format_UNKNOWN: OCP.Image.Image_Format # value = <Image_Format.Image_Format_UNKNOWN: 0>

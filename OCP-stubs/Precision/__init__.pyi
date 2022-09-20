@@ -86,7 +86,7 @@ class Precision():
     def PIntersection_s(T : float) -> float: ...
     @staticmethod
     @overload
-    def Parametric_s(P : float) -> float: 
+    def Parametric_s(P : float,T : float) -> float: 
         """
         Convert a real space precision to a parametric space precision. <T> is the mean value of the length of the tangent of the curve or the surface.
 
@@ -94,7 +94,7 @@ class Precision():
         """
     @staticmethod
     @overload
-    def Parametric_s(P : float,T : float) -> float: ...
+    def Parametric_s(P : float) -> float: ...
     @staticmethod
     def SquareConfusion_s() -> float: 
         """

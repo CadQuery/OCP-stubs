@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
-import io
 import OCP.NCollection
+import io
 import OCP.Standard
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "Expr",
 "Expr_GeneralExpression",
@@ -91,7 +91,7 @@ class Expr():
         """
     @staticmethod
     @overload
-    def NbOfFreeVariables_s(exp : Expr_GeneralExpression) -> int: 
+    def NbOfFreeVariables_s(exp : Expr_GeneralRelation) -> int: 
         """
         None
 
@@ -99,7 +99,7 @@ class Expr():
         """
     @staticmethod
     @overload
-    def NbOfFreeVariables_s(exp : Expr_GeneralRelation) -> int: ...
+    def NbOfFreeVariables_s(exp : Expr_GeneralExpression) -> int: ...
     @staticmethod
     def Sign_s(val : float) -> float: 
         """
@@ -160,23 +160,23 @@ class Expr_GeneralExpression(OCP.Standard.Standard_Transient):
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear on every NamedUnknown it contains.
@@ -195,7 +195,7 @@ class Expr_GeneralExpression(OCP.Standard.Standard_Transient):
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with copies of <with> in <me>. Copies of <with> are made with the Copy() method. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with copies of <with> in <me>. Copies of <with> are made with the Copy() method. Raises InvalidOperand if <with> contains <me>.
         """
     def ShallowSimplified(self) -> Expr_GeneralExpression: 
         """
@@ -278,23 +278,23 @@ class Expr_UnaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transie
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear on every NamedUnknown it contains.
@@ -319,7 +319,7 @@ class Expr_UnaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transie
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -406,23 +406,23 @@ class Expr_ArcSine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -447,7 +447,7 @@ class Expr_ArcSine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -535,23 +535,23 @@ class Expr_ArcTangent(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -576,7 +576,7 @@ class Expr_ArcTangent(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -664,23 +664,23 @@ class Expr_ArgCosh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -705,7 +705,7 @@ class Expr_ArgCosh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -793,23 +793,23 @@ class Expr_ArgSinh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -834,7 +834,7 @@ class Expr_ArgSinh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -922,23 +922,23 @@ class Expr_ArgTanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -963,7 +963,7 @@ class Expr_ArgTanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -1003,7 +1003,7 @@ class Expr_ArgTanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
     pass
 class Expr_Array1OfGeneralExpression():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Expr_Array1OfGeneralExpression) -> Expr_Array1OfGeneralExpression: 
         """
@@ -1078,18 +1078,18 @@ class Expr_Array1OfGeneralExpression():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : Expr_GeneralExpression,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : Expr_GeneralExpression,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : Expr_Array1OfGeneralExpression) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Expr_Array1OfNamedUnknown():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Expr_Array1OfNamedUnknown) -> Expr_Array1OfNamedUnknown: 
         """
@@ -1164,18 +1164,18 @@ class Expr_Array1OfNamedUnknown():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Expr_Array1OfNamedUnknown) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : Expr_NamedUnknown,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Expr_Array1OfNamedUnknown) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Expr_Array1OfSingleRelation():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Expr_Array1OfSingleRelation) -> Expr_Array1OfSingleRelation: 
         """
@@ -1250,13 +1250,13 @@ class Expr_Array1OfSingleRelation():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Expr_Array1OfSingleRelation) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : Expr_SingleRelation,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Expr_Array1OfSingleRelation) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Expr_BinaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transient):
@@ -1318,23 +1318,23 @@ class Expr_BinaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transi
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear on every NamedUnknown it contains.
@@ -1353,7 +1353,7 @@ class Expr_BinaryExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transi
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
         """
     def SecondOperand(self) -> Expr_GeneralExpression: 
         """
@@ -1463,23 +1463,23 @@ class Expr_BinaryFunction(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -1498,7 +1498,7 @@ class Expr_BinaryFunction(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
         """
     def SecondOperand(self) -> Expr_GeneralExpression: 
         """
@@ -1596,23 +1596,23 @@ class Expr_Cosh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -1637,7 +1637,7 @@ class Expr_Cosh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -1725,23 +1725,23 @@ class Expr_Cosine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -1766,7 +1766,7 @@ class Expr_Cosine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -1860,23 +1860,23 @@ class Expr_Difference(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -1895,7 +1895,7 @@ class Expr_Difference(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Standar
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
         """
     def SecondOperand(self) -> Expr_GeneralExpression: 
         """
@@ -1976,23 +1976,23 @@ class Expr_GeneralRelation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -2011,7 +2011,7 @@ class Expr_GeneralRelation(OCP.Standard.Standard_Transient):
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def Simplified(self) -> Expr_GeneralRelation: 
         """
@@ -2100,23 +2100,23 @@ class Expr_Division(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Standard.
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -2135,7 +2135,7 @@ class Expr_Division(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Standard.
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
         """
     def SecondOperand(self) -> Expr_GeneralExpression: 
         """
@@ -2217,23 +2217,23 @@ class Expr_SingleRelation(Expr_GeneralRelation, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -2252,7 +2252,7 @@ class Expr_SingleRelation(Expr_GeneralRelation, OCP.Standard.Standard_Transient)
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -2347,23 +2347,23 @@ class Expr_Exponential(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -2388,7 +2388,7 @@ class Expr_Exponential(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standar
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -2482,23 +2482,23 @@ class Expr_Exponentiate(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -2517,7 +2517,7 @@ class Expr_Exponentiate(Expr_BinaryExpression, Expr_GeneralExpression, OCP.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me>. Raises InvalidOperand if <with> contains <me>.
         """
     def SecondOperand(self) -> Expr_GeneralExpression: 
         """
@@ -2593,14 +2593,14 @@ class Expr_GeneralFunction(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: 
+    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: 
         """
         Returns Derivative of <me> for variable <var>.
 
         Returns Derivative of <me> for variable <var> with degree <deg>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: ...
+    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2626,23 +2626,23 @@ class Expr_GeneralFunction(OCP.Standard.Standard_Transient):
         Tests if <me> and <func> are similar functions (same name and same used expression).
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinearOnVariable(self,index : int) -> bool: 
         """
         Tests if <me> is linear on variable on range <index>
@@ -2720,23 +2720,23 @@ class Expr_Absolute(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.S
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -2761,7 +2761,7 @@ class Expr_Absolute(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.S
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -2821,14 +2821,14 @@ class Expr_FunctionDerivative(Expr_GeneralFunction, OCP.Standard.Standard_Transi
         Returns the derivation variable of <me>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: 
+    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: 
         """
         Returns Derivative of <me> for variable <var>.
 
         Returns Derivative of <me> for variable <var> with degree <deg>.
         """
     @overload
-    def Derivative(self,var : Expr_NamedUnknown,deg : int) -> Expr_GeneralFunction: ...
+    def Derivative(self,var : Expr_NamedUnknown) -> Expr_GeneralFunction: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2862,23 +2862,23 @@ class Expr_FunctionDerivative(Expr_GeneralFunction, OCP.Standard.Standard_Transi
         Tests if <me> and <func> are similar functions (same name and same used expression).
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinearOnVariable(self,index : int) -> bool: 
         """
         Tests if <me> is linear on variable on range <index>
@@ -2945,23 +2945,23 @@ class Expr_Different(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -2980,7 +2980,7 @@ class Expr_Different(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -3060,23 +3060,23 @@ class Expr_GreaterThan(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -3095,7 +3095,7 @@ class Expr_GreaterThan(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.S
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -3175,23 +3175,23 @@ class Expr_GreaterThanOrEqual(Expr_SingleRelation, Expr_GeneralRelation, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -3210,7 +3210,7 @@ class Expr_GreaterThanOrEqual(Expr_SingleRelation, Expr_GeneralRelation, OCP.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -3323,23 +3323,23 @@ class Expr_LessThan(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -3358,7 +3358,7 @@ class Expr_LessThan(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Stan
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -3438,23 +3438,23 @@ class Expr_LessThanOrEqual(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -3473,7 +3473,7 @@ class Expr_LessThanOrEqual(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standa
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -3569,23 +3569,23 @@ class Expr_LogOf10(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -3610,7 +3610,7 @@ class Expr_LogOf10(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -3698,23 +3698,23 @@ class Expr_LogOfe(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -3739,7 +3739,7 @@ class Expr_LogOfe(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -3794,14 +3794,14 @@ class Expr_MapOfNamedUnknown(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : Expr_NamedUnknown) -> bool: 
         """
         Contains
@@ -3863,11 +3863,11 @@ class Expr_MapOfNamedUnknown(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : Expr_MapOfNamedUnknown) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class Expr_NamedExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transient):
     """
@@ -3926,23 +3926,23 @@ class Expr_NamedExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transie
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear on every NamedUnknown it contains.
@@ -3961,7 +3961,7 @@ class Expr_NamedExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transie
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with copies of <with> in <me>. Copies of <with> are made with the Copy() method. Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with copies of <with> in <me>. Copies of <with> are made with the Copy() method. Raises InvalidOperand if <with> contains <me>.
         """
     def SetName(self,name : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -4061,23 +4061,23 @@ class Expr_NamedConstant(Expr_NamedExpression, Expr_GeneralExpression, OCP.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -4096,7 +4096,7 @@ class Expr_NamedConstant(Expr_NamedExpression, Expr_GeneralExpression, OCP.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>
+        Replaces all occurrences of <var> with <with> in <me>
         """
     def SetName(self,name : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -4189,23 +4189,23 @@ class Expr_NamedFunction(Expr_GeneralFunction, OCP.Standard.Standard_Transient):
         Tests if <me> and <func> are similar functions (same name and same used expression).
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinearOnVariable(self,index : int) -> bool: 
         """
         Tests if <me> is linear on variable on range <index>
@@ -4268,9 +4268,9 @@ class Expr_NamedUnknown(Expr_NamedExpression, Expr_GeneralExpression, OCP.Standa
         """
     def Deassign(self) -> None: 
         """
-        Supresses the assigned expression
+        Suppresses the assigned expression
 
-        Supresses the assigned expression
+        Suppresses the assigned expression
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -4319,23 +4319,23 @@ class Expr_NamedUnknown(Expr_NamedExpression, Expr_GeneralExpression, OCP.Standa
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -4354,7 +4354,7 @@ class Expr_NamedUnknown(Expr_NamedExpression, Expr_GeneralExpression, OCP.Standa
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetName(self,name : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
@@ -4471,23 +4471,23 @@ class Expr_NumericValue(Expr_GeneralExpression, OCP.Standard.Standard_Transient)
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -4506,7 +4506,7 @@ class Expr_NumericValue(Expr_GeneralExpression, OCP.Standard.Standard_Transient)
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>
+        Replaces all occurrences of <var> with <with> in <me>
         """
     def SetValue(self,val : float) -> None: 
         """
@@ -4594,23 +4594,23 @@ class Expr_PolyExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transien
         Tests if <me> and <Other> define the same expression. Warning: This method does not include any simplification before testing. It could also be very slow; to be used carefully.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear on every NamedUnknown it contains.
@@ -4639,7 +4639,7 @@ class Expr_PolyExpression(Expr_GeneralExpression, OCP.Standard.Standard_Transien
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression,index : int) -> None: 
         """
@@ -4733,23 +4733,23 @@ class Expr_PolyFunction(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -4778,7 +4778,7 @@ class Expr_PolyFunction(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standar
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression,index : int) -> None: 
         """
@@ -4866,23 +4866,23 @@ class Expr_Product(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -4911,7 +4911,7 @@ class Expr_Product(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression,index : int) -> None: 
         """
@@ -4997,14 +4997,14 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: 
+    def Append(self,theItem : Expr_GeneralExpression) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Expr_GeneralExpression) -> None: ...
+    def Append(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: ...
     def Assign(self,theOther : Expr_SequenceOfGeneralExpression) -> Expr_SequenceOfGeneralExpression: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5077,14 +5077,14 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
     @overload
     def Prepend(self,theSeq : Expr_SequenceOfGeneralExpression) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5110,9 +5110,9 @@ class Expr_SequenceOfGeneralExpression(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : Expr_SequenceOfGeneralExpression) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -5131,14 +5131,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Expr_GeneralRelation) -> None: 
+    def Append(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
+    def Append(self,theItem : Expr_GeneralRelation) -> None: ...
     def Assign(self,theOther : Expr_SequenceOfGeneralRelation) -> Expr_SequenceOfGeneralRelation: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -5177,14 +5177,14 @@ class Expr_SequenceOfGeneralRelation(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Expr_SequenceOfGeneralRelation) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Expr_GeneralRelation) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5306,23 +5306,23 @@ class Expr_Sign(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -5347,7 +5347,7 @@ class Expr_Sign(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -5435,23 +5435,23 @@ class Expr_Sine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -5476,7 +5476,7 @@ class Expr_Sine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -5548,23 +5548,23 @@ class Expr_Equal(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -5583,7 +5583,7 @@ class Expr_Equal(Expr_SingleRelation, Expr_GeneralRelation, OCP.Standard.Standar
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def SecondMember(self) -> Expr_GeneralExpression: 
         """
@@ -5679,23 +5679,23 @@ class Expr_Sinh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -5720,7 +5720,7 @@ class Expr_Sinh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -5808,23 +5808,23 @@ class Expr_Square(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -5849,7 +5849,7 @@ class Expr_Square(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Sta
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -5937,23 +5937,23 @@ class Expr_SquareRoot(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -5978,7 +5978,7 @@ class Expr_SquareRoot(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -6066,23 +6066,23 @@ class Expr_Sum(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Standar
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -6111,7 +6111,7 @@ class Expr_Sum(Expr_PolyExpression, Expr_GeneralExpression, OCP.Standard.Standar
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression,index : int) -> None: 
         """
@@ -6186,23 +6186,23 @@ class Expr_SystemRelation(Expr_GeneralRelation, OCP.Standard.Standard_Transient)
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         Tests if <me> is linear between its NamedUnknowns.
@@ -6225,7 +6225,7 @@ class Expr_SystemRelation(Expr_GeneralRelation, OCP.Standard.Standard_Transient)
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me>.
+        Replaces all occurrences of <var> with <with> in <me>.
         """
     def Simplified(self) -> Expr_GeneralRelation: 
         """
@@ -6309,23 +6309,23 @@ class Expr_Tangent(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -6350,7 +6350,7 @@ class Expr_Tangent(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.St
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -6438,23 +6438,23 @@ class Expr_Tanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -6479,7 +6479,7 @@ class Expr_Tanh(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -6567,23 +6567,23 @@ class Expr_ArcCosine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -6608,7 +6608,7 @@ class Expr_ArcCosine(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard.
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -6703,23 +6703,23 @@ class Expr_UnaryFunction(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Stand
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -6744,7 +6744,7 @@ class Expr_UnaryFunction(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Stand
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -6832,23 +6832,23 @@ class Expr_UnaryMinus(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         Tests if <me> and <Other> define the same expression. This method does not include any simplification before testing.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsLinear(self) -> bool: 
         """
         None
@@ -6873,7 +6873,7 @@ class Expr_UnaryMinus(Expr_UnaryExpression, Expr_GeneralExpression, OCP.Standard
         """
     def Replace(self,var : Expr_NamedUnknown,with_ : Expr_GeneralExpression) -> None: 
         """
-        Replaces all occurences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
+        Replaces all occurrences of <var> with <with> in <me> Raises InvalidOperand if <with> contains <me>.
         """
     def SetOperand(self,exp : Expr_GeneralExpression) -> None: 
         """
@@ -6945,7 +6945,7 @@ def __add__(x : float,y : Expr_GeneralExpression) -> Expr_Sum:
 def __add__(x : Expr_GeneralExpression,y : float) -> Expr_Sum:
     pass
 @overload
-def __mul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
+def __mul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
     """
     None
 
@@ -6954,10 +6954,10 @@ def __mul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Produ
     None
     """
 @overload
-def __mul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
+def __mul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
     pass
 @overload
-def __mul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
+def __mul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
     pass
 @overload
 def __rmul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Product:
@@ -6969,10 +6969,10 @@ def __rmul__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Prod
     None
     """
 @overload
-def __rmul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
+def __rmul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
     pass
 @overload
-def __rmul__(x : Expr_GeneralExpression,y : float) -> Expr_Product:
+def __rmul__(x : float,y : Expr_GeneralExpression) -> Expr_Product:
     pass
 @overload
 def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
@@ -6986,13 +6986,13 @@ def __sub__(x : Expr_GeneralExpression) -> Expr_UnaryMinus:
     None
     """
 @overload
-def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
-    pass
-@overload
 def __sub__(x : Expr_GeneralExpression,y : float) -> Expr_Difference:
     pass
 @overload
 def __sub__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Difference:
+    pass
+@overload
+def __sub__(x : float,y : Expr_GeneralExpression) -> Expr_Difference:
     pass
 @overload
 def __truediv__(x : Expr_GeneralExpression,y : Expr_GeneralExpression) -> Expr_Division:

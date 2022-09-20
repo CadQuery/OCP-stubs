@@ -19,7 +19,7 @@ class BSplSLib():
     """
     @staticmethod
     @overload
-    def BuildCache_s(theU : float,theV : float,theUSpanDomain : float,theVSpanDomain : float,theUPeriodic : bool,theVPeriodic : bool,theUDegree : int,theVDegree : int,theUIndex : int,theVIndex : int,theUFlatKnots : OCP.TColStd.TColStd_Array1OfReal,theVFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array2OfPnt,theWeights : OCP.TColStd.TColStd_Array2OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def BuildCache_s(U : float,V : float,USpanDomain : float,VSpanDomain : float,UPeriodicFlag : bool,VPeriodicFlag : bool,UDegree : int,VDegree : int,UIndex : int,VIndex : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Perform the evaluation of the Taylor expansion of the Bspline normalized between 0 and 1. If rational computes the homogeneous Taylor expension for the numerator and stores it in CachePoles
 
@@ -27,7 +27,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def BuildCache_s(U : float,V : float,USpanDomain : float,VSpanDomain : float,UPeriodicFlag : bool,VPeriodicFlag : bool,UDegree : int,VDegree : int,UIndex : int,VIndex : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def BuildCache_s(theU : float,theV : float,theUSpanDomain : float,theVSpanDomain : float,theUPeriodic : bool,theVPeriodic : bool,theUDegree : int,theVDegree : int,theUIndex : int,theVIndex : int,theUFlatKnots : OCP.TColStd.TColStd_Array1OfReal,theVFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array2OfPnt,theWeights : OCP.TColStd.TColStd_Array2OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def CacheD0_s(U : float,V : float,UDegree : int,VDegree : int,UCacheParameter : float,VCacheParameter : float,USpanLenght : float,VSpanLength : float,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,Point : OCP.gp.gp_Pnt) -> None: 
         """
@@ -86,11 +86,11 @@ class BSplSLib():
     @staticmethod
     def FunctionMultiply_s(Function : BSplSLib_EvaluatorFunction,UBSplineDegree : int,VBSplineDegree : int,UBSplineKnots : OCP.TColStd.TColStd_Array1OfReal,VBSplineKnots : OCP.TColStd.TColStd_Array1OfReal,UMults : OCP.TColStd.TColStd_Array1OfInteger,VMults : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,UNewDegree : int,VNewDegree : int,NewNumerator : OCP.TColgp.TColgp_Array2OfPnt,NewDenominator : OCP.TColStd.TColStd_Array2OfReal) -> Tuple[int]: 
         """
-        this will multiply a given BSpline numerator N(u,v) and denominator D(u,v) defined by its U/VBSplineDegree and U/VBSplineKnots, and U/VMults. Its Poles and Weights are arrays which are coded as array2 of the form [1..UNumPoles][1..VNumPoles] by a function a(u,v) which is assumed to satisfy the following : 1. a(u,v) * N(u,v) and a(u,v) * D(u,v) is a polynomial BSpline that can be expressed exactly as a BSpline of degree U/VNewDegree on the knots U/VFlatKnots 2. the range of a(u,v) is the same as the range of N(u,v) or D(u,v) ---Warning: it is the caller's responsability to insure that conditions 1. and 2. above are satisfied : no check whatsoever is made in this method -- theStatus will return 0 if OK else it will return the pivot index -- of the matrix that was inverted to compute the multiplied -- BSpline : the method used is interpolation at Schoenenberg -- points of a(u,v)* N(u,v) and a(u,v) * D(u,v) theStatus will return 0 if OK else it will return the pivot index of the matrix that was inverted to compute the multiplied BSpline : the method used is interpolation at Schoenenberg points of a(u,v)*F(u,v) --
+        this will multiply a given BSpline numerator N(u,v) and denominator D(u,v) defined by its U/VBSplineDegree and U/VBSplineKnots, and U/VMults. Its Poles and Weights are arrays which are coded as array2 of the form [1..UNumPoles][1..VNumPoles] by a function a(u,v) which is assumed to satisfy the following : 1. a(u,v) * N(u,v) and a(u,v) * D(u,v) is a polynomial BSpline that can be expressed exactly as a BSpline of degree U/VNewDegree on the knots U/VFlatKnots 2. the range of a(u,v) is the same as the range of N(u,v) or D(u,v) ---Warning: it is the caller's responsibility to insure that conditions 1. and 2. above are satisfied : no check whatsoever is made in this method -- theStatus will return 0 if OK else it will return the pivot index -- of the matrix that was inverted to compute the multiplied -- BSpline : the method used is interpolation at Schoenenberg -- points of a(u,v)* N(u,v) and a(u,v) * D(u,v) theStatus will return 0 if OK else it will return the pivot index of the matrix that was inverted to compute the multiplied BSpline : the method used is interpolation at Schoenenberg points of a(u,v)*F(u,v) --
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,UDirection : bool) -> None: 
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UDirection : bool) -> None: 
         """
         Get from FP the coordinates of the poles.
 
@@ -98,7 +98,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UDirection : bool) -> None: ...
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,UDirection : bool) -> None: ...
     @staticmethod
     def HomogeneousD0_s(U : float,V : float,UIndex : int,VIndex : int,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UMults : OCP.TColStd.TColStd_Array1OfInteger,VMults : OCP.TColStd.TColStd_Array1OfInteger,UDegree : int,VDegree : int,URat : bool,VRat : bool,UPer : bool,VPer : bool,P : OCP.gp.gp_Pnt) -> Tuple[float]: 
         """
@@ -152,7 +152,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: 
         """
         Warning! To be used for BezierSurfaces ONLY!!!
 
@@ -160,7 +160,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def RationalDerivative_s(UDeg : int,VDeg : int,N : int,M : int,All : bool=True) -> Tuple[float, float]: 
         """
@@ -250,23 +250,23 @@ class BSplSLib_Cache(OCP.Standard.Standard_Transient):
         Verifies validity of the cache using parameters of the point
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

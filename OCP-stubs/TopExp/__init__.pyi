@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
 import OCP.TopoDS
 import OCP.TopAbs
+import OCP.TopTools
 __all__  = [
 "TopExp",
 "TopExp_Explorer"
@@ -42,20 +42,20 @@ class TopExp():
         """
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: 
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape,cumOri : bool=True,cumLoc : bool=True) -> None: 
         """
         Tool to explore a topological data structure. Stores in the map <M> all the sub-shapes of <S> of type <T>.
 
-        Stores in the map <M> all the sub-shapes of <S>.
+        Stores in the map <M> all the sub-shapes of <S>. - If cumOri is true, the function composes all sub-shapes with the orientation of S. - If cumLoc is true, the function multiplies all sub-shapes by the location of S, i.e. it applies to each sub-shape the transformation that is associated with S.
 
-        Stores in the map <M> all the sub-shapes of <S>.
+        Stores in the map <M> all the sub-shapes of <S>. - If cumOri is true, the function composes all sub-shapes with the orientation of S. - If cumLoc is true, the function multiplies all sub-shapes by the location of S, i.e. it applies to each sub-shape the transformation that is associated with S.
         """
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape) -> None: ...
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape,cumOri : bool=True,cumLoc : bool=True) -> None: ...
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
     @staticmethod
     @overload
     def Vertices_s(W : OCP.TopoDS.TopoDS_Wire,Vfirst : OCP.TopoDS.TopoDS_Vertex,Vlast : OCP.TopoDS.TopoDS_Vertex) -> None: 
@@ -76,8 +76,6 @@ class TopExp_Explorer():
     def Clear(self) -> None: 
         """
         Clears the content of the explorer. It will return False on More().
-
-        Clears the content of the explorer. It will return False on More().
         """
     def Current(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -86,12 +84,10 @@ class TopExp_Explorer():
     def Depth(self) -> int: 
         """
         Returns the current depth of the exploration. 0 is the shape to explore itself.
-
-        Returns the current depth of the exploration. 0 is the shape to explore itself.
         """
-    def Destroy(self) -> None: 
+    def ExploredShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
+        Return explored shape.
         """
     def Init(self,S : OCP.TopoDS.TopoDS_Shape,ToFind : OCP.TopAbs.TopAbs_ShapeEnum,ToAvoid : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: 
         """
@@ -99,8 +95,6 @@ class TopExp_Explorer():
         """
     def More(self) -> bool: 
         """
-        Returns True if there are more shapes in the exploration.
-
         Returns True if there are more shapes in the exploration.
         """
     def Next(self) -> None: 
@@ -116,7 +110,7 @@ class TopExp_Explorer():
         Returns the current shape in the exploration. Exceptions Standard_NoSuchObject if this explorer has no more shapes to explore.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,ToFind : OCP.TopAbs.TopAbs_ShapeEnum,ToAvoid : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,ToFind : OCP.TopAbs.TopAbs_ShapeEnum,ToAvoid : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
     pass

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import io
 import OCP.gp
 import OCP.NCollection
 import OCP.Standard
-import io
 __all__  = [
 "TopLoc_Datum3D",
 "TopLoc_IndexedMapOfLocation",
@@ -53,23 +53,23 @@ class TopLoc_Datum3D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ShallowDump(self,S : io.BytesIO) -> None: 
         """
         Writes the contents of this Datum3D to the stream S.
@@ -87,9 +87,9 @@ class TopLoc_Datum3D(OCP.Standard.Standard_Transient):
         Returns a gp_Trsf which, when applied to this datum, produces the default datum.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -187,11 +187,11 @@ class TopLoc_IndexedMapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : TopLoc_IndexedMapOfLocation) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class TopLoc_ItemLocation():
     """
@@ -207,6 +207,10 @@ class TopLoc_Location():
     """
     A Location is a composite transition. It comprises a series of elementary reference coordinates, i.e. objects of type TopLoc_Datum3D, and the powers to which these objects are raised.
     """
+    def Clear(self) -> None: 
+        """
+        Clear myItems
+        """
     def Divided(self,Other : TopLoc_Location) -> TopLoc_Location: 
         """
         Returns <me> / <Other>.
@@ -272,6 +276,11 @@ class TopLoc_Location():
     def Predivided(self,Other : TopLoc_Location) -> TopLoc_Location: 
         """
         Returns <Other>.Inverted() * <me>.
+        """
+    @staticmethod
+    def ScalePrec_s() -> float: 
+        """
+        None
         """
     def ShallowDump(self,S : io.BytesIO) -> None: 
         """
@@ -426,11 +435,11 @@ class TopLoc_MapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopLoc_MapOfLocation) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class TopLoc_SListNodeOfItemLocation(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -454,23 +463,23 @@ class TopLoc_SListNodeOfItemLocation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Tail(self) -> TopLoc_SListOfItemLocation: 
         """
         None
@@ -540,23 +549,23 @@ class TopLoc_SListOfItemLocation():
         Returns the current value of the list. An error is raised if the list is empty.
         """
     @overload
-    def __init__(self,anItem : TopLoc_ItemLocation,aTail : TopLoc_SListOfItemLocation) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Other : TopLoc_SListOfItemLocation) -> None: ...
+    @overload
+    def __init__(self,anItem : TopLoc_ItemLocation,aTail : TopLoc_SListOfItemLocation) -> None: ...
     pass
 def HashCode(theLocation : TopLoc_Location,theUpperBound : int) -> int:
     """
     Computes a hash code for the given location, in the range [1, theUpperBound]
     """
 @overload
-def ShallowDump(me : TopLoc_Location,S : io.BytesIO) -> None:
+def ShallowDump(me : TopLoc_Datum3D,S : io.BytesIO) -> None:
     """
     None
 
     None
     """
 @overload
-def ShallowDump(me : TopLoc_Datum3D,S : io.BytesIO) -> None:
+def ShallowDump(me : TopLoc_Location,S : io.BytesIO) -> None:
     pass

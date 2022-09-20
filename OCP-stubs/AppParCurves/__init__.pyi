@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import io
 import OCP.math
-import OCP.NCollection
-import OCP.gp
 import OCP.TColgp
+import OCP.NCollection
+import io
+import OCP.gp
 import OCP.Standard
+import OCP.TColStd
 __all__  = [
 "AppParCurves",
 "AppParCurves_Array1OfConstraintCouple",
@@ -61,7 +61,7 @@ class AppParCurves():
     pass
 class AppParCurves_Array1OfConstraintCouple():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : AppParCurves_Array1OfConstraintCouple) -> AppParCurves_Array1OfConstraintCouple: 
         """
@@ -136,18 +136,18 @@ class AppParCurves_Array1OfConstraintCouple():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : AppParCurves_ConstraintCouple,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : AppParCurves_Array1OfConstraintCouple) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : AppParCurves_Array1OfConstraintCouple) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Array1OfMultiBSpCurve():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> AppParCurves_Array1OfMultiBSpCurve: 
         """
@@ -222,18 +222,18 @@ class AppParCurves_Array1OfMultiBSpCurve():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : AppParCurves_MultiBSpCurve,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : AppParCurves_MultiBSpCurve,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Array1OfMultiCurve():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : AppParCurves_Array1OfMultiCurve) -> AppParCurves_Array1OfMultiCurve: 
         """
@@ -308,18 +308,18 @@ class AppParCurves_Array1OfMultiCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : AppParCurves_MultiCurve,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : AppParCurves_Array1OfMultiCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Array1OfMultiPoint():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : AppParCurves_Array1OfMultiPoint) -> AppParCurves_Array1OfMultiPoint: 
         """
@@ -394,13 +394,13 @@ class AppParCurves_Array1OfMultiPoint():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
     @overload
     def __init__(self,theBegin : AppParCurves_MultiPoint,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AppParCurves_Constraint():
@@ -420,6 +420,7 @@ class AppParCurves_Constraint():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -463,9 +464,9 @@ class AppParCurves_ConstraintCouple():
         Changes the index of the constraint object.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,TheIndex : int,Cons : AppParCurves_Constraint) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class AppParCurves_HArray1OfConstraintCouple(AppParCurves_Array1OfConstraintCouple, OCP.Standard.Standard_Transient):
     def Array1(self) -> AppParCurves_Array1OfConstraintCouple: 
@@ -533,23 +534,23 @@ class AppParCurves_HArray1OfConstraintCouple(AppParCurves_Array1OfConstraintCoup
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> AppParCurves_ConstraintCouple: 
         """
         Returns last element
@@ -593,11 +594,11 @@ class AppParCurves_HArray1OfConstraintCouple(AppParCurves_Array1OfConstraintCoup
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : AppParCurves_Array1OfConstraintCouple) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_ConstraintCouple) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -676,23 +677,23 @@ class AppParCurves_HArray1OfMultiBSpCurve(AppParCurves_Array1OfMultiBSpCurve, OC
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> AppParCurves_MultiBSpCurve: 
         """
         Returns last element
@@ -734,13 +735,13 @@ class AppParCurves_HArray1OfMultiBSpCurve(AppParCurves_Array1OfMultiBSpCurve, OC
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiBSpCurve) -> None: ...
-    @overload
     def __init__(self,theOther : AppParCurves_Array1OfMultiBSpCurve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiBSpCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -819,23 +820,23 @@ class AppParCurves_HArray1OfMultiCurve(AppParCurves_Array1OfMultiCurve, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> AppParCurves_MultiCurve: 
         """
         Returns last element
@@ -962,23 +963,23 @@ class AppParCurves_HArray1OfMultiPoint(AppParCurves_Array1OfMultiPoint, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Last(self) -> AppParCurves_MultiPoint: 
         """
         Returns last element
@@ -1020,13 +1021,13 @@ class AppParCurves_HArray1OfMultiPoint(AppParCurves_Array1OfMultiPoint, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiPoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : AppParCurves_MultiPoint) -> None: ...
+    @overload
+    def __init__(self,theOther : AppParCurves_Array1OfMultiPoint) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1044,14 +1045,14 @@ class AppParCurves_MultiCurve():
     This class describes a MultiCurve approximating a Multiline. As a Multiline is a set of n lines, a MultiCurve is a set of n curves. These curves are Bezier curves. A MultiCurve is composed of m MultiPoint. The approximating degree of these n curves is the same for each one.
     """
     @overload
-    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         returns the Pole array of the curve of range CuIndex. An exception is raised if the dimension of the curve is 2d.
 
         returns the Pole array of the curve of range CuIndex. An exception is raised if the dimension of the curve is 3d.
         """
     @overload
-    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: 
         """
@@ -1062,14 +1063,14 @@ class AppParCurves_MultiCurve():
     @overload
     def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
+    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: 
         """
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
 
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
         """
     @overload
-    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: ...
+    def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: ...
     def Degree(self) -> int: 
         """
         returns the degree of the curves.
@@ -1115,7 +1116,7 @@ class AppParCurves_MultiCurve():
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
-    def Value(self,Index : int) -> AppParCurves_MultiPoint: 
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: 
         """
         returns the Index MultiPoint. An exception is raised if Index <0 or Index >Degree+1.
 
@@ -1124,38 +1125,38 @@ class AppParCurves_MultiCurve():
         returns the value of the point with a parameter U on the Bezier curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
         """
     @overload
+    def Value(self,Index : int) -> AppParCurves_MultiPoint: ...
+    @overload
     def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: ...
+    def __init__(self,NbPol : int) -> None: ...
     @overload
     def __init__(self,tabMU : AppParCurves_Array1OfMultiPoint) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,NbPol : int) -> None: ...
     pass
 class AppParCurves_MultiBSpCurve(AppParCurves_MultiCurve):
     """
     This class describes a MultiBSpCurve approximating a Multiline. Just as a Multiline is a set of a given number of lines, a MultiBSpCurve is a set of a specified number of bsplines defined by: - A specified number of MultiPoints - the poles of a specified number of curves - The degree of approximation identical for each of the specified number of curves.
     """
     @overload
-    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         returns the Pole array of the curve of range CuIndex. An exception is raised if the dimension of the curve is 2d.
 
         returns the Pole array of the curve of range CuIndex. An exception is raised if the dimension of the curve is 3d.
         """
     @overload
-    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def Curve(self,CuIndex : int,TabPnt : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
-    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: 
+    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: 
         """
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
 
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
         """
     @overload
-    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d) -> None: ...
+    def D1(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec) -> None: ...
     @overload
     def D2(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: 
         """
@@ -1226,22 +1227,22 @@ class AppParCurves_MultiBSpCurve(AppParCurves_MultiCurve):
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: 
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: 
         """
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 2d.
 
         returns the value of the point with a parameter U on the BSpline curve number CuIndex. An exception is raised if CuIndex <0 or > NbCurves. An exception is raised if the curve dimension is 3d.
         """
     @overload
-    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def __init__(self,NbPol : int) -> None: ...
+    def Value(self,CuIndex : int,U : float,Pt : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,tabMU : AppParCurves_Array1OfMultiPoint,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     @overload
-    def __init__(self,SC : AppParCurves_MultiCurve,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
+    def __init__(self,NbPol : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,SC : AppParCurves_MultiCurve,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     pass
 class AppParCurves_MultiPoint():
     """
@@ -1294,13 +1295,13 @@ class AppParCurves_MultiPoint():
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
-    @overload
-    def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
-    @overload
     def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def __init__(self,NbPoints : int,NbPoints2d : int) -> None: ...
+    @overload
+    def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    @overload
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -1313,14 +1314,14 @@ class AppParCurves_SequenceOfMultiBSpCurve(OCP.NCollection.NCollection_BaseSeque
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : AppParCurves_MultiBSpCurve) -> None: 
+    def Append(self,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: ...
+    def Append(self,theItem : AppParCurves_MultiBSpCurve) -> None: ...
     def Assign(self,theOther : AppParCurves_SequenceOfMultiBSpCurve) -> AppParCurves_SequenceOfMultiBSpCurve: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1350,23 +1351,23 @@ class AppParCurves_SequenceOfMultiBSpCurve(OCP.NCollection.NCollection_BaseSeque
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiBSpCurve) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : AppParCurves_MultiBSpCurve) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1447,14 +1448,14 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: 
+    def Append(self,theItem : AppParCurves_MultiCurve) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : AppParCurves_MultiCurve) -> None: ...
+    def Append(self,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: ...
     def Assign(self,theOther : AppParCurves_SequenceOfMultiCurve) -> AppParCurves_SequenceOfMultiCurve: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1493,14 +1494,14 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
     @overload
     def InsertAfter(self,theIndex : int,theItem : AppParCurves_MultiCurve) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : AppParCurves_MultiCurve) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : AppParCurves_MultiCurve) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1518,14 +1519,14 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: 
+    def Prepend(self,theItem : AppParCurves_MultiCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : AppParCurves_MultiCurve) -> None: ...
+    def Prepend(self,theSeq : AppParCurves_SequenceOfMultiCurve) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1560,11 +1561,11 @@ class AppParCurves_SequenceOfMultiCurve(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : AppParCurves_SequenceOfMultiCurve) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

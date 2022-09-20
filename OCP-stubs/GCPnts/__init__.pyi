@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.gp
 import OCP.math
 import OCP.Adaptor2d
+import OCP.gp
 __all__  = [
 "GCPnts_AbscissaPoint",
 "GCPnts_AbscissaType",
@@ -18,6 +18,8 @@ __all__  = [
 "GCPnts_DistFunctionMV",
 "GCPnts_QuasiUniformAbscissa",
 "GCPnts_QuasiUniformDeflection",
+"GCPnts_TCurveTypes_Adaptor2d_Curve2d",
+"GCPnts_TCurveTypes_Adaptor3d_Curve",
 "GCPnts_TangentialDeflection",
 "GCPnts_UniformAbscissa",
 "GCPnts_UniformDeflection",
@@ -39,67 +41,67 @@ class GCPnts_AbscissaPoint():
         """
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float) -> float: 
+    def Length_s(theC : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
-        Computes the length of the Curve <C>.
+        Computes the length of the 3D Curve.
 
-        Computes the length of the Curve <C>.
+        Computes the length of the 2D Curve.
 
-        Computes the length of the Curve <C> with the given tolerance.
+        Computes the length of the 3D Curve with the given tolerance.
 
-        Computes the length of the Curve <C> with the given tolerance.
+        Computes the length of the 2D Curve with the given tolerance.
 
-        Computes the length of the Curve <C>.
+        Computes the length of the 3D Curve.
 
-        Computes the length of the Curve <C>.
+        Computes the length of the 2D Curve.
 
-        Computes the length of the Curve <C> with the given tolerance.
+        Computes the length of the 3D Curve with the given tolerance.
 
-        Computes the length of the Curve <C> with the given tolerance. Constructs an empty algorithm. This function is used only for initializing a framework to compute the length of a curve (or a series of curves). Warning The function IsDone will return the value false after the use of this function.
+        Computes the length of the Curve with the given tolerance.
         """
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: ...
+    def Length_s(theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theU1 : float,theU2 : float,theTol : float) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: ...
+    def Length_s(theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theTol : float) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Tol : float) -> float: ...
+    def Length_s(theC : OCP.Adaptor3d.Adaptor3d_Curve) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,Tol : float) -> float: ...
+    def Length_s(theC : OCP.Adaptor3d.Adaptor3d_Curve,theTol : float) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> float: ...
+    def Length_s(theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theU1 : float,theU2 : float) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol : float) -> float: ...
+    def Length_s(theC : OCP.Adaptor3d.Adaptor3d_Curve,theU1 : float,theU2 : float) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float) -> float: ...
+    def Length_s(theC : OCP.Adaptor3d.Adaptor3d_Curve,theU1 : float,theU2 : float,theTol : float) -> float: ...
     def Parameter(self) -> float: 
         """
         Returns the parameter on the curve of the point solution of this algorithm. Exceptions StdFail_NotDone if the computation was not successful, or was not done.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U0 : float) -> None: ...
+    def __init__(self,theTol : float,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theU0 : float) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theU0 : float) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theU0 : float,theUi : float) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theU0 : float,theUi : float,theTol : float) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theU0 : float) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theU0 : float,theUi : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Tol : float,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U0 : float) -> None: ...
+    def __init__(self,theTol : float,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theU0 : float) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float,Ui : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U0 : float,Ui : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U0 : float,Ui : float) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float,Ui : float) -> None: ...
-    @overload
-    def __init__(self,Tol : float,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theU0 : float,theUi : float,theTol : float) -> None: ...
     pass
 class GCPnts_AbscissaType():
     """
@@ -116,6 +118,7 @@ class GCPnts_AbscissaType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -154,6 +157,7 @@ class GCPnts_DeflectionType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -178,7 +182,7 @@ class GCPnts_DeflectionType():
     pass
 class GCPnts_DistFunction(OCP.math.math_Function):
     """
-    Class to define function, which calculates square distance between point on curve C(u), U1 <= u <= U2 and line passing through points C(U1) and C(U2) This function is used in any minimisation algorithm to define maximal deviation between curve and line, which required one variable function without derivative (for ex. math_BrentMinimum)
+    Class to define function, which calculates square distance between point on curve C(u), U1 <= u <= U2 and line passing through points C(U1) and C(U2) This function is used in any minimization algorithm to define maximal deviation between curve and line, which required one variable function without derivative (for ex. math_BrentMinimum)
     """
     def GetStateNumber(self) -> int: 
         """
@@ -242,25 +246,25 @@ class GCPnts_DistFunctionMV(OCP.math.math_MultipleVarFunction):
     pass
 class GCPnts_QuasiUniformAbscissa():
     """
-    This class provides an algorithm to compute a uniform abscissa distribution of points on a curve, i.e. a sequence of equidistant points. The distance between two consecutive points is measured along the curve. The distribution is defined: - either by the curvilinear distance between two consecutive points - or by a number of points.
+    This class provides an algorithm to compute a uniform abscissa distribution of points on a curve, i.e. a sequence of equidistant points. The distance between two consecutive points is measured along the curve.
     """
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int,U1 : float,U2 : float) -> None: 
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int) -> None: 
         """
-        Initialize the algoritms with <C>, <NbPoints> and
+        Initialize the algorithms with 3D curve and target number of points.
 
-        Initialize the algoritms with <C>, <Abscissa>, <U1>, <U2>.
+        Initialize the algorithms with 3D curve, target number of points and curve parameter range.
 
-        Initialize the algoritms with <C>, <NbPoints> and
+        Initialize the algorithms with 2D curve and target number of points.
 
-        Initialize the algoritms with <C>, <Abscissa>, <U1>, <U2>.
+        Initialize the algorithms with 2D curve, target number of points and curve parameter range.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int,theU1 : float,theU2 : float) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int,U1 : float,U2 : float) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int,theU1 : float,theU2 : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the computation was successful. IsDone is a protection against: - non-convergence of the algorithm - querying the results before computation.
@@ -274,41 +278,41 @@ class GCPnts_QuasiUniformAbscissa():
         Returns the parameter of the point of index Index in the distribution computed by this algorithm. Warning Index must be greater than or equal to 1, and less than or equal to the number of points of the distribution. However, pay particular attention as this condition is not checked by this function. Exceptions StdFail_NotDone if this algorithm has not been initialized, or if the computation was not successful.
         """
     @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int,theU1 : float,theU2 : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int,U1 : float,U2 : float) -> None: ...
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int,U1 : float,U2 : float) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int,theU1 : float,theU2 : float) -> None: ...
     pass
 class GCPnts_QuasiUniformDeflection():
     """
-    This class computes a distribution of points on a curve. The points may respect the deflection. The algorithm is not based on the classical prediction (with second derivative of curve), but either on the evaluation of the distance between the mid point and the point of mid parameter of the two points, or the distance between the mid point and the point at parameter 0.5 on the cubic interpolation of the two points and their tangents. Note: this algorithm is faster than a GCPnts_UniformDeflection algorithm, and is able to work with non-"C2" continuous curves. However, it generates more points in the distribution.
+    This class computes a distribution of points on a curve. The points may respect the deflection. The algorithm is not based on the classical prediction (with second derivative of curve), but either on the evaluation of the distance between the mid point and the point of mid parameter of the two points, or the distance between the mid point and the point at parameter 0.5 on the cubic interpolation of the two points and their tangents.
     """
     def Deflection(self) -> float: 
         """
         Returns the deflection between the curve and the polygon resulting from the points of the distribution computed by this algorithm. This is the value given to the algorithm at the time of construction (or initialization). Exceptions StdFail_NotDone if this algorithm has not been initialized, or if the computation was not successful.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: 
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: 
         """
-        Initialize the algoritms with <C>, <Deflection>
+        Initialize the algorithms with 3D curve and deflection.
 
-        Initialize the algoritms with <C>, <Deflection>
+        Initialize the algorithms with 2D curve and deflection.
 
-        Initialize the algoritms with <C>, <Deflection>, <U1>,<U2>
+        Initialize the algorithms with 3D curve, deflection and parameter range.
 
-        Initialize the algoritms with <C>, <Deflection>, -- <U1>,<U2> This and the above algorithms initialize (or reinitialize) this algorithm and compute a distribution of points: - on the curve C, or - on the part of curve C limited by the two parameter values U1 and U2, where the deflection resulting from the distributed points is not greater than Deflection. The first point of the distribution is either the origin of curve C or the point of parameter U1. The last point of the distribution is either the end point of curve C or the point of parameter U2. Intermediate points of the distribution are built in such a way that the deflection is not greater than Deflection. Using the following evaluation of the deflection: if Pi and Pj are two consecutive points of the distribution, respectively of parameter ui and uj on the curve, the deflection is the distance between: - the mid-point of Pi and Pj (the center of the chord joining these two points) - and the point of mid-parameter of these two points (the point of parameter [(ui+uj) / 2 ] on curve C). Continuity, defaulted to GeomAbs_C1, gives the degree of continuity of the curve C. (Note that C is an Adaptor3d_Curve or an Adaptor2d_Curve2d object, and does not know the degree of continuity of the underlying curve). Use the function IsDone to verify that the computation was successful, the function NbPoints to obtain the number of points of the computed distribution, and the function Parameter to read the parameter of each point. Warning - The roles of U1 and U2 are inverted if U1 > U2. - Derivative functions on the curve are called according to Continuity. An error may occur if Continuity is greater than the real degree of continuity of the curve. Warning C is an adapted curve, i.e. an object which is an interface between: - the services provided by either a 2D curve from the package Geom2d (in the case of an Adaptor2d_Curve2d curve) or a 3D curve from the package Geom (in the case of an Adaptor3d_Curve curve), and those required on the curve by the computation algorithm.
+        Initialize the algorithms with theC, theDeflection, theU1, theU2. This and the above algorithms initialize (or reinitialize) this algorithm and compute a distribution of points: - on the curve theC, or - on the part of curve theC limited by the two parameter values theU1 and theU2, where the deflection resulting from the distributed points is not greater than theDeflection.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,U1 : float,U2 : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theU1 : float,theU2 : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theU1 : float,theU2 : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the computation was successful. IsDone is a protection against: - non-convergence of the algorithm - querying the results before computation.
@@ -326,19 +330,31 @@ class GCPnts_QuasiUniformDeflection():
         Returns the point of index Index in the distribution computed by this algorithm. Warning Index must be greater than or equal to 1, and less than or equal to the number of points of the distribution. However, pay particular attention as this condition is not checked by this function. Exceptions StdFail_NotDone if this algorithm has not been initialized, or if the computation was not successful.
         """
     @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theU1 : float,theU2 : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theU1 : float,theU2 : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,U1 : float,U2 : float,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    pass
+class GCPnts_TCurveTypes_Adaptor2d_Curve2d():
+    """
+    Auxiliary tool to resolve 2D curve classes.
+    """
+    def __init__(self) -> None: ...
+    pass
+class GCPnts_TCurveTypes_Adaptor3d_Curve():
+    """
+    Auxiliary tool to resolve 3D curve classes.
+    """
+    def __init__(self) -> None: ...
     pass
 class GCPnts_TangentialDeflection():
     """
-    Computes a set of points on a curve from package Adaptor3d such as between two successive points P1(u1)and P2(u2) :
+    Computes a set of points on a curve from package Adaptor3d such as between two successive points P1(u1)and P2(u2) : where P3 is the point of abscissa ((u1+u2)/2), with u1 the abscissa of the point P1 and u2 the abscissa of the point P2.
     """
     def AddPoint(self,thePnt : OCP.gp.gp_Pnt,theParam : float,theIsReplace : bool=True) -> int: 
         """
@@ -350,22 +366,22 @@ class GCPnts_TangentialDeflection():
         Computes angular step for the arc using the given parameters.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,FirstParameter : float,LastParameter : float,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: 
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theFirstParameter : float,theLastParameter : float,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: 
         """
-        None
+        Initialize algorithm for 3D curve.
 
-        None
+        Initialize algorithm for 3D curve with restricted range.
 
-        None
+        Initialize algorithm for 2D curve.
 
-        None
+        Initialize algorithm for 2D curve with restricted range.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,FirstParameter : float,LastParameter : float,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theFirstParameter : float,theLastParameter : float,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
     def NbPoints(self) -> int: 
         """
         None
@@ -379,57 +395,57 @@ class GCPnts_TangentialDeflection():
         None
         """
     @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theFirstParameter : float,theLastParameter : float,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theFirstParameter : float,theLastParameter : float,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,FirstParameter : float,LastParameter : float,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,FirstParameter : float,LastParameter : float,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,AngularDeflection : float,CurvatureDeflection : float,MinimumOfPoints : int=2,UTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAngularDeflection : float,theCurvatureDeflection : float,theMinimumOfPoints : int=2,theUTol : float=1e-09,theMinLen : float=1e-07) -> None: ...
     pass
 class GCPnts_UniformAbscissa():
     """
-    This class allows to compute a uniform distribution of points on a curve (ie the points will all be equally distant).
+    This class allows to compute a uniform distribution of points on a curve (i.e. the points will all be equally distant).
     """
     def Abscissa(self) -> float: 
         """
-        returne the current abscissa ie the distance between two consecutive points
+        Returns the current abscissa, i.e. the distance between two consecutive points.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,Toler : float=-1.0) -> None: 
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theToler : float=-1.0) -> None: 
         """
-        Initialize the algoritms with <C>, <Abscissa>, <Toler>
+        Initialize the algorithms with 3D curve, Abscissa, and Tolerance.
 
-        Initialize the algoritms with <C>, <Abscissa>, <U1>, <U2>, <Toler>
+        Initialize the algorithms with 3D curve, Abscissa, Tolerance, and parameter range.
 
-        Initialize the algoritms with <C>, <NbPoints>, <Toler> and
+        Initialize the algorithms with 3D curve, number of points, and Tolerance.
 
-        Initialize the algoritms with <C>, <Abscissa>, <U1>, <U2>, <Toler>.
+        Initialize the algorithms with 3D curve, number of points, Tolerance, and parameter range.
 
-        Initialize the algoritms with <C>, <Abscissa>, <Toler>
+        Initialize the algorithms with 2D curve, Abscissa, and Tolerance.
 
-        Initialize the algoritms with <C>, <Abscissa>, <U1>, <U2>, <Toler>
+        Initialize the algorithms with 2D curve, Abscissa, Tolerance, and parameter range.
 
-        Initialize the algoritms with <C>, <NbPoints>, <Toler> and
+        Initialize the algorithms with 2D curve, number of points, and Tolerance.
 
-        Initialize the algoritms with <C>, <Abscissa>, <U1>, <U2>, <Toler>.
+        Initialize the algorithms with 2D curve, number of points, Tolerance, and parameter range.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int,theToler : float=-1.0) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int,theToler : float=-1.0) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theToler : float=-1.0) -> None: ...
     def IsDone(self) -> bool: 
         """
         None
@@ -443,23 +459,23 @@ class GCPnts_UniformAbscissa():
         returns the computed Parameter of index <Index>.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int,theToler : float=-1.0) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theNbPoints : int,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbPoints : int,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theToler : float=-1.0) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,NbPoints : int,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theAbscissa : float,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int,theToler : float=-1.0) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theAbscissa : float,theToler : float=-1.0) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U1 : float,U2 : float,Toler : float=-1.0) -> None: ...
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theNbPoints : int,theU1 : float,theU2 : float,theToler : float=-1.0) -> None: ...
     pass
 class GCPnts_UniformDeflection():
     """
@@ -470,22 +486,22 @@ class GCPnts_UniformDeflection():
         Returns the deflection between the curve and the polygon resulting from the points of the distribution computed by this algorithm. This value is the one given to the algorithm at the time of construction (or initialization). Exceptions StdFail_NotDone if this algorithm has not been initialized, or if the computation was not successful.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,WithControl : bool=True) -> None: 
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theWithControl : bool=True) -> None: 
         """
-        Initialize the algoritms with <C>, <Deflection>
+        Initialize the algorithms with 3D curve and deflection.
 
-        Initialize the algoritms with <C>, <Deflection>
+        Initialize the algorithms with 2D curve and deflection.
 
-        Initialize the algoritms with <C>, <Deflection>, <U1>,<U2>
+        Initialize the algorithms with 3D curve, deflection, parameter range.
 
-        Initialize the algoritms with <C>, <Deflection>, <U1>,<U2> This and the above methods initialize (or reinitialize) this algorithm and compute a distribution of points: - on the curve C, or - on the part of curve C limited by the two parameter values U1 and U2, where the maximum distance between C and the polygon that results from the points of the distribution is not greater than Deflection. The first point of the distribution is either the origin of curve C or the point of parameter U1. The last point of the distribution is either the end point of curve C or the point of parameter U2. Intermediate points of the distribution are built using interpolations of segments of the curve limited at the 2nd degree. The construction ensures, in a first step, that the chordal deviation for this interpolation of the curve is less than or equal to Deflection. However, it does not ensure that the chordal deviation for the curve itself is less than or equal to Deflection. To do this a check is necessary, which may generate (second step) additional intermediate points. This check is time consuming, and can be avoided by setting WithControl to false. Note that by default WithControl is true and check is performed. Use the function IsDone to verify that the computation was successful, the function NbPoints to obtain the number of points of the computed distribution, and the function Parameter to read the parameter of each point. Warning - C is necessary, 'C2' continuous. This property is not checked at construction time. - The roles of U1 and U2 are inverted if U1 > U2. Warning C is an adapted curve, i.e. an object which is an interface between: - the services provided by either a 2D curve from the package Geom2d (in the case of an Adaptor2d_Curve2d curve) or a 3D curve from the package Geom (in the case of an Adaptor3d_Curve curve), - and those required on the curve by the computation algorithm.
+        Initialize the algorithms with curve, deflection, parameter range. This and the above methods initialize (or reinitialize) this algorithm and compute a distribution of points: - on the curve theC, or - on the part of curve theC limited by the two parameter values theU1 and theU2, where the maximum distance between theC and the polygon that results from the points of the distribution is not greater than theDeflection. The first point of the distribution is either the origin of curve theC or the point of parameter theU1. The last point of the distribution is either the end point of curve theC or the point of parameter theU2. Intermediate points of the distribution are built using interpolations of segments of the curve limited at the 2nd degree. The construction ensures, in a first step, that the chordal deviation for this interpolation of the curve is less than or equal to theDeflection. However, it does not ensure that the chordal deviation for the curve itself is less than or equal to theDeflection. To do this a check is necessary, which may generate (second step) additional intermediate points. This check is time consuming, and can be avoided by setting theWithControl to false. Note that by default theWithControl is true and check is performed. Use the function IsDone to verify that the computation was successful, the function NbPoints() to obtain the number of points of the computed distribution, and the function Parameter to read the parameter of each point.
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,WithControl : bool=True) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theU1 : float,theU2 : float,theWithControl : bool=True) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,U1 : float,U2 : float,WithControl : bool=True) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theWithControl : bool=True) -> None: ...
     @overload
-    def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,WithControl : bool=True) -> None: ...
+    def Initialize(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theU1 : float,theU2 : float,theWithControl : bool=True) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the computation was successful. IsDone is a protection against: - non-convergence of the algorithm - querying the results before computation.
@@ -503,15 +519,15 @@ class GCPnts_UniformDeflection():
         Returns the point of index Index in the distribution computed by this algorithm. Warning Index must be greater than or equal to 1, and less than or equal to the number of points of the distribution. However, pay particular attention as this condition is not checked by this function. Exceptions StdFAil_NotDone if this algorithm has not been initialized, or if the computation was not successful.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,WithControl : bool=True) -> None: ...
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theU1 : float,theU2 : float,theWithControl : bool=True) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theU1 : float,theU2 : float,theWithControl : bool=True) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor2d.Adaptor2d_Curve2d,theDeflection : float,theWithControl : bool=True) -> None: ...
+    @overload
+    def __init__(self,theC : OCP.Adaptor3d.Adaptor3d_Curve,theDeflection : float,theWithControl : bool=True) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,WithControl : bool=True) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,WithControl : bool=True) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,U1 : float,U2 : float,WithControl : bool=True) -> None: ...
     pass
 GCPnts_AbsComposite: OCP.GCPnts.GCPnts_AbscissaType # value = <GCPnts_AbscissaType.GCPnts_AbsComposite: 2>
 GCPnts_Circular: OCP.GCPnts.GCPnts_DeflectionType # value = <GCPnts_DeflectionType.GCPnts_Circular: 1>

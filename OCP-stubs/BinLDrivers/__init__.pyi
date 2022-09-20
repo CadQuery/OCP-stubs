@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDocStd
-import OCP.TCollection
-import io
-import OCP.NCollection
-import OCP.Message
-import OCP.BinMDF
 import OCP.CDM
+import OCP.NCollection
+import OCP.TDocStd
 import OCP.PCDM
+import io
 import OCP.Storage
 import OCP.Standard
+import OCP.Message
+import OCP.BinMDF
+import OCP.TCollection
 __all__  = [
 "BinLDrivers",
 "BinLDrivers_DocumentRetrievalDriver",
@@ -43,21 +43,12 @@ class BinLDrivers():
         """
         None
         """
-    @staticmethod
-    def StorageVersion_s() -> OCP.TCollection.TCollection_AsciiString: 
-        """
-        returns last storage version
-        """
     def __init__(self) -> None: ...
     pass
 class BinLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCDM.PCDM_Reader, OCP.Standard.Standard_Transient):
     def AttributeDrivers(self,theMsgDriver : OCP.Message.Message_Messenger) -> OCP.BinMDF.BinMDF_ADriverTable: 
         """
         None
-        """
-    def CreateDocument(self) -> OCP.CDM.CDM_Document: 
-        """
-        pure virtual method definition
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -95,32 +86,32 @@ class BinLDrivers_DocumentRetrievalDriver(OCP.PCDM.PCDM_RetrievalDriver, OCP.PCD
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         retrieves the content of the file into a new Document.
 
         None
         """
     @overload
-    def Read(self,theFileName : OCP.TCollection.TCollection_ExtendedString,theNewDocument : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read(self,theIStream : io.BytesIO,theStorageData : OCP.Storage.Storage_Data,theDoc : OCP.CDM.CDM_Document,theApplication : OCP.CDM.CDM_Application,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     def ReferenceCounter_s(theFileName : OCP.TCollection.TCollection_ExtendedString,theMsgDriver : OCP.Message.Message_Messenger) -> int: 
         """
@@ -167,7 +158,7 @@ class BinLDrivers_DocumentSection():
         Query the offset of the section in the persistent file
         """
     @staticmethod
-    def ReadTOC_s(theSection : BinLDrivers_DocumentSection,theIS : io.BytesIO,theDocFormatVersion : int) -> None: 
+    def ReadTOC_s(theSection : BinLDrivers_DocumentSection,theIS : io.BytesIO,theDocFormatVersion : OCP.TDocStd.TDocStd_FormatVersion) -> None: 
         """
         Fill a DocumentSection instance from the data that are read from TOC.
         """
@@ -179,11 +170,11 @@ class BinLDrivers_DocumentSection():
         """
         Set the offset of the section in the persistent file
         """
-    def Write(self,theOS : io.BytesIO,theOffset : int) -> None: 
+    def Write(self,theOS : io.BytesIO,theOffset : int,theDocFormatVersion : OCP.TDocStd.TDocStd_FormatVersion) -> None: 
         """
         Save Offset and Length data into the Section entry in the Document TOC (list of sections)
         """
-    def WriteTOC(self,theOS : io.BytesIO) -> None: 
+    def WriteTOC(self,theOS : io.BytesIO,theDocFormatVersion : OCP.TDocStd.TDocStd_FormatVersion) -> None: 
         """
         Create a Section entry in the Document TOC (list of sections)
         """
@@ -194,7 +185,7 @@ class BinLDrivers_DocumentSection():
     pass
 class BinLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PCDM_Writer, OCP.Standard.Standard_Transient):
     """
-    persistent implemention of storage a document in a binary filepersistent implemention of storage a document in a binary filepersistent implemention of storage a document in a binary file
+    persistent implementation of storage a document in a binary filepersistent implementation of storage a document in a binary filepersistent implementation of storage a document in a binary file
     """
     def AddSection(self,theName : OCP.TCollection.TCollection_AsciiString,isPostRead : bool=True) -> None: 
         """
@@ -237,32 +228,36 @@ class BinLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsQuickPart(self,theVersion : int) -> bool: 
+        """
+        Return true if document should be stored in quick mode for partial reading
+        """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: 
+    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: 
         """
         raises NotImplemented.
 
         By default, puts in the Sequence the document returns by the previous Make method.
         """
     @overload
-    def Make(self,aDocument : OCP.CDM.CDM_Document,Documents : OCP.PCDM.PCDM_SequenceOfDocument) -> None: ...
+    def Make(self,aDocument : OCP.CDM.CDM_Document) -> OCP.PCDM.PCDM_Document: ...
     def SetFormat(self,aformat : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -280,14 +275,14 @@ class BinLDrivers_DocumentStorageDriver(OCP.PCDM.PCDM_StorageDriver, OCP.PCDM.PC
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Write <theDocument> to the binary file <theFileName>
 
         Write <theDocument> to theOStream
         """
     @overload
-    def Write(self,theDocument : OCP.CDM.CDM_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Write(self,theDocument : OCP.CDM.CDM_Document,theFileName : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -313,6 +308,7 @@ class BinLDrivers_Marker():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -407,9 +403,9 @@ class BinLDrivers_VectorOfDocumentSection(OCP.NCollection.NCollection_BaseVector
         None
         """
     @overload
-    def __init__(self,theOther : BinLDrivers_VectorOfDocumentSection) -> None: ...
-    @overload
     def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : BinLDrivers_VectorOfDocumentSection) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 BinLDrivers_ENDATTRLIST: OCP.BinLDrivers.BinLDrivers_Marker # value = <BinLDrivers_Marker.BinLDrivers_ENDATTRLIST: -1>

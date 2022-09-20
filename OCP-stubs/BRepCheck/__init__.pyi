@@ -6,14 +6,13 @@ from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
 import OCP.TopTools
-import io
 import OCP.NCollection
-import OCP.TopoDS
+import io
 import OCP.Standard
+import OCP.TopoDS
 __all__  = [
 "BRepCheck",
 "BRepCheck_Analyzer",
-"BRepCheck_DataMapOfShapeListOfStatus",
 "BRepCheck_Result",
 "BRepCheck_Face",
 "BRepCheck_ListOfStatus",
@@ -76,7 +75,7 @@ class BRepCheck():
         Returns the resolution on the 3d curve
         """
     @staticmethod
-    def PrecSurface_s(aAHSurf : OCP.Adaptor3d.Adaptor3d_HSurface) -> float: 
+    def PrecSurface_s(aAHSurf : OCP.Adaptor3d.Adaptor3d_Surface) -> float: 
         """
         Returns the resolution on the surface
         """
@@ -96,7 +95,7 @@ class BRepCheck_Analyzer():
     """
     A framework to check the overall validity of a shape. For a shape to be valid in Open CASCADE, it - or its component subshapes - must respect certain criteria. These criteria are checked by the function IsValid. Once you have determined whether a shape is valid or not, you can diagnose its specific anomalies and correct them using the services of the ShapeAnalysis, ShapeUpgrade, and ShapeFix packages.
     """
-    def Init(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True) -> None: 
+    def Init(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True,theIsParallel : bool=False) -> None: 
         """
         <S> is the shape to control. <GeomControls> If False only topological informaions are checked. The geometricals controls are For a Vertex : BRepCheck_InvalidTolerance NYI For an Edge : BRepCheck_InvalidCurveOnClosedSurface, BRepCheck_InvalidCurveOnSurface, BRepCheck_InvalidSameParameterFlag, BRepCheck_InvalidTolerance NYI For a face : BRepCheck_UnorientableShape, BRepCheck_IntersectingWires, BRepCheck_InvalidTolerance NYI For a wire : BRepCheck_SelfIntersectingWire
         """
@@ -106,115 +105,14 @@ class BRepCheck_Analyzer():
         <S> is a subshape of the original shape. Returns <STandard_True> if no default has been detected on <S> and any of its subshape.
 
         Returns true if no defect is detected on the shape S or any of its subshapes. Returns true if the shape S is valid. This function checks whether a given shape is valid by checking that: - the topology is correct - parameterization of edges in particular is correct. For the topology to be correct, the following conditions must be satisfied: - edges should have at least two vertices if they are not degenerate edges. The vertices should be within the range of the bounding edges at the tolerance specified in the vertex, - edges should share at least one face. The representation of the edges should be within the tolerance criterion assigned to them. - wires defining a face should not self-intersect and should be closed, - there should be one wire which contains all other wires inside a face, - wires should be correctly oriented with respect to each of the edges, - faces should be correctly oriented, in particular with respect to adjacent faces if these faces define a solid, - shells defining a solid should be closed. There should be one enclosing shell if the shape is a solid; To check parameterization of edge, there are 2 approaches depending on the edge?s contextual situation. - if the edge is either single, or it is in the context of a wire or a compound, its parameterization is defined by the parameterization of its 3D curve and is considered as valid. - If the edge is in the context of a face, it should have SameParameter and SameRange flags set to Standard_True. To check these flags, you should call the function BRep_Tool::SameParameter and BRep_Tool::SameRange for an edge. If at least one of these flags is set to Standard_False, the edge is considered as invalid without any additional check. If the edge is contained by a face, and it has SameParameter and SameRange flags set to Standard_True, IsValid checks whether representation of the edge on face, in context of which the edge is considered, has the same parameterization up to the tolerance value coded on the edge. For a given parameter t on the edge having C as a 3D curve and one PCurve P on a surface S (base surface of the reference face), this checks that |C(t) - S(P(t))| is less than or equal to tolerance, where tolerance is the tolerance value coded on the edge.
-
-        Returns true if no defect is detected on the shape S or any of its subshapes. Returns true if the shape S is valid. This function checks whether a given shape is valid by checking that: - the topology is correct - parameterization of edges in particular is correct. For the topology to be correct, the following conditions must be satisfied: - edges should have at least two vertices if they are not degenerate edges. The vertices should be within the range of the bounding edges at the tolerance specified in the vertex, - edges should share at least one face. The representation of the edges should be within the tolerance criterion assigned to them. - wires defining a face should not self-intersect and should be closed, - there should be one wire which contains all other wires inside a face, - wires should be correctly oriented with respect to each of the edges, - faces should be correctly oriented, in particular with respect to adjacent faces if these faces define a solid, - shells defining a solid should be closed. There should be one enclosing shell if the shape is a solid; To check parameterization of edge, there are 2 approaches depending on the edge?s contextual situation. - if the edge is either single, or it is in the context of a wire or a compound, its parameterization is defined by the parameterization of its 3D curve and is considered as valid. - If the edge is in the context of a face, it should have SameParameter and SameRange flags set to Standard_True. To check these flags, you should call the function BRep_Tool::SameParameter and BRep_Tool::SameRange for an edge. If at least one of these flags is set to Standard_False, the edge is considered as invalid without any additional check. If the edge is contained by a face, and it has SameParameter and SameRange flags set to Standard_True, IsValid checks whether representation of the edge on face, in context of which the edge is considered, has the same parameterization up to the tolerance value coded on the edge. For a given parameter t on the edge having C as a 3D curve and one PCurve P on a surface S (base surface of the reference face), this checks that |C(t) - S(P(t))| is less than or equal to tolerance, where tolerance is the tolerance value coded on the edge.
         """
     @overload
     def IsValid(self) -> bool: ...
-    @overload
-    def Result(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: 
+    def Result(self,theSubS : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: 
         """
         None
-
-        None
         """
-    @overload
-    def Result(self,SubS : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: ...
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True) -> None: ...
-    pass
-class BRepCheck_DataMapOfShapeListOfStatus(OCP.NCollection.NCollection_BaseMap):
-    """
-    Purpose: The DataMap is a Map to store keys with associated Items. See Map from NCollection for a discussion about the number of buckets.
-    """
-    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
-        """
-        Returns attached allocator
-        """
-    def Assign(self,theOther : BRepCheck_DataMapOfShapeListOfStatus) -> BRepCheck_DataMapOfShapeListOfStatus: 
-        """
-        Assignment. This method does not change the internal allocator.
-        """
-    def Bind(self,theKey : OCP.TopoDS.TopoDS_Shape,theItem : BRepCheck_ListOfStatus) -> bool: 
-        """
-        Bind binds Item to Key in map.
-        """
-    def Bound(self,theKey : OCP.TopoDS.TopoDS_Shape,theItem : BRepCheck_ListOfStatus) -> BRepCheck_ListOfStatus: 
-        """
-        Bound binds Item to Key in map. Returns modifiable Item
-        """
-    def ChangeFind(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
-        """
-        ChangeFind returns mofifiable Item by Key. Raises if Key was not bound
-        """
-    def ChangeSeek(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
-        """
-        ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
-        """
-    @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
-        """
-        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
-
-        Clear data and reset allocator
-        """
-    @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def Exchange(self,theOther : BRepCheck_DataMapOfShapeListOfStatus) -> None: 
-        """
-        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
-        """
-    def Extent(self) -> int: 
-        """
-        Extent
-        """
-    @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
-        """
-        Find returns the Item for Key. Raises if Key was not bound
-
-        Find Item for key with copying.
-        """
-    @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepCheck_ListOfStatus) -> bool: ...
-    def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
-        """
-        IsBound
-        """
-    def IsEmpty(self) -> bool: 
-        """
-        IsEmpty
-        """
-    def NbBuckets(self) -> int: 
-        """
-        NbBuckets
-        """
-    def ReSize(self,N : int) -> None: 
-        """
-        ReSize
-        """
-    def Seek(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
-        """
-        Seek returns pointer to Item by Key. Returns NULL is Key was not bound.
-        """
-    def Size(self) -> int: 
-        """
-        Size
-        """
-    def Statistics(self,S : io.BytesIO) -> None: 
-        """
-        Statistics
-        """
-    def UnBind(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
-        """
-        UnBind removes Item Key pair from map
-        """
-    @overload
-    def __init__(self,theOther : BRepCheck_DataMapOfShapeListOfStatus) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> Iterator: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True,theIsParallel : bool=False) -> None: ...
     pass
 class BRepCheck_Result(OCP.Standard.Standard_Transient):
     def Blind(self) -> None: 
@@ -223,8 +121,6 @@ class BRepCheck_Result(OCP.Standard.Standard_Transient):
         """
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
-
         None
         """
     def DecrementRefCounter(self) -> int: 
@@ -262,31 +158,31 @@ class BRepCheck_Result(OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def Minimum(self) -> None: 
@@ -295,8 +191,6 @@ class BRepCheck_Result(OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NextShapeInContext(self) -> None: 
@@ -307,23 +201,23 @@ class BRepCheck_Result(OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -350,8 +244,6 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
-
         None
         """
     def DecrementRefCounter(self) -> int: 
@@ -402,31 +294,31 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def IsUnorientable(self) -> bool: 
@@ -439,8 +331,6 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NextShapeInContext(self) -> None: 
@@ -455,6 +345,10 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def SetStatus(self,theStatus : BRepCheck_Status) -> None: 
         """
         Sets status of Face;
@@ -466,20 +360,16 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -505,7 +395,7 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : BRepCheck_ListOfStatus) -> None: 
+    def Append(self,theItem : BRepCheck_Status) -> BRepCheck_Status: 
         """
         Append one item at the end
 
@@ -516,7 +406,7 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : BRepCheck_Status,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : BRepCheck_Status) -> BRepCheck_Status: ...
+    def Append(self,theOther : BRepCheck_ListOfStatus) -> None: ...
     def Assign(self,theOther : BRepCheck_ListOfStatus) -> BRepCheck_ListOfStatus: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -589,9 +479,9 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : BRepCheck_ListOfStatus) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -607,8 +497,6 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
-
         None
         """
     def DecrementRefCounter(self) -> int: 
@@ -655,31 +543,31 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def Minimum(self) -> None: 
@@ -688,8 +576,6 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NextShapeInContext(self) -> None: 
@@ -700,6 +586,10 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def SetStatus(self,theStatus : BRepCheck_Status) -> None: 
         """
         Sets status of Edge;
@@ -707,20 +597,16 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -752,8 +638,6 @@ class BRepCheck_Shell(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
-
         None
         """
     def DecrementRefCounter(self) -> int: 
@@ -791,31 +675,31 @@ class BRepCheck_Shell(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def IsUnorientable(self) -> bool: 
@@ -828,8 +712,6 @@ class BRepCheck_Shell(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NbConnectedSet(self,theSets : OCP.TopTools.TopTools_ListOfShape) -> int: 
@@ -848,6 +730,10 @@ class BRepCheck_Shell(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def SetUnorientable(self) -> None: 
         """
         None
@@ -855,20 +741,16 @@ class BRepCheck_Shell(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -895,8 +777,6 @@ class BRepCheck_Solid(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
-
         None
         """
     def DecrementRefCounter(self) -> int: 
@@ -934,31 +814,31 @@ class BRepCheck_Solid(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def Minimum(self) -> None: 
@@ -967,8 +847,6 @@ class BRepCheck_Solid(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NextShapeInContext(self) -> None: 
@@ -979,23 +857,23 @@ class BRepCheck_Solid(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1095,6 +973,7 @@ class BRepCheck_Status():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1158,8 +1037,6 @@ class BRepCheck_Vertex(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
-
-        None
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1196,31 +1073,31 @@ class BRepCheck_Vertex(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def Minimum(self) -> None: 
@@ -1229,8 +1106,6 @@ class BRepCheck_Vertex(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NextShapeInContext(self) -> None: 
@@ -1241,23 +1116,23 @@ class BRepCheck_Vertex(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1285,7 +1160,7 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def Closed(self,Update : bool=False) -> BRepCheck_Status: 
         """
-        Checks if the oriented edges of the wire give a closed wire. If the wire is closed, returns BRepCheck_NoError. Warning : if the first and last edge are infinite, the wire will be considered as a closed one. If <Update> is set to Standard_True, registers the status in the list. May return (and registers): **BRepCheck_NotConnected, if wire is not topologically closed **BRepCheck_RedundantEdge, if an edge is in wire more than 3 times or in case of 2 occurences if not with FORWARD and REVERSED orientation. **BRepCheck_NoError
+        Checks if the oriented edges of the wire give a closed wire. If the wire is closed, returns BRepCheck_NoError. Warning : if the first and last edge are infinite, the wire will be considered as a closed one. If <Update> is set to Standard_True, registers the status in the list. May return (and registers): **BRepCheck_NotConnected, if wire is not topologically closed **BRepCheck_RedundantEdge, if an edge is in wire more than 3 times or in case of 2 occurrences if not with FORWARD and REVERSED orientation. **BRepCheck_NoError
         """
     def Closed2d(self,F : OCP.TopoDS.TopoDS_Face,Update : bool=False) -> BRepCheck_Status: 
         """
@@ -1293,8 +1168,6 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def ContextualShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
-        None
-
         None
         """
     def DecrementRefCounter(self) -> int: 
@@ -1310,14 +1183,14 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GeometricControls(self,B : bool) -> None: 
+    def GeometricControls(self) -> bool: 
         """
         report SelfIntersect() check would be (is) done
 
         set SelfIntersect() to be checked
         """
     @overload
-    def GeometricControls(self) -> bool: ...
+    def GeometricControls(self,B : bool) -> None: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1341,31 +1214,31 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def IsBlind(self) -> bool: 
         """
         None
-
-        None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
-
+        """
+    def IsStatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
+        """
         None
         """
     def Minimum(self) -> None: 
@@ -1374,8 +1247,6 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
     def MoreShapeInContext(self) -> bool: 
         """
-        None
-
         None
         """
     def NextShapeInContext(self) -> None: 
@@ -1394,6 +1265,10 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        None
+        """
     def SetStatus(self,theStatus : BRepCheck_Status) -> None: 
         """
         Sets status of Wire;
@@ -1401,20 +1276,16 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def Status(self) -> BRepCheck_ListOfStatus: 
         """
         None
-
-        None
         """
     @overload
-    def StatusOnShape(self,S : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: 
+    def StatusOnShape(self) -> BRepCheck_ListOfStatus: 
         """
-        If not already done, performs the InContext control and returns the list of status.
-
         None
 
         None
         """
     @overload
-    def StatusOnShape(self) -> BRepCheck_ListOfStatus: ...
+    def StatusOnShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_ListOfStatus: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

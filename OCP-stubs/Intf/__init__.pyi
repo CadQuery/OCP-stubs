@@ -44,7 +44,7 @@ class Intf():
     pass
 class Intf_Array1OfLin():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Intf_Array1OfLin) -> Intf_Array1OfLin: 
         """
@@ -119,13 +119,13 @@ class Intf_Array1OfLin():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Intf_Array1OfLin) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Intf_Array1OfLin) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.gp.gp_Lin,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Intf_Interference():
@@ -147,14 +147,14 @@ class Intf_Interference():
         Gives the tolerance used for the calculation.
         """
     @overload
-    def Insert(self,pdeb : Intf_SectionPoint,pfin : Intf_SectionPoint) -> None: 
+    def Insert(self,TheZone : Intf_TangentZone) -> bool: 
         """
         Inserts a new zone of tangence in the current list of tangent zones of the interference and returns True when done.
 
         Insert a new segment of intersection in the current list of polylines of intersection of the interference.
         """
     @overload
-    def Insert(self,TheZone : Intf_TangentZone) -> bool: ...
+    def Insert(self,pdeb : Intf_SectionPoint,pfin : Intf_SectionPoint) -> None: ...
     def LineValue(self,Index : int) -> Intf_SectionLine: 
         """
         Gives the polyline of intersection at address <Index> in the interference.
@@ -211,14 +211,14 @@ class Intf_InterferencePolygon2d(Intf_Interference):
         Gives the tolerance used for the calculation.
         """
     @overload
-    def Insert(self,pdeb : Intf_SectionPoint,pfin : Intf_SectionPoint) -> None: 
+    def Insert(self,TheZone : Intf_TangentZone) -> bool: 
         """
         Inserts a new zone of tangence in the current list of tangent zones of the interference and returns True when done.
 
         Insert a new segment of intersection in the current list of polylines of intersection of the interference.
         """
     @overload
-    def Insert(self,TheZone : Intf_TangentZone) -> bool: ...
+    def Insert(self,pdeb : Intf_SectionPoint,pfin : Intf_SectionPoint) -> None: ...
     def LineValue(self,Index : int) -> Intf_SectionLine: 
         """
         Gives the polyline of intersection at address <Index> in the interference.
@@ -244,14 +244,14 @@ class Intf_InterferencePolygon2d(Intf_Interference):
         Gives the number of zones of tangence in the interference.
         """
     @overload
-    def Perform(self,Obje : Intf_Polygon2d) -> None: 
+    def Perform(self,Obje1 : Intf_Polygon2d,Obje2 : Intf_Polygon2d) -> None: 
         """
         Computes an interference between two Polygons.
 
         Computes the self interference of a Polygon.
         """
     @overload
-    def Perform(self,Obje1 : Intf_Polygon2d,Obje2 : Intf_Polygon2d) -> None: ...
+    def Perform(self,Obje : Intf_Polygon2d) -> None: ...
     def Pnt2dValue(self,Index : int) -> OCP.gp.gp_Pnt2d: 
         """
         Gives the geometrical 2d point of the intersection point at address <Index> in the interference.
@@ -269,11 +269,11 @@ class Intf_InterferencePolygon2d(Intf_Interference):
         Gives the zone of tangence at address Index in the interference.
         """
     @overload
-    def __init__(self,Obje : Intf_Polygon2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Obje1 : Intf_Polygon2d,Obje2 : Intf_Polygon2d) -> None: ...
+    @overload
+    def __init__(self,Obje : Intf_Polygon2d) -> None: ...
     pass
 class Intf_PIType():
     """
@@ -292,6 +292,7 @@ class Intf_PIType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -402,9 +403,9 @@ class Intf_SectionLine():
         Reverses the order of the elements of the SectionLine.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Other : Intf_SectionLine) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Intf_SectionPoint():
     """
@@ -423,24 +424,24 @@ class Intf_SectionPoint():
         """
         None
 
-        Gives the datas about the first argument of the Interference.
+        Gives the data about the first argument of the Interference.
         """
     @overload
     def InfoFirst(self,Dim : Intf_PIType) -> Tuple[int, int, float]: ...
     @overload
-    def InfoSecond(self,Dim : Intf_PIType) -> Tuple[int, int, float]: 
+    def InfoSecond(self,Dim : Intf_PIType) -> Tuple[int, float]: 
         """
         None
 
-        Gives the datas about the second argument of the Interference.
+        Gives the data about the second argument of the Interference.
         """
     @overload
-    def InfoSecond(self,Dim : Intf_PIType) -> Tuple[int, float]: ...
+    def InfoSecond(self,Dim : Intf_PIType) -> Tuple[int, int, float]: ...
     def IsEqual(self,Other : Intf_SectionPoint) -> bool: 
         """
-        Returns True if the two SectionPoint have the same logical informations.
+        Returns True if the two SectionPoint have the same logical information.
 
-        Returns True if the two SectionPoint have the same logical informations.
+        Returns True if the two SectionPoint have the same logical information.
         """
     def IsOnSameEdge(self,Other : Intf_SectionPoint) -> bool: 
         """
@@ -479,11 +480,11 @@ class Intf_SectionPoint():
         Returns the type of the section point on the second element.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Where : OCP.gp.gp_Pnt,DimeO : Intf_PIType,AddrO1 : int,AddrO2 : int,ParamO : float,DimeT : Intf_PIType,AddrT1 : int,AddrT2 : int,ParamT : float,Incid : float) -> None: ...
     @overload
     def __init__(self,Where : OCP.gp.gp_Pnt2d,DimeO : Intf_PIType,AddrO1 : int,ParamO : float,DimeT : Intf_PIType,AddrT1 : int,ParamT : float,Incid : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -494,14 +495,14 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Intf_SectionLine) -> None: 
+    def Append(self,theSeq : Intf_SeqOfSectionLine) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Intf_SeqOfSectionLine) -> None: ...
+    def Append(self,theItem : Intf_SectionLine) -> None: ...
     def Assign(self,theOther : Intf_SeqOfSectionLine) -> Intf_SeqOfSectionLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -531,14 +532,14 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfSectionLine) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Intf_SectionLine) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Intf_SectionLine) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfSectionLine) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Intf_SectionLine) -> None: 
         """
@@ -565,14 +566,14 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Intf_SectionLine) -> None: 
+    def Prepend(self,theSeq : Intf_SeqOfSectionLine) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Intf_SeqOfSectionLine) -> None: ...
+    def Prepend(self,theItem : Intf_SectionLine) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -607,11 +608,11 @@ class Intf_SeqOfSectionLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : Intf_SeqOfSectionLine) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Intf_SeqOfSectionLine) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -674,14 +675,14 @@ class Intf_SeqOfSectionPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Intf_SectionPoint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Intf_SectionPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfSectionPoint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfSectionPoint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Intf_SectionPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -708,14 +709,14 @@ class Intf_SeqOfSectionPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Intf_SeqOfSectionPoint) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -799,23 +800,23 @@ class Intf_SeqOfTangentZone(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Intf_TangentZone) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Intf_TangentZone) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Intf_TangentZone) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Intf_SeqOfTangentZone) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Intf_TangentZone) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -877,9 +878,9 @@ class Intf_SeqOfTangentZone(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Intf_SeqOfTangentZone) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Intf_SeqOfTangentZone) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -922,7 +923,7 @@ class Intf_TangentZone():
         """
     def InfoSecond(self) -> Tuple[int, float, int, float]: 
         """
-        Gives informations about the second argument of the Interference. (Usable only for polygon)
+        Gives information about the second argument of the Interference. (Usable only for polygon)
         """
     def Insert(self,Pi : Intf_SectionPoint) -> bool: 
         """

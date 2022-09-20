@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import io
 import OCP.gp
 import OCP.Standard
-import io
 __all__  = [
 "NCollection_BaseAllocator",
 "NCollection_AlignedAllocator",
@@ -75,23 +75,23 @@ class NCollection_BaseAllocator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def PrintMemUsageStatistics_s() -> None: 
         """
@@ -155,23 +155,23 @@ class NCollection_AlignedAllocator(NCollection_BaseAllocator, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def PrintMemUsageStatistics_s() -> None: 
         """
@@ -236,23 +236,23 @@ class NCollection_AccAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def PrintMemUsageStatistics_s() -> None: 
         """
@@ -408,23 +408,23 @@ class NCollection_Buffer(OCP.Standard.Standard_Transient):
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetAllocator(self,theAlloc : NCollection_BaseAllocator) -> None: 
         """
         Assign new buffer allocator with de-allocation of buffer.
@@ -462,6 +462,7 @@ class NCollection_CellFilter_Action():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -489,7 +490,7 @@ class NCollection_CellFilter_InspectorXY():
     @staticmethod
     def Coord_s(i : int,thePnt : OCP.gp.gp_XY) -> float: 
         """
-        Access to co-ordinate
+        Access to coordinate
         """
     def Shift(self,thePnt : OCP.gp.gp_XY,theTol : float) -> OCP.gp.gp_XY: 
         """
@@ -505,7 +506,7 @@ class NCollection_CellFilter_InspectorXYZ():
     @staticmethod
     def Coord_s(i : int,thePnt : OCP.gp.gp_XYZ) -> float: 
         """
-        Access to co-ordinate
+        Access to coordinate
         """
     def Shift(self,thePnt : OCP.gp.gp_XYZ,theTol : float) -> OCP.gp.gp_XYZ: 
         """
@@ -557,23 +558,23 @@ class NCollection_HeapAllocator(NCollection_BaseAllocator, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def PrintMemUsageStatistics_s() -> None: 
         """
@@ -641,23 +642,23 @@ class NCollection_IncAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def PrintMemUsageStatistics_s() -> None: 
         """
@@ -669,7 +670,7 @@ class NCollection_IncAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_
         """
     def Reset(self,doReleaseMem : bool=True) -> None: 
         """
-        Re-initialize the allocator so that the next Allocate call should start allocating in the very begining as though the allocator is just constructed. Warning: make sure that all previously allocated data are no more used in your code!
+        Re-initialize the allocator so that the next Allocate call should start allocating in the very beginning as though the allocator is just constructed. Warning: make sure that all previously allocated data are no more used in your code!
         """
     def SetThreadSafe(self,theIsThreadSafe : bool=True) -> None: 
         """
@@ -726,11 +727,11 @@ class NCollection_StdAllocator_void():
         Returns an underlying NCollection_BaseAllocator instance. Returns an object specified in the constructor.
         """
     @overload
-    def __init__(self,theAlloc : NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,X : NCollection_StdAllocator_void) -> None: ...
+    @overload
+    def __init__(self,theAlloc : NCollection_BaseAllocator) -> None: ...
     pass
 class NCollection_Utf16Iter():
     """
@@ -783,7 +784,7 @@ class NCollection_Utf16Iter():
     def GetUtf8(self,theBuffer : str) -> str: ...
     def Index(self) -> int: 
         """
-        Returns the index displacement from iterator intialization (first symbol has index 0)
+        Returns the index displacement from iterator initialization (first symbol has index 0)
         """
     def Init(self,theString : str) -> None: 
         """
@@ -857,7 +858,7 @@ class NCollection_Utf16String():
         """
     def ToCString(self) -> str: 
         """
-        Returns NULL-terminated Unicode string. Should not be modifed or deleted!
+        Returns NULL-terminated Unicode string. Should not be modified or deleted!
         """
     def ToLocale(self,theBuffer : str,theSizeBytes : int) -> bool: 
         """
@@ -884,15 +885,15 @@ class NCollection_Utf16String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self,theCopy : NCollection_Utf16String) -> None: ...
-    @overload
     def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopy : NCollection_Utf16String) -> None: ...
     @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     pass
@@ -937,17 +938,17 @@ class NCollection_Utf32Iter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: 
+    def GetUtf8(self,theBuffer : str) -> str: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: ...
+    def GetUtf8(self,theBuffer : int) -> int: ...
     def Index(self) -> int: 
         """
-        Returns the index displacement from iterator intialization (first symbol has index 0)
+        Returns the index displacement from iterator initialization (first symbol has index 0)
         """
     def Init(self,theString : str) -> None: 
         """
@@ -1021,7 +1022,7 @@ class NCollection_Utf32String():
         """
     def ToCString(self) -> str: 
         """
-        Returns NULL-terminated Unicode string. Should not be modifed or deleted!
+        Returns NULL-terminated Unicode string. Should not be modified or deleted!
         """
     def ToLocale(self,theBuffer : str,theSizeBytes : int) -> bool: 
         """
@@ -1048,17 +1049,17 @@ class NCollection_Utf32String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
-    @overload
     def __init__(self,theCopy : NCollection_Utf32String) -> None: ...
     @overload
     def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class NCollection_Utf8Iter():
     """
@@ -1101,17 +1102,17 @@ class NCollection_Utf8Iter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: 
+    def GetUtf8(self,theBuffer : int) -> int: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: ...
+    def GetUtf8(self,theBuffer : str) -> str: ...
     def Index(self) -> int: 
         """
-        Returns the index displacement from iterator intialization (first symbol has index 0)
+        Returns the index displacement from iterator initialization (first symbol has index 0)
         """
     def Init(self,theString : str) -> None: 
         """
@@ -1185,7 +1186,7 @@ class NCollection_Utf8String():
         """
     def ToCString(self) -> str: 
         """
-        Returns NULL-terminated Unicode string. Should not be modifed or deleted!
+        Returns NULL-terminated Unicode string. Should not be modified or deleted!
         """
     def ToLocale(self,theBuffer : str,theSizeBytes : int) -> bool: 
         """
@@ -1212,21 +1213,21 @@ class NCollection_Utf8String():
         Join strings.
         """
     @overload
-    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
-    @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopy : NCollection_Utf8String) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
+    @overload
+    def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_UtfStringTool():
     """
-    Auxiliary convertion tool.
+    Auxiliary conversion tool.
     """
     def FromLocale(self,theString : str) -> str: 
         """
@@ -1280,17 +1281,17 @@ class NCollection_UtfWideIter():
         Fill the UTF-32 buffer within current Unicode symbol. Use method AdvanceUtf32() to allocate buffer with enough size.
         """
     @overload
-    def GetUtf8(self,theBuffer : int) -> int: 
+    def GetUtf8(self,theBuffer : str) -> str: 
         """
         Fill the UTF-8 buffer within current Unicode symbol. Use method AdvanceUtf8() to allocate buffer with enough size.
 
         None
         """
     @overload
-    def GetUtf8(self,theBuffer : str) -> str: ...
+    def GetUtf8(self,theBuffer : int) -> int: ...
     def Index(self) -> int: 
         """
-        Returns the index displacement from iterator intialization (first symbol has index 0)
+        Returns the index displacement from iterator initialization (first symbol has index 0)
         """
     def Init(self,theString : str) -> None: 
         """
@@ -1364,7 +1365,7 @@ class NCollection_UtfWideString():
         """
     def ToCString(self) -> str: 
         """
-        Returns NULL-terminated Unicode string. Should not be modifed or deleted!
+        Returns NULL-terminated Unicode string. Should not be modified or deleted!
         """
     def ToLocale(self,theBuffer : str,theSizeBytes : int) -> bool: 
         """
@@ -1391,17 +1392,17 @@ class NCollection_UtfWideString():
         Join strings.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
+    @overload
     def __init__(self,theCopy : NCollection_UtfWideString) -> None: ...
     @overload
     def __init__(self,theCopyUtf8 : str,theLength : int=-1) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theCopyUtfWide : str,theLength : int=-1) -> None: ...
     @overload
     def __init__(self,theCopyUtf32 : str,theLength : int=-1) -> None: ...
-    @overload
-    def __init__(self,theCopyUtf16 : str,theLength : int=-1) -> None: ...
     pass
 class NCollection_WinHeapAllocator(NCollection_BaseAllocator, OCP.Standard.Standard_Transient):
     """
@@ -1441,23 +1442,23 @@ class NCollection_WinHeapAllocator(NCollection_BaseAllocator, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def PrintMemUsageStatistics_s() -> None: 
         """

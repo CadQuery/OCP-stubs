@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
+import OCP.GeomAbs
 import OCP.NCollection
 import OCP.gp
-import OCP.GeomAbs
 import OCP.Standard
 __all__  = [
 "IntSurf",
@@ -46,7 +46,7 @@ class IntSurf():
         Computes the transition of the intersection point between the two lines. TgFirst is the tangent vector of the first line. TgSecond is the tangent vector of the second line. Normal is the direction used to orientate the cross product TgFirst^TgSecond. TFirst is the transition of the point on the first line. TSecond is the transition of the point on the second line.
         """
     @staticmethod
-    def SetPeriod_s(theFirstSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theSecondSurf : OCP.Adaptor3d.Adaptor3d_HSurface,theArrOfPeriod : float) -> None: 
+    def SetPeriod_s(theFirstSurf : OCP.Adaptor3d.Adaptor3d_Surface,theSecondSurf : OCP.Adaptor3d.Adaptor3d_Surface,theArrOfPeriod : float) -> None: 
         """
         Fills theArrOfPeriod array by the period values of theFirstSurf and theSecondSurf. [0] = U-period of theFirstSurf, [1] = V-period of theFirstSurf, [2] = U-period of theSecondSurf, [3] = V-period of theSecondSurf.
         """
@@ -118,13 +118,13 @@ class IntSurf_InteriorPoint():
         Returns the 3d coordinates of the interior point.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Direc : OCP.gp.gp_Vec,Direc2d : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntSurf_InteriorPointTool():
     """
-    This class provides a tool on the "interior point" that can be used to instantiates the Walking algorithmes (see package IntWalk).
+    This class provides a tool on the "interior point" that can be used to instantiates the Walking algorithms (see package IntWalk).
     """
     @staticmethod
     def Direction2d_s(PStart : IntSurf_InteriorPoint) -> OCP.gp.gp_Dir2d: 
@@ -184,23 +184,23 @@ class IntSurf_LineOn2S(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOutBox(self,theP : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if theP is out of the box built from 3D-points.
@@ -229,6 +229,12 @@ class IntSurf_LineOn2S(OCP.Standard.Standard_Transient):
 
         Reverses the order of points of the line.
         """
+    def SetPoint(self,Index : int,thePnt : OCP.gp.gp_Pnt) -> None: 
+        """
+        Sets the 3D point of the Index-th PntOn2S
+
+        Sets the 3D point of the Index-th PntOn2S
+        """
     def SetUV(self,Index : int,OnFirst : bool,U : float,V : float) -> None: 
         """
         Sets the parametric coordinates on one of the surfaces of the point of range Index in the line.
@@ -242,7 +248,7 @@ class IntSurf_LineOn2S(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Value(self,Index : int,P : IntSurf_PntOn2S) -> None: 
+    def Value(self,Index : int) -> IntSurf_PntOn2S: 
         """
         Returns the point of range Index in the line.
 
@@ -253,7 +259,7 @@ class IntSurf_LineOn2S(OCP.Standard.Standard_Transient):
         Replaces the point of range Index in the line.
         """
     @overload
-    def Value(self,Index : int) -> IntSurf_PntOn2S: ...
+    def Value(self,Index : int,P : IntSurf_PntOn2S) -> None: ...
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -275,7 +281,7 @@ class IntSurf_ListOfPntOn2S(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : IntSurf_ListOfPntOn2S) -> None: 
+    def Append(self,theItem : IntSurf_PntOn2S,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -286,7 +292,7 @@ class IntSurf_ListOfPntOn2S(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : IntSurf_PntOn2S) -> IntSurf_PntOn2S: ...
     @overload
-    def Append(self,theItem : IntSurf_PntOn2S,theIter : Any) -> None: ...
+    def Append(self,theOther : IntSurf_ListOfPntOn2S) -> None: ...
     def Assign(self,theOther : IntSurf_ListOfPntOn2S) -> IntSurf_ListOfPntOn2S: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -315,14 +321,14 @@ class IntSurf_ListOfPntOn2S(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : IntSurf_PntOn2S,theIter : Any) -> IntSurf_PntOn2S: ...
     @overload
-    def InsertBefore(self,theItem : IntSurf_PntOn2S,theIter : Any) -> IntSurf_PntOn2S: 
+    def InsertBefore(self,theOther : IntSurf_ListOfPntOn2S,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : IntSurf_ListOfPntOn2S,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : IntSurf_PntOn2S,theIter : Any) -> IntSurf_PntOn2S: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -334,14 +340,14 @@ class IntSurf_ListOfPntOn2S(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : IntSurf_ListOfPntOn2S) -> None: 
+    def Prepend(self,theItem : IntSurf_PntOn2S) -> IntSurf_PntOn2S: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : IntSurf_PntOn2S) -> IntSurf_PntOn2S: ...
+    def Prepend(self,theOther : IntSurf_ListOfPntOn2S) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -359,11 +365,11 @@ class IntSurf_ListOfPntOn2S(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : IntSurf_ListOfPntOn2S) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IntSurf_PathPoint():
@@ -499,7 +505,7 @@ class IntSurf_PathPointTool():
     pass
 class IntSurf_PntOn2S():
     """
-    This class defines the geometric informations for an intersection point between 2 surfaces : The coordinates ( Pnt from gp ), and two parametric coordinates.
+    This class defines the geometric information for an intersection point between 2 surfaces : The coordinates ( Pnt from gp ), and two parametric coordinates.
     """
     def IsSame(self,theOtherPoint : IntSurf_PntOn2S,theTol3D : float=0.0,theTol2D : float=-1.0) -> bool: 
         """
@@ -528,7 +534,7 @@ class IntSurf_PntOn2S():
         Returns the parameters of the point in the parametric space of one of the surface.
         """
     @overload
-    def SetValue(self,U1 : float,V1 : float,U2 : float,V2 : float) -> None: 
+    def SetValue(self,Pt : OCP.gp.gp_Pnt) -> None: 
         """
         Sets the value of the point in 3d space.
 
@@ -547,13 +553,13 @@ class IntSurf_PntOn2S():
         Set the values of the point in the parametric space of one of the surface.
         """
     @overload
-    def SetValue(self,OnFirst : bool,U : float,V : float) -> None: ...
-    @overload
     def SetValue(self,Pt : OCP.gp.gp_Pnt,OnFirst : bool,U : float,V : float) -> None: ...
     @overload
-    def SetValue(self,Pt : OCP.gp.gp_Pnt) -> None: ...
+    def SetValue(self,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
     @overload
     def SetValue(self,Pt : OCP.gp.gp_Pnt,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
+    @overload
+    def SetValue(self,OnFirst : bool,U : float,V : float) -> None: ...
     def Value(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the point in 3d space.
@@ -599,14 +605,14 @@ class IntSurf_Quadric():
         None
         """
     @overload
-    def Normale(self,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Vec: 
+    def Normale(self,U : float,V : float) -> OCP.gp.gp_Vec: 
         """
         None
 
         None
         """
     @overload
-    def Normale(self,U : float,V : float) -> OCP.gp.gp_Vec: ...
+    def Normale(self,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Vec: ...
     def Parameters(self,P : OCP.gp.gp_Pnt) -> Tuple[float, float]: 
         """
         None
@@ -618,7 +624,7 @@ class IntSurf_Quadric():
         None
         """
     @overload
-    def SetValue(self,S : OCP.gp.gp_Sphere) -> None: 
+    def SetValue(self,T : OCP.gp.gp_Torus) -> None: 
         """
         None
 
@@ -631,13 +637,13 @@ class IntSurf_Quadric():
         None
         """
     @overload
-    def SetValue(self,T : OCP.gp.gp_Torus) -> None: ...
+    def SetValue(self,C : OCP.gp.gp_Cone) -> None: ...
+    @overload
+    def SetValue(self,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
     def SetValue(self,C : OCP.gp.gp_Cylinder) -> None: ...
     @overload
     def SetValue(self,P : OCP.gp.gp_Pln) -> None: ...
-    @overload
-    def SetValue(self,C : OCP.gp.gp_Cone) -> None: ...
     def Sphere(self) -> OCP.gp.gp_Sphere: 
         """
         None
@@ -665,21 +671,21 @@ class IntSurf_Quadric():
         None
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Cylinder) -> None: ...
-    @overload
     def __init__(self,T : OCP.gp.gp_Torus) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Cone) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Sphere) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Cone) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Cylinder) -> None: ...
     pass
 class IntSurf_QuadricTool():
     """
-    This class provides a tool on a quadric that can be used to instantiates the Walking algorithmes (see package IntWalk) with a Quadric from IntSurf as implicit surface.
+    This class provides a tool on a quadric that can be used to instantiates the Walking algorithms (see package IntWalk) with a Quadric from IntSurf as implicit surface.
     """
     @staticmethod
     def Gradient_s(Quad : IntSurf_Quadric,X : float,Y : float,Z : float,V : OCP.gp.gp_Vec) -> None: 
@@ -712,14 +718,14 @@ class IntSurf_SequenceOfCouple(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntSurf_SequenceOfCouple) -> None: 
+    def Append(self,theItem : IntSurf_Couple) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntSurf_Couple) -> None: ...
+    def Append(self,theSeq : IntSurf_SequenceOfCouple) -> None: ...
     def Assign(self,theOther : IntSurf_SequenceOfCouple) -> IntSurf_SequenceOfCouple: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -758,14 +764,14 @@ class IntSurf_SequenceOfCouple(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : IntSurf_Couple) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntSurf_Couple) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntSurf_SequenceOfCouple) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntSurf_SequenceOfCouple) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntSurf_Couple) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -792,14 +798,14 @@ class IntSurf_SequenceOfCouple(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : IntSurf_SequenceOfCouple) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -825,11 +831,11 @@ class IntSurf_SequenceOfCouple(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : IntSurf_SequenceOfCouple) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -917,14 +923,14 @@ class IntSurf_SequenceOfInteriorPoint(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntSurf_InteriorPoint) -> None: 
+    def Prepend(self,theSeq : IntSurf_SequenceOfInteriorPoint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntSurf_SequenceOfInteriorPoint) -> None: ...
+    def Prepend(self,theItem : IntSurf_InteriorPoint) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -980,14 +986,14 @@ class IntSurf_SequenceOfPathPoint(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : IntSurf_SequenceOfPathPoint) -> None: 
+    def Append(self,theItem : IntSurf_PathPoint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : IntSurf_PathPoint) -> None: ...
+    def Append(self,theSeq : IntSurf_SequenceOfPathPoint) -> None: ...
     def Assign(self,theOther : IntSurf_SequenceOfPathPoint) -> IntSurf_SequenceOfPathPoint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1026,14 +1032,14 @@ class IntSurf_SequenceOfPathPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : IntSurf_PathPoint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntSurf_PathPoint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntSurf_SequenceOfPathPoint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntSurf_SequenceOfPathPoint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntSurf_PathPoint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1093,9 +1099,9 @@ class IntSurf_SequenceOfPathPoint(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : IntSurf_SequenceOfPathPoint) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1185,23 +1191,23 @@ class IntSurf_SequenceOfPntOn2S(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IntSurf_SequenceOfPntOn2S) -> None: 
+    def Prepend(self,theItem : IntSurf_PntOn2S) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IntSurf_PntOn2S) -> None: ...
+    def Prepend(self,theSeq : IntSurf_SequenceOfPntOn2S) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1229,9 +1235,9 @@ class IntSurf_SequenceOfPntOn2S(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : IntSurf_SequenceOfPntOn2S) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1254,6 +1260,7 @@ class IntSurf_Situation():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1292,7 +1299,7 @@ class IntSurf_Transition():
         Returns TRUE if the point is tangent to the arc given by Value. An exception is raised if TransitionType returns UNDECIDED.
         """
     @overload
-    def SetValue(self,Tangent : bool,Type : IntSurf_TypeTrans) -> None: 
+    def SetValue(self) -> None: 
         """
         Set the values of an IN or OUT transition.
 
@@ -1307,7 +1314,7 @@ class IntSurf_Transition():
         Set the values of an UNDECIDED transition.
         """
     @overload
-    def SetValue(self) -> None: ...
+    def SetValue(self,Tangent : bool,Type : IntSurf_TypeTrans) -> None: ...
     @overload
     def SetValue(self,Tangent : bool,Situ : IntSurf_Situation,Oppos : bool) -> None: ...
     def Situation(self) -> IntSurf_Situation: 
@@ -1325,9 +1332,9 @@ class IntSurf_Transition():
     @overload
     def __init__(self,Tangent : bool,Situ : IntSurf_Situation,Oppos : bool) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Tangent : bool,Type : IntSurf_TypeTrans) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntSurf_TypeTrans():
     """
@@ -1346,6 +1353,7 @@ class IntSurf_TypeTrans():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Interface
-import OCP.TCollection
-import OCP.StepBasic
 import OCP.StepData
+import OCP.StepBasic
+import OCP.TCollection
+import OCP.Interface
 __all__  = [
 "RWStepBasic_RWAction",
 "RWStepBasic_RWActionAssignment",

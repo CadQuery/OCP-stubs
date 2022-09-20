@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.gp
 import OCP.BRepAdaptor
+import OCP.gp
+import OCP.GeomAbs
 __all__  = [
 "BRepLProp",
 "BRepLProp_CLProps",
@@ -20,15 +20,15 @@ class BRepLProp():
     """
     @staticmethod
     @overload
-    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float,tl : float,ta : float) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         Computes the regularity at the junction between C1 and C2. The point u1 on C1 and the point u2 on C2 must be confused. tl and ta are the linear and angular tolerance used two compare the derivative.
 
-        The same as preciding but using the standard tolerances from package Precision.
+        The same as preceding but using the standard tolerances from package Precision.
         """
     @staticmethod
     @overload
-    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float,tl : float,ta : float) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float) -> OCP.GeomAbs.GeomAbs_Shape: ...
     def __init__(self) -> None: ...
     pass
 class BRepLProp_CLProps():
@@ -82,9 +82,9 @@ class BRepLProp_CLProps():
     @overload
     def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,N : int,Resolution : float) -> None: ...
     @overload
-    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,U : float,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,U : float,N : int,Resolution : float) -> None: ...
     pass
 class BRepLProp_CurveTool():
     """

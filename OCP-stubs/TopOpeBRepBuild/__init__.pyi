@@ -5,16 +5,16 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopTools
-import OCP.TCollection
-import io
-import OCP.TColStd
 import OCP.NCollection
-import OCP.gp
-import OCP.TopOpeBRepDS
-import OCP.TopoDS
+import io
 import OCP.TopOpeBRepTool
-import OCP.Standard
+import OCP.gp
 import OCP.TopAbs
+import OCP.TopOpeBRepDS
+import OCP.Standard
+import OCP.TopoDS
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "TopOpeBRepBuild_AreaBuilder",
 "TopOpeBRepBuild_Area2dBuilder",
@@ -220,9 +220,9 @@ class TopOpeBRepBuild_Area3dBuilder(TopOpeBRepBuild_AreaBuilder):
         None
         """
     @overload
-    def __init__(self,LS : TopOpeBRepBuild_LoopSet,LC : TopOpeBRepBuild_LoopClassifier,ForceClass : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,LS : TopOpeBRepBuild_LoopSet,LC : TopOpeBRepBuild_LoopClassifier,ForceClass : bool=False) -> None: ...
     pass
 class TopOpeBRepBuild_Area1dBuilder(TopOpeBRepBuild_AreaBuilder):
     """
@@ -308,9 +308,9 @@ class TopOpeBRepBuild_BlockBuilder():
         None
         """
     @overload
-    def Element(self,I : int) -> OCP.TopoDS.TopoDS_Shape: ...
-    @overload
     def Element(self,S : OCP.TopoDS.TopoDS_Shape) -> int: ...
+    @overload
+    def Element(self,I : int) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def ElementIsValid(self,I : int) -> bool: 
         """
@@ -337,14 +337,14 @@ class TopOpeBRepBuild_BlockBuilder():
         None
         """
     @overload
-    def SetValid(self,I : int,isvalid : bool) -> None: 
+    def SetValid(self,BI : TopOpeBRepBuild_BlockIterator,isvalid : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def SetValid(self,BI : TopOpeBRepBuild_BlockIterator,isvalid : bool) -> None: ...
+    def SetValid(self,I : int,isvalid : bool) -> None: ...
     @overload
     def __init__(self,SS : TopOpeBRepBuild_ShapeSet) -> None: ...
     @overload
@@ -385,9 +385,9 @@ class TopOpeBRepBuild_BlockIterator():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Lower : int,Upper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TopOpeBRepBuild_Builder():
     """
@@ -489,7 +489,7 @@ class TopOpeBRepBuild_Builder():
         """
     @staticmethod
     @overload
-    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,i1 : int,i2 : int,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
 
@@ -497,7 +497,7 @@ class TopOpeBRepBuild_Builder():
         """
     @staticmethod
     @overload
-    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,i1 : int,i2 : int,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     def GEDBUMakeEdges(self,EF : OCP.TopoDS.TopoDS_Shape,EDBU : TopOpeBRepBuild_EdgeBuilder,LOE : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
@@ -552,14 +552,14 @@ class TopOpeBRepBuild_Builder():
         None
         """
     @overload
-    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: 
+    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_PointIterator,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_PointIterator,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: ...
+    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: ...
     def GFillShellSFS(self,SH1 : OCP.TopoDS.TopoDS_Shape,LSO2 : OCP.TopTools.TopTools_ListOfShape,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: 
         """
         None
@@ -573,36 +573,36 @@ class TopOpeBRepBuild_Builder():
         None
         """
     @overload
-    def GFillSurfaceTopologySFS(self,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_SurfaceIterator,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: 
+    def GFillSurfaceTopologySFS(self,SO1 : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFillSurfaceTopologySFS(self,SO1 : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: ...
+    def GFillSurfaceTopologySFS(self,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_SurfaceIterator,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: ...
     def GFillWireWES(self,W : OCP.TopoDS.TopoDS_Shape,LF2 : OCP.TopTools.TopTools_ListOfShape,G : TopOpeBRepBuild_GTopo,WES : TopOpeBRepBuild_WireEdgeSet) -> None: 
         """
         None
         """
     @overload
-    def GFindSamDom(self,S : OCP.TopoDS.TopoDS_Shape,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def GFindSamDom(self,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFindSamDom(self,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def GFindSamDom(self,S : OCP.TopoDS.TopoDS_Shape,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     @overload
-    def GFindSamDomSODO(self,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def GFindSamDomSODO(self,S : OCP.TopoDS.TopoDS_Shape,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFindSamDomSODO(self,S : OCP.TopoDS.TopoDS_Shape,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def GFindSamDomSODO(self,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     def GFindSameRank(self,L1 : OCP.TopTools.TopTools_ListOfShape,R : int,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
@@ -769,7 +769,7 @@ class TopOpeBRepBuild_Builder():
         None
         """
     @overload
-    def GdumpSHASTA(self,iS : int,T : OCP.TopAbs.TopAbs_State,SS : TopOpeBRepBuild_ShapeSet,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,c : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
+    def GdumpSHASTA(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_State,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
 
@@ -777,16 +777,16 @@ class TopOpeBRepBuild_Builder():
 
         None
         """
+    @overload
+    def GdumpSHASTA(self,iS : int,T : OCP.TopAbs.TopAbs_State,SS : TopOpeBRepBuild_ShapeSet,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,c : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def GdumpSHASTA(self,iS : int,T : OCP.TopAbs.TopAbs_State,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
-    def GdumpSHASTA(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_State,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     def GdumpSOBU(self,SB : TopOpeBRepBuild_SolidBuilder) -> None: 
         """
         None
         """
     @overload
-    def GtraceSPS(self,iS : int) -> bool: 
+    def GtraceSPS(self,S : OCP.TopoDS.TopoDS_Shape,IS : int) -> bool: 
         """
         None
 
@@ -796,12 +796,12 @@ class TopOpeBRepBuild_Builder():
 
         None
         """
+    @overload
+    def GtraceSPS(self,iS : int) -> bool: ...
     @overload
     def GtraceSPS(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     @overload
     def GtraceSPS(self,iS : int,jS : int) -> bool: ...
-    @overload
-    def GtraceSPS(self,S : OCP.TopoDS.TopoDS_Shape,IS : int) -> bool: ...
     def InitSection(self) -> None: 
         """
         None
@@ -836,7 +836,7 @@ class TopOpeBRepBuild_Builder():
         None
         """
     @overload
-    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
+    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,exceptLS1 : OCP.TopTools.TopTools_ListOfShape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
         """
         None
 
@@ -844,10 +844,10 @@ class TopOpeBRepBuild_Builder():
 
         None
         """
+    @overload
+    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     @overload
     def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,exceptS1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
-    @overload
-    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,exceptLS1 : OCP.TopTools.TopTools_ListOfShape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     def KPclassF(self,F1 : OCP.TopoDS.TopoDS_Shape,F2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
         """
         None
@@ -922,14 +922,14 @@ class TopOpeBRepBuild_Builder():
     @overload
     def KPlhg(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: ...
     @overload
-    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,L : OCP.TopTools.TopTools_ListOfShape) -> int: 
+    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: 
         """
         None
 
         None
         """
     @overload
-    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: ...
+    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,L : OCP.TopTools.TopTools_ListOfShape) -> int: ...
     @staticmethod
     @overload
     def KPls_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: 
@@ -980,7 +980,7 @@ class TopOpeBRepBuild_Builder():
         """
     def MergeEdges(self,L1 : OCP.TopTools.TopTools_ListOfShape,TB1 : OCP.TopAbs.TopAbs_State,L2 : OCP.TopTools.TopTools_ListOfShape,TB2 : OCP.TopAbs.TopAbs_State,onA : bool=False,onB : bool=False,onAB : bool=False) -> None: 
         """
-        Merges the two edges <S1> and <S2> keeping the parts in each edge of states <TB1> and <TB2>. Booleans onA, onB, onAB indicate wheter parts of edges found as state ON respectively on first, second, and both shapes must be (or not) built.
+        Merges the two edges <S1> and <S2> keeping the parts in each edge of states <TB1> and <TB2>. Booleans onA, onB, onAB indicate whether parts of edges found as state ON respectively on first, second, and both shapes must be (or not) built.
         """
     def MergeFaces(self,S1 : OCP.TopTools.TopTools_ListOfShape,TB1 : OCP.TopAbs.TopAbs_State,S2 : OCP.TopTools.TopTools_ListOfShape,TB2 : OCP.TopAbs.TopAbs_State,onA : bool=False,onB : bool=False,onAB : bool=False) -> None: 
         """
@@ -1120,14 +1120,14 @@ class TopOpeBRepBuild_Builder():
         None
         """
     @overload
-    def Section(self) -> OCP.TopTools.TopTools_ListOfShape: 
+    def Section(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         return all section edges.
 
         None
         """
     @overload
-    def Section(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def Section(self) -> OCP.TopTools.TopTools_ListOfShape: ...
     def SectionCurves(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         return the section edges built on new curves.
@@ -1276,7 +1276,7 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         """
     @staticmethod
     @overload
-    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,i1 : int,i2 : int,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
 
@@ -1284,7 +1284,7 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         """
     @staticmethod
     @overload
-    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,i1 : int,i2 : int,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def GCopyList_s(Lin : OCP.TopTools.TopTools_ListOfShape,Lou : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     def GEDBUMakeEdges(self,EF : OCP.TopoDS.TopoDS_Shape,EDBU : TopOpeBRepBuild_EdgeBuilder,LOE : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
@@ -1363,14 +1363,14 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         None
         """
     @overload
-    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: 
+    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_PointIterator,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_PointIterator,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: ...
+    def GFillPointTopologyPVS(self,E : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,PVS : TopOpeBRepBuild_PaveSet) -> None: ...
     def GFillShellSFS(self,SH1 : OCP.TopoDS.TopoDS_Shape,LSO2 : OCP.TopTools.TopTools_ListOfShape,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: 
         """
         None
@@ -1384,14 +1384,14 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         None
         """
     @overload
-    def GFillSurfaceTopologySFS(self,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_SurfaceIterator,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: 
+    def GFillSurfaceTopologySFS(self,SO1 : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFillSurfaceTopologySFS(self,SO1 : OCP.TopoDS.TopoDS_Shape,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: ...
+    def GFillSurfaceTopologySFS(self,IT : OCP.TopOpeBRepDS.TopOpeBRepDS_SurfaceIterator,G : TopOpeBRepBuild_GTopo,SFS : TopOpeBRepBuild_ShellFaceSet) -> None: ...
     def GFillWireNotSameDomWES(self,W1 : OCP.TopoDS.TopoDS_Shape,LSO2 : OCP.TopTools.TopTools_ListOfShape,G : TopOpeBRepBuild_GTopo,WES : TopOpeBRepBuild_WireEdgeSet) -> None: 
         """
         None
@@ -1405,23 +1405,23 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         None
         """
     @overload
-    def GFindSamDom(self,S : OCP.TopoDS.TopoDS_Shape,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def GFindSamDom(self,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFindSamDom(self,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def GFindSamDom(self,S : OCP.TopoDS.TopoDS_Shape,L1 : OCP.TopTools.TopTools_ListOfShape,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     @overload
-    def GFindSamDomSODO(self,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def GFindSamDomSODO(self,S : OCP.TopoDS.TopoDS_Shape,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GFindSamDomSODO(self,S : OCP.TopoDS.TopoDS_Shape,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def GFindSamDomSODO(self,LSO : OCP.TopTools.TopTools_ListOfShape,LDO : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     def GFindSameRank(self,L1 : OCP.TopTools.TopTools_ListOfShape,R : int,L2 : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         None
@@ -1588,7 +1588,7 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         None
         """
     @overload
-    def GdumpSHASTA(self,iS : int,T : OCP.TopAbs.TopAbs_State,SS : TopOpeBRepBuild_ShapeSet,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,c : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
+    def GdumpSHASTA(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_State,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
 
@@ -1596,16 +1596,16 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
 
         None
         """
+    @overload
+    def GdumpSHASTA(self,iS : int,T : OCP.TopAbs.TopAbs_State,SS : TopOpeBRepBuild_ShapeSet,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,c : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def GdumpSHASTA(self,iS : int,T : OCP.TopAbs.TopAbs_State,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
-    def GdumpSHASTA(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_State,a : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,b : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> None: ...
     def GdumpSOBU(self,SB : TopOpeBRepBuild_SolidBuilder) -> None: 
         """
         None
         """
     @overload
-    def GtraceSPS(self,iS : int) -> bool: 
+    def GtraceSPS(self,S : OCP.TopoDS.TopoDS_Shape,IS : int) -> bool: 
         """
         None
 
@@ -1615,12 +1615,12 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
 
         None
         """
+    @overload
+    def GtraceSPS(self,iS : int) -> bool: ...
     @overload
     def GtraceSPS(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     @overload
     def GtraceSPS(self,iS : int,jS : int) -> bool: ...
-    @overload
-    def GtraceSPS(self,S : OCP.TopoDS.TopoDS_Shape,IS : int) -> bool: ...
     def InitSection(self) -> None: 
         """
         None
@@ -1655,7 +1655,7 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         None
         """
     @overload
-    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
+    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,exceptLS1 : OCP.TopTools.TopTools_ListOfShape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
         """
         None
 
@@ -1663,10 +1663,10 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
 
         None
         """
+    @overload
+    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     @overload
     def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,exceptS1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
-    @overload
-    def KPclasSS(self,S1 : OCP.TopoDS.TopoDS_Shape,exceptLS1 : OCP.TopTools.TopTools_ListOfShape,S2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: ...
     def KPclassF(self,F1 : OCP.TopoDS.TopoDS_Shape,F2 : OCP.TopoDS.TopoDS_Shape) -> OCP.TopAbs.TopAbs_State: 
         """
         None
@@ -1741,14 +1741,14 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
     @overload
     def KPlhg(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: ...
     @overload
-    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,L : OCP.TopTools.TopTools_ListOfShape) -> int: 
+    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: 
         """
         None
 
         None
         """
     @overload
-    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: ...
+    def KPlhsd(self,S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,L : OCP.TopTools.TopTools_ListOfShape) -> int: ...
     @staticmethod
     @overload
     def KPls_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum) -> int: 
@@ -1799,7 +1799,7 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         """
     def MergeEdges(self,L1 : OCP.TopTools.TopTools_ListOfShape,TB1 : OCP.TopAbs.TopAbs_State,L2 : OCP.TopTools.TopTools_ListOfShape,TB2 : OCP.TopAbs.TopAbs_State,onA : bool=False,onB : bool=False,onAB : bool=False) -> None: 
         """
-        Merges the two edges <S1> and <S2> keeping the parts in each edge of states <TB1> and <TB2>. Booleans onA, onB, onAB indicate wheter parts of edges found as state ON respectively on first, second, and both shapes must be (or not) built.
+        Merges the two edges <S1> and <S2> keeping the parts in each edge of states <TB1> and <TB2>. Booleans onA, onB, onAB indicate whether parts of edges found as state ON respectively on first, second, and both shapes must be (or not) built.
         """
     def MergeFaces(self,S1 : OCP.TopTools.TopTools_ListOfShape,TB1 : OCP.TopAbs.TopAbs_State,S2 : OCP.TopTools.TopTools_ListOfShape,TB2 : OCP.TopAbs.TopAbs_State,onA : bool=False,onB : bool=False,onAB : bool=False) -> None: 
         """
@@ -1951,14 +1951,14 @@ class TopOpeBRepBuild_Builder1(TopOpeBRepBuild_Builder):
         None
         """
     @overload
-    def Section(self) -> OCP.TopTools.TopTools_ListOfShape: 
+    def Section(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         return all section edges.
 
         None
         """
     @overload
-    def Section(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def Section(self) -> OCP.TopTools.TopTools_ListOfShape: ...
     def SectionCurves(self,L : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         return the section edges built on new curves.
@@ -2081,9 +2081,9 @@ class TopOpeBRepBuild_CorrectFace2d():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aFace : OCP.TopoDS.TopoDS_Face,anAvoidMap : OCP.TopTools.TopTools_IndexedMapOfOrientedShape,aMap : OCP.TopTools.TopTools_IndexedDataMapOfShapeShape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape(OCP.NCollection.NCollection_BaseMap):
     """
@@ -2114,14 +2114,14 @@ class TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape(OCP.NCollection.NColl
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -2131,14 +2131,14 @@ class TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape(OCP.NCollection.NColl
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepBuild_ListOfShapeListOfShape) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepBuild_ListOfShapeListOfShape: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> TopOpeBRepBuild_ListOfShapeListOfShape: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : TopOpeBRepBuild_ListOfShapeListOfShape) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -2172,11 +2172,11 @@ class TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape(OCP.NCollection.NColl
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : TopOpeBRepBuild_DataMapOfShapeListOfShapeListOfShape) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepBuild_EdgeBuilder(TopOpeBRepBuild_Area1dBuilder, TopOpeBRepBuild_AreaBuilder):
@@ -2269,9 +2269,9 @@ class TopOpeBRepBuild_EdgeBuilder(TopOpeBRepBuild_Area1dBuilder, TopOpeBRepBuild
         None
         """
     @overload
-    def __init__(self,LS : TopOpeBRepBuild_PaveSet,LC : TopOpeBRepBuild_PaveClassifier,ForceClass : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,LS : TopOpeBRepBuild_PaveSet,LC : TopOpeBRepBuild_PaveClassifier,ForceClass : bool=False) -> None: ...
     pass
 class TopOpeBRepBuild_FaceAreaBuilder(TopOpeBRepBuild_Area2dBuilder, TopOpeBRepBuild_AreaBuilder):
     """
@@ -2326,9 +2326,9 @@ class TopOpeBRepBuild_FaceAreaBuilder(TopOpeBRepBuild_Area2dBuilder, TopOpeBRepB
         None
         """
     @overload
-    def __init__(self,LS : TopOpeBRepBuild_LoopSet,LC : TopOpeBRepBuild_LoopClassifier,ForceClass : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,LS : TopOpeBRepBuild_LoopSet,LC : TopOpeBRepBuild_LoopClassifier,ForceClass : bool=False) -> None: ...
     pass
 class TopOpeBRepBuild_FaceBuilder():
     """
@@ -2532,9 +2532,9 @@ class TopOpeBRepBuild_GIter():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,G : TopOpeBRepBuild_GTopo) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TopOpeBRepBuild_GTool():
     """
@@ -2605,14 +2605,14 @@ class TopOpeBRepBuild_GTopo():
         None
         """
     @overload
-    def ChangeValue(self,i1 : int,i2 : int,b : bool) -> None: 
+    def ChangeValue(self,s1 : OCP.TopAbs.TopAbs_State,s2 : OCP.TopAbs.TopAbs_State,b : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def ChangeValue(self,s1 : OCP.TopAbs.TopAbs_State,s2 : OCP.TopAbs.TopAbs_State,b : bool) -> None: ...
+    def ChangeValue(self,i1 : int,i2 : int,b : bool) -> None: ...
     def Config1(self) -> OCP.TopOpeBRepDS.TopOpeBRepDS_Config: 
         """
         None
@@ -2687,7 +2687,7 @@ class TopOpeBRepBuild_GTopo():
         None
         """
     @overload
-    def Value(self,I1 : int,I2 : int) -> bool: 
+    def Value(self,s1 : OCP.TopAbs.TopAbs_State,s2 : OCP.TopAbs.TopAbs_State) -> bool: 
         """
         None
 
@@ -2696,7 +2696,7 @@ class TopOpeBRepBuild_GTopo():
         None
         """
     @overload
-    def Value(self,s1 : OCP.TopAbs.TopAbs_State,s2 : OCP.TopAbs.TopAbs_State) -> bool: ...
+    def Value(self,I1 : int,I2 : int) -> bool: ...
     @overload
     def Value(self,II : int) -> bool: ...
     @overload
@@ -2793,27 +2793,27 @@ class TopOpeBRepBuild_HBuilder(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsKPart(self) -> int: 
         """
         Returns 0 is standard operation, != 0 if particular case
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMerged(self,S : OCP.TopoDS.TopoDS_Shape,ToBuild : OCP.TopAbs.TopAbs_State) -> bool: 
         """
         Returns True if the shape <S> has been merged.
@@ -3012,9 +3012,9 @@ class TopOpeBRepBuild_IndexedDataMapOfShapeVertexInfo(OCP.NCollection.NCollectio
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRepBuild_IndexedDataMapOfShapeVertexInfo) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepBuild_ListOfListOfLoop(OCP.NCollection.NCollection_BaseList):
@@ -3026,7 +3026,7 @@ class TopOpeBRepBuild_ListOfListOfLoop(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : TopOpeBRepBuild_ListOfListOfLoop) -> None: 
+    def Append(self,theItem : TopOpeBRepBuild_ListOfLoop) -> TopOpeBRepBuild_ListOfLoop: 
         """
         Append one item at the end
 
@@ -3035,9 +3035,9 @@ class TopOpeBRepBuild_ListOfListOfLoop(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TopOpeBRepBuild_ListOfLoop,theIter : Any) -> None: ...
+    def Append(self,theOther : TopOpeBRepBuild_ListOfListOfLoop) -> None: ...
     @overload
-    def Append(self,theItem : TopOpeBRepBuild_ListOfLoop) -> TopOpeBRepBuild_ListOfLoop: ...
+    def Append(self,theItem : TopOpeBRepBuild_ListOfLoop,theIter : Any) -> None: ...
     def Assign(self,theOther : TopOpeBRepBuild_ListOfListOfLoop) -> TopOpeBRepBuild_ListOfListOfLoop: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3110,11 +3110,11 @@ class TopOpeBRepBuild_ListOfListOfLoop(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRepBuild_ListOfListOfLoop) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepBuild_ListOfLoop(OCP.NCollection.NCollection_BaseList):
@@ -3126,7 +3126,7 @@ class TopOpeBRepBuild_ListOfLoop(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TopOpeBRepBuild_Loop,theIter : Any) -> None: 
+    def Append(self,theOther : TopOpeBRepBuild_ListOfLoop) -> None: 
         """
         Append one item at the end
 
@@ -3135,9 +3135,9 @@ class TopOpeBRepBuild_ListOfLoop(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TopOpeBRepBuild_Loop) -> TopOpeBRepBuild_Loop: ...
+    def Append(self,theItem : TopOpeBRepBuild_Loop,theIter : Any) -> None: ...
     @overload
-    def Append(self,theOther : TopOpeBRepBuild_ListOfLoop) -> None: ...
+    def Append(self,theItem : TopOpeBRepBuild_Loop) -> TopOpeBRepBuild_Loop: ...
     def Assign(self,theOther : TopOpeBRepBuild_ListOfLoop) -> TopOpeBRepBuild_ListOfLoop: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3157,23 +3157,23 @@ class TopOpeBRepBuild_ListOfLoop(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : TopOpeBRepBuild_ListOfLoop,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : TopOpeBRepBuild_Loop,theIter : Any) -> TopOpeBRepBuild_Loop: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : TopOpeBRepBuild_Loop,theIter : Any) -> TopOpeBRepBuild_Loop: ...
+    def InsertAfter(self,theOther : TopOpeBRepBuild_ListOfLoop,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : TopOpeBRepBuild_Loop,theIter : Any) -> TopOpeBRepBuild_Loop: 
+    def InsertBefore(self,theOther : TopOpeBRepBuild_ListOfLoop,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : TopOpeBRepBuild_ListOfLoop,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : TopOpeBRepBuild_Loop,theIter : Any) -> TopOpeBRepBuild_Loop: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -3185,14 +3185,14 @@ class TopOpeBRepBuild_ListOfLoop(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : TopOpeBRepBuild_Loop) -> TopOpeBRepBuild_Loop: 
+    def Prepend(self,theOther : TopOpeBRepBuild_ListOfLoop) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TopOpeBRepBuild_ListOfLoop) -> None: ...
+    def Prepend(self,theItem : TopOpeBRepBuild_Loop) -> TopOpeBRepBuild_Loop: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -3212,9 +3212,9 @@ class TopOpeBRepBuild_ListOfLoop(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRepBuild_ListOfLoop) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopOpeBRepBuild_ListOfPave(OCP.NCollection.NCollection_BaseList):
@@ -3226,7 +3226,7 @@ class TopOpeBRepBuild_ListOfPave(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TopOpeBRepBuild_Pave) -> TopOpeBRepBuild_Pave: 
+    def Append(self,theOther : TopOpeBRepBuild_ListOfPave) -> None: 
         """
         Append one item at the end
 
@@ -3235,9 +3235,9 @@ class TopOpeBRepBuild_ListOfPave(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : TopOpeBRepBuild_ListOfPave) -> None: ...
-    @overload
     def Append(self,theItem : TopOpeBRepBuild_Pave,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : TopOpeBRepBuild_Pave) -> TopOpeBRepBuild_Pave: ...
     def Assign(self,theOther : TopOpeBRepBuild_ListOfPave) -> TopOpeBRepBuild_ListOfPave: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3266,14 +3266,14 @@ class TopOpeBRepBuild_ListOfPave(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : TopOpeBRepBuild_Pave,theIter : Any) -> TopOpeBRepBuild_Pave: ...
     @overload
-    def InsertBefore(self,theItem : TopOpeBRepBuild_Pave,theIter : Any) -> TopOpeBRepBuild_Pave: 
+    def InsertBefore(self,theOther : TopOpeBRepBuild_ListOfPave,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : TopOpeBRepBuild_ListOfPave,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : TopOpeBRepBuild_Pave,theIter : Any) -> TopOpeBRepBuild_Pave: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -3285,14 +3285,14 @@ class TopOpeBRepBuild_ListOfPave(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : TopOpeBRepBuild_Pave) -> TopOpeBRepBuild_Pave: 
+    def Prepend(self,theOther : TopOpeBRepBuild_ListOfPave) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TopOpeBRepBuild_ListOfPave) -> None: ...
+    def Prepend(self,theItem : TopOpeBRepBuild_Pave) -> TopOpeBRepBuild_Pave: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -3310,9 +3310,9 @@ class TopOpeBRepBuild_ListOfPave(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : TopOpeBRepBuild_ListOfPave) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -3335,9 +3335,9 @@ class TopOpeBRepBuild_ListOfShapeListOfShape(OCP.NCollection.NCollection_BaseLis
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : TopOpeBRepBuild_ShapeListOfShape) -> TopOpeBRepBuild_ShapeListOfShape: ...
-    @overload
     def Append(self,theOther : TopOpeBRepBuild_ListOfShapeListOfShape) -> None: ...
+    @overload
+    def Append(self,theItem : TopOpeBRepBuild_ShapeListOfShape) -> TopOpeBRepBuild_ShapeListOfShape: ...
     def Assign(self,theOther : TopOpeBRepBuild_ListOfShapeListOfShape) -> TopOpeBRepBuild_ListOfShapeListOfShape: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3366,14 +3366,14 @@ class TopOpeBRepBuild_ListOfShapeListOfShape(OCP.NCollection.NCollection_BaseLis
     @overload
     def InsertAfter(self,theOther : TopOpeBRepBuild_ListOfShapeListOfShape,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : TopOpeBRepBuild_ShapeListOfShape,theIter : Any) -> TopOpeBRepBuild_ShapeListOfShape: 
+    def InsertBefore(self,theOther : TopOpeBRepBuild_ListOfShapeListOfShape,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : TopOpeBRepBuild_ListOfShapeListOfShape,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : TopOpeBRepBuild_ShapeListOfShape,theIter : Any) -> TopOpeBRepBuild_ShapeListOfShape: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -3410,9 +3410,9 @@ class TopOpeBRepBuild_ListOfShapeListOfShape(OCP.NCollection.NCollection_BaseLis
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopOpeBRepBuild_ListOfShapeListOfShape) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -3450,23 +3450,23 @@ class TopOpeBRepBuild_Loop(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsShape(self) -> bool: 
         """
         None
@@ -3480,9 +3480,9 @@ class TopOpeBRepBuild_Loop(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,BI : TopOpeBRepBuild_BlockIterator) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self,BI : TopOpeBRepBuild_BlockIterator) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3542,6 +3542,7 @@ class TopOpeBRepBuild_LoopEnum():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3636,36 +3637,36 @@ class TopOpeBRepBuild_Pave(TopOpeBRepBuild_Loop, OCP.Standard.Standard_Transient
         None
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsShape(self) -> bool: 
         """
         None
         """
     @overload
-    def Parameter(self,Par : float) -> None: 
+    def Parameter(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Parameter(self) -> float: ...
+    def Parameter(self,Par : float) -> None: ...
     @overload
     def SameDomain(self,VSD : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
@@ -3800,9 +3801,9 @@ class TopOpeBRepBuild_ShapeListOfShape():
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,L : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     pass
 class TopOpeBRepBuild_ShapeSet():
     """
@@ -3834,9 +3835,9 @@ class TopOpeBRepBuild_ShapeSet():
         None
         """
     @overload
-    def CheckShape(self) -> bool: ...
-    @overload
     def CheckShape(self,checkshape : bool) -> None: ...
+    @overload
+    def CheckShape(self) -> bool: ...
     @overload
     def DEBName(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -3847,14 +3848,14 @@ class TopOpeBRepBuild_ShapeSet():
     @overload
     def DEBName(self,N : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def DEBNumber(self,I : int) -> None: 
+    def DEBNumber(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def DEBNumber(self) -> int: ...
+    def DEBNumber(self,I : int) -> None: ...
     def DumpBB(self) -> None: 
         """
         None
@@ -3933,14 +3934,14 @@ class TopOpeBRepBuild_ShapeSet():
     @overload
     def SName(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
-    def SNameori(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
+    def SNameori(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         None
         """
     @overload
-    def SNameori(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SNameori(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
@@ -4023,9 +4024,9 @@ class TopOpeBRepBuild_ShellFaceSet(TopOpeBRepBuild_ShapeSet):
         None
         """
     @overload
-    def CheckShape(self) -> bool: ...
-    @overload
     def CheckShape(self,checkshape : bool) -> None: ...
+    @overload
+    def CheckShape(self) -> bool: ...
     @overload
     def DEBName(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -4036,14 +4037,14 @@ class TopOpeBRepBuild_ShellFaceSet(TopOpeBRepBuild_ShapeSet):
     @overload
     def DEBName(self,N : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def DEBNumber(self,I : int) -> None: 
+    def DEBNumber(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def DEBNumber(self) -> int: ...
+    def DEBNumber(self,I : int) -> None: ...
     def DumpBB(self) -> None: 
         """
         None
@@ -4113,14 +4114,14 @@ class TopOpeBRepBuild_ShellFaceSet(TopOpeBRepBuild_ShapeSet):
         None
         """
     @overload
-    def SName(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
+    def SName(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         None
         """
     @overload
-    def SName(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SName(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
     def SNameori(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -4147,9 +4148,9 @@ class TopOpeBRepBuild_ShellFaceSet(TopOpeBRepBuild_ShapeSet):
         return a reference on myStartShapes
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Addr : capsule=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,Addr : capsule=None) -> None: ...
     pass
 class TopOpeBRepBuild_ShellToSolid():
     """
@@ -4222,9 +4223,9 @@ class TopOpeBRepBuild_SolidAreaBuilder(TopOpeBRepBuild_Area3dBuilder, TopOpeBRep
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,LS : TopOpeBRepBuild_LoopSet,LC : TopOpeBRepBuild_LoopClassifier,ForceClass : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class TopOpeBRepBuild_SolidBuilder():
     """
@@ -4283,9 +4284,9 @@ class TopOpeBRepBuild_SolidBuilder():
         Returns current shell This shell may be : * an old shell OldShell(), which has not been reconstructed; * a new shell made of faces described by ...NewFace() methods.
         """
     @overload
-    def __init__(self,FS : TopOpeBRepBuild_ShellFaceSet,ForceClass : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,FS : TopOpeBRepBuild_ShellFaceSet,ForceClass : bool=False) -> None: ...
     pass
 class TopOpeBRepBuild_Tools():
     """
@@ -4317,22 +4318,7 @@ class TopOpeBRepBuild_Tools():
         None
         """
     @staticmethod
-    def FindState1_s(anEdge : OCP.TopoDS.TopoDS_Shape,aState : OCP.TopAbs.TopAbs_State,aMapEdgesFaces : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,aMapProcessedVertices : OCP.TopTools.TopTools_MapOfShape,aMapVs : OCP.TopOpeBRepDS.TopOpeBRepDS_DataMapOfShapeState) -> None: 
-        """
-        None
-        """
-    @staticmethod
-    def FindState2_s(anEdge : OCP.TopoDS.TopoDS_Shape,aState : OCP.TopAbs.TopAbs_State,aMapEdgesFaces : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,aMapProcessedEdges : OCP.TopTools.TopTools_MapOfShape,aMapVs : OCP.TopOpeBRepDS.TopOpeBRepDS_DataMapOfShapeState) -> None: 
-        """
-        None
-        """
-    @staticmethod
     def FindStateThroughVertex_s(aShape : OCP.TopoDS.TopoDS_Shape,aShapeClassifier : OCP.TopOpeBRepTool.TopOpeBRepTool_ShapeClassifier,aMapOfShapeWithState : OCP.TopOpeBRepDS.TopOpeBRepDS_IndexedDataMapOfShapeWithState,anAvoidSubshMap : OCP.TopTools.TopTools_MapOfShape) -> OCP.TopAbs.TopAbs_State: 
-        """
-        None
-        """
-    @staticmethod
-    def FindState_s(aVertex : OCP.TopoDS.TopoDS_Shape,aState : OCP.TopAbs.TopAbs_State,aShapeEnum : OCP.TopAbs.TopAbs_ShapeEnum,aMapVertexEdges : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,aMapProcessedVertices : OCP.TopTools.TopTools_MapOfShape,aMapVs : OCP.TopOpeBRepDS.TopOpeBRepDS_DataMapOfShapeState) -> None: 
         """
         None
         """
@@ -4373,11 +4359,6 @@ class TopOpeBRepBuild_Tools():
         """
     @staticmethod
     def PropagateStateForWires_s(aFacesToRestMap : OCP.TopTools.TopTools_IndexedMapOfShape,aMapOfShapeWithState : OCP.TopOpeBRepDS.TopOpeBRepDS_IndexedDataMapOfShapeWithState) -> None: 
-        """
-        None
-        """
-    @staticmethod
-    def PropagateState_s(aSplEdgesState : OCP.TopOpeBRepDS.TopOpeBRepDS_DataMapOfShapeState,anEdgesToRestMap : OCP.TopTools.TopTools_IndexedMapOfShape,aShapeEnum1 : OCP.TopAbs.TopAbs_ShapeEnum,aShapeEnum2 : OCP.TopAbs.TopAbs_ShapeEnum,aShapeClassifier : OCP.TopOpeBRepTool.TopOpeBRepTool_ShapeClassifier,aMapOfShapeWithState : OCP.TopOpeBRepDS.TopOpeBRepDS_IndexedDataMapOfShapeWithState,anUnkStateShapes : OCP.TopTools.TopTools_MapOfShape) -> None: 
         """
         None
         """
@@ -4570,9 +4551,9 @@ class TopOpeBRepBuild_WireEdgeSet(TopOpeBRepBuild_ShapeSet):
         None
         """
     @overload
-    def CheckShape(self) -> bool: ...
-    @overload
     def CheckShape(self,checkshape : bool) -> None: ...
+    @overload
+    def CheckShape(self) -> bool: ...
     @overload
     def DEBName(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -4583,14 +4564,14 @@ class TopOpeBRepBuild_WireEdgeSet(TopOpeBRepBuild_ShapeSet):
     @overload
     def DEBName(self,N : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def DEBNumber(self,I : int) -> None: 
+    def DEBNumber(self) -> int: 
         """
         None
 
         None
         """
     @overload
-    def DEBNumber(self) -> int: ...
+    def DEBNumber(self,I : int) -> None: ...
     def DumpBB(self) -> None: 
         """
         None
@@ -4669,23 +4650,23 @@ class TopOpeBRepBuild_WireEdgeSet(TopOpeBRepBuild_ShapeSet):
         None
         """
     @overload
-    def SName(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
+    def SName(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         None
         """
     @overload
-    def SName(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SName(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
-    def SNameori(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
+    def SNameori(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
         """
         None
 
         None
         """
     @overload
-    def SNameori(self,S : OCP.TopTools.TopTools_ListOfShape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
+    def SNameori(self,S : OCP.TopoDS.TopoDS_Shape,sb : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString,sa : OCP.TCollection.TCollection_AsciiString=OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None

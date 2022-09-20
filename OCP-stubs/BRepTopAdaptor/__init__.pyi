@@ -5,15 +5,15 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TColStd
-import io
-import OCP.NCollection
 import OCP.Adaptor2d
-import OCP.gp
-import OCP.TopoDS
+import OCP.NCollection
 import OCP.BRepAdaptor
-import OCP.Standard
+import OCP.gp
+import io
 import OCP.TopAbs
+import OCP.Standard
+import OCP.TopoDS
+import OCP.TColStd
 __all__  = [
 "BRepTopAdaptor_FClass2d",
 "BRepTopAdaptor_HVertex",
@@ -75,23 +75,23 @@ class BRepTopAdaptor_HVertex(OCP.Adaptor3d.Adaptor3d_HVertex, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsSame(self,Other : OCP.Adaptor3d.Adaptor3d_HVertex) -> bool: 
         """
         None
@@ -100,11 +100,11 @@ class BRepTopAdaptor_HVertex(OCP.Adaptor3d.Adaptor3d_HVertex, OCP.Standard.Stand
         """
         None
         """
-    def Parameter(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Parameter(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
         """
-    def Resolution(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: 
+    def Resolution(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         Parametric resolution (2d).
         """
@@ -122,7 +122,7 @@ class BRepTopAdaptor_HVertex(OCP.Adaptor3d.Adaptor3d_HVertex, OCP.Standard.Stand
 
         None
         """
-    def __init__(self,Vtx : OCP.TopoDS.TopoDS_Vertex,Curve : OCP.BRepAdaptor.BRepAdaptor_HCurve2d) -> None: ...
+    def __init__(self,Vtx : OCP.TopoDS.TopoDS_Vertex,Curve : OCP.BRepAdaptor.BRepAdaptor_Curve2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -163,14 +163,14 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : BRepTopAdaptor_MapOfShapeTool) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -180,14 +180,14 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -221,9 +221,9 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : BRepTopAdaptor_MapOfShapeTool) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -236,7 +236,7 @@ class BRepTopAdaptor_Tool():
         """
         None
         """
-    def GetSurface(self) -> OCP.Adaptor3d.Adaptor3d_HSurface: 
+    def GetSurface(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         None
         """
@@ -245,29 +245,29 @@ class BRepTopAdaptor_Tool():
         None
         """
     @overload
-    def Init(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: 
+    def Init(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Tol2d : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Tol2d : float) -> None: ...
+    def Init(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
     def SetTopolTool(self,TT : BRepTopAdaptor_TopolTool) -> None: 
         """
         None
         """
     @overload
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Tol2d : float) -> None: ...
+    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface,Tol2d : float) -> None: ...
     pass
 class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.Standard_Transient):
     def BSplSamplePnts(self,theDefl : float,theNUmin : int,theNVmin : int) -> None: 
         """
-        compute the sample-points for the intersections algorithms by adaptive algorithm for BSpline surfaces - is used in SamplePnts theDefl is a requred deflection theNUmin, theNVmin are minimal nb points for U and V.
+        Compute the sample-points for the intersections algorithms by adaptive algorithm for BSpline surfaces - is used in SamplePnts
         """
     def Classify(self,P2d : OCP.gp.gp_Pnt2d,Tol : float,RecadreOnPeriodic : bool=True) -> OCP.TopAbs.TopAbs_State: 
         """
@@ -326,7 +326,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Initialize(self) -> None: 
+    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
         """
         None
 
@@ -335,27 +335,27 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> None: ...
+    def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
-    def Initialize(self,S : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def Initialize(self) -> None: ...
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsThePointOn(self,P2d : OCP.gp.gp_Pnt2d,Tol : float,RecadreOnPeriodic : bool=True) -> bool: 
         """
         see the code for specifications)
@@ -393,7 +393,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         If the function returns the orientation of the arc. If the orientation is FORWARD or REVERSED, the arc is a "real" limit of the surface. If the orientation is INTERNAL or EXTERNAL, the arc is considered as an arc on the surface.
 
@@ -407,7 +407,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         """
     def SamplePnts(self,theDefl : float,theNUmin : int,theNVmin : int) -> None: 
         """
-        compute the sample-points for the intersections algorithms by adaptive algorithm for BSpline surfaces. For other surfaces algorithm is the same as in method ComputeSamplePoints(), but only fill arrays of U and V sample parameters; theDefl is a requred deflection theNUmin, theNVmin are minimal nb points for U and V.
+        Compute the sample-points for the intersections algorithms by adaptive algorithm for BSpline surfaces. For other surfaces algorithm is the same as in method ComputeSamplePoints(), but only fill arrays of U and V sample parameters;
         """
     def SamplePoint(self,Index : int,P2d : OCP.gp.gp_Pnt2d,P3d : OCP.gp.gp_Pnt) -> None: 
         """
@@ -418,14 +418,14 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Tol3d(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> float: 
+    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         returns 3d tolerance of the arc C
 
         returns 3d tolerance of the vertex V
         """
     @overload
-    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_HCurve2d) -> float: ...
+    def Tol3d(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> float: ...
     def UParameters(self,theArray : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         return the set of U parameters on the surface obtained by the method SamplePnts
@@ -434,7 +434,7 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         """
         return the set of V parameters on the surface obtained by the method SamplePnts
         """
-    def Value(self) -> OCP.Adaptor2d.Adaptor2d_HCurve2d: 
+    def Value(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
         """
@@ -443,9 +443,9 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
         None
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_HSurface) -> None: ...
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import OCP.Standard
-import OCP.TCollection
 import io
+import OCP.NCollection
+import OCP.TCollection
+import OCP.Standard
 __all__  = [
 "Resource_DataMapOfAsciiStringAsciiString",
 "Resource_DataMapOfAsciiStringExtendedString",
@@ -28,6 +28,7 @@ __all__  = [
 "Resource_FormatType_CP1256",
 "Resource_FormatType_CP1257",
 "Resource_FormatType_CP1258",
+"Resource_FormatType_CP850",
 "Resource_FormatType_EUC",
 "Resource_FormatType_GB",
 "Resource_FormatType_GBK",
@@ -76,14 +77,14 @@ class Resource_DataMapOfAsciiStringAsciiString(OCP.NCollection.NCollection_BaseM
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : Resource_DataMapOfAsciiStringAsciiString) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -93,14 +94,14 @@ class Resource_DataMapOfAsciiStringAsciiString(OCP.NCollection.NCollection_BaseM
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: 
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_AsciiString: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         IsBound
@@ -134,9 +135,9 @@ class Resource_DataMapOfAsciiStringAsciiString(OCP.NCollection.NCollection_BaseM
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : Resource_DataMapOfAsciiStringAsciiString) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : Resource_DataMapOfAsciiStringAsciiString) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -187,14 +188,14 @@ class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_Ba
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_ExtendedString) -> bool: 
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_ExtendedString: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString) -> OCP.TCollection.TCollection_ExtendedString: ...
+    def Find(self,theKey : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     def IsBound(self,theKey : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         IsBound
@@ -230,9 +231,9 @@ class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_Ba
     @overload
     def __init__(self,theOther : Resource_DataMapOfAsciiStringExtendedString) -> None: ...
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Resource_FormatType():
@@ -289,6 +290,8 @@ class Resource_FormatType():
 
       Resource_FormatType_iso8859_9
 
+      Resource_FormatType_CP850
+
       Resource_FormatType_GBK
 
       Resource_FormatType_Big5
@@ -306,6 +309,7 @@ class Resource_FormatType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -324,7 +328,7 @@ class Resource_FormatType():
     Resource_ANSI: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_NoConversion: 2>
     Resource_EUC: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_EUC: 1>
     Resource_FormatType_ANSI: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_NoConversion: 2>
-    Resource_FormatType_Big5: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_Big5: 25>
+    Resource_FormatType_Big5: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_Big5: 26>
     Resource_FormatType_CP1250: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1250: 6>
     Resource_FormatType_CP1251: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1251: 7>
     Resource_FormatType_CP1252: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1252: 8>
@@ -334,9 +338,10 @@ class Resource_FormatType():
     Resource_FormatType_CP1256: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1256: 12>
     Resource_FormatType_CP1257: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1257: 13>
     Resource_FormatType_CP1258: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1258: 14>
+    Resource_FormatType_CP850: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP850: 24>
     Resource_FormatType_EUC: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_EUC: 1>
     Resource_FormatType_GB: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GB: 3>
-    Resource_FormatType_GBK: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GBK: 24>
+    Resource_FormatType_GBK: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GBK: 25>
     Resource_FormatType_NoConversion: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_NoConversion: 2>
     Resource_FormatType_SJIS: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_SJIS: 0>
     Resource_FormatType_SystemLocale: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_SystemLocale: 5>
@@ -352,8 +357,8 @@ class Resource_FormatType():
     Resource_FormatType_iso8859_9: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_iso8859_9: 23>
     Resource_GB: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GB: 3>
     Resource_SJIS: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_SJIS: 0>
-    __entries: dict # value = {'Resource_FormatType_SJIS': (<Resource_FormatType.Resource_FormatType_SJIS: 0>, None), 'Resource_FormatType_EUC': (<Resource_FormatType.Resource_FormatType_EUC: 1>, None), 'Resource_FormatType_NoConversion': (<Resource_FormatType.Resource_FormatType_NoConversion: 2>, None), 'Resource_FormatType_GB': (<Resource_FormatType.Resource_FormatType_GB: 3>, None), 'Resource_FormatType_UTF8': (<Resource_FormatType.Resource_FormatType_UTF8: 4>, None), 'Resource_FormatType_SystemLocale': (<Resource_FormatType.Resource_FormatType_SystemLocale: 5>, None), 'Resource_FormatType_CP1250': (<Resource_FormatType.Resource_FormatType_CP1250: 6>, None), 'Resource_FormatType_CP1251': (<Resource_FormatType.Resource_FormatType_CP1251: 7>, None), 'Resource_FormatType_CP1252': (<Resource_FormatType.Resource_FormatType_CP1252: 8>, None), 'Resource_FormatType_CP1253': (<Resource_FormatType.Resource_FormatType_CP1253: 9>, None), 'Resource_FormatType_CP1254': (<Resource_FormatType.Resource_FormatType_CP1254: 10>, None), 'Resource_FormatType_CP1255': (<Resource_FormatType.Resource_FormatType_CP1255: 11>, None), 'Resource_FormatType_CP1256': (<Resource_FormatType.Resource_FormatType_CP1256: 12>, None), 'Resource_FormatType_CP1257': (<Resource_FormatType.Resource_FormatType_CP1257: 13>, None), 'Resource_FormatType_CP1258': (<Resource_FormatType.Resource_FormatType_CP1258: 14>, None), 'Resource_FormatType_iso8859_1': (<Resource_FormatType.Resource_FormatType_iso8859_1: 15>, None), 'Resource_FormatType_iso8859_2': (<Resource_FormatType.Resource_FormatType_iso8859_2: 16>, None), 'Resource_FormatType_iso8859_3': (<Resource_FormatType.Resource_FormatType_iso8859_3: 17>, None), 'Resource_FormatType_iso8859_4': (<Resource_FormatType.Resource_FormatType_iso8859_4: 18>, None), 'Resource_FormatType_iso8859_5': (<Resource_FormatType.Resource_FormatType_iso8859_5: 19>, None), 'Resource_FormatType_iso8859_6': (<Resource_FormatType.Resource_FormatType_iso8859_6: 20>, None), 'Resource_FormatType_iso8859_7': (<Resource_FormatType.Resource_FormatType_iso8859_7: 21>, None), 'Resource_FormatType_iso8859_8': (<Resource_FormatType.Resource_FormatType_iso8859_8: 22>, None), 'Resource_FormatType_iso8859_9': (<Resource_FormatType.Resource_FormatType_iso8859_9: 23>, None), 'Resource_FormatType_GBK': (<Resource_FormatType.Resource_FormatType_GBK: 24>, None), 'Resource_FormatType_Big5': (<Resource_FormatType.Resource_FormatType_Big5: 25>, None), 'Resource_FormatType_ANSI': (<Resource_FormatType.Resource_FormatType_NoConversion: 2>, None), 'Resource_SJIS': (<Resource_FormatType.Resource_FormatType_SJIS: 0>, None), 'Resource_EUC': (<Resource_FormatType.Resource_FormatType_EUC: 1>, None), 'Resource_ANSI': (<Resource_FormatType.Resource_FormatType_NoConversion: 2>, None), 'Resource_GB': (<Resource_FormatType.Resource_FormatType_GB: 3>, None)}
-    __members__: dict # value = {'Resource_FormatType_SJIS': <Resource_FormatType.Resource_FormatType_SJIS: 0>, 'Resource_FormatType_EUC': <Resource_FormatType.Resource_FormatType_EUC: 1>, 'Resource_FormatType_NoConversion': <Resource_FormatType.Resource_FormatType_NoConversion: 2>, 'Resource_FormatType_GB': <Resource_FormatType.Resource_FormatType_GB: 3>, 'Resource_FormatType_UTF8': <Resource_FormatType.Resource_FormatType_UTF8: 4>, 'Resource_FormatType_SystemLocale': <Resource_FormatType.Resource_FormatType_SystemLocale: 5>, 'Resource_FormatType_CP1250': <Resource_FormatType.Resource_FormatType_CP1250: 6>, 'Resource_FormatType_CP1251': <Resource_FormatType.Resource_FormatType_CP1251: 7>, 'Resource_FormatType_CP1252': <Resource_FormatType.Resource_FormatType_CP1252: 8>, 'Resource_FormatType_CP1253': <Resource_FormatType.Resource_FormatType_CP1253: 9>, 'Resource_FormatType_CP1254': <Resource_FormatType.Resource_FormatType_CP1254: 10>, 'Resource_FormatType_CP1255': <Resource_FormatType.Resource_FormatType_CP1255: 11>, 'Resource_FormatType_CP1256': <Resource_FormatType.Resource_FormatType_CP1256: 12>, 'Resource_FormatType_CP1257': <Resource_FormatType.Resource_FormatType_CP1257: 13>, 'Resource_FormatType_CP1258': <Resource_FormatType.Resource_FormatType_CP1258: 14>, 'Resource_FormatType_iso8859_1': <Resource_FormatType.Resource_FormatType_iso8859_1: 15>, 'Resource_FormatType_iso8859_2': <Resource_FormatType.Resource_FormatType_iso8859_2: 16>, 'Resource_FormatType_iso8859_3': <Resource_FormatType.Resource_FormatType_iso8859_3: 17>, 'Resource_FormatType_iso8859_4': <Resource_FormatType.Resource_FormatType_iso8859_4: 18>, 'Resource_FormatType_iso8859_5': <Resource_FormatType.Resource_FormatType_iso8859_5: 19>, 'Resource_FormatType_iso8859_6': <Resource_FormatType.Resource_FormatType_iso8859_6: 20>, 'Resource_FormatType_iso8859_7': <Resource_FormatType.Resource_FormatType_iso8859_7: 21>, 'Resource_FormatType_iso8859_8': <Resource_FormatType.Resource_FormatType_iso8859_8: 22>, 'Resource_FormatType_iso8859_9': <Resource_FormatType.Resource_FormatType_iso8859_9: 23>, 'Resource_FormatType_GBK': <Resource_FormatType.Resource_FormatType_GBK: 24>, 'Resource_FormatType_Big5': <Resource_FormatType.Resource_FormatType_Big5: 25>, 'Resource_FormatType_ANSI': <Resource_FormatType.Resource_FormatType_NoConversion: 2>, 'Resource_SJIS': <Resource_FormatType.Resource_FormatType_SJIS: 0>, 'Resource_EUC': <Resource_FormatType.Resource_FormatType_EUC: 1>, 'Resource_ANSI': <Resource_FormatType.Resource_FormatType_NoConversion: 2>, 'Resource_GB': <Resource_FormatType.Resource_FormatType_GB: 3>}
+    __entries: dict # value = {'Resource_FormatType_SJIS': (<Resource_FormatType.Resource_FormatType_SJIS: 0>, None), 'Resource_FormatType_EUC': (<Resource_FormatType.Resource_FormatType_EUC: 1>, None), 'Resource_FormatType_NoConversion': (<Resource_FormatType.Resource_FormatType_NoConversion: 2>, None), 'Resource_FormatType_GB': (<Resource_FormatType.Resource_FormatType_GB: 3>, None), 'Resource_FormatType_UTF8': (<Resource_FormatType.Resource_FormatType_UTF8: 4>, None), 'Resource_FormatType_SystemLocale': (<Resource_FormatType.Resource_FormatType_SystemLocale: 5>, None), 'Resource_FormatType_CP1250': (<Resource_FormatType.Resource_FormatType_CP1250: 6>, None), 'Resource_FormatType_CP1251': (<Resource_FormatType.Resource_FormatType_CP1251: 7>, None), 'Resource_FormatType_CP1252': (<Resource_FormatType.Resource_FormatType_CP1252: 8>, None), 'Resource_FormatType_CP1253': (<Resource_FormatType.Resource_FormatType_CP1253: 9>, None), 'Resource_FormatType_CP1254': (<Resource_FormatType.Resource_FormatType_CP1254: 10>, None), 'Resource_FormatType_CP1255': (<Resource_FormatType.Resource_FormatType_CP1255: 11>, None), 'Resource_FormatType_CP1256': (<Resource_FormatType.Resource_FormatType_CP1256: 12>, None), 'Resource_FormatType_CP1257': (<Resource_FormatType.Resource_FormatType_CP1257: 13>, None), 'Resource_FormatType_CP1258': (<Resource_FormatType.Resource_FormatType_CP1258: 14>, None), 'Resource_FormatType_iso8859_1': (<Resource_FormatType.Resource_FormatType_iso8859_1: 15>, None), 'Resource_FormatType_iso8859_2': (<Resource_FormatType.Resource_FormatType_iso8859_2: 16>, None), 'Resource_FormatType_iso8859_3': (<Resource_FormatType.Resource_FormatType_iso8859_3: 17>, None), 'Resource_FormatType_iso8859_4': (<Resource_FormatType.Resource_FormatType_iso8859_4: 18>, None), 'Resource_FormatType_iso8859_5': (<Resource_FormatType.Resource_FormatType_iso8859_5: 19>, None), 'Resource_FormatType_iso8859_6': (<Resource_FormatType.Resource_FormatType_iso8859_6: 20>, None), 'Resource_FormatType_iso8859_7': (<Resource_FormatType.Resource_FormatType_iso8859_7: 21>, None), 'Resource_FormatType_iso8859_8': (<Resource_FormatType.Resource_FormatType_iso8859_8: 22>, None), 'Resource_FormatType_iso8859_9': (<Resource_FormatType.Resource_FormatType_iso8859_9: 23>, None), 'Resource_FormatType_CP850': (<Resource_FormatType.Resource_FormatType_CP850: 24>, None), 'Resource_FormatType_GBK': (<Resource_FormatType.Resource_FormatType_GBK: 25>, None), 'Resource_FormatType_Big5': (<Resource_FormatType.Resource_FormatType_Big5: 26>, None), 'Resource_FormatType_ANSI': (<Resource_FormatType.Resource_FormatType_NoConversion: 2>, None), 'Resource_SJIS': (<Resource_FormatType.Resource_FormatType_SJIS: 0>, None), 'Resource_EUC': (<Resource_FormatType.Resource_FormatType_EUC: 1>, None), 'Resource_ANSI': (<Resource_FormatType.Resource_FormatType_NoConversion: 2>, None), 'Resource_GB': (<Resource_FormatType.Resource_FormatType_GB: 3>, None)}
+    __members__: dict # value = {'Resource_FormatType_SJIS': <Resource_FormatType.Resource_FormatType_SJIS: 0>, 'Resource_FormatType_EUC': <Resource_FormatType.Resource_FormatType_EUC: 1>, 'Resource_FormatType_NoConversion': <Resource_FormatType.Resource_FormatType_NoConversion: 2>, 'Resource_FormatType_GB': <Resource_FormatType.Resource_FormatType_GB: 3>, 'Resource_FormatType_UTF8': <Resource_FormatType.Resource_FormatType_UTF8: 4>, 'Resource_FormatType_SystemLocale': <Resource_FormatType.Resource_FormatType_SystemLocale: 5>, 'Resource_FormatType_CP1250': <Resource_FormatType.Resource_FormatType_CP1250: 6>, 'Resource_FormatType_CP1251': <Resource_FormatType.Resource_FormatType_CP1251: 7>, 'Resource_FormatType_CP1252': <Resource_FormatType.Resource_FormatType_CP1252: 8>, 'Resource_FormatType_CP1253': <Resource_FormatType.Resource_FormatType_CP1253: 9>, 'Resource_FormatType_CP1254': <Resource_FormatType.Resource_FormatType_CP1254: 10>, 'Resource_FormatType_CP1255': <Resource_FormatType.Resource_FormatType_CP1255: 11>, 'Resource_FormatType_CP1256': <Resource_FormatType.Resource_FormatType_CP1256: 12>, 'Resource_FormatType_CP1257': <Resource_FormatType.Resource_FormatType_CP1257: 13>, 'Resource_FormatType_CP1258': <Resource_FormatType.Resource_FormatType_CP1258: 14>, 'Resource_FormatType_iso8859_1': <Resource_FormatType.Resource_FormatType_iso8859_1: 15>, 'Resource_FormatType_iso8859_2': <Resource_FormatType.Resource_FormatType_iso8859_2: 16>, 'Resource_FormatType_iso8859_3': <Resource_FormatType.Resource_FormatType_iso8859_3: 17>, 'Resource_FormatType_iso8859_4': <Resource_FormatType.Resource_FormatType_iso8859_4: 18>, 'Resource_FormatType_iso8859_5': <Resource_FormatType.Resource_FormatType_iso8859_5: 19>, 'Resource_FormatType_iso8859_6': <Resource_FormatType.Resource_FormatType_iso8859_6: 20>, 'Resource_FormatType_iso8859_7': <Resource_FormatType.Resource_FormatType_iso8859_7: 21>, 'Resource_FormatType_iso8859_8': <Resource_FormatType.Resource_FormatType_iso8859_8: 22>, 'Resource_FormatType_iso8859_9': <Resource_FormatType.Resource_FormatType_iso8859_9: 23>, 'Resource_FormatType_CP850': <Resource_FormatType.Resource_FormatType_CP850: 24>, 'Resource_FormatType_GBK': <Resource_FormatType.Resource_FormatType_GBK: 25>, 'Resource_FormatType_Big5': <Resource_FormatType.Resource_FormatType_Big5: 26>, 'Resource_FormatType_ANSI': <Resource_FormatType.Resource_FormatType_NoConversion: 2>, 'Resource_SJIS': <Resource_FormatType.Resource_FormatType_SJIS: 0>, 'Resource_EUC': <Resource_FormatType.Resource_FormatType_EUC: 1>, 'Resource_ANSI': <Resource_FormatType.Resource_FormatType_NoConversion: 2>, 'Resource_GB': <Resource_FormatType.Resource_FormatType_GB: 3>}
     pass
 class Resource_LexicalCompare():
     """
@@ -386,14 +391,14 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Gets the value of an ExtString resource according to its instance and its type.
         """
     @overload
-    def Find(self,aResource : str) -> bool: 
+    def Find(self,theResource : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         returns True if the Resource does exist.
 
         returns True if the Resource does exist.
         """
     @overload
-    def Find(self,theResource : OCP.TCollection.TCollection_AsciiString,theValue : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    def Find(self,aResource : str) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -412,23 +417,23 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Gets the value of an integer resource according to its instance and its type.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Real(self,aResourceName : str) -> float: 
         """
         Gets the value of a real resource according to its instance and its type.
@@ -535,7 +540,7 @@ class Resource_Unicode():
 Resource_ANSI: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_NoConversion: 2>
 Resource_EUC: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_EUC: 1>
 Resource_FormatType_ANSI: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_NoConversion: 2>
-Resource_FormatType_Big5: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_Big5: 25>
+Resource_FormatType_Big5: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_Big5: 26>
 Resource_FormatType_CP1250: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1250: 6>
 Resource_FormatType_CP1251: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1251: 7>
 Resource_FormatType_CP1252: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1252: 8>
@@ -545,9 +550,10 @@ Resource_FormatType_CP1255: OCP.Resource.Resource_FormatType # value = <Resource
 Resource_FormatType_CP1256: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1256: 12>
 Resource_FormatType_CP1257: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1257: 13>
 Resource_FormatType_CP1258: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP1258: 14>
+Resource_FormatType_CP850: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_CP850: 24>
 Resource_FormatType_EUC: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_EUC: 1>
 Resource_FormatType_GB: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GB: 3>
-Resource_FormatType_GBK: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GBK: 24>
+Resource_FormatType_GBK: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_GBK: 25>
 Resource_FormatType_NoConversion: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_NoConversion: 2>
 Resource_FormatType_SJIS: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_SJIS: 0>
 Resource_FormatType_SystemLocale: OCP.Resource.Resource_FormatType # value = <Resource_FormatType.Resource_FormatType_SystemLocale: 5>

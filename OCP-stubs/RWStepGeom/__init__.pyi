@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Interface
-import OCP.StepGeom
 import OCP.StepData
+import OCP.StepGeom
+import OCP.Interface
 __all__  = [
 "RWStepGeom_RWAxis1Placement",
 "RWStepGeom_RWAxis2Placement2d",
@@ -75,6 +75,7 @@ __all__  = [
 "RWStepGeom_RWReparametrisedCompositeCurveSegment",
 "RWStepGeom_RWSeamCurve",
 "RWStepGeom_RWSphericalSurface",
+"RWStepGeom_RWSuParameters",
 "RWStepGeom_RWSurface",
 "RWStepGeom_RWSurfaceCurve",
 "RWStepGeom_RWSurfaceCurveAndBoundedCurve",
@@ -1292,6 +1293,24 @@ class RWStepGeom_RWSphericalSurface():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepGeom.StepGeom_SphericalSurface) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepGeom_RWSuParameters():
+    """
+    Read & Write tool for SuParameters
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theAch : OCP.Interface.Interface_Check,theEnt : OCP.StepGeom.StepGeom_SuParameters) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepGeom.StepGeom_SuParameters,iter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepGeom.StepGeom_SuParameters) -> None: 
         """
         None
         """

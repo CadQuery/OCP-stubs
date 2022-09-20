@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TopLoc
 import OCP.gp
 import OCP.TopoDS
 import OCP.StdObjMgt
-import OCP.TopLoc
 __all__  = [
 "StdObject_Location",
 "StdObject_Shape",
@@ -17,10 +17,6 @@ class StdObject_Location():
     """
     None
     """
-    def Import(self) -> OCP.TopLoc.TopLoc_Location: 
-        """
-        Import transient object from the persistent data.
-        """
     def PChildren(self,theChildren : Any) -> None: 
         """
         Gets persistent child objects

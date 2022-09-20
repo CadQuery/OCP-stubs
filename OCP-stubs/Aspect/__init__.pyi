@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.WNT
 import OCP.Quantity
-import OCP.TCollection
-import io
 import OCP.NCollection
-import OCP.gp
-import OCP.Image
+import io
 import Aspect_XRSession
 import OCP.Graphic3d
+import OCP.gp
 import OCP.Standard
+import OCP.Image
+import OCP.TCollection
 __all__  = [
 "Aspect_AspectFillAreaDefinitionError",
 "Aspect_AspectLineDefinitionError",
@@ -62,6 +63,7 @@ __all__  = [
 "Aspect_NeutralWindow",
 "Aspect_WindowDefinitionError",
 "Aspect_WindowError",
+"Aspect_WindowInputListener",
 "Aspect_XAtom",
 "Aspect_XRAction",
 "Aspect_XRActionSet",
@@ -96,6 +98,16 @@ __all__  = [
 "Aspect_GFM_VER",
 "Aspect_GT_Circular",
 "Aspect_GT_Rectangular",
+"Aspect_GradientFillMethod_Corner1",
+"Aspect_GradientFillMethod_Corner2",
+"Aspect_GradientFillMethod_Corner3",
+"Aspect_GradientFillMethod_Corner4",
+"Aspect_GradientFillMethod_Diagonal1",
+"Aspect_GradientFillMethod_Diagonal2",
+"Aspect_GradientFillMethod_Elliptical",
+"Aspect_GradientFillMethod_Horizontal",
+"Aspect_GradientFillMethod_None",
+"Aspect_GradientFillMethod_Vertical",
 "Aspect_GraphicsLibrary_OpenGL",
 "Aspect_GraphicsLibrary_OpenGLES",
 "Aspect_HS_DIAGONAL_135",
@@ -397,7 +409,10 @@ class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
         """
         class object():
             """
-            The most base type
+            The base class of the class hierarchy.
+
+            When called, it accepts no arguments and returns a new featureless
+            instance that has no instance attributes and cannot be given any.
             """
             class type():
                 pass
@@ -408,8 +423,8 @@ class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
         def __prepare__() -> dict: ...
         __abstractmethods__: getset_descriptor # value = <attribute '__abstractmethods__' of 'type' objects>
         __bases__: tuple # value = (<class 'object'>,)
-        __basicsize__ = 864
-        __dict__: mappingproxy # value = mappingproxy({'__repr__': <slot wrapper '__repr__' of 'type' objects>, '__call__': <slot wrapper '__call__' of 'type' objects>, '__getattribute__': <slot wrapper '__getattribute__' of 'type' objects>, '__setattr__': <slot wrapper '__setattr__' of 'type' objects>, '__delattr__': <slot wrapper '__delattr__' of 'type' objects>, '__init__': <slot wrapper '__init__' of 'type' objects>, '__new__': <built-in method __new__ of type object at 0x55f0e5d3f8e0>, 'mro': <method 'mro' of 'type' objects>, '__subclasses__': <method '__subclasses__' of 'type' objects>, '__prepare__': <method '__prepare__' of 'type' objects>, '__instancecheck__': <method '__instancecheck__' of 'type' objects>, '__subclasscheck__': <method '__subclasscheck__' of 'type' objects>, '__dir__': <method '__dir__' of 'type' objects>, '__sizeof__': <method '__sizeof__' of 'type' objects>, '__basicsize__': <member '__basicsize__' of 'type' objects>, '__itemsize__': <member '__itemsize__' of 'type' objects>, '__flags__': <member '__flags__' of 'type' objects>, '__weakrefoffset__': <member '__weakrefoffset__' of 'type' objects>, '__base__': <member '__base__' of 'type' objects>, '__dictoffset__': <member '__dictoffset__' of 'type' objects>, '__mro__': <member '__mro__' of 'type' objects>, '__name__': <attribute '__name__' of 'type' objects>, '__qualname__': <attribute '__qualname__' of 'type' objects>, '__bases__': <attribute '__bases__' of 'type' objects>, '__module__': <attribute '__module__' of 'type' objects>, '__abstractmethods__': <attribute '__abstractmethods__' of 'type' objects>, '__dict__': <attribute '__dict__' of 'type' objects>, '__doc__': <attribute '__doc__' of 'type' objects>, '__text_signature__': <attribute '__text_signature__' of 'type' objects>})
+        __basicsize__ = 880
+        __dict__: mappingproxy # value = mappingproxy({'__repr__': <slot wrapper '__repr__' of 'type' objects>, '__call__': <slot wrapper '__call__' of 'type' objects>, '__getattribute__': <slot wrapper '__getattribute__' of 'type' objects>, '__setattr__': <slot wrapper '__setattr__' of 'type' objects>, '__delattr__': <slot wrapper '__delattr__' of 'type' objects>, '__init__': <slot wrapper '__init__' of 'type' objects>, '__new__': <built-in method __new__ of type object at 0x00007FFF4287BC90>, 'mro': <method 'mro' of 'type' objects>, '__subclasses__': <method '__subclasses__' of 'type' objects>, '__prepare__': <method '__prepare__' of 'type' objects>, '__instancecheck__': <method '__instancecheck__' of 'type' objects>, '__subclasscheck__': <method '__subclasscheck__' of 'type' objects>, '__dir__': <method '__dir__' of 'type' objects>, '__sizeof__': <method '__sizeof__' of 'type' objects>, '__basicsize__': <member '__basicsize__' of 'type' objects>, '__itemsize__': <member '__itemsize__' of 'type' objects>, '__flags__': <member '__flags__' of 'type' objects>, '__weakrefoffset__': <member '__weakrefoffset__' of 'type' objects>, '__base__': <member '__base__' of 'type' objects>, '__dictoffset__': <member '__dictoffset__' of 'type' objects>, '__mro__': <member '__mro__' of 'type' objects>, '__name__': <attribute '__name__' of 'type' objects>, '__qualname__': <attribute '__qualname__' of 'type' objects>, '__bases__': <attribute '__bases__' of 'type' objects>, '__module__': <attribute '__module__' of 'type' objects>, '__abstractmethods__': <attribute '__abstractmethods__' of 'type' objects>, '__dict__': <attribute '__dict__' of 'type' objects>, '__doc__': <attribute '__doc__' of 'type' objects>, '__text_signature__': <attribute '__text_signature__' of 'type' objects>})
         __dictoffset__ = 264
         __flags__ = 2148291584
         __itemsize__ = 40
@@ -465,9 +480,9 @@ class Aspect_Background():
         Modifies the colour of the window background <me>.
         """
     @overload
-    def __init__(self,AColor : OCP.Quantity.Quantity_Color) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,AColor : OCP.Quantity.Quantity_Color) -> None: ...
     pass
 class Aspect_Grid(OCP.Standard.Standard_Transient):
     def Activate(self) -> None: 
@@ -539,23 +554,23 @@ class Aspect_Grid(OCP.Standard.Standard_Transient):
         Returns TRUE when the grid is displayed at screen.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Rotate(self,anAngle : float) -> None: 
         """
         Rotate the grid from a relative angle.
@@ -624,6 +639,7 @@ class Aspect_ColorSpace():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -646,7 +662,7 @@ class Aspect_ColorSpace():
     pass
 class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
     """
-    This class creates and provides connection with X server. Raises exception if can not connect to X server. On Windows and Mac OS X (in case when Cocoa used) platforms this class do nothing. WARRNING: Do not close display connection manualy!This class creates and provides connection with X server. Raises exception if can not connect to X server. On Windows and Mac OS X (in case when Cocoa used) platforms this class do nothing. WARRNING: Do not close display connection manualy!
+    This class creates and provides connection with X server. Raises exception if can not connect to X server. On Windows and Mac OS X (in case when Cocoa used) platforms this class does nothing. WARRNING: Do not close display connection manually!This class creates and provides connection with X server. Raises exception if can not connect to X server. On Windows and Mac OS X (in case when Cocoa used) platforms this class does nothing. WARRNING: Do not close display connection manually!
     """
     def DecrementRefCounter(self) -> int: 
         """
@@ -664,6 +680,14 @@ class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
         """
         Returns identifier(atom) for custom named property associated with windows that use current connection to X server.
         """
+    def GetDefaultFBConfig(self) -> __GLXFBConfigRec: 
+        """
+        Returns native Window FB config (GLXFBConfig on Xlib)
+        """
+    def GetDefaultVisualInfo(self) -> Aspect_XVisualInfo: 
+        """
+        Return default window visual or NULL when undefined.
+        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -673,35 +697,39 @@ class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOwnDisplay(self) -> bool: 
         """
         Returns TRUE if X Display has been allocated by this class
+        """
+    def SetDefaultVisualInfo(self,theVisual : Aspect_XVisualInfo,theFBConfig : __GLXFBConfigRec) -> None: 
+        """
+        Set default window visual; the visual will be deallocated using XFree().
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theDisplayName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -737,6 +765,7 @@ class Aspect_Eye():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -774,6 +803,7 @@ class Aspect_FillMethod():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -809,14 +839,14 @@ class Aspect_GenId():
         Dumps the content of me into the stream
         """
     @overload
-    def Free(self) -> None: 
+    def Free(self,theId : int) -> None: 
         """
         Free all identifiers - make the whole range available again.
 
         Free specified identifier. Warning - method has no protection against double-freeing!
         """
     @overload
-    def Free(self,theId : int) -> None: ...
+    def Free(self) -> None: ...
     def HasFree(self) -> bool: 
         """
         Returns true if there are available identifiers in range.
@@ -826,22 +856,22 @@ class Aspect_GenId():
         Returns the lower identifier in range.
         """
     @overload
-    def Next(self,theId : int) -> bool: 
+    def Next(self) -> int: 
         """
         Returns the next available identifier. Warning: Raises IdentDefinitionError if all identifiers are busy.
 
         Generates the next available identifier.
         """
     @overload
-    def Next(self) -> int: ...
+    def Next(self,theId : int) -> bool: ...
     def Upper(self) -> int: 
         """
         Returns the upper identifier in range.
         """
     @overload
-    def __init__(self,theLow : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLow : int,theUpper : int) -> None: ...
     pass
 class Aspect_GradientBackground(Aspect_Background):
     """
@@ -855,9 +885,9 @@ class Aspect_GradientBackground(Aspect_Background):
         """
         Returns the colour of the window background <me>.
         """
-    def Colors(self,AColor1 : OCP.Quantity.Quantity_Color,AColor2 : OCP.Quantity.Quantity_Color) -> None: 
+    def Colors(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Returns colours of the window gradient background <me>.
+        Returns colours of the window gradient background.
         """
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
@@ -867,12 +897,12 @@ class Aspect_GradientBackground(Aspect_Background):
         """
         Modifies the colour of the window background <me>.
         """
-    def SetColors(self,AColor1 : OCP.Quantity.Quantity_Color,AColor2 : OCP.Quantity.Quantity_Color,AMethod : Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GFM_HOR) -> None: 
+    def SetColors(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color,theMethod : Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal) -> None: 
         """
-        Modifies the colours of the window gradient background <me>.
+        Modifies the colours of the window gradient background.
         """
     @overload
-    def __init__(self,AColor1 : OCP.Quantity.Quantity_Color,AColor2 : OCP.Quantity.Quantity_Color,AMethod : Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GFM_HOR) -> None: ...
+    def __init__(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color,theMethod : Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -881,6 +911,26 @@ class Aspect_GradientFillMethod():
     Defines the fill methods to write gradient background in a window.
 
     Members:
+
+      Aspect_GradientFillMethod_None
+
+      Aspect_GradientFillMethod_Horizontal
+
+      Aspect_GradientFillMethod_Vertical
+
+      Aspect_GradientFillMethod_Diagonal1
+
+      Aspect_GradientFillMethod_Diagonal2
+
+      Aspect_GradientFillMethod_Corner1
+
+      Aspect_GradientFillMethod_Corner2
+
+      Aspect_GradientFillMethod_Corner3
+
+      Aspect_GradientFillMethod_Corner4
+
+      Aspect_GradientFillMethod_Elliptical
 
       Aspect_GFM_NONE
 
@@ -903,6 +953,7 @@ class Aspect_GradientFillMethod():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -918,17 +969,27 @@ class Aspect_GradientFillMethod():
         """
         :type: int
         """
-    Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>
-    Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>
-    Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>
-    Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>
-    Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>
-    Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>
-    Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>
-    Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>
-    Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_VER: 2>
-    __entries: dict # value = {'Aspect_GFM_NONE': (<Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>, None), 'Aspect_GFM_HOR': (<Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>, None), 'Aspect_GFM_VER': (<Aspect_GradientFillMethod.Aspect_GFM_VER: 2>, None), 'Aspect_GFM_DIAG1': (<Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>, None), 'Aspect_GFM_DIAG2': (<Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>, None), 'Aspect_GFM_CORNER1': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>, None), 'Aspect_GFM_CORNER2': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>, None), 'Aspect_GFM_CORNER3': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>, None), 'Aspect_GFM_CORNER4': (<Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>, None)}
-    __members__: dict # value = {'Aspect_GFM_NONE': <Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>, 'Aspect_GFM_HOR': <Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>, 'Aspect_GFM_VER': <Aspect_GradientFillMethod.Aspect_GFM_VER: 2>, 'Aspect_GFM_DIAG1': <Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>, 'Aspect_GFM_DIAG2': <Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>, 'Aspect_GFM_CORNER1': <Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>, 'Aspect_GFM_CORNER2': <Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>, 'Aspect_GFM_CORNER3': <Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>, 'Aspect_GFM_CORNER4': <Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>}
+    Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>
+    Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>
+    Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>
+    Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>
+    Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>
+    Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>
+    Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>
+    Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>
+    Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>
+    Aspect_GradientFillMethod_Corner1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>
+    Aspect_GradientFillMethod_Corner2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>
+    Aspect_GradientFillMethod_Corner3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>
+    Aspect_GradientFillMethod_Corner4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>
+    Aspect_GradientFillMethod_Diagonal1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>
+    Aspect_GradientFillMethod_Diagonal2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>
+    Aspect_GradientFillMethod_Elliptical: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Elliptical: 9>
+    Aspect_GradientFillMethod_Horizontal: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>
+    Aspect_GradientFillMethod_None: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>
+    Aspect_GradientFillMethod_Vertical: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>
+    __entries: dict # value = {'Aspect_GradientFillMethod_None': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>, None), 'Aspect_GradientFillMethod_Horizontal': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>, None), 'Aspect_GradientFillMethod_Vertical': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>, None), 'Aspect_GradientFillMethod_Diagonal1': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>, None), 'Aspect_GradientFillMethod_Diagonal2': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>, None), 'Aspect_GradientFillMethod_Corner1': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>, None), 'Aspect_GradientFillMethod_Corner2': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>, None), 'Aspect_GradientFillMethod_Corner3': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>, None), 'Aspect_GradientFillMethod_Corner4': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>, None), 'Aspect_GradientFillMethod_Elliptical': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Elliptical: 9>, None), 'Aspect_GFM_NONE': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>, None), 'Aspect_GFM_HOR': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>, None), 'Aspect_GFM_VER': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>, None), 'Aspect_GFM_DIAG1': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>, None), 'Aspect_GFM_DIAG2': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>, None), 'Aspect_GFM_CORNER1': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>, None), 'Aspect_GFM_CORNER2': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>, None), 'Aspect_GFM_CORNER3': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>, None), 'Aspect_GFM_CORNER4': (<Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>, None)}
+    __members__: dict # value = {'Aspect_GradientFillMethod_None': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>, 'Aspect_GradientFillMethod_Horizontal': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>, 'Aspect_GradientFillMethod_Vertical': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>, 'Aspect_GradientFillMethod_Diagonal1': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>, 'Aspect_GradientFillMethod_Diagonal2': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>, 'Aspect_GradientFillMethod_Corner1': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>, 'Aspect_GradientFillMethod_Corner2': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>, 'Aspect_GradientFillMethod_Corner3': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>, 'Aspect_GradientFillMethod_Corner4': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>, 'Aspect_GradientFillMethod_Elliptical': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Elliptical: 9>, 'Aspect_GFM_NONE': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>, 'Aspect_GFM_HOR': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>, 'Aspect_GFM_VER': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>, 'Aspect_GFM_DIAG1': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>, 'Aspect_GFM_DIAG2': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>, 'Aspect_GFM_CORNER1': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>, 'Aspect_GFM_CORNER2': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>, 'Aspect_GFM_CORNER3': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>, 'Aspect_GFM_CORNER4': <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>}
     pass
 class Aspect_GraphicDeviceDefinitionError(Exception, BaseException):
     class type():
@@ -954,6 +1015,7 @@ class Aspect_GraphicsLibrary():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1048,23 +1110,23 @@ class Aspect_CircularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
         Returns TRUE when the grid is displayed at screen.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RadiusStep(self) -> float: 
         """
         returns the x step of the grid.
@@ -1152,6 +1214,7 @@ class Aspect_GridDrawMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1186,6 +1249,7 @@ class Aspect_GridType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1243,6 +1307,7 @@ class Aspect_HatchStyle():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1307,6 +1372,7 @@ class Aspect_InteriorStyle():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1343,6 +1409,14 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         """
         Returns the current image background fill mode.
         """
+    def ConvertPointFromBacking(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d) -> OCP.Graphic3d.Graphic3d_Vec2d: 
+        """
+        Convert point from backing store units to logical units.
+        """
+    def ConvertPointToBacking(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d) -> OCP.Graphic3d.Graphic3d_Vec2d: 
+        """
+        Convert point from logical units into backing store units.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1350,6 +1424,14 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DevicePixelRatio(self) -> float: 
+        """
+        Return device pixel ratio (logical to backing store scale factor).
+        """
+    def DisplayConnection(self) -> Aspect_DisplayConnection: 
+        """
+        Returns connection to Display or NULL.
         """
     def DoMapping(self) -> bool: 
         """
@@ -1384,23 +1466,23 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         Invalidate entire window content.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMapped(self) -> bool: 
         """
         Returns True if the window <me> is opened and False if the window is closed.
@@ -1413,11 +1495,11 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         """
         Opens the window <me>.
         """
-    def NativeHandle(self) -> int: 
+    def NativeHandle(self) -> capsule: 
         """
         Returns native Window handle (HWND on Windows, Window with Xlib, and so on)
         """
-    def NativeParentHandle(self) -> int: 
+    def NativeParentHandle(self) -> capsule: 
         """
         Returns parent of native Window handle (HWND on Windows, Window with Xlib, and so on)
         """
@@ -1570,23 +1652,23 @@ class Aspect_XRSession(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOpen(self) -> bool: 
         """
         Return TRUE if session is opened.
@@ -1708,6 +1790,7 @@ class Aspect_PolygonOffsetMode():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -1807,23 +1890,23 @@ class Aspect_RectangularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
         Returns TRUE when the grid is displayed at screen.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Rotate(self,anAngle : float) -> None: 
         """
         Rotate the grid from a relative angle.
@@ -1921,11 +2004,11 @@ class Aspect_ScrollDelta():
         Reset at point.
         """
     @overload
-    def __init__(self,theValue : float,theFlags : int=0) -> None: ...
-    @overload
     def __init__(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2i,theValue : float,theFlags : int=0) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theValue : float,theFlags : int=0) -> None: ...
     @property
     def Delta(self) -> float:
         """
@@ -1952,14 +2035,14 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Aspect_SequenceOfColor) -> None: 
+    def Append(self,theItem : OCP.Quantity.Quantity_Color) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : OCP.Quantity.Quantity_Color) -> None: ...
+    def Append(self,theSeq : Aspect_SequenceOfColor) -> None: ...
     def Assign(self,theOther : Aspect_SequenceOfColor) -> Aspect_SequenceOfColor: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2129,14 +2212,14 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : int) -> bool: 
         """
         Contains
@@ -2215,9 +2298,9 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : Aspect_TouchMap) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2254,7 +2337,7 @@ class Aspect_TrackedDevicePose():
     pass
 class Aspect_TrackedDevicePoseArray():
     """
-    Purpose: The class Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
     """
     def Assign(self,theOther : Aspect_TrackedDevicePoseArray) -> Aspect_TrackedDevicePoseArray: 
         """
@@ -2329,13 +2412,13 @@ class Aspect_TrackedDevicePoseArray():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : Aspect_TrackedDevicePose,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Aspect_TrackedDevicePoseArray) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Aspect_TypeOfColorScaleData():
@@ -2351,6 +2434,7 @@ class Aspect_TypeOfColorScaleData():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2388,6 +2472,7 @@ class Aspect_TypeOfColorScaleOrientation():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2427,6 +2512,7 @@ class Aspect_TypeOfColorScalePosition():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2462,6 +2548,7 @@ class Aspect_TypeOfDeflection():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2503,6 +2590,7 @@ class Aspect_TypeOfDisplayText():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2542,6 +2630,7 @@ class Aspect_TypeOfFacingModel():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2576,6 +2665,7 @@ class Aspect_TypeOfHighlightMethod():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2617,6 +2707,7 @@ class Aspect_TypeOfLine():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2680,6 +2771,7 @@ class Aspect_TypeOfMarker():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2742,6 +2834,7 @@ class Aspect_TypeOfResize():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2783,6 +2876,7 @@ class Aspect_TypeOfStyleText():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -2830,6 +2924,7 @@ class Aspect_TypeOfTriedronPosition():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3152,6 +3247,7 @@ class Aspect_VKeyBasic():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3332,6 +3428,7 @@ class Aspect_WidthOfLine():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3367,6 +3464,14 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         """
         Returns the current image background fill mode.
         """
+    def ConvertPointFromBacking(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d) -> OCP.Graphic3d.Graphic3d_Vec2d: 
+        """
+        Convert point from backing store units to logical units.
+        """
+    def ConvertPointToBacking(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d) -> OCP.Graphic3d.Graphic3d_Vec2d: 
+        """
+        Convert point from logical units into backing store units.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -3374,6 +3479,14 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
+        """
+    def DevicePixelRatio(self) -> float: 
+        """
+        Return device pixel ratio (logical to backing store scale factor).
+        """
+    def DisplayConnection(self) -> Aspect_DisplayConnection: 
+        """
+        Returns connection to Display or NULL.
         """
     def DoMapping(self) -> bool: 
         """
@@ -3408,23 +3521,23 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         Invalidate entire window content.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsMapped(self) -> bool: 
         """
         Return true if window is not hidden.
@@ -3437,11 +3550,11 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         """
         Change window mapped flag to TRUE.
         """
-    def NativeHandle(self) -> int: 
+    def NativeHandle(self) -> capsule: 
         """
         Return native handle of this drawable.
         """
-    def NativeParentHandle(self) -> int: 
+    def NativeParentHandle(self) -> capsule: 
         """
         Return native handle of the parent drawable.
         """
@@ -3470,7 +3583,7 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
     def SetBackground(self,ABack : Aspect_Background) -> None: ...
     @overload
     def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
-    def SetNativeHandle(self,theWindow : int) -> bool: 
+    def SetNativeHandle(self,theWindow : capsule) -> bool: 
         """
         Set native handle.
         """
@@ -3541,6 +3654,163 @@ class Aspect_WindowError(Exception, BaseException):
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Aspect_WindowError' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
+class Aspect_WindowInputListener():
+    """
+    Defines a listener for window input events.
+    """
+    def AddTouchPoint(self,theId : int,thePnt : OCP.Graphic3d.Graphic3d_Vec2d,theClearBefore : bool=False) -> None: 
+        """
+        Add touch point with the given ID. This method is expected to be called from UI thread.
+        """
+    def Change3dMouseIsNoRotate(self) -> Any: 
+        """
+        Return 3d mouse rotation axes (tilt/roll/spin) ignore flag; (FALSE, FALSE, FALSE) by default.
+        """
+    def Change3dMouseToReverse(self) -> Any: 
+        """
+        Return 3d mouse rotation axes (tilt/roll/spin) reverse flag; (TRUE, FALSE, FALSE) by default.
+        """
+    def ChangeKeys(self) -> Aspect_VKeySet: 
+        """
+        Return keyboard state.
+        """
+    def EventTime(self) -> float: 
+        """
+        Return event time (e.g. current time).
+        """
+    def Get3dMouseIsNoRotate(self) -> Any: 
+        """
+        Return 3d mouse rotation axes (tilt/roll/spin) ignore flag; (FALSE, FALSE, FALSE) by default.
+        """
+    def Get3dMouseRotationScale(self) -> float: 
+        """
+        Return acceleration ratio for rotation event; 4.0 by default.
+        """
+    def Get3dMouseToReverse(self) -> Any: 
+        """
+        Return 3d mouse rotation axes (tilt/roll/spin) reverse flag; (TRUE, FALSE, FALSE) by default.
+        """
+    def Get3dMouseTranslationScale(self) -> float: 
+        """
+        Return acceleration ratio for translation event; 2.0 by default.
+        """
+    def HasTouchPoints(self) -> bool: 
+        """
+        Return TRUE if touches map is not empty.
+        """
+    def KeyDown(self,theKey : int,theTime : float,thePressure : float=1.0) -> None: 
+        """
+        Press key. Default implementation updates internal cache.
+        """
+    def KeyFromAxis(self,theNegative : int,thePositive : int,theTime : float,thePressure : float) -> None: 
+        """
+        Simulate key up/down events from axis value. Default implementation updates internal cache.
+        """
+    def KeyUp(self,theKey : int,theTime : float) -> None: 
+        """
+        Release key. Default implementation updates internal cache.
+        """
+    def Keys(self) -> Aspect_VKeySet: 
+        """
+        Return keyboard state.
+        """
+    def LastMouseFlags(self) -> int: 
+        """
+        Return active key modifiers passed with last mouse event.
+        """
+    def LastMousePosition(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Return last mouse position.
+        """
+    def PressMouseButton(self,thePoint : OCP.Graphic3d.Graphic3d_Vec2i,theButton : int,theModifiers : int,theIsEmulated : bool) -> bool: 
+        """
+        Handle mouse button press event. This method is expected to be called from UI thread. Default implementation redirects to UpdateMousePosition().
+        """
+    def PressedMouseButtons(self) -> int: 
+        """
+        Return currently pressed mouse buttons.
+        """
+    def ProcessClose(self) -> None: 
+        """
+        Handle window close event.
+        """
+    def ProcessConfigure(self,theIsResized : bool) -> None: 
+        """
+        Handle window resize event.
+        """
+    def ProcessExpose(self) -> None: 
+        """
+        Handle expose event (window content has been invalidation and should be redrawn).
+        """
+    def ProcessFocus(self,theIsActivated : bool) -> None: 
+        """
+        Handle focus event.
+        """
+    def ProcessInput(self) -> None: 
+        """
+        Handle window input event immediately (flush input buffer or ignore).
+        """
+    def ReleaseMouseButton(self,thePoint : OCP.Graphic3d.Graphic3d_Vec2i,theButton : int,theModifiers : int,theIsEmulated : bool) -> bool: 
+        """
+        Handle mouse button release event. This method is expected to be called from UI thread. Default implementation redirects to UpdateMousePosition().
+        """
+    def RemoveTouchPoint(self,theId : int,theClearSelectPnts : bool=False) -> bool: 
+        """
+        Remove touch point with the given ID. This method is expected to be called from UI thread.
+        """
+    def Set3dMousePreciseInput(self,theIsQuadric : bool) -> None: 
+        """
+        Set quadric acceleration flag.
+        """
+    def Set3dMouseRotationScale(self,theScale : float) -> None: 
+        """
+        Set acceleration ratio for rotation event.
+        """
+    def Set3dMouseTranslationScale(self,theScale : float) -> None: 
+        """
+        Set acceleration ratio for translation event.
+        """
+    def To3dMousePreciseInput(self) -> bool: 
+        """
+        Return quadric acceleration flag; TRUE by default.
+        """
+    def TouchPoints(self) -> Aspect_TouchMap: 
+        """
+        Return map of active touches.
+        """
+    def Update3dMouse(self,theEvent : OCP.WNT.WNT_HIDSpaceMouse) -> bool: 
+        """
+        Process 3d mouse input event (redirects to translation, rotation and keys).
+        """
+    def UpdateMouseButtons(self,thePoint : OCP.Graphic3d.Graphic3d_Vec2i,theButtons : int,theModifiers : int,theIsEmulated : bool) -> bool: 
+        """
+        Handle mouse button press/release event. This method is expected to be called from UI thread.
+        """
+    def UpdateMousePosition(self,thePoint : OCP.Graphic3d.Graphic3d_Vec2i,theButtons : int,theModifiers : int,theIsEmulated : bool) -> bool: 
+        """
+        Handle mouse cursor movement event. This method is expected to be called from UI thread. Default implementation does nothing.
+        """
+    def UpdateMouseScroll(self,theDelta : Aspect_ScrollDelta) -> bool: 
+        """
+        Update mouse scroll event. This method is expected to be called from UI thread.
+        """
+    def UpdateTouchPoint(self,theId : int,thePnt : OCP.Graphic3d.Graphic3d_Vec2d) -> None: 
+        """
+        Update touch point with the given ID. If point with specified ID was not registered before, it will be added. This method is expected to be called from UI thread.
+        """
+    def update3dMouseKeys(self,theEvent : OCP.WNT.WNT_HIDSpaceMouse) -> bool: 
+        """
+        Process 3d mouse input keys event.
+        """
+    def update3dMouseRotation(self,theEvent : OCP.WNT.WNT_HIDSpaceMouse) -> bool: 
+        """
+        Process 3d mouse input rotation event.
+        """
+    def update3dMouseTranslation(self,theEvent : OCP.WNT.WNT_HIDSpaceMouse) -> bool: 
+        """
+        Process 3d mouse input translation event.
+        """
+    pass
 class Aspect_XAtom():
     """
     Defines custom identifiers(atoms) for X window custom named properties
@@ -3552,6 +3822,7 @@ class Aspect_XAtom():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3600,23 +3871,23 @@ class Aspect_XRAction(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Return TRUE if action is defined.
@@ -3686,23 +3957,23 @@ class Aspect_XRActionSet(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def RawHandle(self) -> int: 
         """
         Return action handle.
@@ -3746,6 +4017,7 @@ class Aspect_XRActionType():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3828,6 +4100,7 @@ class Aspect_XRGenericAction():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -3908,6 +4181,7 @@ class Aspect_OpenVRSession(Aspect_XRSession, OCP.Standard.Standard_Transient):
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -3943,6 +4217,7 @@ class Aspect_OpenVRSession(Aspect_XRSession, OCP.Standard.Standard_Transient):
         def __eq__(self,other : object) -> bool: ...
         def __getstate__(self) -> int: ...
         def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
         def __init__(self,value : int) -> None: ...
         def __int__(self) -> int: ...
         def __ne__(self,other : object) -> bool: ...
@@ -4053,23 +4328,23 @@ class Aspect_OpenVRSession(Aspect_XRSession, OCP.Standard.Standard_Transient):
         Return TRUE if an HMD may be presented on the system (e.g. to show VR checkbox in application GUI). This is fast check, and even if it returns TRUE, opening session may fail.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsOpen(self) -> bool: 
         """
         Return TRUE if session is opened.
@@ -4186,6 +4461,7 @@ class Aspect_XRTrackedDeviceRole():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -4223,17 +4499,27 @@ Aspect_FM_TILED: OCP.Aspect.Aspect_FillMethod # value = <Aspect_FillMethod.Aspec
 Aspect_GDM_Lines: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_Lines: 0>
 Aspect_GDM_None: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_None: 2>
 Aspect_GDM_Points: OCP.Aspect.Aspect_GridDrawMode # value = <Aspect_GridDrawMode.Aspect_GDM_Points: 1>
-Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER1: 5>
-Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER2: 6>
-Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER3: 7>
-Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_CORNER4: 8>
-Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG1: 3>
-Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_DIAG2: 4>
-Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_HOR: 1>
-Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_NONE: 0>
-Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GFM_VER: 2>
+Aspect_GFM_CORNER1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>
+Aspect_GFM_CORNER2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>
+Aspect_GFM_CORNER3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>
+Aspect_GFM_CORNER4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>
+Aspect_GFM_DIAG1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>
+Aspect_GFM_DIAG2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>
+Aspect_GFM_HOR: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>
+Aspect_GFM_NONE: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>
+Aspect_GFM_VER: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>
 Aspect_GT_Circular: OCP.Aspect.Aspect_GridType # value = <Aspect_GridType.Aspect_GT_Circular: 1>
 Aspect_GT_Rectangular: OCP.Aspect.Aspect_GridType # value = <Aspect_GridType.Aspect_GT_Rectangular: 0>
+Aspect_GradientFillMethod_Corner1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner1: 5>
+Aspect_GradientFillMethod_Corner2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner2: 6>
+Aspect_GradientFillMethod_Corner3: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner3: 7>
+Aspect_GradientFillMethod_Corner4: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Corner4: 8>
+Aspect_GradientFillMethod_Diagonal1: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal1: 3>
+Aspect_GradientFillMethod_Diagonal2: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Diagonal2: 4>
+Aspect_GradientFillMethod_Elliptical: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Elliptical: 9>
+Aspect_GradientFillMethod_Horizontal: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal: 1>
+Aspect_GradientFillMethod_None: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_None: 0>
+Aspect_GradientFillMethod_Vertical: OCP.Aspect.Aspect_GradientFillMethod # value = <Aspect_GradientFillMethod.Aspect_GradientFillMethod_Vertical: 2>
 Aspect_GraphicsLibrary_OpenGL: OCP.Aspect.Aspect_GraphicsLibrary # value = <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGL: 0>
 Aspect_GraphicsLibrary_OpenGLES: OCP.Aspect.Aspect_GraphicsLibrary # value = <Aspect_GraphicsLibrary.Aspect_GraphicsLibrary_OpenGLES: 1>
 Aspect_HS_DIAGONAL_135: OCP.Aspect.Aspect_HatchStyle # value = <Aspect_HatchStyle.Aspect_HS_DIAGONAL_135: 6>

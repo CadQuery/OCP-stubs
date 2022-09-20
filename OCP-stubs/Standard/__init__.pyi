@@ -5,10 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import io
-import OCP.TColStd
 import OCP.TCollection
+import OCP.TColStd
 __all__  = [
-"GUID",
 "Standard",
 "Standard_AbortiveTransaction",
 "Standard_ArrayStreamBuffer",
@@ -150,12 +149,6 @@ __all__  = [
 "Standard_JsonKey_SeparatorKeyToValue",
 "Standard_JsonKey_SeparatorValueToValue"
 ]
-class GUID():
-    """
-    None
-    """
-    def __init__(self) -> None: ...
-    pass
 class Standard():
     """
     The package Standard provides global memory allocator and other basic services used by other OCCT components.
@@ -189,6 +182,11 @@ class Standard():
     def Reallocate_s(aStorage : capsule,aNewSize : int) -> capsule: 
         """
         Reallocates memory blocks aStorage - previously allocated memory block aNewSize - new size in bytes
+        """
+    @staticmethod
+    def StackTrace_s(theBuffer : str,theBufferSize : int,theNbTraces : int,theContext : capsule=None,theNbTopSkip : int=0) -> bool: 
+        """
+        Appends backtrace to a message buffer. Stack information might be incomplete in case of stripped binaries. Implementation details: - Not implemented for Android, iOS, QNX and UWP platforms. - On non-Windows platform, this function is a wrapper to backtrace() system call. - On Windows (Win32) platform, the function loads DbgHelp.dll dynamically, and no stack will be provided if this or companion libraries (SymSrv.dll, SrcSrv.dll, etc.) will not be found; .pdb symbols should be provided on Windows platform to retrieve a meaningful stack; only x86_64 CPU architecture is currently implemented.
         """
     def __init__(self) -> None: ...
     pass
@@ -253,6 +251,10 @@ class Standard_Condition():
     @overload
     def Wait(self) -> None: ...
     def __init__(self,theIsSet : bool) -> None: ...
+    def getHandle(self) -> capsule: 
+        """
+        Access native HANDLE to Event object.
+        """
     pass
 class Standard_ConstructionError(Exception, BaseException):
     class type():
@@ -328,7 +330,7 @@ class Standard_Dump():
     @staticmethod
     def FormatJson_s(theStream : Any,theIndent : int=3) -> OCP.TCollection.TCollection_AsciiString: 
         """
-        Converts stream value to string value. Improves the text presentation with the following cases: - for '{' append after '' and indent to the next value, increment current indent value - for '}' append '' and current indent before it, decrement indent value - for ',' append after '' and indent to the next value. If the current symbol is in massive container [], do nothing
+        Converts stream value to string value. Improves the text presentation with the following cases: - for '{' append after '' and indent to the next value, increment current indent value - for '}' append '' and current indent before it, decrement indent value - for ',' append after '' and indent to the next value. If the current symbol is in massive container [], do nothing Covers result with opened and closed brackets on the top level, if it has no symbols there.
         """
     @staticmethod
     @overload
@@ -398,9 +400,9 @@ class Standard_DumpValue():
     Type for storing a dump value with the stream position
     """
     @overload
-    def __init__(self,theValue : OCP.TCollection.TCollection_AsciiString,theStartPos : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theValue : OCP.TCollection.TCollection_AsciiString,theStartPos : int) -> None: ...
     @property
     def myStartPosition(self) -> int:
         """
@@ -439,7 +441,7 @@ class Standard_ErrorHandler():
         """
         Test if the code is currently running in a try block
         """
-    def Label(self) -> __jmp_buf_tag: 
+    def Label(self) -> _SETJMP_FLOAT128: 
         """
         Returns label for jump
         """
@@ -470,7 +472,7 @@ class Standard_GUID():
     None
     """
     @overload
-    def Assign(self,uid : GUID) -> None: 
+    def Assign(self,uid : _GUID) -> None: 
         """
         None
 
@@ -517,20 +519,20 @@ class Standard_GUID():
         """
         translate the GUID into unicode string the aStrGuid is allocated by user. the guid have the following format:
         """
-    def ToUUID(self) -> GUID: 
+    def ToUUID(self) -> _GUID: 
         """
         None
         """
+    @overload
+    def __init__(self,aGuid : _GUID) -> None: ...
     @overload
     def __init__(self,a32b : int,a16b1 : str,a16b2 : str,a16b3 : str,a8b1 : int,a8b2 : int,a8b3 : int,a8b4 : int,a8b5 : int,a8b6 : int) -> None: ...
     @overload
     def __init__(self,aGuid : Standard_GUID) -> None: ...
     @overload
-    def __init__(self,aGuid : GUID) -> None: ...
+    def __init__(self,aGuid : str) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,aGuid : str) -> None: ...
     pass
 class Standard_HandlerStatus():
     """
@@ -547,6 +549,7 @@ class Standard_HandlerStatus():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -604,6 +607,7 @@ class Standard_JsonKey():
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
     def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
     def __init__(self,value : int) -> None: ...
     def __int__(self) -> int: ...
     def __ne__(self,other : object) -> bool: ...
@@ -718,7 +722,7 @@ class Standard_MMgrOpt(Standard_MMgrRoot):
     @staticmethod
     def SetCallBackFunction_s(pFunc : Any) -> None: 
         """
-        SetCallBackFunction_s(pFunc: void (bool, void*, unsigned long, unsigned long)) -> None
+        SetCallBackFunction_s(pFunc: void __cdecl(bool,void * __ptr64,unsigned __int64,unsigned __int64)) -> None
 
         Set the callback function. You may pass 0 there to turn off the callback. The callback function, if set, will be automatically called from within Allocate and Free methods.
         """
@@ -1324,42 +1328,42 @@ def IsDigit(me : str) -> bool:
     None
     """
 @overload
-def IsEqual(Value1 : float,Value2 : float) -> bool:
+def IsEqual(One : int,Two : int) -> bool:
     """
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
     None
 
     Returns Standard_True if two strings are equal
 
     None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
     """
 @overload
-def IsEqual(theOne : int,theTwo : int) -> bool:
+def IsEqual(Value1 : float,Value2 : float) -> bool:
     pass
 @overload
-def IsEqual(theOne : str,theTwo : str) -> bool:
-    pass
-@overload
-def IsEqual(One : int,Two : int) -> bool:
+def IsEqual(One : capsule,Two : capsule) -> bool:
     pass
 @overload
 def IsEqual(One : str,Two : str) -> bool:
     pass
 @overload
-def IsEqual(One : capsule,Two : capsule) -> bool:
+def IsEqual(theOne : int,theTwo : int) -> bool:
+    pass
+@overload
+def IsEqual(theOne : str,theTwo : str) -> bool:
     pass
 def IsEven(Value : int) -> bool:
     """
@@ -1422,7 +1426,7 @@ def Max(Val1 : float,Val2 : float) -> float:
 def Max(Val1 : int,Val2 : int) -> int:
     pass
 @overload
-def Min(Val1 : int,Val2 : int) -> int:
+def Min(Val1 : float,Val2 : float) -> float:
     """
     None
 
@@ -1431,7 +1435,7 @@ def Min(Val1 : int,Val2 : int) -> int:
     None
     """
 @overload
-def Min(Val1 : float,Val2 : float) -> float:
+def Min(Val1 : int,Val2 : int) -> int:
     pass
 def Modulus(Value : int,Divisor : int) -> int:
     """
@@ -1558,14 +1562,14 @@ def Sqrt(arg0 : float) -> float:
     None
     """
 @overload
-def Square(Value : float) -> float:
+def Square(Value : int) -> int:
     """
     None
 
     None
     """
 @overload
-def Square(Value : int) -> int:
+def Square(Value : float) -> float:
     pass
 def Standard_ASSERT_DO_NOTHING() -> None:
     """

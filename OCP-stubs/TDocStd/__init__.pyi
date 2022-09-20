@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDF
-import OCP.TColStd
 import OCP.CDF
-import io
-import OCP.TCollection
-import OCP.NCollection
-import OCP.Message
-import OCP.PCDM
+import OCP.TDF
 import OCP.CDM
-import OCP.Resource
+import OCP.NCollection
+import OCP.PCDM
+import io
 import OCP.Standard
+import OCP.TColStd
+import OCP.Message
+import OCP.TCollection
+import OCP.Resource
 __all__  = [
 "TDocStd",
 "TDocStd_Application",
@@ -22,6 +22,7 @@ __all__  = [
 "TDocStd_CompoundDelta",
 "TDocStd_Context",
 "TDocStd_Document",
+"TDocStd_FormatVersion",
 "TDocStd_LabelIDMapDataMap",
 "TDocStd_Modified",
 "TDocStd_MultiTransactionManager",
@@ -32,7 +33,21 @@ __all__  = [
 "TDocStd_XLink",
 "TDocStd_XLinkIterator",
 "TDocStd_XLinkRoot",
-"TDocStd_XLinkTool"
+"TDocStd_XLinkTool",
+"TDocStd_FormatVersion_CURRENT",
+"TDocStd_FormatVersion_LOWER",
+"TDocStd_FormatVersion_UPPER",
+"TDocStd_FormatVersion_VERSION_10",
+"TDocStd_FormatVersion_VERSION_11",
+"TDocStd_FormatVersion_VERSION_12",
+"TDocStd_FormatVersion_VERSION_2",
+"TDocStd_FormatVersion_VERSION_3",
+"TDocStd_FormatVersion_VERSION_4",
+"TDocStd_FormatVersion_VERSION_5",
+"TDocStd_FormatVersion_VERSION_6",
+"TDocStd_FormatVersion_VERSION_7",
+"TDocStd_FormatVersion_VERSION_8",
+"TDocStd_FormatVersion_VERSION_9"
 ]
 class TDocStd():
     """
@@ -47,7 +62,7 @@ class TDocStd():
     pass
 class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.Standard.Standard_Transient):
     """
-    The abstract root class for all application classes. They are in charge of: - Creating documents - Storing documents and retrieving them - Initializing document views. To create a useful OCAF-based application, you derive a class from Application and implement the methods below. You will have to redefine the deferred (virtual) methods Formats, InitDocument, and Resources, and override others. The application is a container for a document, which in its turn is the container of the data framework made up of labels and attributes. Besides furnishing a container for documents, TDocStd_Application provides the following services for them: - Creation of new documents - Activation of documents in sessions of an application - Storage and retrieval of documents - Initialization of document views. Note: If a client needs detailed information concerning the events during the Open/Store operation, a MessageDriver based on Message_PrinterOStream may be used. In case of need client can implement his own version inheriting from Message_Printer class and add it to the Messanger. Also the trace level of messages can be tuned by setting trace level (SetTraceLevel (Gravity )) for the used Printer. By default, trace level is Message_Info, so that all messages are output.The abstract root class for all application classes. They are in charge of: - Creating documents - Storing documents and retrieving them - Initializing document views. To create a useful OCAF-based application, you derive a class from Application and implement the methods below. You will have to redefine the deferred (virtual) methods Formats, InitDocument, and Resources, and override others. The application is a container for a document, which in its turn is the container of the data framework made up of labels and attributes. Besides furnishing a container for documents, TDocStd_Application provides the following services for them: - Creation of new documents - Activation of documents in sessions of an application - Storage and retrieval of documents - Initialization of document views. Note: If a client needs detailed information concerning the events during the Open/Store operation, a MessageDriver based on Message_PrinterOStream may be used. In case of need client can implement his own version inheriting from Message_Printer class and add it to the Messanger. Also the trace level of messages can be tuned by setting trace level (SetTraceLevel (Gravity )) for the used Printer. By default, trace level is Message_Info, so that all messages are output.The abstract root class for all application classes. They are in charge of: - Creating documents - Storing documents and retrieving them - Initializing document views. To create a useful OCAF-based application, you derive a class from Application and implement the methods below. You will have to redefine the deferred (virtual) methods Formats, InitDocument, and Resources, and override others. The application is a container for a document, which in its turn is the container of the data framework made up of labels and attributes. Besides furnishing a container for documents, TDocStd_Application provides the following services for them: - Creation of new documents - Activation of documents in sessions of an application - Storage and retrieval of documents - Initialization of document views. Note: If a client needs detailed information concerning the events during the Open/Store operation, a MessageDriver based on Message_PrinterOStream may be used. In case of need client can implement his own version inheriting from Message_Printer class and add it to the Messanger. Also the trace level of messages can be tuned by setting trace level (SetTraceLevel (Gravity )) for the used Printer. By default, trace level is Message_Info, so that all messages are output.
+    The abstract root class for all application classes. They are in charge of: - Creating documents - Storing documents and retrieving them - Initializing document views. To create a useful OCAF-based application, you derive a class from Application and implement the methods below. You will have to redefine the deferred (virtual) methods Formats, InitDocument, and Resources, and override others. The application is a container for a document, which in its turn is the container of the data framework made up of labels and attributes. Besides furnishing a container for documents, TDocStd_Application provides the following services for them: - Creation of new documents - Activation of documents in sessions of an application - Storage and retrieval of documents - Initialization of document views. Note: If a client needs detailed information concerning the events during the Open/Store operation, a MessageDriver based on Message_PrinterOStream may be used. In case of need client can implement his own version inheriting from Message_Printer class and add it to the Messenger. Also the trace level of messages can be tuned by setting trace level (SetTraceLevel (Gravity )) for the used Printer. By default, trace level is Message_Info, so that all messages are output.The abstract root class for all application classes. They are in charge of: - Creating documents - Storing documents and retrieving them - Initializing document views. To create a useful OCAF-based application, you derive a class from Application and implement the methods below. You will have to redefine the deferred (virtual) methods Formats, InitDocument, and Resources, and override others. The application is a container for a document, which in its turn is the container of the data framework made up of labels and attributes. Besides furnishing a container for documents, TDocStd_Application provides the following services for them: - Creation of new documents - Activation of documents in sessions of an application - Storage and retrieval of documents - Initialization of document views. Note: If a client needs detailed information concerning the events during the Open/Store operation, a MessageDriver based on Message_PrinterOStream may be used. In case of need client can implement his own version inheriting from Message_Printer class and add it to the Messenger. Also the trace level of messages can be tuned by setting trace level (SetTraceLevel (Gravity )) for the used Printer. By default, trace level is Message_Info, so that all messages are output.The abstract root class for all application classes. They are in charge of: - Creating documents - Storing documents and retrieving them - Initializing document views. To create a useful OCAF-based application, you derive a class from Application and implement the methods below. You will have to redefine the deferred (virtual) methods Formats, InitDocument, and Resources, and override others. The application is a container for a document, which in its turn is the container of the data framework made up of labels and attributes. Besides furnishing a container for documents, TDocStd_Application provides the following services for them: - Creation of new documents - Activation of documents in sessions of an application - Storage and retrieval of documents - Initialization of document views. Note: If a client needs detailed information concerning the events during the Open/Store operation, a MessageDriver based on Message_PrinterOStream may be used. In case of need client can implement his own version inheriting from Message_Printer class and add it to the Messenger. Also the trace level of messages can be tuned by setting trace level (SetTraceLevel (Gravity )) for the used Printer. By default, trace level is Message_Info, so that all messages are output.
     """
     def BeginOfUpdate(self,aDocument : OCP.CDM.CDM_Document) -> None: 
         """
@@ -58,14 +73,14 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         None
         """
     @overload
-    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def CanRetrieve(self,theFolder : OCP.TCollection.TCollection_ExtendedString,theName : OCP.TCollection.TCollection_ExtendedString,theVersion : OCP.TCollection.TCollection_ExtendedString,theAppendMode : bool) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
         None
 
         None
         """
     @overload
-    def CanRetrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    def CanRetrieve(self,theFolder : OCP.TCollection.TCollection_ExtendedString,theName : OCP.TCollection.TCollection_ExtendedString,theAppendMode : bool) -> OCP.PCDM.PCDM_ReaderStatus: ...
     def Close(self,aDoc : TDocStd_Document) -> None: 
         """
         Close the given document. the document is not any more handled by the applicative session.
@@ -118,7 +133,7 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         """
         Increments the reference counter of this object
         """
-    def InitDocument(self,aDoc : TDocStd_Document) -> None: 
+    def InitDocument(self,aDoc : OCP.CDM.CDM_Document) -> None: 
         """
         Initialize the document aDoc for the applicative session. This virtual function is called by NewDocument and is to be redefined for each specific application. Modified flag (different of disk version) ============= to open/save a document =======================
         """
@@ -131,23 +146,23 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Returns an index for the document found in the path path in this applicative session. If the returned value is 0, the document is not present in the applicative session. This method can be used for the interactive part of an application. For instance, on a call to Open, the document to be opened may already be in memory. IsInSession checks to see if this is the case. Open can be made to depend on the value of the index returned: if IsInSession returns 0, the document is opened; if it returns another value, a message is displayed asking the user if he wants to override the version of the document in memory. Example: Standard_Integer insession = A->IsInSession(aDoc); if (insession > 0) { std::cout << "document " << insession << " is already in session" << std::endl; return 0; }
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def Load_s(aGUID : OCP.Standard.Standard_GUID) -> OCP.CDF.CDF_Application: 
         """
@@ -173,10 +188,15 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         """
         returns the number of documents handled by the current applicative session.
         """
-    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document) -> Any: 
+    @overload
+    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : OCP.CDM.CDM_Document) -> Any: 
         """
         Constructs the empty new document aDoc. This document will have the format format. If InitDocument is redefined for a specific application, the new document is handled by the applicative session.
+
+        A non-virtual method taking a TDocStd_Documment object as an input. Internally it calls a virtual method NewDocument() with CDM_Document object.
         """
+    @overload
+    def NewDocument(self,format : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document) -> Any: ...
     def OnAbortTransaction(self,theDoc : TDocStd_Document) -> None: 
         """
         Notification that is fired at each AbortTransaction event.
@@ -190,17 +210,25 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Notification that is fired at each OpenTransaction event.
         """
     @overload
-    def Open(self,path : OCP.TCollection.TCollection_ExtendedString,aDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
+    def Open(self,theIStream : io.BytesIO,theDoc : TDocStd_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: 
         """
-        Retrieves the document aDoc stored under the name aName in the directory directory. In order not to override a version of aDoc which is already in memory, this method can be made to depend on the value returned by IsInSession.
+        Retrieves the document from specified file. In order not to override a version of the document which is already in memory, this method can be made to depend on the value returned by IsInSession.
 
-        Retrieves aDoc from standard SEEKABLE stream theIStream. the stream should support SEEK fuctionality
+        Retrieves the document from specified file. In order not to override a version of the document which is already in memory, this method can be made to depend on the value returned by IsInSession.
+
+        Retrieves document from standard stream.
+
+        Retrieves document from standard stream.
         """
     @overload
+    def Open(self,thePath : OCP.TCollection.TCollection_ExtendedString,theDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    @overload
+    def Open(self,thePath : OCP.TCollection.TCollection_ExtendedString,theDoc : TDocStd_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
+    @overload
     def Open(self,theIStream : io.BytesIO,theDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_ReaderStatus: ...
-    def Read(self,theIStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
+    def Read(self,theIStream : io.BytesIO,theDocument : OCP.CDM.CDM_Document,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> Any: 
         """
-        Reads aDoc from standard SEEKABLE stream theIStream, the stream should support SEEK fuctionality
+        Reads theDocument from standard SEEKABLE stream theIStream, the stream should support SEEK functionality
         """
     def ReaderFromFormat(self,aFormat : OCP.TCollection.TCollection_ExtendedString) -> OCP.PCDM.PCDM_Reader: 
         """
@@ -219,40 +247,40 @@ class TDocStd_Application(OCP.CDF.CDF_Application, OCP.CDM.CDM_Application, OCP.
         Returns the name of the file containing the resources of this application, for support of legacy method of loading formats data from resource files.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: 
         """
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. The content of {aFolder}, {aName} and {aVersion} depends on the Database Manager system. If the DBMS is only based on the OS, {aFolder} is a directory and {aName} is the name of a file. In this case the use of the syntax with {aVersion} has no sense. For example:
 
         This method retrieves a document from the database. If the Document references other documents which have been updated, the latest version of these documents will be used if {UseStorageConfiguration} is Standard_True. -- If the DBMS is only based on the OS, this syntax should not be used.
         """
     @overload
-    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
+    def Retrieve(self,aFolder : OCP.TCollection.TCollection_ExtendedString,aName : OCP.TCollection.TCollection_ExtendedString,aVersion : OCP.TCollection.TCollection_ExtendedString,UseStorageConfiguration : bool=True,theFilter : OCP.PCDM.PCDM_ReaderFilter=None,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.CDM.CDM_Document: ...
     @overload
-    def Save(self,aDoc : TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
+    def Save(self,theDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save aDoc active document. Exceptions: Standard_NotImplemented if the document was not retrieved in the applicative session by using Open.
 
         Save the document overwriting the previous file
         """
     @overload
-    def Save(self,aDoc : TDocStd_Document,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def Save(self,theDoc : TDocStd_Document,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
     def SaveAs(self,theDoc : TDocStd_Document,theOStream : io.BytesIO,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: 
         """
         Save the active document in the file <name> in the path <path> ; o verwrites the file if it already exists.
 
-        Save theDoc to standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
+        Save theDoc to standard SEEKABLE stream theOStream. the stream should support SEEK functionality
 
         Save the active document in the file <name> in the path <path> . overwrite the file if it already exist.
 
-        Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK fuctionality
+        Save theDoc TO standard SEEKABLE stream theOStream. the stream should support SEEK functionality
         """
     @overload
-    def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    def SaveAs(self,theDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theStatusMessage : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
+    @overload
+    def SaveAs(self,theDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     @overload
     def SaveAs(self,theDoc : TDocStd_Document,theOStream : io.BytesIO,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
-    @overload
-    def SaveAs(self,aDoc : TDocStd_Document,path : OCP.TCollection.TCollection_ExtendedString,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.PCDM.PCDM_StoreStatus: ...
     def SetDefaultFolder(self,aFolder : str) -> bool: 
         """
         None
@@ -327,23 +355,23 @@ class TDocStd_ApplicationDelta(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def SetName(self,theName : OCP.TCollection.TCollection_ExtendedString) -> None: 
         """
         None
@@ -429,23 +457,23 @@ class TDocStd_CompoundDelta(OCP.TDF.TDF_Delta, OCP.Standard.Standard_Transient):
         Returns true if there is nothing to undo.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Labels(self,aLabelList : OCP.TDF.TDF_LabelList) -> None: 
         """
         Adds in <aLabelList> the labels of the attribute deltas. Caution: <aLabelList> is not cleared before use.
@@ -524,9 +552,9 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
         methods for the nested transaction mode
         """
-    def ChangeStorageFormatVersion(self,theVersion : int) -> None: 
+    def ChangeStorageFormatVersion(self,theVersion : TDocStd_FormatVersion) -> None: 
         """
-        Sets <theVersion> of the format to be used to store the document
+        Sets version of the format to be used to store the document
         """
     def ClearRedos(self) -> None: 
         """
@@ -546,7 +574,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
     def Comment(self) -> str: 
         """
-        returns the first of associated comments. By defaut the comment is an empty string.
+        Returns the first of associated comments. By default the comment is an empty string.
         """
     def Comments(self,aComments : OCP.TColStd.TColStd_SequenceOfExtendedString) -> None: 
         """
@@ -561,7 +589,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         Copies a reference to this document. This method avoid retrieval of referenced document. The arguments are the original document and a valid reference identifier Returns the local identifier.
         """
     @overload
-    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,anApplication : OCP.CDM.CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: 
+    def CreateReference(self,anOtherDocument : OCP.CDM.CDM_Document) -> int: 
         """
         Creates a reference from this document to {anOtherDocument}. Returns a reference identifier. This reference identifier is unique in the document and will not be used for the next references, even after the storing of the document. If there is already a reference between the two documents, the reference is not created, but its reference identifier is returned.
 
@@ -570,9 +598,14 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def CreateReference(self,anOtherDocument : OCP.CDM.CDM_Document) -> int: ...
-    @overload
     def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,anApplication : OCP.CDM.CDM_Application,aDocumentVersion : int,UseStorageConfiguration : bool) -> int: ...
+    @overload
+    def CreateReference(self,aMetaData : OCP.CDM.CDM_MetaData,aReferenceIdentifier : int,anApplication : OCP.CDM.CDM_Application,aToDocumentVersion : int,UseStorageConfiguration : bool) -> None: ...
+    @staticmethod
+    def CurrentStorageFormatVersion_s() -> TDocStd_FormatVersion: 
+        """
+        Returns current storage format version of the document.
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -657,7 +690,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
     def GetPath(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
-        returns the OS path of the file, in wich one <me> is saved. Raise an exception if <me> is not saved.
+        returns the OS path of the file, in which one <me> is saved. Raise an exception if <me> is not saved.
         """
     def GetRedos(self) -> OCP.TDF.TDF_DeltaList: 
         """
@@ -708,9 +741,9 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
     def IsChanged(self) -> bool: 
         """
-        returns True if document differs from the state of last saving. this method have to be called only wroking in the transaction mode
+        returns True if document differs from the state of last saving. this method have to be called only working in the transaction mode
 
-        returns True if document differs from the state of last saving. this method have to be called only wroking in the transaction mode
+        returns True if document differs from the state of last saving. this method have to be called only working in the transaction mode
         """
     def IsEmpty(self) -> bool: 
         """
@@ -721,23 +754,23 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         returns True if the To Document of the reference identified by aReferenceIdentifier is in session, False if it corresponds to a not yet retrieved document.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsModified(self) -> bool: 
         """
         returns true if the version is greater than the storage version
@@ -876,7 +909,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
     def RequestedName(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
-        determines under which the document is going to be store. By default the name of the document wil be -- used. If the document has no name its presentation will be used.
+        Determines under which the document is going to be store. By default the name of the document will be used. If the document has no name its presentation will be used.
         """
     def RequestedPreviousVersion(self) -> OCP.TCollection.TCollection_ExtendedString: 
         """
@@ -927,14 +960,14 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         Notify the label as modified, the Document becomes UnValid. returns True if <L> has been notified as modified.
         """
     @overload
-    def SetNestedTransactionMode(self,isAllowed : bool) -> None: 
+    def SetNestedTransactionMode(self,isAllowed : bool=True) -> None: 
         """
         Sets nested transaction mode if isAllowed == Standard_True
 
         Sets nested transaction mode if isAllowed == Standard_True
         """
     @overload
-    def SetNestedTransactionMode(self,isAllowed : bool=True) -> None: ...
+    def SetNestedTransactionMode(self,isAllowed : bool) -> None: ...
     def SetReferenceCounter(self,aReferenceCounter : int) -> None: 
         """
         None
@@ -979,7 +1012,7 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         """
         None
         """
-    def StorageFormatVersion(self) -> int: 
+    def StorageFormatVersion(self) -> TDocStd_FormatVersion: 
         """
         Returns version of the format to be used to store the document
         """
@@ -1039,6 +1072,70 @@ class TDocStd_Document(OCP.CDM.CDM_Document, OCP.Standard.Standard_Transient):
         None
         """
     pass
+class TDocStd_FormatVersion():
+    """
+    Storage format versions of OCAF documents in XML and binary file formats.
+
+    Members:
+
+      TDocStd_FormatVersion_VERSION_2
+
+      TDocStd_FormatVersion_VERSION_3
+
+      TDocStd_FormatVersion_VERSION_4
+
+      TDocStd_FormatVersion_VERSION_5
+
+      TDocStd_FormatVersion_VERSION_6
+
+      TDocStd_FormatVersion_VERSION_7
+
+      TDocStd_FormatVersion_VERSION_8
+
+      TDocStd_FormatVersion_VERSION_9
+
+      TDocStd_FormatVersion_VERSION_10
+
+      TDocStd_FormatVersion_VERSION_11
+
+      TDocStd_FormatVersion_VERSION_12
+
+      TDocStd_FormatVersion_CURRENT
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    TDocStd_FormatVersion_CURRENT: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>
+    TDocStd_FormatVersion_VERSION_10: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_10: 10>
+    TDocStd_FormatVersion_VERSION_11: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_11: 11>
+    TDocStd_FormatVersion_VERSION_12: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>
+    TDocStd_FormatVersion_VERSION_2: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_2: 2>
+    TDocStd_FormatVersion_VERSION_3: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_3: 3>
+    TDocStd_FormatVersion_VERSION_4: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_4: 4>
+    TDocStd_FormatVersion_VERSION_5: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_5: 5>
+    TDocStd_FormatVersion_VERSION_6: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_6: 6>
+    TDocStd_FormatVersion_VERSION_7: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_7: 7>
+    TDocStd_FormatVersion_VERSION_8: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_8: 8>
+    TDocStd_FormatVersion_VERSION_9: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_9: 9>
+    __entries: dict # value = {'TDocStd_FormatVersion_VERSION_2': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_2: 2>, None), 'TDocStd_FormatVersion_VERSION_3': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_3: 3>, None), 'TDocStd_FormatVersion_VERSION_4': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_4: 4>, None), 'TDocStd_FormatVersion_VERSION_5': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_5: 5>, None), 'TDocStd_FormatVersion_VERSION_6': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_6: 6>, None), 'TDocStd_FormatVersion_VERSION_7': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_7: 7>, None), 'TDocStd_FormatVersion_VERSION_8': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_8: 8>, None), 'TDocStd_FormatVersion_VERSION_9': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_9: 9>, None), 'TDocStd_FormatVersion_VERSION_10': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_10: 10>, None), 'TDocStd_FormatVersion_VERSION_11': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_11: 11>, None), 'TDocStd_FormatVersion_VERSION_12': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>, None), 'TDocStd_FormatVersion_CURRENT': (<TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>, None)}
+    __members__: dict # value = {'TDocStd_FormatVersion_VERSION_2': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_2: 2>, 'TDocStd_FormatVersion_VERSION_3': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_3: 3>, 'TDocStd_FormatVersion_VERSION_4': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_4: 4>, 'TDocStd_FormatVersion_VERSION_5': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_5: 5>, 'TDocStd_FormatVersion_VERSION_6': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_6: 6>, 'TDocStd_FormatVersion_VERSION_7': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_7: 7>, 'TDocStd_FormatVersion_VERSION_8': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_8: 8>, 'TDocStd_FormatVersion_VERSION_9': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_9: 9>, 'TDocStd_FormatVersion_VERSION_10': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_10: 10>, 'TDocStd_FormatVersion_VERSION_11': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_11: 11>, 'TDocStd_FormatVersion_VERSION_12': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>, 'TDocStd_FormatVersion_CURRENT': <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>}
+    pass
 class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
     """
     Purpose: The DataMap is a Map to store keys with associated Items. See Map from NCollection for a discussion about the number of buckets.
@@ -1085,14 +1182,14 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TDF.TDF_IDMap) -> bool: 
+    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_IDMap: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TDF.TDF_Label) -> OCP.TDF.TDF_IDMap: ...
+    def Find(self,theKey : OCP.TDF.TDF_Label,theValue : OCP.TDF.TDF_IDMap) -> bool: ...
     def IsBound(self,theKey : OCP.TDF.TDF_Label) -> bool: 
         """
         IsBound
@@ -1135,7 +1232,7 @@ class TDocStd_LabelIDMapDataMap(OCP.NCollection.NCollection_BaseMap):
     pass
 class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
-    Transient attribute wich register modified labels. This attribute is attached to root label.Transient attribute wich register modified labels. This attribute is attached to root label.Transient attribute wich register modified labels. This attribute is attached to root label.
+    Transient attribute which register modified labels. This attribute is attached to root label.Transient attribute which register modified labels. This attribute is attached to root label.Transient attribute which register modified labels. This attribute is attached to root label.
     """
     def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
         """
@@ -1263,11 +1360,11 @@ class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def Get(self) -> OCP.TDF.TDF_LabelMap: 
         """
@@ -1321,23 +1418,23 @@ class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1380,14 +1477,14 @@ class TDocStd_Modified(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1435,14 +1532,14 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
         Clears undos in the manager and in documents.
         """
     @overload
-    def CommitCommand(self) -> bool: 
+    def CommitCommand(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: 
         """
-        Commits transaction in all documents and fills the transaction manager with the documents that have been changed during the transaction. Returns True if new data has been added to myUndos. NOTE: All nested transactions in the documents will be commited.
+        Commits transaction in all documents and fills the transaction manager with the documents that have been changed during the transaction. Returns True if new data has been added to myUndos. NOTE: All nested transactions in the documents will be committed.
 
         Makes the same steps as the previous function but defines the name for transaction. Returns True if new data has been added to myUndos.
         """
     @overload
-    def CommitCommand(self,theName : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
+    def CommitCommand(self) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1498,23 +1595,23 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNestedTransactionMode(self) -> bool: 
         """
         Returns Standard_True if NestedTransaction mode is set. Methods for protection of changes outside transactions
@@ -1529,7 +1626,7 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
         """
     def OpenCommand(self) -> None: 
         """
-        Opens transaction in each document and sets the flag that transaction is opened. If there are already opened transactions in the documents, these transactions will be aborted before openning new ones.
+        Opens transaction in each document and sets the flag that transaction is opened. If there are already opened transactions in the documents, these transactions will be aborted before opening new ones.
         """
     def Redo(self) -> None: 
         """
@@ -1577,7 +1674,7 @@ class TDocStd_MultiTransactionManager(OCP.Standard.Standard_Transient):
     pass
 class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
-    This attribute located at the root label of the framework contains a back reference to the owner TDocStd_Document, providing acces to the document from any label. private class Owner;This attribute located at the root label of the framework contains a back reference to the owner TDocStd_Document, providing acces to the document from any label. private class Owner;This attribute located at the root label of the framework contains a back reference to the owner TDocStd_Document, providing acces to the document from any label. private class Owner;
+    This attribute located at the root label of the framework contains a back reference to the owner TDocStd_Document, providing access to the document from any label. private class Owner;This attribute located at the root label of the framework contains a back reference to the owner TDocStd_Document, providing access to the document from any label. private class Owner;This attribute located at the root label of the framework contains a back reference to the owner TDocStd_Document, providing access to the document from any label. private class Owner;
     """
     def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
         """
@@ -1682,11 +1779,11 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     def GetDocument(self) -> TDocStd_Document: 
         """
@@ -1731,23 +1828,23 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1794,14 +1891,14 @@ class TDocStd_Owner(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1913,14 +2010,14 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : TDocStd_ApplicationDelta) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1938,23 +2035,23 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: 
+    def Prepend(self,theItem : TDocStd_ApplicationDelta) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : TDocStd_ApplicationDelta) -> None: ...
+    def Prepend(self,theSeq : TDocStd_SequenceOfApplicationDelta) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1982,9 +2079,9 @@ class TDocStd_SequenceOfApplicationDelta(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TDocStd_SequenceOfApplicationDelta) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2038,14 +2135,14 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfDocument) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : TDocStd_Document) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : TDocStd_Document) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : TDocStd_SequenceOfDocument) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : TDocStd_SequenceOfDocument) -> None: 
         """
@@ -2116,9 +2213,9 @@ class TDocStd_SequenceOfDocument(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : TDocStd_SequenceOfDocument) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2156,7 +2253,7 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def BackupCopy(self) -> OCP.TDF.TDF_Attribute: 
         """
-        Returns a null handle. Raise allways for ,it is nonsense to use this method.
+        Returns a null handle. Raise always for it is nonsense to use this method.
         """
     def BeforeCommitTransaction(self) -> None: 
         """
@@ -2208,14 +2305,14 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Makes an AttributeDelta because <me> has been resumed.
         """
     @overload
-    def DocumentEntry(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def DocumentEntry(self,aDocEntry : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets the name aDocEntry for the external document in this external link attribute.
 
         Returns the contents of the document identified by aDocEntry. aDocEntry provides external data to this external link attribute.
         """
     @overload
-    def DocumentEntry(self,aDocEntry : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def DocumentEntry(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def Dump(self,anOS : io.BytesIO) -> io.BytesIO: 
         """
         Dumps the attribute on <aStream>.
@@ -2242,11 +2339,11 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -2282,23 +2379,23 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -2316,7 +2413,7 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def LabelEntry(self,aLabel : OCP.TDF.TDF_Label) -> None: 
+    def LabelEntry(self,aLabEntry : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets the label entry for this external link attribute with the label aLabel. aLabel pilots the importation of data from the document entry.
 
@@ -2325,7 +2422,7 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns the contents of the field <myLabelEntry>.
         """
     @overload
-    def LabelEntry(self,aLabEntry : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def LabelEntry(self,aLabel : OCP.TDF.TDF_Label) -> None: ...
     @overload
     def LabelEntry(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def NewEmpty(self) -> OCP.TDF.TDF_Attribute: 
@@ -2345,14 +2442,14 @@ class TDocStd_XLink(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Does nothing.
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(atLabel : OCP.TDF.TDF_Label) -> TDocStd_XLink: 
         """
@@ -2419,7 +2516,7 @@ class TDocStd_XLinkIterator():
     pass
 class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     """
-    This attribute is the root of all external references contained in a Data from TDF. Only one instance of this class is added to the TDF_Data root label. Starting from this attribute all the Reference are linked together, to be found easely.This attribute is the root of all external references contained in a Data from TDF. Only one instance of this class is added to the TDF_Data root label. Starting from this attribute all the Reference are linked together, to be found easely.This attribute is the root of all external references contained in a Data from TDF. Only one instance of this class is added to the TDF_Data root label. Starting from this attribute all the Reference are linked together, to be found easely.
+    This attribute is the root of all external references contained in a Data from TDF. Only one instance of this class is added to the TDF_Data root label. Starting from this attribute all the Reference are linked together, to be found easily.This attribute is the root of all external references contained in a Data from TDF. Only one instance of this class is added to the TDF_Data root label. Starting from this attribute all the Reference are linked together, to be found easily.This attribute is the root of all external references contained in a Data from TDF. Only one instance of this class is added to the TDF_Data root label. Starting from this attribute all the Reference are linked together, to be found easily.
     """
     def AddAttribute(self,other : OCP.TDF.TDF_Attribute) -> None: 
         """
@@ -2524,11 +2621,11 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     def ForgetAllAttributes(self,clearChildren : bool=True) -> None: 
         """
-        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mecanisms. Be carefull that if <me> will have a null label after this call
+        Forgets all the attributes attached to the label of <me>. Does it on the sub-labels if <clearChildren> is set to true. Of course, this method is compatible with Transaction & Delta mechanisms. Be careful that if <me> will have a null label after this call
         """
     def ForgetAttribute(self,aguid : OCP.Standard.Standard_GUID) -> bool: 
         """
-        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be carefull that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
+        Forgets the Attribute of GUID <aguid> associated to the label of <me>. Be careful that if <me> is the attribute of <guid>, <me> will have a null label after this call. If the attribute doesn't exist returns False. Otherwise returns True.
         """
     @staticmethod
     def GetID_s() -> OCP.Standard.Standard_GUID: 
@@ -2564,23 +2661,23 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -2614,14 +2711,14 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Does nothing.
         """
     @overload
-    def SetID(self) -> None: 
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
+    def SetID(self) -> None: ...
     @staticmethod
     def Set_s(aDF : OCP.TDF.TDF_Data) -> TDocStd_XLinkRoot: 
         """
@@ -2654,15 +2751,15 @@ class TDocStd_XLinkRoot(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
     pass
 class TDocStd_XLinkTool():
     """
-    This tool class is used to copy the content of source label under target label. Only child labels and attributes of source are copied. attributes located out of source scope are not copied by this algorithm. Depending of the called method an external reference is set in the the target document to registred the externallink. Provide services to set, update and perform external references. Warning1: Nothing is provided in this class about the opportunity to copy, set a link or update it. Such decisions must be under application control. Warning2: If the document manages shapes, use after copy TNaming::ChangeShapes(target,M) to make copy of shapes.
+    This tool class is used to copy the content of source label under target label. Only child labels and attributes of source are copied. attributes located out of source scope are not copied by this algorithm. Depending of the called method an external reference is set in the target document to registered the externallink. Provide services to set, update and perform external references. Warning1: Nothing is provided in this class about the opportunity to copy, set a link or update it. Such decisions must be under application control. Warning2: If the document manages shapes, use after copy TNaming::ChangeShapes(target,M) to make copy of shapes.
     """
     def Copy(self,intarget : OCP.TDF.TDF_Label,fromsource : OCP.TDF.TDF_Label) -> None: 
         """
-        Copy the content of <fromsource> under <intarget>. Noone link is registred. noone check is done. Example Handle(TDocStd_Document) DOC, XDOC; TDF_Label L, XL; TDocStd_XLinkTool xlinktool; xlinktool.Copy(L,XL); Exceptions: Standard_DomainError if the contents of fromsource are not entirely in the scope of this label, in other words, are not self-contained. !!! ==> Warning: If the document manages shapes use the next way: TDocStd_XLinkTool xlinktool; xlinktool.Copy(L,XL); TopTools_DataMapOfShapeShape M; TNaming::ChangeShapes(target,M);
+        Copy the content of <fromsource> under <intarget>. No link is registered. No check is done. Example Handle(TDocStd_Document) DOC, XDOC; TDF_Label L, XL; TDocStd_XLinkTool xlinktool; xlinktool.Copy(L,XL); Exceptions: Standard_DomainError if the contents of fromsource are not entirely in the scope of this label, in other words, are not self-contained. !!! ==> Warning: If the document manages shapes use the next way: TDocStd_XLinkTool xlinktool; xlinktool.Copy(L,XL); TopTools_DataMapOfShapeShape M; TNaming::ChangeShapes(target,M);
         """
     def CopyWithLink(self,intarget : OCP.TDF.TDF_Label,fromsource : OCP.TDF.TDF_Label) -> None: 
         """
-        Copies the content of the label <fromsource> to the label <intarget>. The link is registred with an XLink attribute by <intarget> label. if the content of <fromsource> is not self-contained, and/or <intarget> has already an XLink attribute, an exception is raised.
+        Copies the content of the label <fromsource> to the label <intarget>. The link is registered with an XLink attribute by <intarget> label. if the content of <fromsource> is not self-contained, and/or <intarget> has already an XLink attribute, an exception is raised.
         """
     def DataSet(self) -> OCP.TDF.TDF_DataSet: 
         """
@@ -2682,3 +2779,17 @@ class TDocStd_XLinkTool():
         """
     def __init__(self) -> None: ...
     pass
+TDocStd_FormatVersion_CURRENT: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>
+TDocStd_FormatVersion_LOWER = 2
+TDocStd_FormatVersion_UPPER = 12
+TDocStd_FormatVersion_VERSION_10: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_10: 10>
+TDocStd_FormatVersion_VERSION_11: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_11: 11>
+TDocStd_FormatVersion_VERSION_12: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_12: 12>
+TDocStd_FormatVersion_VERSION_2: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_2: 2>
+TDocStd_FormatVersion_VERSION_3: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_3: 3>
+TDocStd_FormatVersion_VERSION_4: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_4: 4>
+TDocStd_FormatVersion_VERSION_5: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_5: 5>
+TDocStd_FormatVersion_VERSION_6: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_6: 6>
+TDocStd_FormatVersion_VERSION_7: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_7: 7>
+TDocStd_FormatVersion_VERSION_8: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_8: 8>
+TDocStd_FormatVersion_VERSION_9: OCP.TDocStd.TDocStd_FormatVersion # value = <TDocStd_FormatVersion.TDocStd_FormatVersion_VERSION_9: 9>

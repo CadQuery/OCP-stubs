@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Interface
 import OCP.Standard
 import OCP.TColStd
+import OCP.Interface
 __all__  = [
 "IFGraph_AllConnected",
 "IFGraph_AllShared",
@@ -22,7 +22,7 @@ __all__  = [
 ]
 class IFGraph_AllConnected(OCP.Interface.Interface_GraphContent, OCP.Interface.Interface_EntityIterator):
     """
-    this class gives content of the CONNECTED COMPONANT(S) which include specific Entity(ies)
+    this class gives content of the CONNECTED COMPONENT(S) which include specific Entity(ies)
     """
     def AddItem(self,anentity : OCP.Standard.Standard_Transient) -> None: 
         """
@@ -50,17 +50,17 @@ class IFGraph_AllConnected(OCP.Interface.Interface_GraphContent, OCP.Interface.I
         """
     def GetFromEntity(self,ent : OCP.Standard.Standard_Transient) -> None: 
         """
-        adds an entity and its Connected ones to the list (allows to cumulate all Entities Connected by some ones) Note that if "ent" is in the already computed list,, no entity will be added, but if "ent" is not already in the list, a new Connected Componant will be cumulated
+        adds an entity and its Connected ones to the list (allows to cumulate all Entities Connected by some ones) Note that if "ent" is in the already computed list,, no entity will be added, but if "ent" is not already in the list, a new Connected Component will be cumulated
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: 
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: ...
     def GetOneItem(self,anentity : OCP.Standard.Standard_Transient) -> None: 
         """
         same as AddItem (kept for compatibility)
@@ -87,7 +87,7 @@ class IFGraph_AllConnected(OCP.Interface.Interface_GraphContent, OCP.Interface.I
         """
     def Result(self) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SelectType(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -106,9 +106,9 @@ class IFGraph_AllConnected(OCP.Interface.Interface_GraphContent, OCP.Interface.I
         Returns the current Entity iterated, to be used by Interface tools
         """
     @overload
-    def __init__(self,agraph : OCP.Interface.Interface_Graph,ent : OCP.Standard.Standard_Transient) -> None: ...
-    @overload
     def __init__(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    @overload
+    def __init__(self,agraph : OCP.Interface.Interface_Graph,ent : OCP.Standard.Standard_Transient) -> None: ...
     pass
 class IFGraph_AllShared(OCP.Interface.Interface_GraphContent, OCP.Interface.Interface_EntityIterator):
     """
@@ -143,14 +143,14 @@ class IFGraph_AllShared(OCP.Interface.Interface_GraphContent, OCP.Interface.Inte
         adds an entity and its shared ones to the list (allows to cumulate all Entities shared by some ones)
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: 
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: ...
     def GetFromIter(self,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         Adds Entities from an EntityIterator and all their shared ones at any level
@@ -181,7 +181,7 @@ class IFGraph_AllShared(OCP.Interface.Interface_GraphContent, OCP.Interface.Inte
         """
     def Result(self) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SelectType(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -200,13 +200,13 @@ class IFGraph_AllShared(OCP.Interface.Interface_GraphContent, OCP.Interface.Inte
         Returns the current Entity iterated, to be used by Interface tools
         """
     @overload
-    def __init__(self,agraph : OCP.Interface.Interface_Graph,ent : OCP.Standard.Standard_Transient) -> None: ...
-    @overload
     def __init__(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    @overload
+    def __init__(self,agraph : OCP.Interface.Interface_Graph,ent : OCP.Standard.Standard_Transient) -> None: ...
     pass
 class IFGraph_Articulations(OCP.Interface.Interface_GraphContent, OCP.Interface.Interface_EntityIterator):
     """
-    this class gives entities which are Articulation points in a whole Model or in a sub-part An Articulation Point divides the graph in two (or more) disconnected sub-graphs Identifying Articulation Points allows improving efficiency of spliting a set of Entities into sub-sets
+    this class gives entities which are Articulation points in a whole Model or in a sub-part An Articulation Point divides the graph in two (or more) disconnected sub-graphs Identifying Articulation Points allows improving efficiency of splitting a set of Entities into sub-sets
     """
     def AddItem(self,anentity : OCP.Standard.Standard_Transient) -> None: 
         """
@@ -237,14 +237,14 @@ class IFGraph_Articulations(OCP.Interface.Interface_GraphContent, OCP.Interface.
         adds an entity and its shared ones to the list
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: 
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: ...
     def GetFromIter(self,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         adds a list of entities (as an iterator)
@@ -275,7 +275,7 @@ class IFGraph_Articulations(OCP.Interface.Interface_GraphContent, OCP.Interface.
         """
     def Result(self) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SelectType(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -336,14 +336,14 @@ class IFGraph_Compare(OCP.Interface.Interface_GraphContent, OCP.Interface.Interf
         adds an entity and its shared ones to the list : first True means adds to the first sub-list, else to the 2nd
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: 
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: ...
     def GetFromIter(self,iter : OCP.Interface.Interface_EntityIterator,first : bool) -> None: 
         """
         adds a list of entities (as an iterator) as such, that is, their shared entities are not considered (use AllShared to have them) first True means adds to the first sub-list, else to the 2nd
@@ -386,7 +386,7 @@ class IFGraph_Compare(OCP.Interface.Interface_GraphContent, OCP.Interface.Interf
         """
     def Result(self) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SecondOnly(self) -> OCP.Interface.Interface_EntityIterator: 
         """
@@ -503,9 +503,9 @@ class IFGraph_SubPartsIterator():
         Sets iteration to its beginning; calls Evaluate
         """
     @overload
-    def __init__(self,other : IFGraph_SubPartsIterator) -> None: ...
-    @overload
     def __init__(self,agraph : OCP.Interface.Interface_Graph,whole : bool) -> None: ...
+    @overload
+    def __init__(self,other : IFGraph_SubPartsIterator) -> None: ...
     pass
 class IFGraph_Cumulate(OCP.Interface.Interface_GraphContent, OCP.Interface.Interface_EntityIterator):
     """
@@ -544,14 +544,14 @@ class IFGraph_Cumulate(OCP.Interface.Interface_GraphContent, OCP.Interface.Inter
         adds an entity and its shared ones to the list
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: 
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: ...
     def GetFromIter(self,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         adds a list of entities (as an iterator) as such, that is, without their shared entities (use AllShared to have them)
@@ -598,7 +598,7 @@ class IFGraph_Cumulate(OCP.Interface.Interface_GraphContent, OCP.Interface.Inter
         """
     def Result(self) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SelectType(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -620,7 +620,7 @@ class IFGraph_Cumulate(OCP.Interface.Interface_GraphContent, OCP.Interface.Inter
     pass
 class IFGraph_Cycles(IFGraph_SubPartsIterator):
     """
-    determines strong componants in a graph which are Cycles
+    determines strong components in a graph which are Cycles
     """
     def AddPart(self) -> None: 
         """
@@ -711,9 +711,9 @@ class IFGraph_Cycles(IFGraph_SubPartsIterator):
         Sets iteration to its beginning; calls Evaluate
         """
     @overload
-    def __init__(self,agraph : OCP.Interface.Interface_Graph,whole : bool) -> None: ...
-    @overload
     def __init__(self,subparts : IFGraph_StrongComponants) -> None: ...
+    @overload
+    def __init__(self,agraph : OCP.Interface.Interface_Graph,whole : bool) -> None: ...
     pass
 class IFGraph_ExternalSources(OCP.Interface.Interface_GraphContent, OCP.Interface.Interface_EntityIterator):
     """
@@ -748,14 +748,14 @@ class IFGraph_ExternalSources(OCP.Interface.Interface_GraphContent, OCP.Interfac
         adds an entity and its shared ones to the list
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: 
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: 
         """
         Gets all Entities designated by a Graph (once created), adds them to those already recorded
 
         Gets entities from a graph which have a specific Status value (one created), adds them to those already recorded
         """
     @overload
-    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph) -> None: ...
+    def GetFromGraph(self,agraph : OCP.Interface.Interface_Graph,stat : int) -> None: ...
     def GetFromIter(self,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         adds a list of entities (as an iterator) with shared ones
@@ -790,7 +790,7 @@ class IFGraph_ExternalSources(OCP.Interface.Interface_GraphContent, OCP.Interfac
         """
     def Result(self) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), whitout way for a sub-class
+        Returns Result under the exact form of an EntityIterator : Can be used when EntityIterator itself is required (as a returned value for instance), without way for a sub-class
         """
     def SelectType(self,atype : OCP.Standard.Standard_Type,keep : bool) -> None: 
         """
@@ -812,7 +812,7 @@ class IFGraph_ExternalSources(OCP.Interface.Interface_GraphContent, OCP.Interfac
     pass
 class IFGraph_StrongComponants(IFGraph_SubPartsIterator):
     """
-    determines strong componants of a graph, that is isolated entities (single componants) or loops
+    determines strong components of a graph, that is isolated entities (single components) or loops
     """
     def AddPart(self) -> None: 
         """
@@ -906,7 +906,7 @@ class IFGraph_StrongComponants(IFGraph_SubPartsIterator):
     pass
 class IFGraph_SCRoots(IFGraph_StrongComponants, IFGraph_SubPartsIterator):
     """
-    determines strong componants in a graph which are Roots
+    determines strong components in a graph which are Roots
     """
     def AddPart(self) -> None: 
         """
@@ -997,13 +997,13 @@ class IFGraph_SCRoots(IFGraph_StrongComponants, IFGraph_SubPartsIterator):
         Sets iteration to its beginning; calls Evaluate
         """
     @overload
-    def __init__(self,subparts : IFGraph_StrongComponants) -> None: ...
-    @overload
     def __init__(self,agraph : OCP.Interface.Interface_Graph,whole : bool) -> None: ...
+    @overload
+    def __init__(self,subparts : IFGraph_StrongComponants) -> None: ...
     pass
 class IFGraph_ConnectedComponants(IFGraph_SubPartsIterator):
     """
-    determines Connected Componants in a Graph. They define disjoined sets of Entities
+    determines Connected Components in a Graph. They define disjoined sets of Entities.
     """
     def AddPart(self) -> None: 
         """

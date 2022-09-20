@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import OCP.TCollection
-import io
 import OCP.IGESData
+import OCP.IFGraph
+import io
+import OCP.Standard
 import OCP.IFSelect
 import OCP.Interface
-import OCP.Standard
-import OCP.IFGraph
+import OCP.TCollection
+import OCP.TColStd
 __all__  = [
 "IGESSelect",
 "IGESSelect_Activator",
@@ -73,7 +73,7 @@ class IGESSelect():
     @staticmethod
     def WhatIges_s(ent : OCP.IGESData.IGESData_IGESEntity,G : OCP.Interface.Interface_Graph,sup : OCP.IGESData.IGESData_IGESEntity,index : int) -> int: 
         """
-        Gives a quick analysis of an IGES Entity in the context of a model (i.e. a File) described by a Graph. Returned values are : : the most meaningfull super entity, if any (else Null) <index> : meaningfull index relating to super entity, if any <returned> : a status which helps exploitation of , by giving a case (normally, types of <ent> and should suffice to known the case)
+        Gives a quick analysis of an IGES Entity in the context of a model (i.e. a File) described by a Graph. Returned values are : : the most meaningful super entity, if any (else Null) <index> : meaningful index relating to super entity, if any <returned> : a status which helps exploitation of , by giving a case (normally, types of <ent> and should suffice to known the case)
         """
     def __init__(self) -> None: ...
     pass
@@ -136,23 +136,23 @@ class IGESSelect_Activator(OCP.IFSelect.IFSelect_Activator, OCP.Standard.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @staticmethod
     def Mode_s(command : str) -> int: 
         """
@@ -215,30 +215,30 @@ class IGESSelect_FileModifier(OCP.IFSelect.IFSelect_GeneralModifier, OCP.Standar
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a short text which defines the operation performed
@@ -309,30 +309,30 @@ class IGESSelect_ModelModifier(OCP.IFSelect.IFSelect_Modifier, OCP.IFSelect.IFSe
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a short text which defines the operation performed
@@ -414,30 +414,30 @@ class IGESSelect_AutoCorrect(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_Mod
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Auto-correction of IGES Entities"
@@ -528,30 +528,30 @@ class IGESSelect_ChangeLevelList(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which begins by "Changes Level Lists containing <old>", or "Changes all Level Lists in D.E.", and ends by " to Number <new>" or " to Number = first value in List"
@@ -654,30 +654,30 @@ class IGESSelect_ChangeLevelNumber(IGESSelect_ModelModifier, OCP.IFSelect.IFSele
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Changes Level Number <old> to <new>" , or "Changes all Levels Numbers positive and zero to <new>"
@@ -776,30 +776,30 @@ class IGESSelect_ComputeStatus(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_M
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Compute Subordinate Status and Use Flag"
@@ -882,7 +882,7 @@ class IGESSelect_CounterOfLevelNumber(OCP.IFSelect.IFSelect_SignCounter, OCP.IFS
         """
     def AddSign(self,ent : OCP.Standard.Standard_Transient,model : OCP.Interface.Interface_InterfaceModel) -> None: 
         """
-        Adds an entity by considering its lrvrl number(s) A level is added both in numeric and alphanumeric form, i.e. LevelList gives "LEVEL LIST", others (no level or positive level) displays level number on 7 digits (C : %7d) Remark : an entity attached to a Level List is added for " LEVEL LIST", and for each of its constituant levels
+        Adds an entity by considering its lrvrl number(s) A level is added both in numeric and alphanumeric form, i.e. LevelList gives "LEVEL LIST", others (no level or positive level) displays level number on 7 digits (C : %7d) Remark : an entity attached to a Level List is added for " LEVEL LIST", and for each of its constituent levels
         """
     def AddWithGraph(self,list : OCP.TColStd.TColStd_HSequenceOfTransient,graph : OCP.Interface.Interface_Graph) -> None: 
         """
@@ -890,7 +890,7 @@ class IGESSelect_CounterOfLevelNumber(OCP.IFSelect.IFSelect_SignCounter, OCP.IFS
         """
     def Clear(self) -> None: 
         """
-        Resets already memorized informations : also numeric data
+        Resets already memorized information : also numeric data
         """
     def ComputeSelected(self,G : OCP.Interface.Interface_Graph,forced : bool=False) -> bool: 
         """
@@ -932,28 +932,24 @@ class IGESSelect_CounterOfLevelNumber(OCP.IFSelect.IFSelect_SignCounter, OCP.IFS
         """
         Increments the reference counter of this object
         """
-    def Init(self,name : str,count : Any,list : Any,nbnuls : int) -> None: 
-        """
-        Aknowledges the list in once. Name identifies the Signature
-        """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def LastValue(self) -> str: 
         """
         Returns the last value recorded by Add (only if SignMode set) Cleared by Clear or Init
@@ -1020,7 +1016,7 @@ class IGESSelect_CounterOfLevelNumber(OCP.IFSelect.IFSelect_SignCounter, OCP.IFS
         """
     def SetSelection(self,sel : OCP.IFSelect.IFSelect_Selection) -> None: 
         """
-        Sets a Selection as input : this causes content to be cleared then the Selection to be ready to compute (but not immediatly)
+        Sets a Selection as input : this causes content to be cleared then the Selection to be ready to compute (but not immediately)
         """
     def Sign(self,ent : OCP.Standard.Standard_Transient,model : OCP.Interface.Interface_InterfaceModel) -> OCP.TCollection.TCollection_HAsciiString: 
         """
@@ -1099,23 +1095,23 @@ class IGESSelect_DispPerDrawing(OCP.IFSelect.IFSelect_Dispatch, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns as Label, "One File per Drawing"
@@ -1206,23 +1202,23 @@ class IGESSelect_DispPerSingleView(OCP.IFSelect.IFSelect_Dispatch, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns as Label, "One File per single View or Drawing Frame"
@@ -1302,23 +1298,23 @@ class IGESSelect_Dumper(OCP.IFSelect.IFSelect_SessionDumper, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Next(self) -> OCP.IFSelect.IFSelect_SessionDumper: 
         """
         Returns the Next SesionDumper in the Library. Returns a Null Handle at the End.
@@ -1384,23 +1380,23 @@ class IGESSelect_EditDirPart(OCP.IFSelect.IFSelect_Editor, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsList(self,num : int) -> bool: 
         """
         Tells if a parameter is a list
@@ -1530,23 +1526,23 @@ class IGESSelect_EditHeader(OCP.IFSelect.IFSelect_Editor, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def IsList(self,num : int) -> bool: 
         """
         Tells if a parameter is a list
@@ -1681,30 +1677,30 @@ class IGESSelect_AddFileComment(IGESSelect_FileModifier, OCP.IFSelect.IFSelect_G
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns specific Label, which is "Add <nn> Comment Lines (Start Section)"
@@ -1795,30 +1791,30 @@ class IGESSelect_FloatFormat(IGESSelect_FileModifier, OCP.IFSelect.IFSelect_Gene
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns specific Label : for instance, "Float Format [ZeroSuppress] %E [, in range R1-R2 %f]"
@@ -1849,7 +1845,7 @@ class IGESSelect_FloatFormat(IGESSelect_FileModifier, OCP.IFSelect.IFSelect_Gene
         """
     def SetFormat(self,format : str='%E') -> None: 
         """
-        Sets Main Format to a new value Remark : SetFormat, SetZeroSuppress and SetFormatForRange are independant
+        Sets Main Format to a new value Remark : SetFormat, SetZeroSuppress and SetFormatForRange are independent
         """
     def SetFormatForRange(self,format : str='%f',Rmin : float=0.1,Rmax : float=1000.0) -> None: 
         """
@@ -2055,30 +2051,30 @@ class IGESSelect_AddGroup(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_Modifi
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Add Group"
@@ -2161,30 +2157,30 @@ class IGESSelect_RebuildDrawings(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Rebuild Drawings"
@@ -2239,7 +2235,7 @@ class IGESSelect_RebuildDrawings(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect
     pass
 class IGESSelect_RebuildGroups(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_Modifier, OCP.IFSelect.IFSelect_GeneralModifier, OCP.Standard.Standard_Transient):
     """
-    Rebuilds Groups which were bypassed to produce new models. If a set of entities, all put into a same IGESModel, were part of a same Group in the starting Model, this Modifier rebuilds the original group, but only with the transferred entities. The distinctions (Ordered or not, "WhithoutBackP" or not) are renewed, also the name of the group.Rebuilds Groups which were bypassed to produce new models. If a set of entities, all put into a same IGESModel, were part of a same Group in the starting Model, this Modifier rebuilds the original group, but only with the transferred entities. The distinctions (Ordered or not, "WhithoutBackP" or not) are renewed, also the name of the group.Rebuilds Groups which were bypassed to produce new models. If a set of entities, all put into a same IGESModel, were part of a same Group in the starting Model, this Modifier rebuilds the original group, but only with the transferred entities. The distinctions (Ordered or not, "WhithoutBackP" or not) are renewed, also the name of the group.
+    Rebuilds Groups which were bypassed to produce new models. If a set of entities, all put into a same IGESModel, were part of a same Group in the starting Model, this Modifier rebuilds the original group, but only with the transferred entities. The distinctions (Ordered or not, "WithoutBackP" or not) are renewed, also the name of the group.Rebuilds Groups which were bypassed to produce new models. If a set of entities, all put into a same IGESModel, were part of a same Group in the starting Model, this Modifier rebuilds the original group, but only with the transferred entities. The distinctions (Ordered or not, "WithoutBackP" or not) are renewed, also the name of the group.Rebuilds Groups which were bypassed to produce new models. If a set of entities, all put into a same IGESModel, were part of a same Group in the starting Model, this Modifier rebuilds the original group, but only with the transferred entities. The distinctions (Ordered or not, "WithoutBackP" or not) are renewed, also the name of the group.
     """
     def Applies(self,disp : OCP.IFSelect.IFSelect_Dispatch) -> bool: 
         """
@@ -2267,30 +2263,30 @@ class IGESSelect_RebuildGroups(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_M
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Rebuild Groups"
@@ -2373,30 +2369,30 @@ class IGESSelect_RemoveCurves(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_Mo
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Remove Curves UV on Face" or "Remove Curves 3D on Face"
@@ -2510,23 +2506,23 @@ class IGESSelect_SelectBasicGeom(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSele
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "(Recursive)" or "(Level nn)" plus specific criterium returned by ExploreLabel (see below)
@@ -2554,7 +2550,7 @@ class IGESSelect_SelectBasicGeom(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSele
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self,mode : int) -> None: ...
     @staticmethod
@@ -2629,23 +2625,23 @@ class IGESSelect_SelectBypassGroup(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSe
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "(Recursive)" or "(Level nn)" plus specific criterium returned by ExploreLabel (see below)
@@ -2668,7 +2664,7 @@ class IGESSelect_SelectBypassGroup(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSe
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self,level : int=0) -> None: ...
     @staticmethod
@@ -2743,23 +2739,23 @@ class IGESSelect_SelectBypassSubfigure(OCP.IFSelect.IFSelect_SelectExplore, OCP.
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "(Recursive)" or "(Level nn)" plus specific criterium returned by ExploreLabel (see below)
@@ -2782,7 +2778,7 @@ class IGESSelect_SelectBypassSubfigure(OCP.IFSelect.IFSelect_SelectExplore, OCP.
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self,level : int=0) -> None: ...
     @staticmethod
@@ -2849,23 +2845,23 @@ class IGESSelect_SelectDrawingFrom(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IFSel
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the label, with is "Drawings attached"
@@ -2884,7 +2880,7 @@ class IGESSelect_SelectDrawingFrom(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IFSel
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -2959,23 +2955,23 @@ class IGESSelect_SelectFaces(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelect.I
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "(Recursive)" or "(Level nn)" plus specific criterium returned by ExploreLabel (see below)
@@ -2998,7 +2994,7 @@ class IGESSelect_SelectFaces(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelect.I
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3065,23 +3061,23 @@ class IGESSelect_SelectFromDrawing(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IFSel
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the label, with is "Entities attached to Drawing"
@@ -3100,7 +3096,7 @@ class IGESSelect_SelectFromDrawing(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IFSel
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3167,23 +3163,23 @@ class IGESSelect_SelectFromSingleView(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IF
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the label, with is "Entities attached to single View"
@@ -3202,7 +3198,7 @@ class IGESSelect_SelectFromSingleView(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IF
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3277,23 +3273,23 @@ class IGESSelect_SelectLevelNumber(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSe
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "Picked" or "Removed", plus the specific criterium returned by ExtractLabel (see below)
@@ -3332,7 +3328,7 @@ class IGESSelect_SelectLevelNumber(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSe
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3407,23 +3403,23 @@ class IGESSelect_SelectName(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSelect.IF
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "Picked" or "Removed", plus the specific criterium returned by ExtractLabel (see below)
@@ -3462,7 +3458,7 @@ class IGESSelect_SelectName(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSelect.IF
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3502,7 +3498,7 @@ class IGESSelect_SelectPCurves(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelect
         """
     def Explore(self,level : int,ent : OCP.Standard.Standard_Transient,G : OCP.Interface.Interface_Graph,explored : OCP.Interface.Interface_EntityIterator) -> bool: 
         """
-        Explores an entity, to take its contained PCurves An independant curve is IGNORED : only faces are explored
+        Explores an entity, to take its contained PCurves An independent curve is IGNORED : only faces are explored
         """
     def ExploreLabel(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -3537,23 +3533,23 @@ class IGESSelect_SelectPCurves(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelect
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "(Recursive)" or "(Level nn)" plus specific criterium returned by ExploreLabel (see below)
@@ -3576,7 +3572,7 @@ class IGESSelect_SelectPCurves(OCP.IFSelect.IFSelect_SelectExplore, OCP.IFSelect
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self,basic : bool) -> None: ...
     @staticmethod
@@ -3643,23 +3639,23 @@ class IGESSelect_SelectSingleViewFrom(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IF
         Returns the Result determined by Input Selection, as Unique if Input Selection is not defined, returns an empty list.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the label, with is "Single Views attached"
@@ -3678,7 +3674,7 @@ class IGESSelect_SelectSingleViewFrom(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IF
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3694,7 +3690,7 @@ class IGESSelect_SelectSingleViewFrom(OCP.IFSelect.IFSelect_SelectDeduct, OCP.IF
     pass
 class IGESSelect_SelectSubordinate(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSelect.IFSelect_SelectDeduct, OCP.IFSelect.IFSelect_Selection, OCP.Standard.Standard_Transient):
     """
-    This selections uses Subordinate Status as sort criterium It is an integer number which can be : 0 Independant 1 Physically Dependant 2 Logically Dependant 3 Both (recorded) + to sort : 4 : 1 or 3 -> at least Physically 5 : 2 or 3 -> at least Logically 6 : 1 or 2 or 3 -> any kind of dependance (corresponds to 0 reversed)This selections uses Subordinate Status as sort criterium It is an integer number which can be : 0 Independant 1 Physically Dependant 2 Logically Dependant 3 Both (recorded) + to sort : 4 : 1 or 3 -> at least Physically 5 : 2 or 3 -> at least Logically 6 : 1 or 2 or 3 -> any kind of dependance (corresponds to 0 reversed)This selections uses Subordinate Status as sort criterium It is an integer number which can be : 0 Independant 1 Physically Dependant 2 Logically Dependant 3 Both (recorded) + to sort : 4 : 1 or 3 -> at least Physically 5 : 2 or 3 -> at least Logically 6 : 1 or 2 or 3 -> any kind of dependance (corresponds to 0 reversed)
+    This selections uses Subordinate Status as sort criterium It is an integer number which can be : 0 Independent 1 Physically Dependent 2 Logically Dependent 3 Both (recorded) + to sort : 4 : 1 or 3 -> at least Physically 5 : 2 or 3 -> at least Logically 6 : 1 or 2 or 3 -> any kind of dependence (corresponds to 0 reversed)This selections uses Subordinate Status as sort criterium It is an integer number which can be : 0 Independent 1 Physically Dependent 2 Logically Dependent 3 Both (recorded) + to sort : 4 : 1 or 3 -> at least Physically 5 : 2 or 3 -> at least Logically 6 : 1 or 2 or 3 -> any kind of dependence (corresponds to 0 reversed)This selections uses Subordinate Status as sort criterium It is an integer number which can be : 0 Independent 1 Physically Dependent 2 Logically Dependent 3 Both (recorded) + to sort : 4 : 1 or 3 -> at least Physically 5 : 2 or 3 -> at least Logically 6 : 1 or 2 or 3 -> any kind of dependence (corresponds to 0 reversed)
     """
     def Alternate(self) -> OCP.IFSelect.IFSelect_SelectPointed: 
         """
@@ -3718,7 +3714,7 @@ class IGESSelect_SelectSubordinate(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSe
         """
     def ExtractLabel(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
-        Returns the Selection criterium : "IGES Entity, Independant" etc...
+        Returns the Selection criterium : "IGES Entity, Independent" etc...
         """
     def FillIterator(self,iter : OCP.IFSelect.IFSelect_SelectionIterator) -> None: 
         """
@@ -3753,23 +3749,23 @@ class IGESSelect_SelectSubordinate(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSe
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "Picked" or "Removed", plus the specific criterium returned by ExtractLabel (see below)
@@ -3804,7 +3800,7 @@ class IGESSelect_SelectSubordinate(OCP.IFSelect.IFSelect_SelectExtract, OCP.IFSe
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self,status : int) -> None: ...
     @staticmethod
@@ -3879,23 +3875,23 @@ class IGESSelect_SelectVisibleStatus(OCP.IFSelect.IFSelect_SelectExtract, OCP.IF
         Returns True if Sort criterium is Direct, False if Reverse
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text saying "Picked" or "Removed", plus the specific criterium returned by ExtractLabel (see below)
@@ -3926,7 +3922,7 @@ class IGESSelect_SelectVisibleStatus(OCP.IFSelect.IFSelect_SelectExtract, OCP.IF
         """
     def UniqueResult(self,G : OCP.Interface.Interface_Graph) -> OCP.Interface.Interface_EntityIterator: 
         """
-        Returns the list of selected entities, each of them beeing unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
+        Returns the list of selected entities, each of them being unique. Default definition works from RootResult. According HasUniqueResult, UniqueResult returns directly RootResult, or build a Unique Result from it with a Graph.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -3974,30 +3970,30 @@ class IGESSelect_SetGlobalParameter(IGESSelect_ModelModifier, OCP.IFSelect.IFSel
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Sets Global Parameter <numpar> to <new value>"
@@ -4088,30 +4084,30 @@ class IGESSelect_SetLabel(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_Modifi
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Clear Short Label" or "Set Label to DE" With possible additional information " (enforced)"
@@ -4194,30 +4190,30 @@ class IGESSelect_SetVersion5(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_Mod
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Update IGES Version to 5.1"
@@ -4512,23 +4508,23 @@ class IGESSelect_SplineToBSpline(OCP.IFSelect.IFSelect_Transformer, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which defines the way a Transformer works : "Conversion Spline to BSpline" and as opted, " trying to upgrade continuity"
@@ -4591,30 +4587,30 @@ class IGESSelect_UpdateCreationDate(IGESSelect_ModelModifier, OCP.IFSelect.IFSel
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Update IGES Header Creation Date"
@@ -4697,30 +4693,30 @@ class IGESSelect_UpdateFileName(IGESSelect_ModelModifier, OCP.IFSelect.IFSelect_
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Updates IGES File Name to new current one"
@@ -4803,30 +4799,30 @@ class IGESSelect_UpdateLastChange(IGESSelect_ModelModifier, OCP.IFSelect.IFSelec
         """
     def HasSelection(self) -> bool: 
         """
-        Returns True if a Selection is set as an additionnal criterium
+        Returns True if a Selection is set as an additional criterium
         """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def Label(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a text which is "Update IGES Header Last Change Date"
@@ -4924,23 +4920,23 @@ class IGESSelect_ViewSorter(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NbEntities(self) -> int: 
         """
         Returns the count of already recorded
@@ -5031,23 +5027,23 @@ class IGESSelect_WorkLibrary(OCP.IFSelect.IFSelect_WorkLibrary, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def ReadFile(self,name : str,model : OCP.Interface.Interface_InterfaceModel,protocol : OCP.Interface.Interface_Protocol) -> int: 
         """
         Reads a IGES File and returns a IGES Model (into <mod>), or lets <mod> "Null" in case of Error Returns 0 if OK, 1 if Read Error, -1 if File not opened

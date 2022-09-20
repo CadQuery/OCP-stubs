@@ -5,18 +5,18 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TopTools
-import OCP.Message
-import OCP.BRepTools
 import OCP.GeomAbs
-import OCP.Geom
+import OCP.Poly
+import OCP.BRepTools
 import OCP.TColgp
-import OCP.TopoDS
-import OCP.gp
 import OCP.TopLoc
 import OCP.Geom2d
+import OCP.gp
 import OCP.Standard
 import OCP.ShapeExtend
-import OCP.Poly
+import OCP.Geom
+import OCP.Message
+import OCP.TopoDS
 __all__  = [
 "ShapeCustom",
 "ShapeCustom_Modification",
@@ -101,23 +101,23 @@ class ShapeCustom_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -179,7 +179,7 @@ class ShapeCustom_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standar
     pass
 class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
-    implement a modification for BRepTools Modifier algortihm. Converts Surface of Linear Exctrusion, Revolution and Offset surfaces into BSpline Surface according to flags.implement a modification for BRepTools Modifier algortihm. Converts Surface of Linear Exctrusion, Revolution and Offset surfaces into BSpline Surface according to flags.implement a modification for BRepTools Modifier algortihm. Converts Surface of Linear Exctrusion, Revolution and Offset surfaces into BSpline Surface according to flags.
+    implement a modification for BRepTools Modifier algorithm. Converts Surface of Linear Exctrusion, Revolution and Offset surfaces into BSpline Surface according to flags.implement a modification for BRepTools Modifier algorithm. Converts Surface of Linear Exctrusion, Revolution and Offset surfaces into BSpline Surface according to flags.implement a modification for BRepTools Modifier algorithm. Converts Surface of Linear Exctrusion, Revolution and Offset surfaces into BSpline Surface according to flags.
     """
     def Continuity(self,E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,NewE : OCP.TopoDS.TopoDS_Edge,NewF1 : OCP.TopoDS.TopoDS_Face,NewF2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -206,23 +206,23 @@ class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepT
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -265,7 +265,7 @@ class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepT
         """
     def SetExtrusionMode(self,extrMode : bool) -> None: 
         """
-        Sets mode for convertion of Surfaces of Linear extrusion.
+        Sets mode for conversion of Surfaces of Linear extrusion.
         """
     def SetMsgRegistrator(self,msgreg : OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator) -> None: 
         """
@@ -273,15 +273,15 @@ class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepT
         """
     def SetOffsetMode(self,offsetMode : bool) -> None: 
         """
-        Sets mode for convertion of Offset surfaces.
+        Sets mode for conversion of Offset surfaces.
         """
     def SetPlaneMode(self,planeMode : bool) -> None: 
         """
-        Sets mode for convertion of Plane surfaces.
+        Sets mode for conversion of Plane surfaces.
         """
     def SetRevolutionMode(self,revolMode : bool) -> None: 
         """
-        Sets mode for convertion of Surfaces of Revolution.
+        Sets mode for conversion of Surfaces of Revolution.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -301,7 +301,7 @@ class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepT
     pass
 class ShapeCustom_ConvertToRevolution(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
-    implements a modification for the BRepTools Modifier algortihm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algortihm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algortihm. Converts all elementary surfaces into surfaces of revolution.
+    implements a modification for the BRepTools Modifier algorithm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algorithm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algorithm. Converts all elementary surfaces into surfaces of revolution.
     """
     def Continuity(self,E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,NewE : OCP.TopoDS.TopoDS_Edge,NewF1 : OCP.TopoDS.TopoDS_Face,NewF2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -328,23 +328,23 @@ class ShapeCustom_ConvertToRevolution(ShapeCustom_Modification, OCP.BRepTools.BR
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -418,9 +418,9 @@ class ShapeCustom_Curve():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ShapeCustom_Curve2d():
     """
@@ -445,7 +445,7 @@ class ShapeCustom_Curve2d():
     pass
 class ShapeCustom_DirectModification(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
-    implements a modification for the BRepTools Modifier algortihm. Will redress indirect surfaces.implements a modification for the BRepTools Modifier algortihm. Will redress indirect surfaces.implements a modification for the BRepTools Modifier algortihm. Will redress indirect surfaces.
+    implements a modification for the BRepTools Modifier algorithm. Will redress indirect surfaces.implements a modification for the BRepTools Modifier algorithm. Will redress indirect surfaces.implements a modification for the BRepTools Modifier algorithm. Will redress indirect surfaces.
     """
     def Continuity(self,E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,NewE : OCP.TopoDS.TopoDS_Edge,NewF1 : OCP.TopoDS.TopoDS_Face,NewF2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -472,23 +472,23 @@ class ShapeCustom_DirectModification(ShapeCustom_Modification, OCP.BRepTools.BRe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -551,7 +551,7 @@ class ShapeCustom_DirectModification(ShapeCustom_Modification, OCP.BRepTools.BRe
     pass
 class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
-    this tool intended for aproximation surfaces, curves and pcurves with specified degree , max number of segments, tolerance 2d, tolerance 3d. Specified continuity can be reduced if approximation with specified continuity was not done.this tool intended for aproximation surfaces, curves and pcurves with specified degree , max number of segments, tolerance 2d, tolerance 3d. Specified continuity can be reduced if approximation with specified continuity was not done.this tool intended for aproximation surfaces, curves and pcurves with specified degree , max number of segments, tolerance 2d, tolerance 3d. Specified continuity can be reduced if approximation with specified continuity was not done.
+    this tool intended for approximation surfaces, curves and pcurves with specified degree , max number of segments, tolerance 2d, tolerance 3d. Specified continuity can be reduced if approximation with specified continuity was not done.this tool intended for approximation surfaces, curves and pcurves with specified degree , max number of segments, tolerance 2d, tolerance 3d. Specified continuity can be reduced if approximation with specified continuity was not done.this tool intended for approximation surfaces, curves and pcurves with specified degree , max number of segments, tolerance 2d, tolerance 3d. Specified continuity can be reduced if approximation with specified continuity was not done.
     """
     def Continuity(self,E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,NewE : OCP.TopoDS.TopoDS_Edge,NewF1 : OCP.TopoDS.TopoDS_Face,NewF2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -559,27 +559,27 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         """
     def ConvertCurve(self,aCurve : OCP.Geom.Geom_Curve,C : OCP.Geom.Geom_Curve,IsConvert : bool,First : float,Last : float,TolCur : float,IsOf : bool=True) -> bool: 
         """
-        Returns Standard_True if the curve has been modified. if flag IsOf equals Standard_True Offset curves are aproximated to Offset if Standard_False to BSpline
+        Returns Standard_True if the curve has been modified. if flag IsOf equals Standard_True Offset curves are approximated to Offset if Standard_False to BSpline
         """
     def ConvertCurve2d(self,aCurve : OCP.Geom2d.Geom2d_Curve,C : OCP.Geom2d.Geom2d_Curve,IsConvert : bool,First : float,Last : float,TolCur : float,IsOf : bool=True) -> bool: 
         """
-        Returns Standard_True if the pcurve has been modified. if flag IsOf equals Standard_True Offset pcurves are aproximated to Offset if Standard_False to BSpline
+        Returns Standard_True if the pcurve has been modified. if flag IsOf equals Standard_True Offset pcurves are approximated to Offset if Standard_False to BSpline
         """
     def ConvertSurface(self,aSurface : OCP.Geom.Geom_Surface,S : OCP.Geom.Geom_Surface,UF : float,UL : float,VF : float,VL : float,IsOf : bool=True) -> bool: 
         """
-        Returns Standard_True if the surface has been modified. if flag IsOf equals Standard_True Offset surfaces are aproximated to Offset if Standard_False to BSpline
+        Returns Standard_True if the surface has been modified. if flag IsOf equals Standard_True Offset surfaces are approximated to Offset if Standard_False to BSpline
         """
     def Curve2dError(self) -> float: 
         """
-        Returns error for aproximation curve2d.
+        Returns error for approximation curve2d.
 
-        Returns error for aproximation curve2d.
+        Returns error for approximation curve2d.
         """
     def Curve3dError(self) -> float: 
         """
-        Returns error for aproximation curve3d.
+        Returns error for approximation curve3d.
 
-        Returns error for aproximation curve3d.
+        Returns error for approximation curve3d.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -608,26 +608,26 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MaxErrors(self,aCurve3dErr : float,aCurve2dErr : float) -> float: 
         """
-        Returns error for aproximation surface, curve3d and curve2d.
+        Returns error for approximation surface, curve3d and curve2d.
         """
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
@@ -635,7 +635,7 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         """
     def NbOfSpan(self) -> int: 
         """
-        Returns number for aproximation surface, curve3d and curve2d.
+        Returns number for approximation surface, curve3d and curve2d.
         """
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
@@ -675,15 +675,15 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         """
     def SetContinuity2d(self,Continuity2d : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Sets continuity3d for aproximation curve2d.
+        Sets continuity3d for approximation curve2d.
 
-        Sets continuity3d for aproximation curve2d.
+        Sets continuity3d for approximation curve2d.
         """
     def SetContinuity3d(self,Continuity3d : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
-        Sets continuity3d for aproximation curve3d and surface.
+        Sets continuity3d for approximation curve3d and surface.
 
-        Sets continuity3d for aproximation curve3d and surface.
+        Sets continuity3d for approximation curve3d and surface.
         """
     def SetConvRational(self,Rational : bool) -> None: 
         """
@@ -693,15 +693,15 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         """
     def SetMaxDegree(self,MaxDegree : int) -> None: 
         """
-        Sets max degree for aproximation.
+        Sets max degree for approximation.
 
-        Sets max degree for aproximation.
+        Sets max degree for approximation.
         """
     def SetMaxNbSegments(self,MaxNbSegments : int) -> None: 
         """
-        Sets max number of segments for aproximation.
+        Sets max number of segments for approximation.
 
-        Sets max number of segments for aproximation.
+        Sets max number of segments for approximation.
         """
     def SetMsgRegistrator(self,msgreg : OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator) -> None: 
         """
@@ -709,9 +709,9 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         """
     def SetPriority(self,Degree : bool) -> None: 
         """
-        Sets priority for aproximation curves and surface. If Degree is True approximation is made with degree less then specified MaxDegree at the expense of number of spanes. If Degree is False approximation is made with number of spans less then specified MaxNbSegment at the expense of specified MaxDegree.
+        Sets priority for approximation curves and surface. If Degree is True approximation is made with degree less then specified MaxDegree at the expense of number of spanes. If Degree is False approximation is made with number of spans less then specified MaxNbSegment at the expense of specified MaxDegree.
 
-        Sets priority for aproximation curves and surface. If Degree is True approximation is made with degree less then specified MaxDegree at the expense of number of spanes. If Degree is False approximation is made with number of spans less then specified MaxNbSegment at the expense of specified MaxDegree.
+        Sets priority for approximation curves and surface. If Degree is True approximation is made with degree less then specified MaxDegree at the expense of number of spanes. If Degree is False approximation is made with number of spans less then specified MaxNbSegment at the expense of specified MaxDegree.
         """
     def SetRestrictionParameters(self,aModes : ShapeCustom_RestrictionParameters) -> None: 
         """
@@ -721,32 +721,32 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         """
     def SetTol2d(self,Tol2d : float) -> None: 
         """
-        Sets tolerance of aproximation for curve2d
+        Sets tolerance of approximation for curve2d
 
-        Sets tolerance of aproximation for curve2d
+        Sets tolerance of approximation for curve2d
         """
     def SetTol3d(self,Tol3d : float) -> None: 
         """
-        Sets tolerance of aproximation for curve3d and surface
+        Sets tolerance of approximation for curve3d and surface
 
-        Sets tolerance of aproximation for curve3d and surface
+        Sets tolerance of approximation for curve3d and surface
         """
     def SurfaceError(self) -> float: 
         """
-        Returns error for aproximation surface.
+        Returns error for approximation surface.
 
-        Returns error for aproximation surface.
+        Returns error for approximation surface.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool) -> None: ...
-    @overload
     def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -807,23 +807,23 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1018,7 +1018,7 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
     pass
 class ShapeCustom_Surface():
     """
-    Converts a surface to the analitical form with given precision. Conversion is done only the surface is bspline of bezier and this can be approximed by some analytical surface with that precision.
+    Converts a surface to the analytical form with given precision. Conversion is done only the surface is bspline of bezier and this can be approximated by some analytical surface with that precision.
     """
     def ConvertToAnalytical(self,tol : float,substitute : bool) -> OCP.Geom.Geom_Surface: 
         """
@@ -1045,7 +1045,7 @@ class ShapeCustom_Surface():
     pass
 class ShapeCustom_SweptToElementary(ShapeCustom_Modification, OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
-    implements a modification for the BRepTools Modifier algortihm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algortihm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algortihm. Converts all elementary surfaces into surfaces of revolution.
+    implements a modification for the BRepTools Modifier algorithm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algorithm. Converts all elementary surfaces into surfaces of revolution.implements a modification for the BRepTools Modifier algorithm. Converts all elementary surfaces into surfaces of revolution.
     """
     def Continuity(self,E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,NewE : OCP.TopoDS.TopoDS_Edge,NewF1 : OCP.TopoDS.TopoDS_Face,NewF2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
@@ -1072,23 +1072,23 @@ class ShapeCustom_SweptToElementary(ShapeCustom_Modification, OCP.BRepTools.BRep
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -1178,23 +1178,23 @@ class ShapeCustom_TrsfModification(OCP.BRepTools.BRepTools_TrsfModification, OCP
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Calls inherited method. Sets <Tol> as actual tolerance of <E> multiplied with scale factor.

@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColStd
-import io
 import OCP.GeomAbs
 import OCP.TColgp
+import io
 import OCP.PLib
+import OCP.TColStd
 __all__  = [
 "AdvApprox_ApproxAFunction",
 "AdvApprox_Cutting",
@@ -27,14 +27,14 @@ class AdvApprox_ApproxAFunction():
         None
         """
     @overload
-    def AverageError(self,Dimension : int,Index : int) -> float: 
+    def AverageError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         returns the error as is in the algorithms
 
         None
         """
     @overload
-    def AverageError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def AverageError(self,Dimension : int,Index : int) -> float: ...
     def Degree(self) -> int: 
         """
         None
@@ -43,7 +43,7 @@ class AdvApprox_ApproxAFunction():
         """
     def Dump(self,o : io.BytesIO) -> None: 
         """
-        diplay information on approximation.
+        display information on approximation.
         """
     def HasResult(self) -> bool: 
         """
@@ -64,14 +64,14 @@ class AdvApprox_ApproxAFunction():
         None
         """
     @overload
-    def MaxError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def MaxError(self,Dimension : int,Index : int) -> float: 
         """
         returns the error as is in the algorithms
 
         None
         """
     @overload
-    def MaxError(self,Dimension : int,Index : int) -> float: ...
+    def MaxError(self,Dimension : int) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def Multiplicities(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
         """
         None
@@ -95,7 +95,7 @@ class AdvApprox_ApproxAFunction():
         None
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_HArray2OfPnt: 
+    def Poles(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         -- returns the poles from the algorithms as is
 
@@ -104,7 +104,7 @@ class AdvApprox_ApproxAFunction():
         -- returns the poles from the algorithms as is
         """
     @overload
-    def Poles(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def Poles(self) -> OCP.TColgp.TColgp_HArray2OfPnt: ...
     @overload
     def Poles1d(self,Index : int,P : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -117,7 +117,7 @@ class AdvApprox_ApproxAFunction():
     @overload
     def Poles1d(self) -> OCP.TColStd.TColStd_HArray2OfReal: ...
     @overload
-    def Poles2d(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Poles2d(self) -> OCP.TColgp.TColgp_HArray2OfPnt2d: 
         """
         returns the poles from the algorithms as is
 
@@ -126,11 +126,11 @@ class AdvApprox_ApproxAFunction():
         returns the poles from the algorithms as is
         """
     @overload
-    def Poles2d(self) -> OCP.TColgp.TColgp_HArray2OfPnt2d: ...
-    @overload
-    def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,First : float,Last : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDeg : int,MaxSeg : int,Func : AdvApprox_EvaluatorFunction,CutTool : AdvApprox_Cutting) -> None: ...
+    def Poles2d(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,First : float,Last : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDeg : int,MaxSeg : int,Func : AdvApprox_EvaluatorFunction) -> None: ...
+    @overload
+    def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,First : float,Last : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDeg : int,MaxSeg : int,Func : AdvApprox_EvaluatorFunction,CutTool : AdvApprox_Cutting) -> None: ...
     pass
 class AdvApprox_Cutting():
     """

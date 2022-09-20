@@ -4,16 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
 import OCP.TDF
+import OCP.TopTools
 import OCP.LDOM
-import OCP.XmlObjMgt
-import OCP.TCollection
-import OCP.XmlMDF
-import OCP.Message
-import OCP.TopoDS
+import OCP.TDocStd
 import OCP.Standard
 import OCP.TopAbs
+import OCP.XmlObjMgt
+import OCP.Message
+import OCP.TopoDS
+import OCP.TCollection
+import OCP.XmlMDF
 __all__  = [
 "XmlMNaming",
 "XmlMNaming_NamedShapeDriver",
@@ -63,23 +64,23 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -93,14 +94,14 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         None
         """
     @overload
-    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def ReadShapeSection(self,anElement : OCP.LDOM.LDOM_Element,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Input the shapes from DOM element
@@ -121,7 +122,7 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         """
         Returns the version number from which the driver is available.
         """
-    def WriteShapeSection(self,anElement : OCP.LDOM.LDOM_Element,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def WriteShapeSection(self,anElement : OCP.LDOM.LDOM_Element,theStorageFormatVersion : OCP.TDocStd.TDocStd_FormatVersion,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Output the shapes into DOM element
         """
@@ -159,23 +160,23 @@ class XmlMNaming_NamingDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsInstance(self,theTypeName : str) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+    def IsKind(self,theTypeName : str) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -189,14 +190,14 @@ class XmlMNaming_NamingDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_T
         None
         """
     @overload
-    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: 
+    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Paste(self,theSource : OCP.TDF.TDF_Attribute,theTarget : OCP.XmlObjMgt.XmlObjMgt_Persistent,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_SRelocationTable) -> None: ...
+    def Paste(self,theSource : OCP.XmlObjMgt.XmlObjMgt_Persistent,theTarget : OCP.TDF.TDF_Attribute,theRelocTable : OCP.XmlObjMgt.XmlObjMgt_RRelocationTable) -> bool: ...
     def SourceType(self) -> OCP.Standard.Standard_Type: 
         """
         Returns the type of source object, inheriting from Attribute from TDF.
