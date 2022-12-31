@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.Geom2d
 import OCP.gp
+import OCP.Geom2d
+import OCP.GeomAbs
 import OCP.Standard
 import OCP.TColStd
 __all__  = [
@@ -103,23 +103,23 @@ class Adaptor2d_Curve2d(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -281,23 +281,23 @@ class Adaptor2d_Line2d(Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -315,14 +315,14 @@ class Adaptor2d_Line2d(Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Load(self,L : OCP.gp.gp_Lin2d,UFirst : float,ULast : float) -> None: 
+    def Load(self,L : OCP.gp.gp_Lin2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Load(self,L : OCP.gp.gp_Lin2d) -> None: ...
+    def Load(self,L : OCP.gp.gp_Lin2d,UFirst : float,ULast : float) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.
@@ -368,9 +368,9 @@ class Adaptor2d_Line2d(Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,D : OCP.gp.gp_Dir2d,UFirst : float,ULast : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,D : OCP.gp.gp_Dir2d,UFirst : float,ULast : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -475,23 +475,23 @@ class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -518,9 +518,9 @@ class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
         Changes the Offset Curve on the current Curve.
         """
     @overload
-    def Load(self,Offset : float,WFirst : float,WLast : float) -> None: ...
-    @overload
     def Load(self,Offset : float) -> None: ...
+    @overload
+    def Load(self,Offset : float,WFirst : float,WLast : float) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.
@@ -570,13 +570,13 @@ class Adaptor2d_OffsetCurve(Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
         Computes the point of parameter U on the curve.
         """
     @overload
-    def __init__(self,C : Adaptor2d_Curve2d,Offset : float) -> None: ...
-    @overload
     def __init__(self,C : Adaptor2d_Curve2d,Offset : float,WFirst : float,WLast : float) -> None: ...
     @overload
     def __init__(self,C : Adaptor2d_Curve2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : Adaptor2d_Curve2d,Offset : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

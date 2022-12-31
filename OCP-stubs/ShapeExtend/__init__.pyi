@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.NCollection
-import io
-import OCP.gp
-import OCP.Standard
 import OCP.Geom
-import OCP.TColStd
-import OCP.Message
-import OCP.TopAbs
-import OCP.TopoDS
 import OCP.TColGeom
+import OCP.TopoDS
+import OCP.NCollection
+import OCP.Message
+import OCP.gp
+import OCP.TopAbs
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.Standard
+import OCP.TColStd
+import io
 __all__  = [
 "ShapeExtend",
 "ShapeExtend_BasicMsgRegistrator",
@@ -97,25 +97,25 @@ class ShapeExtend_BasicMsgRegistrator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Send(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: 
+    def Send(self,object : OCP.Standard.Standard_Transient,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: 
         """
         Sends a message to be attached to the object. Object can be of any type interpreted by redefined MsgRegistrator.
 
@@ -124,7 +124,7 @@ class ShapeExtend_BasicMsgRegistrator(OCP.Standard.Standard_Transient):
         Calls Send method with Null Transient.
         """
     @overload
-    def Send(self,object : OCP.Standard.Standard_Transient,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def Send(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def Send(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
@@ -232,23 +232,23 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
         Returns True if the curve is closed
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns False
@@ -279,9 +279,9 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
+    @overload
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> OCP.Geom.Geom_Geometry: 
         """
@@ -354,14 +354,14 @@ class ShapeExtend_ComplexCurve(OCP.Geom.Geom_Curve, OCP.Geom.Geom_Geometry, OCP.
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
@@ -480,23 +480,23 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         returns True if N <=0
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns True if grid is closed in U direction (i.e. connected with Precision::Confusion)
@@ -539,9 +539,9 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
+    @overload
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> OCP.Geom.Geom_Geometry: 
         """
@@ -568,7 +568,7 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
         """
     @overload
-    def Patch(self,i : int,j : int) -> OCP.Geom.Geom_Surface: 
+    def Patch(self,pnt : OCP.gp.gp_Pnt2d) -> OCP.Geom.Geom_Surface: 
         """
         Returns one surface patch
 
@@ -577,9 +577,9 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         Returns one surface patch that contains given point
         """
     @overload
-    def Patch(self,pnt : OCP.gp.gp_Pnt2d) -> OCP.Geom.Geom_Surface: ...
-    @overload
     def Patch(self,U : float,V : float) -> OCP.Geom.Geom_Surface: ...
+    @overload
+    def Patch(self,i : int,j : int) -> OCP.Geom.Geom_Surface: ...
     def Patches(self) -> OCP.TColGeom.TColGeom_HArray2OfSurface: 
         """
         Returns grid of surfaces
@@ -633,14 +633,14 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         None
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> OCP.Geom.Geom_Geometry: 
         """
@@ -672,7 +672,7 @@ class ShapeExtend_CompositeSurface(OCP.Geom.Geom_Surface, OCP.Geom.Geom_Geometry
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -830,9 +830,9 @@ class ShapeExtend_DataMapOfShapeListOfMsg(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : ShapeExtend_DataMapOfShapeListOfMsg) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -924,11 +924,11 @@ class ShapeExtend_DataMapOfTransientListOfMsg(OCP.NCollection.NCollection_BaseMa
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : ShapeExtend_DataMapOfTransientListOfMsg) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ShapeExtend_Explorer():
@@ -990,23 +990,23 @@ class ShapeExtend_MsgRegistrator(ShapeExtend_BasicMsgRegistrator, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MapShape(self) -> ShapeExtend_DataMapOfShapeListOfMsg: 
         """
         Returns a Map of shapes and message list
@@ -1020,14 +1020,14 @@ class ShapeExtend_MsgRegistrator(ShapeExtend_BasicMsgRegistrator, OCP.Standard.S
         Returns a Map of objects and message list
         """
     @overload
-    def Send(self,object : OCP.Standard.Standard_Transient,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: 
+    def Send(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: 
         """
         Sends a message to be attached to the object. If the object is in the map then the message is added to the list, otherwise the object is firstly added to the map.
 
         Sends a message to be attached to the shape. If the shape is in the map then the message is added to the list, otherwise the shape is firstly added to the map.
         """
     @overload
-    def Send(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def Send(self,object : OCP.Standard.Standard_Transient,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1171,7 +1171,7 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
     This class provides a data structure necessary for work with the wire as with ordered list of edges, what is required for many algorithms. The advantage of this class is that it allows to work with wires which are not correct. The object of the class ShapeExtend_WireData can be initialized by TopoDS_Wire, and converted back to TopoDS_Wire. An edge in the wire is defined by its rank number. Operations of accessing, adding and removing edge at the given rank number are provided. On the whole wire, operations of circular permutation and reversing (both orientations of all edges and order of edges) are provided as well. This class also provides a method to check if the edge in the wire is a seam (if the wire lies on a face). This class is handled by reference. Such an approach gives the following advantages: 1. Sharing the object of this class strongly optimizes the processes of analysis and fixing performed in parallel on the wire stored in the form of this class. Fixing tool (e.g. ShapeFix_Wire) fixes problems one by one using analyzing tool (e.g. ShapeAnalysis_Wire). Sharing allows not to reinitialize each time the analyzing tool with modified ShapeExtend_WireData what consumes certain time. 2. No copying of contents. The object of ShapeExtend_WireData class has quite big size, returning it as a result of the function would cause additional copying of contents if this class were one handled by value. Moreover, this class is stored as a field in other classes which are they returned as results of functions, storing only a handle to ShapeExtend_WireData saves time and memory.This class provides a data structure necessary for work with the wire as with ordered list of edges, what is required for many algorithms. The advantage of this class is that it allows to work with wires which are not correct. The object of the class ShapeExtend_WireData can be initialized by TopoDS_Wire, and converted back to TopoDS_Wire. An edge in the wire is defined by its rank number. Operations of accessing, adding and removing edge at the given rank number are provided. On the whole wire, operations of circular permutation and reversing (both orientations of all edges and order of edges) are provided as well. This class also provides a method to check if the edge in the wire is a seam (if the wire lies on a face). This class is handled by reference. Such an approach gives the following advantages: 1. Sharing the object of this class strongly optimizes the processes of analysis and fixing performed in parallel on the wire stored in the form of this class. Fixing tool (e.g. ShapeFix_Wire) fixes problems one by one using analyzing tool (e.g. ShapeAnalysis_Wire). Sharing allows not to reinitialize each time the analyzing tool with modified ShapeExtend_WireData what consumes certain time. 2. No copying of contents. The object of ShapeExtend_WireData class has quite big size, returning it as a result of the function would cause additional copying of contents if this class were one handled by value. Moreover, this class is stored as a field in other classes which are they returned as results of functions, storing only a handle to ShapeExtend_WireData saves time and memory.This class provides a data structure necessary for work with the wire as with ordered list of edges, what is required for many algorithms. The advantage of this class is that it allows to work with wires which are not correct. The object of the class ShapeExtend_WireData can be initialized by TopoDS_Wire, and converted back to TopoDS_Wire. An edge in the wire is defined by its rank number. Operations of accessing, adding and removing edge at the given rank number are provided. On the whole wire, operations of circular permutation and reversing (both orientations of all edges and order of edges) are provided as well. This class also provides a method to check if the edge in the wire is a seam (if the wire lies on a face). This class is handled by reference. Such an approach gives the following advantages: 1. Sharing the object of this class strongly optimizes the processes of analysis and fixing performed in parallel on the wire stored in the form of this class. Fixing tool (e.g. ShapeFix_Wire) fixes problems one by one using analyzing tool (e.g. ShapeAnalysis_Wire). Sharing allows not to reinitialize each time the analyzing tool with modified ShapeExtend_WireData what consumes certain time. 2. No copying of contents. The object of ShapeExtend_WireData class has quite big size, returning it as a result of the function would cause additional copying of contents if this class were one handled by value. Moreover, this class is stored as a field in other classes which are they returned as results of functions, storing only a handle to ShapeExtend_WireData saves time and memory.
     """
     @overload
-    def Add(self,wire : ShapeExtend_WireData,atnum : int=0) -> None: 
+    def Add(self,wire : OCP.TopoDS.TopoDS_Wire,atnum : int=0) -> None: 
         """
         Adds an edge to a wire, being defined (not yet ended) This is the plain, basic, function to add an edge <num> = 0 (D): Appends at end <num> = 1: Preprends at start else, Insert before <num> Remark : Null Edge is simply ignored
 
@@ -1182,13 +1182,13 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Adds an edge or a wire invoking corresponding method Add
         """
     @overload
-    def Add(self,wire : OCP.TopoDS.TopoDS_Wire,atnum : int=0) -> None: ...
+    def Add(self,wire : ShapeExtend_WireData,atnum : int=0) -> None: ...
     @overload
     def Add(self,shape : OCP.TopoDS.TopoDS_Shape,atnum : int=0) -> None: ...
     @overload
     def Add(self,edge : OCP.TopoDS.TopoDS_Edge,atnum : int=0) -> None: ...
     @overload
-    def AddOriented(self,edge : OCP.TopoDS.TopoDS_Edge,mode : int) -> None: 
+    def AddOriented(self,wire : OCP.TopoDS.TopoDS_Wire,mode : int) -> None: 
         """
         Adds an edge to start or end of <me>, according to <mode> 0: at end, as direct 1: at end, as reversed 2: at start, as direct 3: at start, as reversed < 0: no adding
 
@@ -1197,9 +1197,9 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Adds an edge or a wire invoking corresponding method AddOriented
         """
     @overload
-    def AddOriented(self,shape : OCP.TopoDS.TopoDS_Shape,mode : int) -> None: ...
+    def AddOriented(self,edge : OCP.TopoDS.TopoDS_Edge,mode : int) -> None: ...
     @overload
-    def AddOriented(self,wire : OCP.TopoDS.TopoDS_Wire,mode : int) -> None: ...
+    def AddOriented(self,shape : OCP.TopoDS.TopoDS_Shape,mode : int) -> None: ...
     def Clear(self) -> None: 
         """
         Clears data about Wire.
@@ -1237,32 +1237,32 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Returns the index of the edge If the edge is a seam the orientation is also checked Returns 0 if the edge is not found in the list
         """
     @overload
-    def Init(self,wire : OCP.TopoDS.TopoDS_Wire,chained : bool=True,theManifoldMode : bool=True) -> bool: 
+    def Init(self,other : ShapeExtend_WireData) -> None: 
         """
         Copies data from another WireData
 
         Loads an already existing wire If <chained> is True (default), edges are added in the sequence as they are explored by TopoDS_Iterator Else, if <chained> is False, wire is explored by BRepTools_WireExplorer and it is guaranteed that edges will be sequentially connected. Remark : In the latter case it can happen that not all edges will be found (because of limitations of BRepTools_WireExplorer for disconnected wires and wires with seam edges).
         """
     @overload
-    def Init(self,other : ShapeExtend_WireData) -> None: ...
+    def Init(self,wire : OCP.TopoDS.TopoDS_Wire,chained : bool=True,theManifoldMode : bool=True) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSeam(self,num : int) -> bool: 
         """
         Tells if an Edge is seam (see ComputeSeams) An edge is considered as seam if it presents twice in the edge list, once as FORWARD and once as REVERSED.
@@ -1288,14 +1288,14 @@ class ShapeExtend_WireData(OCP.Standard.Standard_Transient):
         Removes an Edge, given its rank. By default removes the last edge.
         """
     @overload
-    def Reverse(self) -> None: 
+    def Reverse(self,face : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Reverses the sense of the list and the orientation of each Edge This method should be called when either wire has no seam edges or face is not available
 
         Reverses the sense of the list and the orientation of each Edge The face is necessary for swapping pcurves for seam edges (first pcurve corresponds to orientation FORWARD, and second to REVERSED; when edge is reversed, pcurves must be swapped) If face is NULL, no swapping is performed
         """
     @overload
-    def Reverse(self,face : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def Reverse(self) -> None: ...
     def Set(self,edge : OCP.TopoDS.TopoDS_Edge,num : int=0) -> None: 
         """
         Replaces an edge at the given rank number <num> with new one. Default is last edge (<num> = 0).

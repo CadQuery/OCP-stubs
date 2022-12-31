@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
 import OCP.StepGeom
+import OCP.StepData
 import OCP.Interface
 __all__  = [
 "RWStepGeom_RWAxis1Placement",

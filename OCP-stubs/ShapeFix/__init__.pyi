@@ -4,21 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.NCollection
-import io
-import OCP.ShapeConstruct
+import OCP.Geom
+import OCP.TopLoc
+import OCP.TopoDS
 import OCP.Geom2d
 import OCP.Standard
 import OCP.ShapeExtend
-import OCP.TopoDS
-import OCP.ShapeBuild
-import OCP.TopLoc
-import OCP.Geom
-import OCP.TopAbs
+import OCP.NCollection
 import OCP.Message
 import OCP.ShapeAnalysis
+import OCP.ShapeBuild
+import OCP.TopAbs
 import OCP.Bnd
+import OCP.ShapeConstruct
+import io
+import OCP.TopTools
 __all__  = [
 "ShapeFix",
 "ShapeFix_Root",
@@ -107,23 +107,23 @@ class ShapeFix_Root(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -155,7 +155,7 @@ class ShapeFix_Root(OCP.Standard.Standard_Transient):
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -166,9 +166,9 @@ class ShapeFix_Root(OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -177,9 +177,9 @@ class ShapeFix_Root(OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -262,14 +262,14 @@ class ShapeFix_DataMapOfShapeBox2d(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : ShapeFix_DataMapOfShapeBox2d) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -279,14 +279,14 @@ class ShapeFix_DataMapOfShapeBox2d(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Bnd.Bnd_Box2d) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box2d: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.Bnd.Bnd_Box2d: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.Bnd.Bnd_Box2d) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -320,9 +320,9 @@ class ShapeFix_DataMapOfShapeBox2d(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : ShapeFix_DataMapOfShapeBox2d) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -352,7 +352,7 @@ class ShapeFix_Edge(OCP.Standard.Standard_Transient):
         Tries to build 3d curve of the edge if missing Use : It is to be called after FixRemoveCurve3d (if removed) or in any case when edge can have no 3d curve Returns: True if 3d curve was added, else False Status : OK : 3d curve exists FAIL1: BRepLib::BuildCurve3d() has failed DONE1: 3d curve was added
         """
     @overload
-    def FixAddPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,isSeam : bool,surfana : OCP.ShapeAnalysis.ShapeAnalysis_Surface,prec : float=0.0) -> bool: 
+    def FixAddPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,isSeam : bool,prec : float=0.0) -> bool: 
         """
         See method below for information
 
@@ -367,20 +367,20 @@ class ShapeFix_Edge(OCP.Standard.Standard_Transient):
     @overload
     def FixAddPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,isSeam : bool,surfana : OCP.ShapeAnalysis.ShapeAnalysis_Surface,prec : float=0.0) -> bool: ...
     @overload
-    def FixAddPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,isSeam : bool,prec : float=0.0) -> bool: ...
+    def FixAddPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,isSeam : bool,surfana : OCP.ShapeAnalysis.ShapeAnalysis_Surface,prec : float=0.0) -> bool: ...
     def FixRemoveCurve3d(self,edge : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Removes 3d curve of the edge if it does not match the vertices Returns: True, if does not match, removed (status DONE) False, (status OK) if matches or (status FAIL) if no 3d curve, nothing done
         """
     @overload
-    def FixRemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: 
+    def FixRemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         None
 
         Removes the pcurve(s) of the edge if it does not match the vertices Check is done Use : It is to be called when pcurve of an edge can be wrong (e.g., after import from IGES) Returns: True, if does not match, removed (status DONE) False, (status OK) if matches or (status FAIL) if no pcurve, nothing done
         """
     @overload
-    def FixRemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def FixRemovePCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: ...
     @overload
     def FixReversed2d(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
@@ -417,23 +417,23 @@ class ShapeFix_Edge(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Projector(self) -> OCP.ShapeConstruct.ShapeConstruct_ProjectCurveOnSurface: 
         """
         Returns the projector used for recomputing missing pcurves Can be used for adjusting parameters of projector
@@ -526,27 +526,27 @@ class ShapeFix_EdgeProjAux(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsIso(self,C : OCP.Geom2d.Geom2d_Curve) -> bool: 
         """
         None
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLastDone(self) -> bool: 
         """
         None
@@ -675,27 +675,27 @@ class ShapeFix_Face(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Starts the creation of the face By default it will be FORWARD, or REVERSED if <fwd> is False
         """
     @overload
-    def Init(self,face : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def Init(self,surf : OCP.Geom.Geom_Surface,preci : float,fwd : bool=True) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def Init(self,face : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -737,7 +737,7 @@ class ShapeFix_Face(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns resulting shape (Face or Shell if split) To be used instead of Face() if FixMissingSeam involved
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -748,9 +748,9 @@ class ShapeFix_Face(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -759,9 +759,9 @@ class ShapeFix_Face(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -810,9 +810,9 @@ class ShapeFix_Face(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,face : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,face : OCP.TopoDS.TopoDS_Face) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -993,23 +993,23 @@ class ShapeFix_FixSmallFace(ShapeFix_Root, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1061,7 +1061,7 @@ class ShapeFix_FixSmallFace(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Compute average vertex and replacing vertices by new one.
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -1072,9 +1072,9 @@ class ShapeFix_FixSmallFace(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -1083,9 +1083,9 @@ class ShapeFix_FixSmallFace(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -1178,23 +1178,23 @@ class ShapeFix_FixSmallSolid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1234,7 +1234,7 @@ class ShapeFix_FixSmallSolid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Remove small solids from the given shape
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -1245,9 +1245,9 @@ class ShapeFix_FixSmallSolid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -1256,9 +1256,9 @@ class ShapeFix_FixSmallSolid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -1347,11 +1347,11 @@ class ShapeFix_FreeBounds():
         Returns modified source shape.
         """
     @overload
-    def __init__(self,shape : OCP.TopoDS.TopoDS_Shape,closetoler : float,splitclosed : bool,splitopen : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,shape : OCP.TopoDS.TopoDS_Shape,sewtoler : float,closetoler : float,splitclosed : bool,splitopen : bool) -> None: ...
+    @overload
+    def __init__(self,shape : OCP.TopoDS.TopoDS_Shape,closetoler : float,splitclosed : bool,splitopen : bool) -> None: ...
     pass
 class ShapeFix_IntersectionTool():
     """
@@ -1424,23 +1424,23 @@ class ShapeFix_ComposeShell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Initializes with composite surface, face and precision. Here face defines both set of wires and way of getting pcurves. Precision is used (together with tolerance of edges) for handling subtle cases, such as tangential intersections.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1480,7 +1480,7 @@ class ShapeFix_ComposeShell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns resulting shell or face (or Null shape if not done)
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -1491,9 +1491,9 @@ class ShapeFix_ComposeShell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -1502,9 +1502,9 @@ class ShapeFix_ComposeShell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -1633,14 +1633,14 @@ class ShapeFix_SequenceOfWireSegment(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : ShapeFix_SequenceOfWireSegment) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ShapeFix_SequenceOfWireSegment) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : ShapeFix_WireSegment) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ShapeFix_WireSegment) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : ShapeFix_SequenceOfWireSegment) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1658,23 +1658,23 @@ class ShapeFix_SequenceOfWireSegment(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : ShapeFix_WireSegment) -> None: 
+    def Prepend(self,theSeq : ShapeFix_SequenceOfWireSegment) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : ShapeFix_SequenceOfWireSegment) -> None: ...
+    def Prepend(self,theItem : ShapeFix_WireSegment) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1700,11 +1700,11 @@ class ShapeFix_SequenceOfWireSegment(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : ShapeFix_SequenceOfWireSegment) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1777,23 +1777,23 @@ class ShapeFix_Shape(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Initislises by shape.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1829,7 +1829,7 @@ class ShapeFix_Shape(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -1840,9 +1840,9 @@ class ShapeFix_Shape(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -1851,9 +1851,9 @@ class ShapeFix_Shape(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -2034,23 +2034,23 @@ class ShapeFix_Shell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Initializes by shell.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -2090,7 +2090,7 @@ class ShapeFix_Shell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -2101,9 +2101,9 @@ class ShapeFix_Shell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -2112,9 +2112,9 @@ class ShapeFix_Shell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -2173,9 +2173,9 @@ class ShapeFix_Shell(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,shape : OCP.TopoDS.TopoDS_Shell) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,shape : OCP.TopoDS.TopoDS_Shell) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2242,23 +2242,23 @@ class ShapeFix_Solid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Initializes by solid .
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -2294,7 +2294,7 @@ class ShapeFix_Solid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -2305,9 +2305,9 @@ class ShapeFix_Solid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -2316,9 +2316,9 @@ class ShapeFix_Solid(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -2450,23 +2450,23 @@ class ShapeFix_SplitCommonVertex(ShapeFix_Root, OCP.Standard.Standard_Transient)
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -2502,7 +2502,7 @@ class ShapeFix_SplitCommonVertex(ShapeFix_Root, OCP.Standard.Standard_Transient)
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -2513,9 +2513,9 @@ class ShapeFix_SplitCommonVertex(ShapeFix_Root, OCP.Standard.Standard_Transient)
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -2524,9 +2524,9 @@ class ShapeFix_SplitCommonVertex(ShapeFix_Root, OCP.Standard.Standard_Transient)
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -2593,7 +2593,7 @@ class ShapeFix_SplitTool():
         Cut edge by parameters pend and cut
         """
     @overload
-    def SplitEdge(self,edge : OCP.TopoDS.TopoDS_Edge,fp : float,V1 : OCP.TopoDS.TopoDS_Vertex,lp : float,V2 : OCP.TopoDS.TopoDS_Vertex,face : OCP.TopoDS.TopoDS_Face,SeqE : OCP.TopTools.TopTools_SequenceOfShape,aNum : int,context : OCP.ShapeBuild.ShapeBuild_ReShape,tol3d : float,tol2d : float) -> bool: 
+    def SplitEdge(self,edge : OCP.TopoDS.TopoDS_Edge,param : float,vert : OCP.TopoDS.TopoDS_Vertex,face : OCP.TopoDS.TopoDS_Face,newE1 : OCP.TopoDS.TopoDS_Edge,newE2 : OCP.TopoDS.TopoDS_Edge,tol3d : float,tol2d : float) -> bool: 
         """
         Split edge on two new edges using new vertex "vert" and "param" - parameter for splitting The "face" is necessary for pcurves and using TransferParameterProj
 
@@ -2602,7 +2602,7 @@ class ShapeFix_SplitTool():
         Split edge on two new edges using two new vertex V1 and V2 and two parameters for splitting - fp and lp correspondingly The "face" is necessary for pcurves and using TransferParameterProj aNum - number of edge in SeqE which corresponding to [fp,lp]
         """
     @overload
-    def SplitEdge(self,edge : OCP.TopoDS.TopoDS_Edge,param : float,vert : OCP.TopoDS.TopoDS_Vertex,face : OCP.TopoDS.TopoDS_Face,newE1 : OCP.TopoDS.TopoDS_Edge,newE2 : OCP.TopoDS.TopoDS_Edge,tol3d : float,tol2d : float) -> bool: ...
+    def SplitEdge(self,edge : OCP.TopoDS.TopoDS_Edge,fp : float,V1 : OCP.TopoDS.TopoDS_Vertex,lp : float,V2 : OCP.TopoDS.TopoDS_Vertex,face : OCP.TopoDS.TopoDS_Face,SeqE : OCP.TopTools.TopTools_SequenceOfShape,aNum : int,context : OCP.ShapeBuild.ShapeBuild_ReShape,tol3d : float,tol2d : float) -> bool: ...
     @overload
     def SplitEdge(self,edge : OCP.TopoDS.TopoDS_Edge,param1 : float,param2 : float,vert : OCP.TopoDS.TopoDS_Vertex,face : OCP.TopoDS.TopoDS_Face,newE1 : OCP.TopoDS.TopoDS_Edge,newE2 : OCP.TopoDS.TopoDS_Edge,tol3d : float,tol2d : float) -> bool: ...
     def __init__(self) -> None: ...
@@ -2663,14 +2663,14 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
     @overload
     def FixConnected(self,prec : float=-1.0) -> bool: ...
     @overload
-    def FixDegenerated(self,num : int) -> bool: 
+    def FixDegenerated(self) -> bool: 
         """
         Applies FixDegenerated(num) to all edges in the wire Connection between first and last edges is treated only if flag ClosedMode is True
 
         Fixes Degenerated Edge Checks an <num-th> edge or a point between <num>th-1 and <num>th edges for a singularity on a supporting surface. If singularity is detected, either adds new degenerated edge (before <num>th), or makes <num>th edge to be degenerated.
         """
     @overload
-    def FixDegenerated(self) -> bool: ...
+    def FixDegenerated(self,num : int) -> bool: ...
     def FixEdgeCurves(self) -> bool: 
         """
         Groups the fixes dealing with 3d and pcurves of the edges. The order of the fixes and the default behaviour are: ShapeFix_Edge::FixReversed2d ShapeFix_Edge::FixRemovePCurve (only if forced) ShapeFix_Edge::FixAddPCurve ShapeFix_Edge::FixRemoveCurve3d (only if forced) ShapeFix_Edge::FixAddCurve3d FixSeam, FixShifted, ShapeFix_Edge::FixSameParameter
@@ -2698,14 +2698,14 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Fixes gaps between ends of 3d curves on adjacent edges myPrecision is used to detect the gaps.
         """
     @overload
-    def FixLacking(self,force : bool=False) -> bool: 
+    def FixLacking(self,num : int,force : bool=False) -> bool: 
         """
         Applies FixLacking(num) to all edges in the wire Connection between first and last edges is treated only if flag ClosedMode is True If <force> is False (default), test for connectness is done with precision of vertex between edges, else it is done with minimal value of vertex tolerance and Analyzer.Precision(). Hence, <force> will lead to inserting lacking edges in replacement of vertices which have big tolerances.
 
         Fixes Lacking Edge Test if two adjucent edges are disconnected in 2d (while connected in 3d), and in that case either increase tolerance of the vertex or add a new edge (straight in 2d space), in order to close wire in 2d. Returns True if edge was added or tolerance was increased.
         """
     @overload
-    def FixLacking(self,num : int,force : bool=False) -> bool: ...
+    def FixLacking(self,force : bool=False) -> bool: ...
     def FixNotchedEdges(self) -> bool: 
         """
         None
@@ -2713,12 +2713,12 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
     @overload
     def FixReorder(self,wi : OCP.ShapeAnalysis.ShapeAnalysis_WireOrder) -> bool: 
         """
-        Performs an analysis and reorders edges in the wire using class WireOrder
+        Performs an analysis and reorders edges in the wire using class WireOrder. Flag <theModeBoth> determines the use of miscible mode if necessary.
 
         Reorder edges in the wire as determined by WireOrder that should be filled and computed before
         """
     @overload
-    def FixReorder(self) -> bool: ...
+    def FixReorder(self,theModeBoth : bool=False) -> bool: ...
     def FixSeam(self,num : int) -> bool: 
         """
         Fixes a seam edge A Seam edge has two pcurves, one for forward. one for reversed The forward pcurve must be set as first
@@ -2732,14 +2732,14 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Fixes edges which have pcurves shifted by whole parameter range on the closed surface (the case may occur if pcurve of edge was computed by projecting 3d curve, which goes along the seam). It compares each two consequent edges and tries to connect them if distance between ends is near to range of the surface. It also can detect and fix the case if all pcurves are connected, but lie out of parametric bounds of the surface. In addition to FixShifted from ShapeFix_Wire, more sophisticated check of degenerate points is performed, and special cases like sphere given by two meridians are treated.
         """
     @overload
-    def FixSmall(self,num : int,lockvtx : bool,precsmall : float) -> bool: 
+    def FixSmall(self,lockvtx : bool,precsmall : float=0.0) -> int: 
         """
         Applies FixSmall(num) to all edges in the wire
 
         Fixes Null Length Edge to be removed If an Edge has Null Length (regarding preci, or <precsmall> - what is smaller), it should be removed It can be with no problem if its two vertices are the same Else, if lockvtx is False, it is removed and its end vertex is put on the preceding edge But if lockvtx is True, this edge must be kept ...
         """
     @overload
-    def FixSmall(self,lockvtx : bool,precsmall : float=0.0) -> int: ...
+    def FixSmall(self,num : int,lockvtx : bool,precsmall : float) -> bool: ...
     def FixTails(self) -> bool: 
         """
         None
@@ -2762,23 +2762,23 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
     @overload
     def Init(self,saw : OCP.ShapeAnalysis.ShapeAnalysis_Wire) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLoaded(self) -> bool: 
         """
         Tells if the wire is loaded
@@ -2845,7 +2845,7 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -2856,9 +2856,9 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -2867,9 +2867,9 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -3035,9 +3035,9 @@ class ShapeFix_Wire(ShapeFix_Root, OCP.Standard.Standard_Transient):
         returns working wire
         """
     @overload
-    def __init__(self,wire : OCP.TopoDS.TopoDS_Wire,face : OCP.TopoDS.TopoDS_Face,prec : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,wire : OCP.TopoDS.TopoDS_Wire,face : OCP.TopoDS.TopoDS_Face,prec : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3370,14 +3370,14 @@ class ShapeFix_WireSegment():
     This class is auxiliary class (data storage) used in ComposeShell. It is intended for representing segment of the wire (or whole wire). The segment itself is represented by ShapeExtend_WireData. In addition, some associated data necessary for computations are stored:
     """
     @overload
-    def AddEdge(self,i : int,edge : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def AddEdge(self,i : int,edge : OCP.TopoDS.TopoDS_Edge,iumin : int,iumax : int,ivmin : int,ivmax : int) -> None: 
         """
         Insert a new edge with index i and implicitly defined patch indices (indefinite patch). If i==0, edge is inserted at end of wire.
 
         Insert a new edge with index i and explicitly defined patch indices. If i==0, edge is inserted at end of wire.
         """
     @overload
-    def AddEdge(self,i : int,edge : OCP.TopoDS.TopoDS_Edge,iumin : int,iumax : int,ivmin : int,ivmax : int) -> None: ...
+    def AddEdge(self,i : int,edge : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def CheckPatchIndex(self,i : int) -> bool: 
         """
         Checks patch indices for edge i to satisfy equations IUMin(i) <= IUMax(i) <= IUMin(i)+1
@@ -3439,14 +3439,14 @@ class ShapeFix_WireSegment():
         Returns Number of edges in the wire
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Orientation(self,ori : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         Sets orientation flag.
 
         Returns orientation flag.
         """
     @overload
-    def Orientation(self,ori : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
     def SetEdge(self,i : int,edge : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Replaces edge at index i by new one.
@@ -3464,9 +3464,9 @@ class ShapeFix_WireSegment():
         Returns wire.
         """
     @overload
-    def __init__(self,wire : OCP.ShapeExtend.ShapeExtend_WireData,ori : OCP.TopAbs.TopAbs_Orientation=TopAbs_Orientation.TopAbs_EXTERNAL) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,wire : OCP.ShapeExtend.ShapeExtend_WireData,ori : OCP.TopAbs.TopAbs_Orientation=TopAbs_Orientation.TopAbs_EXTERNAL) -> None: ...
     pass
 class ShapeFix_WireVertex():
     """
@@ -3485,7 +3485,7 @@ class ShapeFix_WireVertex():
         Fixes "Same" or "Close" status (same vertex may be set, without changing parameters) Returns the count of fixed vertices, 0 if none
         """
     @overload
-    def Init(self,sawv : OCP.ShapeAnalysis.ShapeAnalysis_WireVertex) -> None: 
+    def Init(self,sbwd : OCP.ShapeExtend.ShapeExtend_WireData,preci : float) -> None: 
         """
         Loads the wire, ininializes internal analyzer (ShapeAnalysis_WireVertex) with the given precision, and performs analysis
 
@@ -3494,7 +3494,7 @@ class ShapeFix_WireVertex():
         Loads all the data on wire, already analysed by ShapeAnalysis_WireVertex
         """
     @overload
-    def Init(self,sbwd : OCP.ShapeExtend.ShapeExtend_WireData,preci : float) -> None: ...
+    def Init(self,sawv : OCP.ShapeAnalysis.ShapeAnalysis_WireVertex) -> None: ...
     @overload
     def Init(self,wire : OCP.TopoDS.TopoDS_Wire,preci : float) -> None: ...
     def Wire(self) -> OCP.TopoDS.TopoDS_Wire: 
@@ -3554,23 +3554,23 @@ class ShapeFix_Wireframe(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitAngle(self) -> float: 
         """
         Get limit angle for merging edges.
@@ -3616,7 +3616,7 @@ class ShapeFix_Wireframe(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns basic precision value
         """
     @overload
-    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
+    def SendFail(self,message : OCP.Message.Message_Msg) -> None: 
         """
         Sends a fail to be attached to the shape. Calls SendMsg with gravity set to Message_Fail.
 
@@ -3627,9 +3627,9 @@ class ShapeFix_Wireframe(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Calls previous method for myShape.
         """
     @overload
-    def SendFail(self,message : OCP.Message.Message_Msg) -> None: ...
+    def SendFail(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: ...
     @overload
-    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: 
         """
         Sends a message to be attached to the shape. Calls corresponding message of message registrator.
 
@@ -3638,9 +3638,9 @@ class ShapeFix_Wireframe(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Sends a message to be attached to myShape. Calls previous method.
         """
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
+    def SendMsg(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
     @overload
-    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity=Message_Gravity.Message_Info) -> None: ...
+    def SendMsg(self,message : OCP.Message.Message_Msg,gravity : OCP.Message.Message_Gravity) -> None: ...
     @overload
     def SendWarning(self,shape : OCP.TopoDS.TopoDS_Shape,message : OCP.Message.Message_Msg) -> None: 
         """
@@ -3707,9 +3707,9 @@ class ShapeFix_Wireframe(ShapeFix_Root, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,shape : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,shape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

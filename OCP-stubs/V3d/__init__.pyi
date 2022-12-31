@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import OCP.NCollection
-import io
 import OCP.Graphic3d
+import OCP.Prs3d
+import OCP.Aspect
+import OCP.TCollection
+import OCP.NCollection
 import OCP.gp
 import OCP.Image
-import OCP.Standard
-import OCP.Aspect
-import OCP.TColStd
-import OCP.Prs3d
-import OCP.TCollection
 import OCP.Bnd
+import OCP.Standard
+import OCP.Quantity
+import OCP.TColStd
+import io
 __all__  = [
 "V3d",
 "V3d_AmbientLight",
@@ -119,7 +119,7 @@ class V3d():
         """
     @staticmethod
     @overload
-    def TypeOfOrientationFromString_s(theTypeString : str,theType : V3d_TypeOfOrientation) -> bool: 
+    def TypeOfOrientationFromString_s(theTypeString : str) -> V3d_TypeOfOrientation: 
         """
         Returns the orientation type from the given string identifier (using case-insensitive comparison).
 
@@ -127,7 +127,7 @@ class V3d():
         """
     @staticmethod
     @overload
-    def TypeOfOrientationFromString_s(theTypeString : str) -> V3d_TypeOfOrientation: ...
+    def TypeOfOrientationFromString_s(theTypeString : str,theType : V3d_TypeOfOrientation) -> bool: ...
     @staticmethod
     def TypeOfOrientationToString_s(theType : V3d_TypeOfOrientation) -> str: 
         """
@@ -172,14 +172,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DisplayPosition(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot/directional light, which is the same as returned by Position().
@@ -225,23 +225,23 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LinearAttenuation(self) -> float: 
         """
         Returns linear attenuation factor of positional/spot light source; 0.0 by default. Distance attenuation factors of reducing positional/spot light intensity depending on the distance from its position:
@@ -267,14 +267,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Packed light parameters.
         """
     @overload
-    def Position(self) -> OCP.gp.gp_Pnt: 
+    def Position(self) -> Tuple[float, float, float]: 
         """
         Returns location of positional/spot light.
 
         Returns location of positional/spot light; (0, 0, 0) by default.
         """
     @overload
-    def Position(self) -> Tuple[float, float, float]: ...
+    def Position(self) -> OCP.gp.gp_Pnt: ...
     def Range(self) -> float: 
         """
         Returns maximum distance on which point light source affects to objects and is considered during illumination calculations. 0.0 means disabling range considering at all without any distance limits. Has sense only for point light sources (positional and spot).
@@ -304,14 +304,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Defines the coefficient of concentration; value should be within range [0.0, 1.0].
         """
     @overload
-    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: 
+    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: 
         """
         Sets direction of directional/spot light.
 
         Sets direction of directional/spot light.
         """
     @overload
-    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: ...
+    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: ...
     def SetDisplayPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot/directional light, which is the same as SetPosition() but allows directional light source (technically having no position, but this point can be used for displaying light source presentation).
@@ -333,14 +333,14 @@ class V3d_AmbientLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tra
         Sets light source name.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
     def SetRange(self,theValue : float) -> None: 
         """
         Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
@@ -470,23 +470,23 @@ class V3d_CircularGrid(OCP.Aspect.Aspect_CircularGrid, OCP.Aspect.Aspect_Grid, O
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def RadiusStep(self) -> float: 
         """
         returns the x step of the grid.
@@ -599,14 +599,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DisplayPosition(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot/directional light, which is the same as returned by Position().
@@ -652,23 +652,23 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LinearAttenuation(self) -> float: 
         """
         Returns linear attenuation factor of positional/spot light source; 0.0 by default. Distance attenuation factors of reducing positional/spot light intensity depending on the distance from its position:
@@ -694,14 +694,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Packed light parameters.
         """
     @overload
-    def Position(self) -> OCP.gp.gp_Pnt: 
+    def Position(self) -> Tuple[float, float, float]: 
         """
         Returns location of positional/spot light.
 
         Returns location of positional/spot light; (0, 0, 0) by default.
         """
     @overload
-    def Position(self) -> Tuple[float, float, float]: ...
+    def Position(self) -> OCP.gp.gp_Pnt: ...
     def Range(self) -> float: 
         """
         Returns maximum distance on which point light source affects to objects and is considered during illumination calculations. 0.0 means disabling range considering at all without any distance limits. Has sense only for point light sources (positional and spot).
@@ -731,14 +731,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Defines the coefficient of concentration; value should be within range [0.0, 1.0].
         """
     @overload
-    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: 
+    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: 
         """
         Sets direction of directional/spot light.
 
         Sets direction of directional/spot light.
         """
     @overload
-    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: ...
+    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: ...
     def SetDisplayPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot/directional light, which is the same as SetPosition() but allows directional light source (technically having no position, but this point can be used for displaying light source presentation).
@@ -760,14 +760,14 @@ class V3d_PositionLight(OCP.Graphic3d.Graphic3d_CLight, OCP.Standard.Standard_Tr
         Sets light source name.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
     def SetRange(self,theValue : float) -> None: 
         """
         Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
@@ -870,7 +870,7 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : V3d_ListOfLight) -> None: 
+    def Append(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -879,7 +879,7 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> None: ...
+    def Append(self,theOther : V3d_ListOfLight) -> None: ...
     @overload
     def Append(self,theItem : OCP.Graphic3d.Graphic3d_CLight) -> OCP.Graphic3d.Graphic3d_CLight: ...
     def Assign(self,theOther : V3d_ListOfLight) -> V3d_ListOfLight: 
@@ -901,23 +901,23 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : V3d_ListOfLight,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: ...
+    def InsertAfter(self,theOther : V3d_ListOfLight,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : V3d_ListOfLight,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : OCP.Graphic3d.Graphic3d_CLight,theIter : Any) -> OCP.Graphic3d.Graphic3d_CLight: ...
+    def InsertBefore(self,theOther : V3d_ListOfLight,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -954,9 +954,9 @@ class V3d_ListOfLight(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : V3d_ListOfLight) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -979,9 +979,9 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : V3d_View,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : V3d_ListOfView) -> None: ...
+    @overload
+    def Append(self,theItem : V3d_View,theIter : Any) -> None: ...
     def Assign(self,theOther : V3d_ListOfView) -> V3d_ListOfView: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1029,14 +1029,14 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : V3d_View) -> V3d_View: 
+    def Prepend(self,theOther : V3d_ListOfView) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : V3d_ListOfView) -> None: ...
+    def Prepend(self,theItem : V3d_View) -> V3d_View: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1056,9 +1056,9 @@ class V3d_ListOfView(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : V3d_ListOfView) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class V3d_Plane(OCP.Standard.Standard_Transient):
@@ -1102,23 +1102,23 @@ class V3d_Plane(OCP.Standard.Standard_Transient):
         Returns TRUE when the plane representation is displayed.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Plane(self) -> Tuple[float, float, float, float]: 
         """
         Returns the parameters of the plane.
@@ -1180,14 +1180,14 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DisplayPosition(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot/directional light, which is the same as returned by Position().
@@ -1233,23 +1233,23 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LinearAttenuation(self) -> float: 
         """
         Returns linear attenuation factor of positional/spot light source; 0.0 by default. Distance attenuation factors of reducing positional/spot light intensity depending on the distance from its position:
@@ -1275,14 +1275,14 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Packed light parameters.
         """
     @overload
-    def Position(self) -> OCP.gp.gp_Pnt: 
+    def Position(self) -> Tuple[float, float, float]: 
         """
         Returns location of positional/spot light.
 
         Returns location of positional/spot light; (0, 0, 0) by default.
         """
     @overload
-    def Position(self) -> Tuple[float, float, float]: ...
+    def Position(self) -> OCP.gp.gp_Pnt: ...
     def Range(self) -> float: 
         """
         Returns maximum distance on which point light source affects to objects and is considered during illumination calculations. 0.0 means disabling range considering at all without any distance limits. Has sense only for point light sources (positional and spot).
@@ -1336,14 +1336,14 @@ class V3d_DirectionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OC
         Sets light source name.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
     def SetRange(self,theValue : float) -> None: 
         """
         Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
@@ -1424,14 +1424,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DisplayPosition(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot/directional light, which is the same as returned by Position().
@@ -1477,23 +1477,23 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LinearAttenuation(self) -> float: 
         """
         Returns linear attenuation factor of positional/spot light source; 0.0 by default. Distance attenuation factors of reducing positional/spot light intensity depending on the distance from its position:
@@ -1519,14 +1519,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Packed light parameters.
         """
     @overload
-    def Position(self) -> OCP.gp.gp_Pnt: 
+    def Position(self) -> Tuple[float, float, float]: 
         """
         Returns location of positional/spot light.
 
         Returns location of positional/spot light; (0, 0, 0) by default.
         """
     @overload
-    def Position(self) -> Tuple[float, float, float]: ...
+    def Position(self) -> OCP.gp.gp_Pnt: ...
     def Range(self) -> float: 
         """
         Returns maximum distance on which point light source affects to objects and is considered during illumination calculations. 0.0 means disabling range considering at all without any distance limits. Has sense only for point light sources (positional and spot).
@@ -1556,14 +1556,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Defines the coefficient of concentration; value should be within range [0.0, 1.0].
         """
     @overload
-    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: 
+    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: 
         """
         Sets direction of directional/spot light.
 
         Sets direction of directional/spot light.
         """
     @overload
-    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: ...
+    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: ...
     def SetDisplayPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot/directional light, which is the same as SetPosition() but allows directional light source (technically having no position, but this point can be used for displaying light source presentation).
@@ -1585,14 +1585,14 @@ class V3d_PositionalLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP
         Sets light source name.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
     def SetRange(self,theValue : float) -> None: 
         """
         Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
@@ -1711,23 +1711,23 @@ class V3d_RectangularGrid(OCP.Aspect.Aspect_RectangularGrid, OCP.Aspect.Aspect_G
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Rotate(self,anAngle : float) -> None: 
         """
         Rotate the grid from a relative angle.
@@ -1852,14 +1852,14 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DisplayPosition(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot/directional light, which is the same as returned by Position().
@@ -1905,23 +1905,23 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LinearAttenuation(self) -> float: 
         """
         Returns linear attenuation factor of positional/spot light source; 0.0 by default. Distance attenuation factors of reducing positional/spot light intensity depending on the distance from its position:
@@ -1947,14 +1947,14 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Packed light parameters.
         """
     @overload
-    def Position(self) -> OCP.gp.gp_Pnt: 
+    def Position(self) -> Tuple[float, float, float]: 
         """
         Returns location of positional/spot light.
 
         Returns location of positional/spot light; (0, 0, 0) by default.
         """
     @overload
-    def Position(self) -> Tuple[float, float, float]: ...
+    def Position(self) -> OCP.gp.gp_Pnt: ...
     def Range(self) -> float: 
         """
         Returns maximum distance on which point light source affects to objects and is considered during illumination calculations. 0.0 means disabling range considering at all without any distance limits. Has sense only for point light sources (positional and spot).
@@ -2008,14 +2008,14 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Sets light source name.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
     def SetRange(self,theValue : float) -> None: 
         """
         Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
@@ -2045,9 +2045,9 @@ class V3d_SpotLight(V3d_PositionLight, OCP.Graphic3d.Graphic3d_CLight, OCP.Stand
         Returns the Type of the Light, cannot be changed after object construction.
         """
     @overload
-    def __init__(self,thePos : OCP.gp.gp_Pnt,theDirection : V3d_TypeOfOrientation=V3d_TypeOfOrientation.V3d_XnegYnegZpos,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
-    @overload
     def __init__(self,thePos : OCP.gp.gp_Pnt,theDirection : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
+    @overload
+    def __init__(self,thePos : OCP.gp.gp_Pnt,theDirection : V3d_TypeOfOrientation=V3d_TypeOfOrientation.V3d_XnegYnegZpos,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2146,23 +2146,23 @@ class V3d_Trihedron(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsWireframe(self) -> bool: 
         """
         Return TRUE if wireframe presentation is set; FALSE by default.
@@ -2200,14 +2200,14 @@ class V3d_Trihedron(OCP.Standard.Standard_Transient):
         Setup per-axis text.
         """
     @overload
-    def SetLabelsColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetLabelsColor(self,theXColor : OCP.Quantity.Quantity_Color,theYColor : OCP.Quantity.Quantity_Color,theZColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Setup per-label color.
 
         Setup color of text labels.
         """
     @overload
-    def SetLabelsColor(self,theXColor : OCP.Quantity.Quantity_Color,theYColor : OCP.Quantity.Quantity_Color,theZColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetLabelsColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetNbFacets(self,theNbFacets : int) -> None: 
         """
         Setup the number of facets for tessellation.
@@ -2542,6 +2542,10 @@ class V3d_View(OCP.Standard.Standard_Transient):
         """
         Adds clip plane to the view. The composition of clip planes truncates the rendering space to convex volume. Number of supported clip planes can be consulted by PlaneLimit method of associated Graphic3d_GraphicDriver. Please be aware that the planes which exceed the limit are ignored during rendering.
         """
+    def AddSubview(self,theView : V3d_View) -> None: 
+        """
+        Add subview to the list.
+        """
     def At(self) -> Tuple[float, float, float]: 
         """
         Returns the position of the view point.
@@ -2559,14 +2563,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         returns scale factor parameter of automatic z-fit mode.
         """
     @overload
-    def AxialScale(self) -> Tuple[float, float, float]: 
+    def AxialScale(self,Dx : int,Dy : int,Axis : V3d_TypeOfAxe) -> None: 
         """
         Performs anisotropic scaling of <me> view along the given <Axis>. The scale factor is calculated on a basis of the mouse pointer displacement <Dx,Dy>. The calculated scale factor is then passed to SetAxialScale(Sx, Sy, Sz) method.
 
         Returns the current values of the anisotropic (axial) scale factors.
         """
     @overload
-    def AxialScale(self,Dx : int,Dy : int,Axis : V3d_TypeOfAxe) -> None: ...
+    def AxialScale(self) -> Tuple[float, float, float]: ...
     def BackFacingModel(self) -> OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel: 
         """
         Returns current state of the back faces display; Graphic3d_TypeOfBackfacingModel_Auto by default, which means that backface culling is defined by each presentation.
@@ -2580,6 +2584,10 @@ class V3d_View(OCP.Standard.Standard_Transient):
         """
     @overload
     def BackgroundColor(self,Type : OCP.Quantity.Quantity_TypeOfColor) -> Tuple[float, float, float]: ...
+    def BackgroundSkydome(self) -> OCP.Aspect.Aspect_SkydomeBackground: 
+        """
+        Returns skydome aspect;
+        """
     def Camera(self) -> OCP.Graphic3d.Graphic3d_Camera: 
         """
         Returns camera object of the view.
@@ -2601,7 +2609,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns the computed HLR mode state.
         """
     @overload
-    def Convert(self,Xv : float,Yv : float) -> Tuple[int, int]: 
+    def Convert(self,Vv : float) -> int: 
         """
         Converts the PIXEL value to a value in the projection plane.
 
@@ -2616,24 +2624,24 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Projects the point defined in the reference frame of the view into the projected point in the associated window.
         """
     @overload
-    def Convert(self,X : float,Y : float,Z : float) -> Tuple[int, int]: ...
-    @overload
     def Convert(self,Vp : int) -> float: ...
     @overload
-    def Convert(self,Xp : int,Yp : int) -> Tuple[float, float, float]: ...
+    def Convert(self,Xv : float,Yv : float) -> Tuple[int, int]: ...
     @overload
-    def Convert(self,Vv : float) -> int: ...
+    def Convert(self,X : float,Y : float,Z : float) -> Tuple[int, int]: ...
     @overload
     def Convert(self,Xp : int,Yp : int) -> Tuple[float, float]: ...
     @overload
-    def ConvertToGrid(self,Xp : int,Yp : int) -> Tuple[float, float, float]: 
+    def Convert(self,Xp : int,Yp : int) -> Tuple[float, float, float]: ...
+    @overload
+    def ConvertToGrid(self,X : float,Y : float,Z : float) -> Tuple[float, float, float]: 
         """
         Converts the projected point into the nearest grid point in the reference frame of the view corresponding to the intersection with the projection plane of the eye/view point vector and display the grid marker. Warning: When the grid is not active the result is identical to the above Convert() method. How to use: 1) Enable the grid echo display myViewer->SetGridEcho(Standard_True); 2) When application receive a move event: 2.1) Check if any object is detected if( myInteractiveContext->MoveTo(x,y) == AIS_SOD_Nothing ) { 2.2) Check if the grid is active if( myViewer->Grid()->IsActive() ) { 2.3) Display the grid echo and gets the grid point myView->ConvertToGrid(x,y,X,Y,Z); myView->Viewer()->ShowGridEcho (myView, Graphic3d_Vertex (X,Y,Z)); myView->RedrawImmediate(); 2.4) Else this is the standard case } else myView->Convert(x,y,X,Y,Z);
 
         Converts the point into the nearest grid point and display the grid marker.
         """
     @overload
-    def ConvertToGrid(self,X : float,Y : float,Z : float) -> Tuple[float, float, float]: ...
+    def ConvertToGrid(self,Xp : int,Yp : int) -> Tuple[float, float, float]: ...
     def ConvertWithProj(self,Xp : int,Yp : int) -> Tuple[float, float, float, float, float, float]: 
         """
         Converts the projected point into a point in the reference frame of the view corresponding to the intersection with the projection plane of the eye/view point vector and returns the projection ray for further computations.
@@ -2683,7 +2691,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns the position of the eye.
         """
     @overload
-    def FitAll(self,theMargin : float=0.01,theToUpdate : bool=True) -> None: 
+    def FitAll(self,theBox : OCP.Bnd.Bnd_Box,theMargin : float=0.01,theToUpdate : bool=True) -> None: 
         """
         Adjust view parameters to fit the displayed scene, respecting height / width ratio. The Z clipping range (depth range) is fitted if AutoZFit flag is TRUE. Throws program error exception if margin coefficient is < 0 or >= 1. Updates the view.
 
@@ -2692,7 +2700,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Centers the defined projection window so that it occupies the maximum space while respecting the initial height/width ratio. NOTE than the original Z size of the view is NOT modified .
         """
     @overload
-    def FitAll(self,theBox : OCP.Bnd.Bnd_Box,theMargin : float=0.01,theToUpdate : bool=True) -> None: ...
+    def FitAll(self,theMargin : float=0.01,theToUpdate : bool=True) -> None: ...
     @overload
     def FitAll(self,theMinXv : float,theMinYv : float,theMaxXv : float,theMaxYv : float) -> None: ...
     def FitMinMax(self,theCamera : OCP.Graphic3d.Graphic3d_Camera,theBox : OCP.Bnd.Bnd_Box,theMargin : float,theResolution : float=0.0,theToEnlargeIfLine : bool=True) -> bool: 
@@ -2780,14 +2788,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns TRUE if IBL (Image Based Lighting) from background cubemap is enabled.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInvalidated(self) -> bool: 
         """
         Returns true if cached view content has been invalidated.
@@ -2797,14 +2805,18 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns true if immediate layer content has been invalidated.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsSubview(self) -> bool: 
+        """
+        Return TRUE if this is a subview of another view.
+        """
     def LightLimit(self) -> int: 
         """
         Returns the MAX number of light associated to the view.
@@ -2814,7 +2826,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         returns true if there are more active Light(s) to return.
         """
     @overload
-    def Move(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: 
+    def Move(self,Length : float,Start : bool=True) -> None: 
         """
         Movement of the eye parallel to the coordinate system of reference of the screen a distance relative to the initial position expressed by Start = Standard_True.
 
@@ -2823,7 +2835,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Movement of the eye parllel to the current axis a distance relative to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Move(self,Length : float,Start : bool=True) -> None: ...
+    def Move(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: ...
     @overload
     def Move(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: ...
     def MustBeResized(self) -> None: 
@@ -2842,6 +2854,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         """
         Translates the center of the view along "x" and "y" axes of view projection. Can be used to perform interactive panning operation. In that case the DXv, DXy parameters specify panning relative to the point where the operation is started.
         """
+    def ParentView(self) -> V3d_View: 
+        """
+        Return parent View or NULL if this is not a subview.
+        """
+    def PickSubview(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2i) -> V3d_View: 
+        """
+        Pick subview from the given 2D point.
+        """
     def Place(self,theXp : int,theYp : int,theZoomFactor : float=1.0) -> None: 
         """
         places the point of the view corresponding at the pixel position x,y at the center of the window and updates the view.
@@ -2859,14 +2879,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns the coordinate of the point (Xpix,Ypix) in the view (XP,YP,ZP), and the projection vector of the view passing by the point (for PerspectiveView).
         """
     @overload
-    def Project(self,theX : float,theY : float,theZ : float) -> Tuple[float, float]: 
+    def Project(self,theX : float,theY : float,theZ : float) -> Tuple[float, float, float]: 
         """
         Converts the point defined in the user space of the view to the projection plane at the depth relative to theZ.
 
         Converts the point defined in the user space of the view to the projection plane at the depth relative to theZ.
         """
     @overload
-    def Project(self,theX : float,theY : float,theZ : float) -> Tuple[float, float, float]: ...
+    def Project(self,theX : float,theY : float,theZ : float) -> Tuple[float, float]: ...
     def Redraw(self) -> None: 
         """
         Redisplays the view even if there has not been any modification. Must be called if the view is shown. (Ex: DeIconification ) .
@@ -2882,6 +2902,10 @@ class V3d_View(OCP.Standard.Standard_Transient):
     def RemoveClipPlane(self,thePlane : OCP.Graphic3d.Graphic3d_ClipPlane) -> None: 
         """
         Removes clip plane from the view.
+        """
+    def RemoveSubview(self,theView : V3d_View) -> bool: 
+        """
+        Remove subview from the list.
         """
     def RenderingParams(self) -> OCP.Graphic3d.Graphic3d_RenderingParams: 
         """
@@ -2900,7 +2924,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Resets the orientation of the view. Updates the view
         """
     @overload
-    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,X : float,Y : float,Z : float,Start : bool=True) -> None: 
+    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: 
         """
         Rotates the eye about the coordinate system of reference of the screen for which the origin is the view point of the projection, with a relative angular value in RADIANS with respect to the initial position expressed by Start = Standard_True Warning! raises BadValue from V3d If the eye, the view point, or the high point are aligned or confused.
 
@@ -2915,11 +2939,11 @@ class V3d_View(OCP.Standard.Standard_Transient):
     @overload
     def Rotate(self,Angle : float,Start : bool=True) -> None: ...
     @overload
-    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: ...
-    @overload
-    def Rotate(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: ...
+    def Rotate(self,Axe : V3d_TypeOfAxe,Angle : float,X : float,Y : float,Z : float,Start : bool=True) -> None: ...
     @overload
     def Rotate(self,Ax : float,Ay : float,Az : float,X : float,Y : float,Z : float,Start : bool=True) -> None: ...
+    @overload
+    def Rotate(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: ...
     def Rotation(self,X : int,Y : int) -> None: 
         """
         Continues the rotation of the view with an angle computed from the last and new mouse position <X,Y>.
@@ -2962,14 +2986,18 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Sets environment cubemap as background.
         """
     @overload
-    def SetBackgroundImage(self,theTexture : OCP.Graphic3d.Graphic3d_Texture2D,theFillStyle : OCP.Aspect.Aspect_FillMethod=Aspect_FillMethod.Aspect_FM_CENTERED,theToUpdate : bool=False) -> None: 
+    def SetBackgroundImage(self,theFileName : str,theFillStyle : OCP.Aspect.Aspect_FillMethod=Aspect_FillMethod.Aspect_FM_CENTERED,theToUpdate : bool=False) -> None: 
         """
         Defines the background texture of the view by supplying the texture image file name and fill method (centered by default).
 
         Defines the background texture of the view by supplying the texture and fill method (centered by default)
         """
     @overload
-    def SetBackgroundImage(self,theFileName : str,theFillStyle : OCP.Aspect.Aspect_FillMethod=Aspect_FillMethod.Aspect_FM_CENTERED,theToUpdate : bool=False) -> None: ...
+    def SetBackgroundImage(self,theTexture : OCP.Graphic3d.Graphic3d_Texture2D,theFillStyle : OCP.Aspect.Aspect_FillMethod=Aspect_FillMethod.Aspect_FM_CENTERED,theToUpdate : bool=False) -> None: ...
+    def SetBackgroundSkydome(self,theAspect : OCP.Aspect.Aspect_SkydomeBackground,theToUpdatePBREnv : bool=True) -> None: 
+        """
+        Sets skydome aspect
+        """
     def SetBgGradientColors(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color,theFillStyle : OCP.Aspect.Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal,theToUpdate : bool=False) -> None: 
         """
         Defines the gradient background colors of the view by supplying the colors and the fill method (horizontal by default).
@@ -3035,14 +3063,14 @@ class V3d_View(OCP.Standard.Standard_Transient):
         sets the immediate update mode and returns the previous one.
         """
     @overload
-    def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: 
+    def SetLightOff(self) -> None: 
         """
         Deactivate theLight in this view.
 
         Deactivate all the Lights defined in this view.
         """
     @overload
-    def SetLightOff(self) -> None: ...
+    def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: ...
     @overload
     def SetLightOn(self) -> None: 
         """
@@ -3106,10 +3134,15 @@ class V3d_View(OCP.Standard.Standard_Transient):
         """
         Defines the visualization type in the view.
         """
+    @overload
     def SetWindow(self,theWindow : OCP.Aspect.Aspect_Window,theContext : capsule=None) -> None: 
         """
         Activates the view in the specified Window If <aContext> is not NULL the graphic context is used to draw something in this view. Otherwise an internal graphic context is created. Warning: The view is centered and resized to preserve the height/width ratio of the window.
+
+        Activates the view as subview of another view.
         """
+    @overload
+    def SetWindow(self,theParentView : V3d_View,theSize : OCP.Graphic3d.Graphic3d_Vec2d,theCorner : OCP.Aspect.Aspect_TypeOfTriedronPosition=Aspect_TypeOfTriedronPosition.Aspect_TOTP_LEFT_UPPER,theOffset : OCP.Graphic3d.Graphic3d_Vec2d=OCP.Graphic3d.Graphic3d_Vec2d,theMargins : OCP.Graphic3d.Graphic3d_Vec2i=OCP.Graphic3d.Graphic3d_Vec2i) -> None: ...
     def SetZSize(self,SetZSize : float) -> None: 
         """
         Defines the Depth size of the view Front Plane will be set to Size/2. Back Plane will be set to -Size/2. Any Object located Above the Front Plane or behind the Back Plane will be Clipped . NOTE than the XY Size of the View is NOT modified .
@@ -3135,14 +3168,18 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Defines starting point for ZoomAtPoint view operation.
         """
     @overload
-    def StatisticInformation(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def StatisticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: 
         """
         Returns string with statistic performance info.
 
         Fills in the dictionary with statistic performance info.
         """
     @overload
-    def StatisticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: ...
+    def StatisticInformation(self) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Subviews(self) -> Any: 
+        """
+        Return subview list.
+        """
     def TextureEnv(self) -> OCP.Graphic3d.Graphic3d_TextureEnv: 
         """
         None
@@ -3152,16 +3189,16 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theParams : V3d_ImageDumpOptions) -> bool: 
+    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theWidth : int,theHeight : int,theBufferType : OCP.Graphic3d.Graphic3d_BufferType=Graphic3d_BufferType.Graphic3d_BT_RGB,theToAdjustAspect : bool=True,theStereoOptions : V3d_StereoDumpOptions=V3d_StereoDumpOptions.V3d_SDO_MONO) -> bool: 
         """
         Dumps the full contents of the view to a pixmap with specified parameters. Internally this method calls Redraw() with an offscreen render buffer of requested target size (theWidth x theHeight), so that there is no need resizing a window control for making a dump of different size.
 
         Dumps the full contents of the view to a pixmap. Internally this method calls Redraw() with an offscreen render buffer of requested target size (theWidth x theHeight), so that there is no need resizing a window control for making a dump of different size.
         """
     @overload
-    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theWidth : int,theHeight : int,theBufferType : OCP.Graphic3d.Graphic3d_BufferType=Graphic3d_BufferType.Graphic3d_BT_RGB,theToAdjustAspect : bool=True,theStereoOptions : V3d_StereoDumpOptions=V3d_StereoDumpOptions.V3d_SDO_MONO) -> bool: ...
+    def ToPixMap(self,theImage : OCP.Image.Image_PixMap,theParams : V3d_ImageDumpOptions) -> bool: ...
     @overload
-    def Translate(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: 
+    def Translate(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: 
         """
         Movement of the ye and the view point parallel to the frame of reference of the screen a distance relative to the initial position expressed by Start = Standard_True
 
@@ -3170,9 +3207,9 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Movement of the eye and view point parallel to the current axis a distance relative to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Translate(self,Dx : float,Dy : float,Dz : float,Start : bool=True) -> None: ...
-    @overload
     def Translate(self,Length : float,Start : bool=True) -> None: ...
+    @overload
+    def Translate(self,Axe : V3d_TypeOfAxe,Length : float,Start : bool=True) -> None: ...
     def TriedronDisplay(self,thePosition : OCP.Aspect.Aspect_TypeOfTriedronPosition=Aspect_TypeOfTriedronPosition.Aspect_TOTP_CENTER,theColor : OCP.Quantity.Quantity_Color=OCP.Quantity.Quantity_Color,theScale : float=0.02,theMode : V3d_TypeOfVisualization=V3d_TypeOfVisualization.V3d_WIREFRAME) -> None: 
         """
         Display of the Triedron. Initialize position, color and length of Triedron axes. The scale is a percent of the window width.
@@ -3186,7 +3223,7 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Returns trihedron object.
         """
     @overload
-    def Turn(self,Angle : float,Start : bool=True) -> None: 
+    def Turn(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: 
         """
         Rotation of the view point around the frame of reference of the screen for which the origin is the eye of the projection with a relative angular value in RADIANS with respect to the initial position expressed by Start = Standard_True
 
@@ -3195,9 +3232,9 @@ class V3d_View(OCP.Standard.Standard_Transient):
         Rotation of the view point around the current axis an angular value in RADIANS relative to the initial position expressed by Start = Standard_True
         """
     @overload
-    def Turn(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: ...
+    def Turn(self,Angle : float,Start : bool=True) -> None: ...
     @overload
-    def Turn(self,Axe : V3d_TypeOfAxe,Angle : float,Start : bool=True) -> None: ...
+    def Turn(self,Ax : float,Ay : float,Az : float,Start : bool=True) -> None: ...
     def Twist(self) -> float: 
         """
         Returns in RADIANS the orientation of the view around the visual axis measured from the Y axis of the screen.
@@ -3442,14 +3479,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
         Get the reference counter of this object
         """
     @overload
-    def Grid(self,theGridType : OCP.Aspect.Aspect_GridType,theToCreate : bool=True) -> OCP.Aspect.Aspect_Grid: 
+    def Grid(self,theToCreate : bool=True) -> OCP.Aspect.Aspect_Grid: 
         """
         Returns the defined grid in <me>.
 
         Returns the defined grid in <me>.
         """
     @overload
-    def Grid(self,theToCreate : bool=True) -> OCP.Aspect.Aspect_Grid: ...
+    def Grid(self,theGridType : OCP.Aspect.Aspect_GridType,theToCreate : bool=True) -> OCP.Aspect.Aspect_Grid: ...
     def GridDrawMode(self) -> OCP.Aspect.Aspect_GridDrawMode: 
         """
         Returns the current grid draw mode defined in <me>.
@@ -3515,23 +3552,23 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
         Returns Standard_True if a grid is activated in <me>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LastActiveView(self) -> bool: 
         """
         returns true if there is only one active view.
@@ -3664,14 +3701,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
     @overload
     def SetLightOff(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: ...
     @overload
-    def SetLightOn(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: 
+    def SetLightOn(self) -> None: 
         """
         Activates MyLight in the viewer.
 
         Activates all the lights defined in this viewer.
         """
     @overload
-    def SetLightOn(self) -> None: ...
+    def SetLightOn(self,theLight : OCP.Graphic3d.Graphic3d_CLight) -> None: ...
     def SetPrivilegedPlane(self,thePlane : OCP.gp.gp_Ax3) -> None: 
         """
         None
@@ -3685,14 +3722,14 @@ class V3d_Viewer(OCP.Standard.Standard_Transient):
         Sets the definition of the rectangular grid. <XOrigin>, <YOrigin> defines the origin of the grid. <XStep> defines the interval between 2 vertical lines. <YStep> defines the interval between 2 horizontal lines. <RotationAngle> defines the rotation angle of the grid.
         """
     @overload
-    def SetViewOff(self,theView : V3d_View) -> None: 
+    def SetViewOff(self) -> None: 
         """
         Deactivates all the views of a Viewer attached to a window.
 
         Deactivates a particular view in the Viewer. Must be call if the Window attached to the view has been Iconified .
         """
     @overload
-    def SetViewOff(self) -> None: ...
+    def SetViewOff(self,theView : V3d_View) -> None: ...
     @overload
     def SetViewOn(self,theView : V3d_View) -> None: 
         """

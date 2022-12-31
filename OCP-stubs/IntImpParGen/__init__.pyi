@@ -21,7 +21,7 @@ class IntImpParGen():
         """
     @staticmethod
     @overload
-    def DetermineTransition_s(Pos1 : OCP.IntRes2d.IntRes2d_Position,Tan1 : OCP.gp.gp_Vec2d,Norm1 : OCP.gp.gp_Vec2d,Trans1 : OCP.IntRes2d.IntRes2d_Transition,Pos2 : OCP.IntRes2d.IntRes2d_Position,Tan2 : OCP.gp.gp_Vec2d,Norm2 : OCP.gp.gp_Vec2d,Trans2 : OCP.IntRes2d.IntRes2d_Transition,Tol : float) -> None: 
+    def DetermineTransition_s(Pos1 : OCP.IntRes2d.IntRes2d_Position,Tan1 : OCP.gp.gp_Vec2d,Trans1 : OCP.IntRes2d.IntRes2d_Transition,Pos2 : OCP.IntRes2d.IntRes2d_Position,Tan2 : OCP.gp.gp_Vec2d,Trans2 : OCP.IntRes2d.IntRes2d_Transition,Tol : float) -> bool: 
         """
         Template class for an implicit curve. Math function, instantiated inside the Intersector. Tool used by the package IntCurve and IntImpParGen
 
@@ -29,7 +29,7 @@ class IntImpParGen():
         """
     @staticmethod
     @overload
-    def DetermineTransition_s(Pos1 : OCP.IntRes2d.IntRes2d_Position,Tan1 : OCP.gp.gp_Vec2d,Trans1 : OCP.IntRes2d.IntRes2d_Transition,Pos2 : OCP.IntRes2d.IntRes2d_Position,Tan2 : OCP.gp.gp_Vec2d,Trans2 : OCP.IntRes2d.IntRes2d_Transition,Tol : float) -> bool: ...
+    def DetermineTransition_s(Pos1 : OCP.IntRes2d.IntRes2d_Position,Tan1 : OCP.gp.gp_Vec2d,Norm1 : OCP.gp.gp_Vec2d,Trans1 : OCP.IntRes2d.IntRes2d_Transition,Pos2 : OCP.IntRes2d.IntRes2d_Position,Tan2 : OCP.gp.gp_Vec2d,Norm2 : OCP.gp.gp_Vec2d,Trans2 : OCP.IntRes2d.IntRes2d_Transition,Tol : float) -> None: ...
     @staticmethod
     def NormalizeOnDomain_s(Par1 : float,Dom1 : OCP.IntRes2d.IntRes2d_Domain) -> float: 
         """

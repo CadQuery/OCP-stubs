@@ -4,22 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.PrsMgr
-import io
-import OCP.SelectMgr
-import OCP.Standard
-import OCP.V3d
-import OCP.TopoDS
-import OCP.Prs3d
-import OCP.Select3D
-import OCP.Quantity
-import OCP.Bnd
-import OCP.TopLoc
 import OCP.Graphic3d
-import OCP.gp
-import OCP.TopAbs
 import OCP.Aspect
+import OCP.TopLoc
+import OCP.TopoDS
+import OCP.PrsMgr
+import OCP.Standard
 import OCP.TColStd
+import OCP.SelectMgr
+import OCP.Prs3d
+import OCP.V3d
+import OCP.Select3D
+import OCP.TopAbs
+import OCP.gp
+import OCP.Bnd
+import OCP.TopTools
+import io
+import OCP.Quantity
 __all__  = [
 "StdSelect",
 "StdSelect_BRepOwner",
@@ -139,23 +140,23 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns true if an object with the selection mode aMode is highlighted in the presentation manager aPM.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameSelectable(self,theOther : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         Returns true if pointer to selectable object of this owner is equal to the given one
@@ -181,14 +182,14 @@ class StdSelect_BRepOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -274,6 +275,11 @@ class StdSelect_BRepSelectionTool():
         Create a sensitive edge or sensitive wire.
         """
     @staticmethod
+    def GetSensitiveForCylinder_s(theSubfacesMap : OCP.TopTools.TopTools_IndexedMapOfShape,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theSelection : OCP.SelectMgr.SelectMgr_Selection) -> bool: 
+        """
+        Creates a sensitive cylinder.
+        """
+    @staticmethod
     def GetSensitiveForFace_s(theFace : OCP.TopoDS.TopoDS_Face,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theOutList : OCP.Select3D.Select3D_EntitySequence,theAutoTriang : bool=True,theNbPOnEdge : int=9,theMaxiParam : float=500.0,theInteriorFlag : bool=True) -> bool: 
         """
         Creates the 3D sensitive entities for Face selection.
@@ -330,23 +336,23 @@ class StdSelect_EdgeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anobj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         None
@@ -404,23 +410,23 @@ class StdSelect_FaceFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anobj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         None
@@ -590,23 +596,23 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -696,14 +702,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -721,14 +727,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -750,14 +756,14 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         Set Z layer ID and update all presentations of the presentable object. The layers mechanism allows drawing objects in higher layers in overlay of objects in lower layers.
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def Shape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Shape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def SynchronizeAspects(self) -> None: 
         """
         Synchronize presentation aspects after their modification.
@@ -835,6 +841,10 @@ class StdSelect_Shape(OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard
         """
         Updates final transformation (parent + local) of presentable object and its presentations.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -884,23 +894,23 @@ class StdSelect_ShapeTypeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anobj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         None

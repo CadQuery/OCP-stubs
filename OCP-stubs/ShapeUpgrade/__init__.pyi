@@ -4,22 +4,22 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
+import OCP.Geom
+import OCP.TopLoc
+import OCP.TopoDS
 import OCP.BRepTools
-import OCP.TColGeom2d
 import OCP.Geom2d
 import OCP.Standard
-import OCP.ShapeExtend
-import OCP.TopoDS
+import OCP.TColStd
 import OCP.TColGeom
-import OCP.ShapeBuild
-import OCP.TopLoc
-import OCP.Geom
+import OCP.ShapeExtend
 import OCP.TopAbs
 import OCP.Message
+import OCP.ShapeBuild
 import OCP.ShapeAnalysis
-import OCP.TColStd
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.TColGeom2d
 __all__  = [
 "ShapeUpgrade",
 "ShapeUpgrade_Tool",
@@ -61,7 +61,7 @@ class ShapeUpgrade():
     """
     @staticmethod
     @overload
-    def C0BSplineToSequenceOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,seqBS : OCP.TColGeom.TColGeom_HSequenceOfBoundedCurve) -> bool: 
+    def C0BSplineToSequenceOfC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,seqBS : OCP.TColGeom2d.TColGeom2d_HSequenceOfBoundedCurve) -> bool: 
         """
         Unifies same domain faces and edges of specified shape
 
@@ -69,7 +69,7 @@ class ShapeUpgrade():
         """
     @staticmethod
     @overload
-    def C0BSplineToSequenceOfC1BSplineCurve_s(BS : OCP.Geom2d.Geom2d_BSplineCurve,seqBS : OCP.TColGeom2d.TColGeom2d_HSequenceOfBoundedCurve) -> bool: ...
+    def C0BSplineToSequenceOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,seqBS : OCP.TColGeom.TColGeom_HSequenceOfBoundedCurve) -> bool: ...
     def __init__(self) -> None: ...
     pass
 class ShapeUpgrade_Tool(OCP.Standard.Standard_Transient):
@@ -103,23 +103,23 @@ class ShapeUpgrade_Tool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -231,23 +231,23 @@ class ShapeUpgrade_FaceDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Initialize by a Face.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -266,9 +266,9 @@ class ShapeUpgrade_FaceDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
 
         Returns minimal allowed tolerance
         """
-    def Perform(self) -> bool: 
+    def Perform(self,theArea : float=0.0) -> bool: 
         """
-        Performs splitting and computes the resulting shell The context is used to keep track of former splittings in order to keep sharings. It is updated according to modifications made.
+        Performs splitting and computes the resulting shell The context is used to keep track of former splittings in order to keep sharings. It is updated according to modifications made. The optional argument <theArea> is used to initialize the tool for splitting surface in the case of splitting into N parts where N is user-defined.
         """
     def Precision(self) -> float: 
         """
@@ -324,9 +324,9 @@ class ShapeUpgrade_FaceDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         """
         Performs splitting of curves of all the edges in the shape and divides these edges.
         """
-    def SplitSurface(self) -> bool: 
+    def SplitSurface(self,theArea : float=0.0) -> bool: 
         """
-        Performs splitting of surface and computes the shell from source face.
+        Performs splitting of surface and computes the shell from source face. The optional argument <theArea> is used to initialize the tool for splitting surface in the case of splitting into N parts where N is user-defined.
         """
     def Status(self,status : OCP.ShapeExtend.ShapeExtend_Status) -> bool: 
         """
@@ -388,23 +388,23 @@ class ShapeUpgrade_SplitCurve(OCP.Standard.Standard_Transient):
         Initializes with curve first and last parameters.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -474,32 +474,32 @@ class ShapeUpgrade_SplitCurve3d(ShapeUpgrade_SplitCurve, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         Initializes with curve with its first and last parameters.
 
         Initializes with curve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -565,32 +565,32 @@ class ShapeUpgrade_SplitSurface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,theArea : float=0.0) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the surface. First defines splitting values by method Compute(), then calls method Build().
@@ -691,23 +691,23 @@ class ShapeUpgrade_EdgeDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Knots2d(self) -> OCP.TColStd.TColStd_HSequenceOfReal: 
         """
         None
@@ -849,23 +849,23 @@ class ShapeUpgrade_ClosedFaceDivide(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, 
         Initialize by a Face.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -884,9 +884,9 @@ class ShapeUpgrade_ClosedFaceDivide(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, 
 
         Returns minimal allowed tolerance
         """
-    def Perform(self) -> bool: 
+    def Perform(self,theArea : float=0.0) -> bool: 
         """
-        Performs splitting and computes the resulting shell The context is used to keep track of former splittings in order to keep sharings. It is updated according to modifications made.
+        Performs splitting and computes the resulting shell The context is used to keep track of former splittings in order to keep sharings. It is updated according to modifications made. The optional argument <theArea> is used to initialize the tool for splitting surface in the case of splitting into N parts where N is user-defined.
         """
     def Precision(self) -> float: 
         """
@@ -946,7 +946,7 @@ class ShapeUpgrade_ClosedFaceDivide(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, 
         """
         Performs splitting of curves of all the edges in the shape and divides these edges.
         """
-    def SplitSurface(self) -> bool: 
+    def SplitSurface(self,theArea : float=0.0) -> bool: 
         """
         Performs splitting of surface and computes the shell from source face.
         """
@@ -1016,23 +1016,23 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
         Initialize by a Face.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1051,7 +1051,7 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
 
         Returns minimal allowed tolerance
         """
-    def Perform(self) -> bool: 
+    def Perform(self,theArea : float=0.0) -> bool: 
         """
         Performs splitting and computes the resulting shell The context is used to keep track of former splittings
         """
@@ -1087,6 +1087,12 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
 
         Sets minimal allowed tolerance
         """
+    def SetNumbersUVSplits(self,theNbUsplits : int,theNbVsplits : int) -> None: 
+        """
+        Set fixed numbers of splits in U and V directions. Only for "Splitting By Numbers" mode
+
+        Set fixed numbers of splits in U and V directions. Only for "Splitting By Numbers" mode
+        """
     def SetPrecision(self,preci : float) -> None: 
         """
         Sets basic precision value
@@ -1096,6 +1102,12 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
     def SetSplitSurfaceTool(self,splitSurfaceTool : ShapeUpgrade_SplitSurface) -> None: 
         """
         Sets the tool for splitting surfaces.
+        """
+    def SetSplittingByNumber(self,theIsSplittingByNumber : bool) -> None: 
+        """
+        Set splitting mode If the mode is "splitting by number", the face is splitted approximately into <myNbParts> parts, the parts are similar to squares in 2D.
+
+        Set splitting mode If the mode is "splitting by number", the face is splitted approximately into <myNbParts> parts, the parts are similar to squares in 2D.
         """
     def SetSurfaceSegmentMode(self,Segment : bool) -> None: 
         """
@@ -1109,9 +1121,9 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
         """
         Performs splitting of curves of all the edges in the shape and divides these edges.
         """
-    def SplitSurface(self) -> bool: 
+    def SplitSurface(self,theArea : float=0.0) -> bool: 
         """
-        Performs splitting of surface and computes the shell from source face.
+        Performs splitting of surface and computes the shell from source face. The optional argument <theArea> is used to initialize the tool for splitting surface in the case of splitting into N parts where N is user-defined.
         """
     def Status(self,status : OCP.ShapeExtend.ShapeExtend_Status) -> bool: 
         """
@@ -1122,9 +1134,9 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1146,6 +1158,18 @@ class ShapeUpgrade_FaceDivideArea(ShapeUpgrade_FaceDivide, ShapeUpgrade_Tool, OC
     def MaxArea(self, arg1: float) -> None:
         """
         Set max area allowed for faces
+        """
+    @property
+    def NbParts(self) -> int:
+        """
+        Set number of parts expected
+
+        :type: int
+        """
+    @NbParts.setter
+    def NbParts(self, arg1: int) -> None:
+        """
+        Set number of parts expected
         """
     pass
 class ShapeUpgrade_FixSmallCurves(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient):
@@ -1184,23 +1208,23 @@ class ShapeUpgrade_FixSmallCurves(ShapeUpgrade_Tool, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1317,23 +1341,23 @@ class ShapeUpgrade_FixSmallBezierCurves(ShapeUpgrade_FixSmallCurves, ShapeUpgrad
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1455,23 +1479,23 @@ class ShapeUpgrade_RemoveInternalWires(ShapeUpgrade_Tool, OCP.Standard.Standard_
         Initialize by a Shape.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]
@@ -1491,14 +1515,14 @@ class ShapeUpgrade_RemoveInternalWires(ShapeUpgrade_Tool, OCP.Standard.Standard_
         Returns minimal allowed tolerance
         """
     @overload
-    def Perform(self,theSeqShapes : OCP.TopTools.TopTools_SequenceOfShape) -> bool: 
+    def Perform(self) -> bool: 
         """
         Removes all internal wires having area less than area specified as minimal allowed area
 
         If specified sequence of shape contains - 1.wires then these wires will be removed if they have area less than allowed min area. 2.faces than internal wires from these faces will be removed if they have area less than allowed min area.
         """
     @overload
-    def Perform(self) -> bool: ...
+    def Perform(self,theSeqShapes : OCP.TopTools.TopTools_SequenceOfShape) -> bool: ...
     def Precision(self) -> float: 
         """
         Returns basic precision value
@@ -1556,9 +1580,9 @@ class ShapeUpgrade_RemoveInternalWires(ShapeUpgrade_Tool, OCP.Standard.Standard_
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1625,23 +1649,23 @@ class ShapeUpgrade_RemoveLocations(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ModifiedShape(self,theInitShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns modified shape obtained from initial shape.
@@ -2067,6 +2091,12 @@ class ShapeUpgrade_ShapeDivideArea(ShapeUpgrade_ShapeDivide):
         """
         Sets message registrator
         """
+    def SetNumbersUVSplits(self,theNbUsplits : int,theNbVsplits : int) -> None: 
+        """
+        Set fixed numbers of splits in U and V directions. Only for "Splitting By Numbers" mode
+
+        Set fixed numbers of splits in U and V directions. Only for "Splitting By Numbers" mode
+        """
     def SetPrecision(self,Prec : float) -> None: 
         """
         Defines the spatial precision used for splitting
@@ -2074,6 +2104,12 @@ class ShapeUpgrade_ShapeDivideArea(ShapeUpgrade_ShapeDivide):
     def SetSplitFaceTool(self,splitFaceTool : ShapeUpgrade_FaceDivide) -> None: 
         """
         Sets the tool for splitting faces.
+        """
+    def SetSplittingByNumber(self,theIsSplittingByNumber : bool) -> None: 
+        """
+        Set splitting mode If the mode is "splitting by number", the face is splitted approximately into <myNbParts> parts, the parts are similar to squares in 2D.
+
+        Set splitting mode If the mode is "splitting by number", the face is splitted approximately into <myNbParts> parts, the parts are similar to squares in 2D.
         """
     def SetSurfaceSegmentMode(self,Segment : bool) -> None: 
         """
@@ -2098,6 +2134,18 @@ class ShapeUpgrade_ShapeDivideArea(ShapeUpgrade_ShapeDivide):
     def MaxArea(self, arg1: float) -> None:
         """
         Set max area allowed for faces
+        """
+    @property
+    def NbParts(self) -> int:
+        """
+        Set number of parts expected for the case of splitting by number
+
+        :type: int
+        """
+    @NbParts.setter
+    def NbParts(self, arg1: int) -> None:
+        """
+        Set number of parts expected for the case of splitting by number
         """
     pass
 class ShapeUpgrade_ShapeDivideClosed(ShapeUpgrade_ShapeDivide):
@@ -2325,9 +2373,9 @@ class ShapeUpgrade_ShapeDivideContinuity(ShapeUpgrade_ShapeDivide):
         Queries the status of last call to Perform OK : no splitting was done (or no call to Perform) DONE1: some edges were split DONE2: surface was split FAIL1: some errors occurred
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ShapeUpgrade_ShellSewing():
     """
@@ -2376,32 +2424,32 @@ class ShapeUpgrade_SplitCurve2d(ShapeUpgrade_SplitCurve, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         Initializes with pcurve with its first and last parameters.
 
         Initializes with pcurve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -2471,32 +2519,32 @@ class ShapeUpgrade_ConvertCurve2dToBezier(ShapeUpgrade_SplitCurve2d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         Initializes with pcurve with its first and last parameters.
 
         Initializes with pcurve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -2570,32 +2618,32 @@ class ShapeUpgrade_SplitCurve2dContinuity(ShapeUpgrade_SplitCurve2d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         Initializes with pcurve with its first and last parameters.
 
         Initializes with pcurve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def Init(self,C : OCP.Geom2d.Geom2d_Curve,First : float,Last : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -2691,32 +2739,32 @@ class ShapeUpgrade_ConvertCurve3dToBezier(ShapeUpgrade_SplitCurve3d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         Initializes with curve with its first and last parameters.
 
         Initializes with curve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -2812,32 +2860,32 @@ class ShapeUpgrade_SplitCurve3dContinuity(ShapeUpgrade_SplitCurve3d, ShapeUpgrad
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: 
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
         """
         Initializes with curve with its first and last parameters.
 
         Initializes with curve with its parameters.
         """
     @overload
-    def Init(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,C : OCP.Geom.Geom_Curve,First : float,Last : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the curve. First defines splitting values by method Compute(), then calls method Build().
@@ -2935,32 +2983,32 @@ class ShapeUpgrade_ConvertSurfaceToBezierBasis(ShapeUpgrade_SplitSurface, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,theArea : float=0.0) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the surface. First defines splitting values by method Compute(), then calls method Build().
@@ -3066,32 +3114,32 @@ class ShapeUpgrade_SplitSurfaceAngle(ShapeUpgrade_SplitSurface, OCP.Standard.Sta
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,theArea : float=0.0) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxAngle(self) -> float: 
         """
         Returns maximal angle
@@ -3177,32 +3225,32 @@ class ShapeUpgrade_SplitSurfaceArea(ShapeUpgrade_SplitSurface, OCP.Standard.Stan
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,theArea : float=0.0) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the surface. First defines splitting values by method Compute(), then calls method Build().
@@ -3210,6 +3258,18 @@ class ShapeUpgrade_SplitSurfaceArea(ShapeUpgrade_SplitSurface, OCP.Standard.Stan
     def ResSurfaces(self) -> OCP.ShapeExtend.ShapeExtend_CompositeSurface: 
         """
         Returns obtained surfaces after splitting as CompositeSurface
+        """
+    def SetNumbersUVSplits(self,theNbUsplits : int,theNbVsplits : int) -> None: 
+        """
+        Set fixed numbers of splits in U and V directions. Only for "Splitting Into Squares" mode
+
+        Set fixed numbers of splits in U and V directions. Only for "Splitting Into Squares" mode
+        """
+    def SetSplittingIntoSquares(self,theIsSplittingIntoSquares : bool) -> None: 
+        """
+        Set splitting mode If the mode is "splitting into squares", the face is splitted approximately into <myNbParts> parts, the parts are similar to squares in 2D.
+
+        Set splitting mode If the mode is "splitting into squares", the face is splitted approximately into <myNbParts> parts, the parts are similar to squares in 2D.
         """
     def SetUSplitValues(self,UValues : OCP.TColStd.TColStd_HSequenceOfReal) -> None: 
         """
@@ -3292,32 +3352,32 @@ class ShapeUpgrade_SplitSurfaceContinuity(ShapeUpgrade_SplitSurface, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float,theArea : float=0.0) -> None: 
         """
         Initializes with single supporting surface.
 
         Initializes with single supporting surface with bounding parameters.
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface,UFirst : float,ULast : float,VFirst : float,VLast : float) -> None: ...
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,Segment : bool=True) -> None: 
         """
         Performs correction/splitting of the surface. First defines splitting values by method Compute(), then calls method Build().
@@ -3426,23 +3486,23 @@ class ShapeUpgrade_ClosedEdgeDivide(ShapeUpgrade_EdgeDivide, ShapeUpgrade_Tool, 
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Knots2d(self) -> OCP.TColStd.TColStd_HSequenceOfReal: 
         """
         None
@@ -3580,23 +3640,23 @@ class ShapeUpgrade_UnifySameDomain(OCP.Standard.Standard_Transient):
         Initializes with a shape and necessary flags. It does not perform unification. If you intend to nullify the History place holder do it after initialization.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def KeepShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Sets the shape for avoid merging of the faces/edges. This shape can be vertex or edge. If the shape is a vertex it forbids merging of connected edges. If the shape is a edge it forbids merging of connected faces. This method can be called several times to keep several shapes.
@@ -3683,32 +3743,32 @@ class ShapeUpgrade_WireDivide(ShapeUpgrade_Tool, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Initializes by wire and face
 
         Initializes by wire and surface
         """
     @overload
-    def Init(self,W : OCP.TopoDS.TopoDS_Wire,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,W : OCP.TopoDS.TopoDS_Wire,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LimitTolerance(self,toler : float) -> float: 
         """
         Returns tolerance limited by [myMinTol,myMaxTol]

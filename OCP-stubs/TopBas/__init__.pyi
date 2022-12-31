@@ -19,7 +19,7 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: 
+    def Append(self,theItem : TopBas_TestInterference,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -30,7 +30,7 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theOther : TopBas_ListOfTestInterference) -> None: ...
     @overload
-    def Append(self,theItem : TopBas_TestInterference,theIter : Any) -> None: ...
+    def Append(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: ...
     def Assign(self,theOther : TopBas_ListOfTestInterference) -> TopBas_ListOfTestInterference: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -50,14 +50,14 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: 
+    def InsertAfter(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : TopBas_ListOfTestInterference,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: ...
     @overload
     def InsertBefore(self,theItem : TopBas_TestInterference,theIter : Any) -> TopBas_TestInterference: 
         """
@@ -78,14 +78,14 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: 
+    def Prepend(self,theOther : TopBas_ListOfTestInterference) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : TopBas_ListOfTestInterference) -> None: ...
+    def Prepend(self,theItem : TopBas_TestInterference) -> TopBas_TestInterference: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -103,11 +103,11 @@ class TopBas_ListOfTestInterference(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : TopBas_ListOfTestInterference) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : TopBas_ListOfTestInterference) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TopBas_TestInterference():
@@ -133,14 +133,14 @@ class TopBas_TestInterference():
     @overload
     def BoundaryTransition(self,BTr : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
-    def Intersection(self,I : float) -> None: 
+    def Intersection(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def Intersection(self) -> float: ...
+    def Intersection(self,I : float) -> None: ...
     @overload
     def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
@@ -151,18 +151,18 @@ class TopBas_TestInterference():
     @overload
     def Orientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
-    def Transition(self) -> OCP.TopAbs.TopAbs_Orientation: 
+    def Transition(self,Tr : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Transition(self,Tr : OCP.TopAbs.TopAbs_Orientation) -> None: ...
-    @overload
-    def __init__(self,Inters : float,Bound : int,Orient : OCP.TopAbs.TopAbs_Orientation,Trans : OCP.TopAbs.TopAbs_Orientation,BTrans : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def Transition(self) -> OCP.TopAbs.TopAbs_Orientation: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Inters : float,Bound : int,Orient : OCP.TopAbs.TopAbs_Orientation,Trans : OCP.TopAbs.TopAbs_Orientation,BTrans : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @property
     def ChangeBoundary(self) -> int:
         """

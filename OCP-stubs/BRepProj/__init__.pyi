@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import OCP.TopoDS
+import OCP.gp
 __all__  = [
 "BRepProj_Projection"
 ]
@@ -50,7 +50,7 @@ class BRepProj_Projection():
         Returns the complete result as compound of wires.
         """
     @overload
-    def __init__(self,Wire : OCP.TopoDS.TopoDS_Shape,Shape : OCP.TopoDS.TopoDS_Shape,D : OCP.gp.gp_Dir) -> None: ...
-    @overload
     def __init__(self,Wire : OCP.TopoDS.TopoDS_Shape,Shape : OCP.TopoDS.TopoDS_Shape,P : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,Wire : OCP.TopoDS.TopoDS_Shape,Shape : OCP.TopoDS.TopoDS_Shape,D : OCP.gp.gp_Dir) -> None: ...
     pass

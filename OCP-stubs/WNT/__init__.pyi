@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import io
-import OCP.SelectMgr
 import OCP.Graphic3d
-import OCP.Standard
+import OCP.SelectMgr
 import OCP.Aspect
 import OCP.TCollection
+import OCP.Standard
+import OCP.Quantity
+import io
 __all__  = [
 "WNT_ClassDefinitionError",
 "WNT_HIDSpaceMouse",
@@ -143,23 +143,23 @@ class WNT_WClass(OCP.Standard.Standard_Transient):
         Returns a program instance handle.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a class name.
@@ -250,6 +250,10 @@ class WNT_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         """
         Return device pixel ratio (logical to backing store scale factor).
         """
+    def Dimensions(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Returns window dimensions.
+        """
     def DisplayConnection(self) -> OCP.Aspect.Aspect_DisplayConnection: 
         """
         Returns connection to Display or NULL.
@@ -295,23 +299,23 @@ class WNT_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Invalidate entire window content by calling InvalidateRect() WinAPI function, resulting in WM_PAINT event put into window message loop. Method can be called from non-window thread, and system will also automatically aggregate multiple events into single one.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMapped(self) -> bool: 
         """
         Returns True if the window <me> is opened and False if the window is closed.
@@ -371,7 +375,7 @@ class WNT_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         """
     def RegisterRawInputDevices(self,theRawDeviceMask : int) -> int: ...
     @overload
-    def SetBackground(self,ABackground : OCP.Aspect.Aspect_GradientBackground) -> None: 
+    def SetBackground(self,theBack : OCP.Aspect.Aspect_Background) -> None: 
         """
         Modifies the window background.
 
@@ -382,11 +386,11 @@ class WNT_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
         Modifies the window gradient background.
         """
     @overload
-    def SetBackground(self,ABack : OCP.Aspect.Aspect_Background) -> None: ...
+    def SetBackground(self,theBackground : OCP.Aspect.Aspect_GradientBackground) -> None: ...
+    @overload
+    def SetBackground(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
     def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : OCP.Aspect.Aspect_GradientFillMethod) -> None: ...
-    @overload
-    def SetBackground(self,color : OCP.Quantity.Quantity_Color) -> None: ...
     def SetCursor(self,theCursor : capsule) -> None: 
         """
         Sets cursor for ENTIRE WINDOW CLASS to which the Window belongs.
@@ -410,6 +414,10 @@ class WNT_Window(OCP.Aspect.Aspect_Window, OCP.Standard.Standard_Transient):
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TopLeft(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Returns window top-left corner.
         """
     def Unmap(self) -> None: 
         """

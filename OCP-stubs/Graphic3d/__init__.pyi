@@ -4,26 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import Graphic3d_Camera
-import OCP.NCollection
-import io
-import OCP.OSD
-import OCP.SelectMgr
+import OCP.Aspect
+import OCP.TopLoc
+import OCP.TCollection
 import OCP.Standard
 import OCP.TColStd
-import OCP.Select3D
-import OCP.Font
-import OCP.Quantity
-import OCP.TopLoc
+import io
+import OCP.SelectMgr
+import Graphic3d_Camera
+import OCP.NCollection
+import OCP.OSD
 import OCP.gp
 import OCP.Image
-import OCP.Aspect
-import OCP.TCollection
+import OCP.Select3D
 import OCP.Bnd
+import OCP.Font
+import OCP.Quantity
 __all__  = [
 "Graphic3d_AlphaMode",
 "Graphic3d_Array1OfAttribute",
-"Graphic3d_ArrayOfIndexedMapOfStructure",
 "Graphic3d_ArrayOfPrimitives",
 "Graphic3d_ArrayOfPolygons",
 "Graphic3d_ArrayOfPolylines",
@@ -63,6 +62,7 @@ __all__  = [
 "Graphic3d_CullingTool",
 "Graphic3d_CView",
 "Graphic3d_DiagnosticInfo",
+"Graphic3d_DisplayPriority",
 "Graphic3d_FrameStats",
 "Graphic3d_FrameStatsCounter",
 "Graphic3d_FrameStatsData",
@@ -81,7 +81,6 @@ __all__  = [
 "Graphic3d_HatchStyle",
 "Graphic3d_HorizontalTextAlignment",
 "Graphic3d_IndexBuffer",
-"Graphic3d_IndexedMapOfStructure",
 "Graphic3d_Layer",
 "Graphic3d_LevelOfTextureAnisotropy",
 "Graphic3d_LightSet",
@@ -127,8 +126,8 @@ __all__  = [
 "Graphic3d_Texture1Dmanual",
 "Graphic3d_Texture1Dsegment",
 "Graphic3d_MediaTexture",
-"Graphic3d_Texture2Dmanual",
 "Graphic3d_Texture2Dplane",
+"Graphic3d_Texture3D",
 "Graphic3d_TextureEnv",
 "Graphic3d_CubeMapPacked",
 "Graphic3d_TextureParams",
@@ -238,6 +237,19 @@ __all__  = [
 "Graphic3d_DiagnosticInfo_Memory",
 "Graphic3d_DiagnosticInfo_NativePlatform",
 "Graphic3d_DiagnosticInfo_Short",
+"Graphic3d_DisplayPriority_Above",
+"Graphic3d_DisplayPriority_Above1",
+"Graphic3d_DisplayPriority_Above2",
+"Graphic3d_DisplayPriority_AlmostBottom",
+"Graphic3d_DisplayPriority_Below",
+"Graphic3d_DisplayPriority_Below1",
+"Graphic3d_DisplayPriority_Below2",
+"Graphic3d_DisplayPriority_Bottom",
+"Graphic3d_DisplayPriority_Highlight",
+"Graphic3d_DisplayPriority_INVALID",
+"Graphic3d_DisplayPriority_NB",
+"Graphic3d_DisplayPriority_Normal",
+"Graphic3d_DisplayPriority_Topmost",
 "Graphic3d_FM_CONDUCTOR",
 "Graphic3d_FM_CONSTANT",
 "Graphic3d_FM_DIELECTRIC",
@@ -551,6 +563,7 @@ __all__  = [
 "Graphic3d_TypeOfBackfacingModel_Auto",
 "Graphic3d_TypeOfBackfacingModel_BackCulled",
 "Graphic3d_TypeOfBackfacingModel_DoubleSided",
+"Graphic3d_TypeOfBackfacingModel_FrontCulled",
 "Graphic3d_TypeOfBackground_NB",
 "Graphic3d_TypeOfLightSource_Ambient",
 "Graphic3d_TypeOfLightSource_Directional",
@@ -586,6 +599,10 @@ __all__  = [
 "Graphic3d_TypeOfShadingModel_Phong",
 "Graphic3d_TypeOfShadingModel_PhongFacet",
 "Graphic3d_TypeOfShadingModel_Unlit",
+"Graphic3d_TypeOfTexture_1D",
+"Graphic3d_TypeOfTexture_2D",
+"Graphic3d_TypeOfTexture_3D",
+"Graphic3d_TypeOfTexture_CUBEMAP",
 "Graphic3d_VTA_BOTTOM",
 "Graphic3d_VTA_CENTER",
 "Graphic3d_VTA_TOP",
@@ -728,99 +745,13 @@ class Graphic3d_Array1OfAttribute():
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : Graphic3d_Array1OfAttribute) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : Graphic3d_Attribute,theLower : int,theUpper : int) -> None: ...
-    def __iter__(self) -> Iterator: ...
-    pass
-class Graphic3d_ArrayOfIndexedMapOfStructure():
-    """
-    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
-    """
-    def Assign(self,theOther : Graphic3d_ArrayOfIndexedMapOfStructure) -> Graphic3d_ArrayOfIndexedMapOfStructure: 
-        """
-        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
-        """
-    def ChangeFirst(self) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Returns first element
-        """
-    def ChangeLast(self) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Returns last element
-        """
-    def ChangeValue(self,theIndex : int) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Variable value access
-        """
-    def First(self) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Returns first element
-        """
-    def Init(self,theValue : Graphic3d_IndexedMapOfStructure) -> None: 
-        """
-        Initialise the items with theValue
-        """
-    def IsAllocated(self) -> bool: 
-        """
-        IsAllocated flag - for naming compatibility
-        """
-    def IsDeletable(self) -> bool: 
-        """
-        myDeletable flag
-        """
-    def IsEmpty(self) -> bool: 
-        """
-        Return TRUE if array has zero length.
-        """
-    def Last(self) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Returns last element
-        """
-    def Length(self) -> int: 
-        """
-        Length query (the same)
-        """
-    def Lower(self) -> int: 
-        """
-        Lower bound
-        """
-    def Move(self,theOther : Graphic3d_ArrayOfIndexedMapOfStructure) -> Graphic3d_ArrayOfIndexedMapOfStructure: 
-        """
-        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
-        """
-    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
-        """
-        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
-        """
-    def SetValue(self,theIndex : int,theItem : Graphic3d_IndexedMapOfStructure) -> None: 
-        """
-        Set value
-        """
-    def Size(self) -> int: 
-        """
-        Size query
-        """
-    def Upper(self) -> int: 
-        """
-        Upper bound
-        """
-    def Value(self,theIndex : int) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Constant value access
-        """
-    @overload
-    def __init__(self,theOther : Graphic3d_ArrayOfIndexedMapOfStructure) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : Graphic3d_IndexedMapOfStructure,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
@@ -828,7 +759,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
     This class furnish services to defined and fill an array of primitives which can be passed directly to graphics rendering API.This class furnish services to defined and fill an array of primitives which can be passed directly to graphics rendering API.This class furnish services to defined and fill an array of primitives which can be passed directly to graphics rendering API.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -837,9 +768,9 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -854,9 +785,9 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -866,20 +797,20 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -888,7 +819,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -900,7 +831,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -939,31 +870,31 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -973,14 +904,14 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -995,7 +926,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -1003,7 +934,7 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1057,23 +988,23 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -1083,58 +1014,58 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -1148,31 +1079,31 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -1182,23 +1113,23 @@ class Graphic3d_ArrayOfPrimitives(OCP.Standard.Standard_Transient):
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1215,7 +1146,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     Contains polygons array definition. WARNING! Polygon primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.Contains polygons array definition. WARNING! Polygon primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -1224,9 +1155,9 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -1241,9 +1172,9 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -1253,20 +1184,20 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -1275,7 +1206,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -1287,7 +1218,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -1326,31 +1257,31 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -1360,14 +1291,14 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -1382,7 +1313,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -1390,7 +1321,7 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1444,23 +1375,23 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -1470,58 +1401,58 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -1535,31 +1466,31 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -1569,23 +1500,23 @@ class Graphic3d_ArrayOfPolygons(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @overload
@@ -1606,7 +1537,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     Contains polylines array definition.Contains polylines array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -1615,9 +1546,9 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -1632,9 +1563,9 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -1644,20 +1575,20 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -1666,7 +1597,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -1678,7 +1609,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -1717,31 +1648,31 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -1751,14 +1682,14 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -1773,7 +1704,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -1781,7 +1712,7 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1835,23 +1766,23 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -1861,58 +1792,58 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -1926,31 +1857,31 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -1960,27 +1891,27 @@ class Graphic3d_ArrayOfPolylines(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxBounds : int=0,theMaxEdges : int=0,theHasVColors : bool=False,theHasBColors : bool=False) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1997,7 +1928,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
     Contains points array definition.Contains points array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -2006,9 +1937,9 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -2023,9 +1954,9 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -2035,20 +1966,20 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -2057,7 +1988,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -2069,7 +2000,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -2108,31 +2039,31 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -2142,14 +2073,14 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -2164,7 +2095,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -2172,7 +2103,7 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2226,23 +2157,23 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -2252,58 +2183,58 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -2317,31 +2248,31 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -2351,23 +2282,23 @@ class Graphic3d_ArrayOfPoints(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standard
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theHasVColors : bool=False,theHasVNormals : bool=False) -> None: ...
     @overload
@@ -2388,7 +2319,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
     Contains quadrangles strip array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.Contains quadrangles strip array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -2397,9 +2328,9 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -2414,9 +2345,9 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -2426,20 +2357,20 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -2448,7 +2379,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -2460,7 +2391,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -2499,31 +2430,31 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -2533,14 +2464,14 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -2555,7 +2486,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -2563,7 +2494,7 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2617,23 +2548,23 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -2643,58 +2574,58 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -2708,31 +2639,31 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -2742,27 +2673,27 @@ class Graphic3d_ArrayOfQuadrangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standar
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxStrips : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasSColors : bool=False,theHasVTexels : bool=False) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxStrips : int,theArrayFlags : int) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxStrips : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasSColors : bool=False,theHasVTexels : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2779,7 +2710,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
     Contains quadrangles array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.Contains quadrangles array definition. WARNING! Quadrangle primitives might be unsupported by graphics library. Triangulation should be used instead of quads for better compatibility.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -2788,9 +2719,9 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -2805,9 +2736,9 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -2817,20 +2748,20 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -2839,7 +2770,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -2851,7 +2782,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -2890,31 +2821,31 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -2924,14 +2855,14 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -2946,7 +2877,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -2954,7 +2885,7 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -3008,23 +2939,23 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -3034,58 +2965,58 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -3099,31 +3030,31 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -3133,23 +3064,23 @@ class Graphic3d_ArrayOfQuadrangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Sta
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @overload
@@ -3170,7 +3101,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
     Contains segments array definition.Contains segments array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -3179,9 +3110,9 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -3196,9 +3127,9 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -3208,20 +3139,20 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -3230,7 +3161,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -3242,7 +3173,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -3281,31 +3212,31 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -3315,14 +3246,14 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -3337,7 +3268,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -3345,7 +3276,7 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -3399,23 +3330,23 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -3425,58 +3356,58 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -3490,31 +3421,31 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -3524,23 +3455,23 @@ class Graphic3d_ArrayOfSegments(Graphic3d_ArrayOfPrimitives, OCP.Standard.Standa
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @overload
@@ -3561,7 +3492,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
     Contains triangles fan array definitionContains triangles fan array definition
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -3570,9 +3501,9 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -3587,9 +3518,9 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -3599,20 +3530,20 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -3621,7 +3552,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -3633,7 +3564,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -3672,31 +3603,31 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -3706,14 +3637,14 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -3728,7 +3659,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -3736,7 +3667,7 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -3790,23 +3721,23 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -3816,58 +3747,58 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -3881,31 +3812,31 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -3915,23 +3846,23 @@ class Graphic3d_ArrayOfTriangleFans(Graphic3d_ArrayOfPrimitives, OCP.Standard.St
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxFans : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasBColors : bool=False,theHasVTexels : bool=False) -> None: ...
     @overload
@@ -3952,7 +3883,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
     Contains triangles strip array definition.Contains triangles strip array definition.
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -3961,9 +3892,9 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -3978,9 +3909,9 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -3990,20 +3921,20 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -4012,7 +3943,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -4024,7 +3955,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -4063,31 +3994,31 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -4097,14 +4028,14 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -4119,7 +4050,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -4127,7 +4058,7 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -4181,23 +4112,23 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -4207,58 +4138,58 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -4272,31 +4203,31 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -4306,27 +4237,27 @@ class Graphic3d_ArrayOfTriangleStrips(Graphic3d_ArrayOfPrimitives, OCP.Standard.
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
-    @overload
-    def __init__(self,theMaxVertexs : int,theMaxStrips : int,theArrayFlags : int) -> None: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxStrips : int=0,theHasVNormals : bool=False,theHasVColors : bool=False,theHasBColors : bool=False,theHasVTexels : bool=False) -> None: ...
+    @overload
+    def __init__(self,theMaxVertexs : int,theMaxStrips : int,theArrayFlags : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4343,7 +4274,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
     Contains triangles array definitionContains triangles array definition
     """
     @overload
-    def AddBound(self,theEdgeNumber : int) -> int: 
+    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: 
         """
         Adds a bound of length theEdgeNumber in the bound array
 
@@ -4352,9 +4283,9 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a bound of length theEdgeNumber and bound color coordinates in the bound array. Warning: <theR,theG,theB> are ignored when the hasBColors constructor parameter is FALSE
         """
     @overload
-    def AddBound(self,theEdgeNumber : int,theBColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
     def AddBound(self,theEdgeNumber : int,theR : float,theG : float,theB : float) -> int: ...
+    @overload
+    def AddBound(self,theEdgeNumber : int) -> int: ...
     def AddEdge(self,theVertexIndex : int) -> int: 
         """
         Adds an edge in the range [1,VertexNumber()] in the array.
@@ -4369,9 +4300,9 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array.
         """
     @overload
-    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
-    @overload
     def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: ...
+    @overload
+    def AddEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     def AddPolylineEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
         """
         Add line strip (polyline) into indexed segments array. N-1 segments are added from N input nodes (or N with closed flag). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
@@ -4381,20 +4312,20 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds four vertex indices (a quad) in the range [1,VertexNumber()] in the array of quads. Raises exception if array is not of type Graphic3d_TOPA_QUADRANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: 
+    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: 
         """
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
         Convenience method, adds quad indices in the range [1,VertexNumber()] into array or triangles as two triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddQuadTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
+    def AddQuadTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int,theVertexIndex4 : int) -> int: ...
     def AddSegmentEdges(self,theVertexIndex1 : int,theVertexIndex2 : int) -> int: 
         """
         Convenience method, adds two vertex indices (a segment) in the range [1,VertexNumber()] in the array of segments (Graphic3d_TOPA_SEGMENTS). Raises exception if array is not of type Graphic3d_TOPA_SEGMENTS.
         """
     @overload
-    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: 
+    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: 
         """
         Convenience method, adds three vertex indices of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
 
@@ -4403,7 +4334,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Convenience method, adds three vertex indices (4th component is ignored) of triangle in the range [1,VertexNumber()] in the array of triangles. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddTriangleEdges(self,theIndexes : Graphic3d_Vec3i) -> int: ...
+    def AddTriangleEdges(self,theVertexIndex1 : int,theVertexIndex2 : int,theVertexIndex3 : int) -> int: ...
     @overload
     def AddTriangleEdges(self,theIndexes : Graphic3d_Vec4i) -> int: ...
     def AddTriangleFanEdges(self,theVertexLower : int,theVertexUpper : int,theToClose : bool) -> None: 
@@ -4415,7 +4346,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Add triangle strip into indexed triangulation array. N-2 triangles are added from N input nodes. Raises exception if array is not of type Graphic3d_TOPA_TRIANGLES.
         """
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: 
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: 
         """
         Adds a vertice in the array.
 
@@ -4454,31 +4385,31 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Adds a vertice,vertex normal and texture in the vertex array. Warning: Normal is ignored when the hasVNormals constructor parameter is FALSE and Texel is ignored when the hasVTexels constructor parameter is FALSE.
         """
     @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float,theTX : float,theTY : float) -> int: ...
     @overload
     def AddVertex(self,theX : float,theY : float,theZ : float,theTX : float,theTY : float) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor32 : int) -> int: ...
-    @overload
-    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
-    @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : Graphic3d_Vec4ub) -> int: ...
-    @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theColor : OCP.Quantity.Quantity_Color) -> int: ...
     @overload
     def AddVertex(self,theVertex : OCP.gp.gp_Vec3f) -> int: ...
     @overload
-    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir) -> int: ...
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt) -> int: ...
+    @overload
+    def AddVertex(self,theVertex : OCP.gp.gp_Pnt,theNormal : OCP.gp.gp_Dir,theTexel : OCP.gp.gp_Pnt2d) -> int: ...
+    @overload
+    def AddVertex(self,theX : float,theY : float,theZ : float,theNX : float,theNY : float,theNZ : float) -> int: ...
     def Attributes(self) -> Graphic3d_Buffer: 
         """
         Returns vertex attributes buffer (colors, normals, texture coordinates).
@@ -4488,14 +4419,14 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the edge number at rank theRank.
         """
     @overload
-    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: 
+    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: 
         """
         Returns the bound color at rank theRank from the bound table if defined.
 
         Returns the bound color values at rank theRank from the bound table if defined.
         """
     @overload
-    def BoundColor(self,theRank : int) -> Tuple[float, float, float]: ...
+    def BoundColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     def BoundNumber(self) -> int: 
         """
         Returns the number of defined bounds
@@ -4510,7 +4441,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: 
         """
         Create an array of specified type.
 
@@ -4518,7 +4449,7 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         """
     @staticmethod
     @overload
-    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxBounds : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
+    def CreateArray_s(theType : Graphic3d_TypeOfPrimitiveArray,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> Graphic3d_ArrayOfPrimitives: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -4572,23 +4503,23 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns optional index buffer.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Returns TRUE only when the contains of this array is available.
@@ -4598,58 +4529,58 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the number of total items according to the array type.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
         """
         Change the bound color of rank theIndex in the array.
 
         Change the bound color of rank theIndex in the array.
         """
     @overload
-    def SetBoundColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
+    def SetBoundColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: 
+    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex in the array.
+        Change the vertex color in the array.
 
-        Change the vertex color of rank theIndex> in the array.
+        Change the vertex color in the array.
         """
-    @overload
-    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
     @overload
     def SetVertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
     @overload
-    def SetVertexColor(self,theIndex : int,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetVertexColor(self,theIndex : int,theColor32 : int) -> None: ...
+    @overload
+    def SetVertexColor(self,theIndex : int,theR : float,theG : float,theB : float) -> None: ...
     @overload
     def SetVertexNormal(self,theIndex : int,theNX : float,theNY : float,theNZ : float) -> None: 
         """
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
 
-        Change the vertex normal of rank theIndex in the array.
+        Change the vertex normal in the array.
         """
     @overload
     def SetVertexNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: 
+    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: 
         """
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
 
-        Change the vertex texel of rank theIndex in the array.
+        Change the vertex texel in the array.
         """
     @overload
-    def SetVertexTexel(self,theIndex : int,theTexel : OCP.gp.gp_Pnt2d) -> None: ...
+    def SetVertexTexel(self,theIndex : int,theTX : float,theTY : float) -> None: ...
     @overload
-    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: 
+    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: 
         """
         Change the vertice of rank theIndex in the array.
 
-        Change the vertice of rank theIndex in the array.
+        Change the vertice in the array.
         """
     @overload
-    def SetVertice(self,theIndex : int,theX : float,theY : float,theZ : float) -> None: ...
+    def SetVertice(self,theIndex : int,theVertex : OCP.gp.gp_Pnt) -> None: ...
     def StringType(self) -> str: 
         """
         Returns the string type of this primitive
@@ -4663,31 +4594,31 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the type of this primitive
         """
     @overload
-    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: 
+    def VertexColor(self,theRank : int) -> Tuple[int]: 
         """
         Returns the vertex color at rank theRank from the vertex table if defined.
 
-        Returns the vertex color at rank theIndex from the vertex table if defined.
+        Returns the vertex color from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
 
-        Returns the vertex color values at rank theRank from the vertex table if defined.
+        Returns the vertex color values from the vertex table if defined.
         """
-    @overload
-    def VertexColor(self,theRank : int) -> Tuple[int]: ...
-    @overload
-    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
     @overload
     def VertexColor(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
-    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: 
+    def VertexColor(self,theIndex : int,theColor : Graphic3d_Vec4ub) -> None: ...
+    @overload
+    def VertexColor(self,theRank : int) -> OCP.Quantity.Quantity_Color: ...
+    @overload
+    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: 
         """
-        Returns the vertex normal at rank theRank from the vertex table if defined.
+        Returns the vertex normal from the vertex table if defined.
 
         Returns the vertex normal coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexNormal(self,theRank : int) -> Tuple[float, float, float]: ...
+    def VertexNormal(self,theRank : int) -> OCP.gp.gp_Dir: ...
     def VertexNumber(self) -> int: 
         """
         Returns the number of defined vertex
@@ -4697,23 +4628,23 @@ class Graphic3d_ArrayOfTriangles(Graphic3d_ArrayOfPrimitives, OCP.Standard.Stand
         Returns the number of allocated vertex
         """
     @overload
-    def VertexTexel(self,theRank : int) -> Tuple[float, float]: 
+    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: 
         """
         Returns the vertex texture at rank theRank from the vertex table if defined.
 
         Returns the vertex texture coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def VertexTexel(self,theRank : int) -> OCP.gp.gp_Pnt2d: ...
+    def VertexTexel(self,theRank : int) -> Tuple[float, float]: ...
     @overload
-    def Vertice(self,theRank : int) -> Tuple[float, float, float]: 
+    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: 
         """
-        Returns the vertice at rank theRank from the vertex table if defined.
+        Returns the vertice from the vertex table if defined.
 
         Returns the vertice coordinates at rank theRank from the vertex table if defined.
         """
     @overload
-    def Vertice(self,theRank : int) -> OCP.gp.gp_Pnt: ...
+    def Vertice(self,theRank : int) -> Tuple[float, float, float]: ...
     @overload
     def __init__(self,theMaxVertexs : int,theMaxEdges : int,theArrayFlags : int) -> None: ...
     @overload
@@ -4868,23 +4799,23 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Check for equality with another aspects.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMarkerSprite(self) -> bool: 
         """
         Returns TRUE if marker should be drawn using marker sprite (either user-provided or generated).
@@ -5119,14 +5050,14 @@ class Graphic3d_Aspects(OCP.Standard.Standard_Transient):
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: 
+    def SetTextureMapOn(self) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self) -> None: ...
+    def SetTextureMapOn(self,theToMap : bool) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -5350,23 +5281,23 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Check for equality with another aspects.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMarkerSprite(self) -> bool: 
         """
         Returns TRUE if marker should be drawn using marker sprite (either user-provided or generated).
@@ -5601,14 +5532,14 @@ class Graphic3d_AspectLine3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: 
+    def SetTextureMapOn(self) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self) -> None: ...
+    def SetTextureMapOn(self,theToMap : bool) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -5861,23 +5792,23 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Check for equality with another aspects.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMarkerSprite(self) -> bool: 
         """
         Returns TRUE if marker should be drawn using marker sprite (either user-provided or generated).
@@ -6126,14 +6057,14 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: 
+    def SetTextureMapOn(self) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self) -> None: ...
+    def SetTextureMapOn(self,theToMap : bool) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -6215,9 +6146,9 @@ class Graphic3d_AspectMarker3d(Graphic3d_Aspects, OCP.Standard.Standard_Transien
         Return marker type.
         """
     @overload
-    def __init__(self,theType : OCP.Aspect.Aspect_TypeOfMarker,theColor : OCP.Quantity.Quantity_Color,theScale : float) -> None: ...
-    @overload
     def __init__(self,theTextureImage : OCP.Image.Image_PixMap) -> None: ...
+    @overload
+    def __init__(self,theType : OCP.Aspect.Aspect_TypeOfMarker,theColor : OCP.Quantity.Quantity_Color,theScale : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -6392,23 +6323,23 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Check for equality with another aspects.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMarkerSprite(self) -> bool: 
         """
         Returns TRUE if marker should be drawn using marker sprite (either user-provided or generated).
@@ -6471,14 +6402,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Modifies the surface material of internal faces
         """
     @overload
-    def SetColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Modifies the color.
 
         Modifies the color.
         """
     @overload
-    def SetColor(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
     def SetColorSubTitle(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
@@ -6665,14 +6596,14 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: 
+    def SetTextureMapOn(self) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self) -> None: ...
+    def SetTextureMapOn(self,theToMap : bool) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -6750,9 +6681,9 @@ class Graphic3d_AspectText3d(Graphic3d_Aspects, OCP.Standard.Standard_Transient)
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theColor : OCP.Quantity.Quantity_Color,theFont : str,theExpansionFactor : float,theSpace : float,theStyle : OCP.Aspect.Aspect_TypeOfStyleText=Aspect_TypeOfStyleText.Aspect_TOST_NORMAL,theDisplayType : OCP.Aspect.Aspect_TypeOfDisplayText=Aspect_TypeOfDisplayText.Aspect_TODT_NORMAL) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6907,23 +6838,23 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Check for equality with another aspects.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMarkerSprite(self) -> bool: 
         """
         Returns TRUE if marker should be drawn using marker sprite (either user-provided or generated).
@@ -7158,14 +7089,14 @@ class Graphic3d_AspectFillArea3d(Graphic3d_Aspects, OCP.Standard.Standard_Transi
         Disable texture mapping.
         """
     @overload
-    def SetTextureMapOn(self,theToMap : bool) -> None: 
+    def SetTextureMapOn(self) -> None: 
         """
         Enable or disable texture mapping (has no effect if texture is not set).
 
         Enable texture mapping (has no effect if texture is not set).
         """
     @overload
-    def SetTextureMapOn(self) -> None: ...
+    def SetTextureMapOn(self,theToMap : bool) -> None: ...
     def SetTextureSet(self,theTextures : Graphic3d_TextureSet) -> None: 
         """
         Setup texture array to be mapped.
@@ -7335,14 +7266,14 @@ class Graphic3d_Buffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: 
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: 
         """
         Allocates new empty array
 
         Allocates new empty array
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: ...
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
     def Invalidate(self) -> None: 
         """
         Invalidate entire buffer.
@@ -7356,27 +7287,27 @@ class Graphic3d_Buffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInterleaved(self) -> bool: 
         """
         Flag indicating that attributes in the buffer are interleaved; TRUE by default. Requires sub-classing for creating a non-interleaved buffer (advanced usage).
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Return TRUE if data can be invalidated; FALSE by default. Requires sub-classing for creating a mutable buffer (advanced usage).
@@ -7640,23 +7571,23 @@ class Graphic3d_BoundBuffer(OCP.NCollection.NCollection_Buffer, OCP.Standard.Sta
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetAllocator(self,theAlloc : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Assign new buffer allocator with de-allocation of buffer.
@@ -7788,7 +7719,7 @@ class Graphic3d_AttribBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffe
     @overload
     def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
     @overload
-    def Invalidate(self) -> None: 
+    def Invalidate(self,theAttributeIndex : int) -> None: 
         """
         Invalidate the entire buffer data.
 
@@ -7803,7 +7734,7 @@ class Graphic3d_AttribBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffe
     @overload
     def Invalidate(self,theAttributeIndex : int,theVertexLower : int,theVertexUpper : int) -> None: ...
     @overload
-    def Invalidate(self,theAttributeIndex : int) -> None: ...
+    def Invalidate(self) -> None: ...
     def InvalidatedRange(self) -> Graphic3d_BufferRange: 
         """
         Return invalidated range.
@@ -7813,27 +7744,27 @@ class Graphic3d_AttribBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffe
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInterleaved(self) -> bool: 
         """
         Return TRUE for interleaved array; TRUE by default.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Return TRUE if data can be invalidated; FALSE by default.
@@ -8039,14 +7970,14 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Direction(self) -> OCP.gp.gp_Dir: 
+    def Direction(self) -> Tuple[float, float, float]: 
         """
         Returns direction of directional/spot light.
 
         Returns the theVx, theVy, theVz direction of the light source.
         """
     @overload
-    def Direction(self) -> Tuple[float, float, float]: ...
+    def Direction(self) -> OCP.gp.gp_Dir: ...
     def DisplayPosition(self) -> OCP.gp.gp_Pnt: 
         """
         Returns location of positional/spot/directional light, which is the same as returned by Position().
@@ -8092,23 +8023,23 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         Returns true if the light is a headlight; FALSE by default. Headlight flag means that light position/direction are defined not in a World coordinate system, but relative to the camera orientation.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LinearAttenuation(self) -> float: 
         """
         Returns linear attenuation factor of positional/spot light source; 0.0 by default. Distance attenuation factors of reducing positional/spot light intensity depending on the distance from its position:
@@ -8171,14 +8102,14 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         Defines the coefficient of concentration; value should be within range [0.0, 1.0].
         """
     @overload
-    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: 
+    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: 
         """
         Sets direction of directional/spot light.
 
         Sets direction of directional/spot light.
         """
     @overload
-    def SetDirection(self,theVx : float,theVy : float,theVz : float) -> None: ...
+    def SetDirection(self,theDir : OCP.gp.gp_Dir) -> None: ...
     def SetDisplayPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
         """
         Setup location of positional/spot/directional light, which is the same as SetPosition() but allows directional light source (technically having no position, but this point can be used for displaying light source presentation).
@@ -8200,14 +8131,14 @@ class Graphic3d_CLight(OCP.Standard.Standard_Transient):
         Sets light source name.
         """
     @overload
-    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: 
+    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: 
         """
         Setup location of positional/spot light.
 
         Setup location of positional/spot light.
         """
     @overload
-    def SetPosition(self,theX : float,theY : float,theZ : float) -> None: ...
+    def SetPosition(self,thePosition : OCP.gp.gp_Pnt) -> None: ...
     def SetRange(self,theValue : float) -> None: 
         """
         Modifies maximum distance on which point light source affects to objects and is considered during illumination calculations. Positional and spot lights are only point light sources. 0.0 means disabling range considering at all without any distance limits.
@@ -8324,6 +8255,10 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
         """
         Returns valid handle to highlight style of the structure in case if highlight flag is set to true
         """
+    def Identification(self) -> int: 
+        """
+        Return structure id (generated by Graphic3d_GraphicDriver::NewIdentification() during structure construction).
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -8337,32 +8272,32 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
         Returns FALSE if the structure hits the current view volume, otherwise returns TRUE.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IsVisible(self) -> bool: 
+    def IsVisible(self,theViewId : int) -> bool: 
         """
         Return structure visibility flag
 
         Return structure visibility considering both View Affinity and global visibility state.
         """
     @overload
-    def IsVisible(self,theViewId : int) -> bool: ...
+    def IsVisible(self) -> bool: ...
     def MarkAsNotCulled(self) -> None: 
         """
         Marks structure as overlapping the current view volume one. The method is called during traverse of BVH tree.
@@ -8374,6 +8309,14 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
     def OnVisibilityChanged(self) -> None: 
         """
         Update structure visibility state
+        """
+    def PreviousPriority(self) -> Graphic3d_DisplayPriority: 
+        """
+        Return previous structure display priority.
+        """
+    def Priority(self) -> Graphic3d_DisplayPriority: 
+        """
+        Return structure display priority.
         """
     def RemoveGroup(self,theGroup : Graphic3d_Group) -> None: 
         """
@@ -8394,6 +8337,14 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
     def SetGroupTransformPersistence(self,theValue : bool) -> None: 
         """
         Set if some groups might have transform persistence.
+        """
+    def SetPreviousPriority(self,thePriority : Graphic3d_DisplayPriority) -> None: 
+        """
+        Set previous structure display priority.
+        """
+    def SetPriority(self,thePriority : Graphic3d_DisplayPriority) -> None: 
+        """
+        Set structure display priority.
         """
     def SetTransformPersistence(self,theTrsfPers : Graphic3d_TransformPers) -> None: 
         """
@@ -8441,38 +8392,6 @@ class Graphic3d_CStructure(OCP.Standard.Standard_Transient):
         """
         Update render transformation matrix.
         """
-    @property
-    def ContainsFacet(self) -> int:
-        """
-        :type: int
-        """
-    @ContainsFacet.setter
-    def ContainsFacet(self, arg0: int) -> None:
-        pass
-    @property
-    def Id(self) -> int:
-        """
-        :type: int
-        """
-    @Id.setter
-    def Id(self, arg0: int) -> None:
-        pass
-    @property
-    def PreviousPriority(self) -> int:
-        """
-        :type: int
-        """
-    @PreviousPriority.setter
-    def PreviousPriority(self, arg0: int) -> None:
-        pass
-    @property
-    def Priority(self) -> int:
-        """
-        :type: int
-        """
-    @Priority.setter
-    def Priority(self, arg0: int) -> None:
-        pass
     pass
 class Graphic3d_DataStructureManager(OCP.Standard.Standard_Transient):
     """
@@ -8499,23 +8418,23 @@ class Graphic3d_DataStructureManager(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -8780,23 +8699,23 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         Return TRUE if custom stereo projection matrices are set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOrthographic(self) -> bool: 
         """
         Check that the camera projection is orthographic.
@@ -9002,14 +8921,14 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         Get camera Up direction vector.
         """
     @overload
-    def ViewDimensions(self,theZValue : float) -> OCP.gp.gp_XYZ: 
+    def ViewDimensions(self) -> OCP.gp.gp_XYZ: 
         """
         Calculate view plane size at center (target) point and distance between ZFar and ZNear planes.
 
         Calculate view plane size at center point with specified Z offset and distance between ZFar and ZNear planes.
         """
     @overload
-    def ViewDimensions(self) -> OCP.gp.gp_XYZ: ...
+    def ViewDimensions(self,theZValue : float) -> OCP.gp.gp_XYZ: ...
     def WorldViewProjState(self) -> Graphic3d_WorldViewProjState: 
         """
         Returns projection modification state of the camera.
@@ -9023,14 +8942,14 @@ class Graphic3d_Camera(OCP.Standard.Standard_Transient):
         Get the Far Z-clipping plane position.
         """
     @overload
-    def ZFitAll(self,theScaleFactor : float,theMinMax : OCP.Bnd.Bnd_Box,theGraphicBB : OCP.Bnd.Bnd_Box) -> None: 
+    def ZFitAll(self,theScaleFactor : float,theMinMax : OCP.Bnd.Bnd_Box,theGraphicBB : OCP.Bnd.Bnd_Box,theZNear : float,theZFar : float) -> bool: 
         """
         Estimate Z-min and Z-max planes of projection volume to match the displayed objects. The methods ensures that view volume will be close by depth range to the displayed objects. Fitting assumes that for orthogonal projection the view volume contains the displayed objects completely. For zoomed perspective view, the view volume is adjusted such that it contains the objects or their parts, located in front of the camera.
 
         Change Z-min and Z-max planes of projection volume to match the displayed objects.
         """
     @overload
-    def ZFitAll(self,theScaleFactor : float,theMinMax : OCP.Bnd.Bnd_Box,theGraphicBB : OCP.Bnd.Bnd_Box,theZNear : float,theZFar : float) -> bool: ...
+    def ZFitAll(self,theScaleFactor : float,theMinMax : OCP.Bnd.Bnd_Box,theGraphicBB : OCP.Bnd.Bnd_Box) -> None: ...
     def ZFocus(self) -> float: 
         """
         Get stereographic focus value.
@@ -9094,9 +9013,9 @@ class Graphic3d_CameraLerp():
         Compute interpolated value between two values.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theStart : Graphic3d_Camera,theEnd : Graphic3d_Camera) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Graphic3d_CameraTile():
     """
@@ -9280,23 +9199,23 @@ class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
         Returns True if hatching mask is turned on.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOn(self) -> bool: 
         """
         Check that the clipping plane is turned on.
@@ -9435,13 +9354,13 @@ class Graphic3d_ClipPlane(OCP.Standard.Standard_Transient):
         Flag indicating whether texture for capping plane should be taken from object. Default value: FALSE.
         """
     @overload
-    def __init__(self,theEquation : Graphic3d_Vec4d) -> None: ...
+    def __init__(self,theOther : Graphic3d_ClipPlane) -> None: ...
     @overload
     def __init__(self,thePlane : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Graphic3d_ClipPlane) -> None: ...
+    def __init__(self,theEquation : Graphic3d_Vec4d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -9526,6 +9445,10 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -9539,23 +9462,23 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Returns whether row's memory layout is top-down.
@@ -9571,6 +9494,10 @@ class Graphic3d_TextureRoot(OCP.Standard.Standard_Transient):
     def SetColorMap(self,theIsColor : bool) -> None: 
         """
         Set flag indicating color nature of values within the texture.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
         """
     @staticmethod
     def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
@@ -9642,14 +9569,14 @@ class Graphic3d_CubeMapOrder():
         Returns permuted by other cubemap order copy of current one.
         """
     @overload
-    def Set(self,theOrder : Graphic3d_CubeMapOrder) -> Graphic3d_CubeMapOrder: 
+    def Set(self,theCubeMapSide : Graphic3d_CubeMapSide,theValue : int) -> Graphic3d_CubeMapOrder: 
         """
         Alias of 'operator='.
 
         Sets number of tile in packed cubemap image according passed cubemap side.
         """
     @overload
-    def Set(self,theCubeMapSide : Graphic3d_CubeMapSide,theValue : int) -> Graphic3d_CubeMapOrder: ...
+    def Set(self,theOrder : Graphic3d_CubeMapOrder) -> Graphic3d_CubeMapOrder: ...
     def SetDefault(self) -> Graphic3d_CubeMapOrder: 
         """
         Sets default order (just from 0 to 5)
@@ -9667,11 +9594,11 @@ class Graphic3d_CubeMapOrder():
         Checks whether order is valid and returns object containing it. If order is invalid then exception will be thrown. This method is only way to create Graphic3d_ValidatedCubeMapOrder except copy constructor.
         """
     @overload
-    def __init__(self,theOrder : Graphic3d_ValidatedCubeMapOrder) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,thePosXLocation : int,theNegXLocation : int,thePosYLocation : int,theNegYLocation : int,thePosZLocation : int,theNegZLocation : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOrder : Graphic3d_ValidatedCubeMapOrder) -> None: ...
     pass
 class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
     """
@@ -9737,6 +9664,10 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -9750,23 +9681,23 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -9795,6 +9726,10 @@ class Graphic3d_TextureMap(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
     def SetColorMap(self,theIsColor : bool) -> None: 
         """
         Set flag indicating color nature of values within the texture.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
         """
     @staticmethod
     def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
@@ -9913,23 +9848,23 @@ class Graphic3d_CubeMap(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standar
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -10151,6 +10086,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Activates the view. Maps presentations defined within structure manager onto this view.
         """
+    def AddSubview(self,theView : Graphic3d_CView) -> None: 
+        """
+        Add subview to the list.
+        """
     def BackfacingModel(self) -> Graphic3d_TypeOfBackfacingModel: 
         """
         Return backfacing model used for the view; Graphic3d_TypeOfBackfacingModel_Auto by default, which means that backface culling is defined by each presentation.
@@ -10171,6 +10110,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns background image fill style.
         """
+    def BackgroundSkydome(self) -> OCP.Aspect.Aspect_SkydomeBackground: 
+        """
+        Returns skydome aspect;
+        """
     def BackgroundType(self) -> Graphic3d_TypeOfBackground: 
         """
         Returns background type.
@@ -10186,10 +10129,6 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def Camera(self) -> Graphic3d_Camera: 
         """
         Returns camera object of the view.
-        """
-    def ChangeHiddenObjects(self) -> Any: 
-        """
-        Returns map of objects hidden within this specific view (not viewer-wise).
         """
     def ChangeRenderingParams(self) -> Graphic3d_RenderingParams: 
         """
@@ -10219,15 +10158,6 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Returns zoom-scale factor.
         """
-    @overload
-    def ContainsFacet(self,theSet : Any) -> bool: 
-        """
-        Returns Standard_True if one of the structures displayed in the view contains Polygons, Triangles or Quadrangles.
-
-        Returns Standard_True if one of the structures in the set contains Polygons, Triangles or Quadrangles.
-        """
-    @overload
-    def ContainsFacet(self) -> bool: ...
     def CopySettings(self,theOther : Graphic3d_CView) -> None: 
         """
         Copy visualization settings from another view. Method is used for cloning views in viewer when its required to create view with same view properties.
@@ -10304,10 +10234,6 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Sets minimum and maximum points of scene bounding box for Graduated Trihedron stored in graphic view object.
         """
-    def HiddenObjects(self) -> Any: 
-        """
-        Returns map of objects hidden within this specific view (not viewer-wise).
-        """
     def IBLCubeMap(self) -> Graphic3d_CubeMap: 
         """
         Returns cubemap being set last time on background.
@@ -10361,30 +10287,42 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         Returns True if the window associated to the view is defined.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInvalidated(self) -> bool: 
         """
         Return true if view content cache has been invalidated.
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRemoved(self) -> bool: 
         """
         Returns true if the view was removed.
+        """
+    def IsSubViewRelativeSize(self) -> bool: 
+        """
+        Return TRUE if subview size is set as proportions relative to parent view.
+        """
+    def IsSubview(self) -> bool: 
+        """
+        Return TRUE if this is a subview of another view.
+        """
+    def IsSubviewComposer(self) -> bool: 
+        """
+        Return TRUE if this is view performs rendering of subviews and nothing else; FALSE by default. By default, view with subviews will render main scene and blit subviews on top of it. Rendering of main scene might become redundant in case if subviews cover entire window of parent view. This flag allows to disable rendering of the main scene in such scenarios without creation of a dedicated V3d_Viewer instance just for composing subviews.
         """
     def Layer(self,theLayerId : int) -> Graphic3d_Layer: 
         """
@@ -10410,6 +10348,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def NumberOfDisplayedStructures(self) -> int: 
         """
         Returns number of displayed structures in the view.
+        """
+    def ParentView(self) -> Graphic3d_CView: 
+        """
+        Return parent View or NULL if this is not a subview.
         """
     def PoseXRToWorld(self,thePoseXR : OCP.gp.gp_Trsf) -> OCP.gp.gp_Trsf: 
         """
@@ -10443,6 +10385,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Erases the view and removes from graphic driver. No more graphic operations are allowed in this view after the call.
         """
+    def RemoveSubview(self,theView : Graphic3d_CView) -> bool: 
+        """
+        Remove subview from the list.
+        """
     def RemoveZLayer(self,theLayerId : int) -> None: 
         """
         Remove Z layer from the specified view. All structures displayed at the moment in layer will be displayed in default layer ( the bottom-level z layer ). To unset layer ID from associated structures use method UnsetZLayer (...).
@@ -10470,6 +10416,10 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
     def SetBackgroundImageStyle(self,theFillStyle : OCP.Aspect.Aspect_FillMethod) -> None: 
         """
         Sets background image fill style.
+        """
+    def SetBackgroundSkydome(self,theAspect : OCP.Aspect.Aspect_SkydomeBackground,theToUpdatePBREnv : bool=True) -> None: 
+        """
+        Sets skydome aspect
         """
     def SetBackgroundType(self,theType : Graphic3d_TypeOfBackground) -> None: 
         """
@@ -10519,6 +10469,26 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Sets default Shading Model of the view. Will throw an exception on attempt to set Graphic3d_TypeOfShadingModel_DEFAULT.
         """
+    def SetSubviewComposer(self,theIsComposer : bool) -> None: 
+        """
+        Set if this view should perform composing of subviews and nothing else.
+        """
+    def SetSubviewCorner(self,thePos : OCP.Aspect.Aspect_TypeOfTriedronPosition) -> None: 
+        """
+        Set subview position within parent view.
+        """
+    def SetSubviewMargins(self,theMargins : Graphic3d_Vec2i) -> None: 
+        """
+        Set subview margins in pixels.
+        """
+    def SetSubviewOffset(self,theOffset : Graphic3d_Vec2d) -> None: 
+        """
+        Set corner offset within parent view.
+        """
+    def SetSubviewSize(self,theSize : Graphic3d_Vec2d) -> None: 
+        """
+        Set subview size relative to parent view.
+        """
     def SetTextureEnv(self,theTextureEnv : Graphic3d_TextureEnv) -> None: 
         """
         Sets environment texture for the view.
@@ -10531,7 +10501,7 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         """
         Sets visualization type of the view.
         """
-    def SetWindow(self,theWindow : OCP.Aspect.Aspect_Window,theContext : capsule=None) -> None: 
+    def SetWindow(self,theParentVIew : Graphic3d_CView,theWindow : OCP.Aspect.Aspect_Window,theContext : capsule) -> None: 
         """
         Creates and maps rendering window to the view.
         """
@@ -10552,17 +10522,45 @@ class Graphic3d_CView(Graphic3d_DataStructureManager, OCP.Standard.Standard_Tran
         Returns default Shading Model of the view; Graphic3d_TypeOfShadingModel_Phong by default.
         """
     @overload
-    def StatisticInformation(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def StatisticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: 
         """
         Returns string with statistic performance info.
 
         Fills in the dictionary with statistic performance info.
         """
     @overload
-    def StatisticInformation(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString) -> None: ...
+    def StatisticInformation(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def StructureManager(self) -> Graphic3d_StructureManager: 
         """
         Returns the structure manager handle which manage structures associated with this view.
+        """
+    def SubviewCorner(self) -> OCP.Aspect.Aspect_TypeOfTriedronPosition: 
+        """
+        Return subview position within parent view; Aspect_TOTP_LEFT_UPPER by default.
+        """
+    def SubviewMargins(self) -> Graphic3d_Vec2i: 
+        """
+        Return subview margins in pixels; (0,0) by default
+        """
+    def SubviewOffset(self) -> Graphic3d_Vec2d: 
+        """
+        Return corner offset within parent view; (0.0,0.0) by default. Values >= 2 define offset in pixels; Values <= 1.0 define offset as fraction of parent view dimensions.
+        """
+    def SubviewResized(self,theWindow : OCP.Aspect.Aspect_NeutralWindow) -> None: 
+        """
+        Update subview position and dimensions.
+        """
+    def SubviewSize(self) -> Graphic3d_Vec2d: 
+        """
+        Return subview dimensions; (1.0, 1.0) by default. Values >= 2 define size in pixels; Values <= 1.0 define size as fraction of parent view.
+        """
+    def SubviewTopLeft(self) -> Graphic3d_Vec2i: 
+        """
+        Return subview top-left position relative to parent view in pixels.
+        """
+    def Subviews(self) -> Any: 
+        """
+        Return subview list.
         """
     def SynchronizeXRBaseToPosedCamera(self) -> None: 
         """
@@ -10683,6 +10681,70 @@ class Graphic3d_DiagnosticInfo():
     __entries: dict # value = {'Graphic3d_DiagnosticInfo_Device': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device: 1>, None), 'Graphic3d_DiagnosticInfo_FrameBuffer': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer: 2>, None), 'Graphic3d_DiagnosticInfo_Limits': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits: 4>, None), 'Graphic3d_DiagnosticInfo_Memory': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>, None), 'Graphic3d_DiagnosticInfo_NativePlatform': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>, None), 'Graphic3d_DiagnosticInfo_Extensions': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions: 32>, None), 'Graphic3d_DiagnosticInfo_Short': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>, None), 'Graphic3d_DiagnosticInfo_Basic': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic: 31>, None), 'Graphic3d_DiagnosticInfo_Complete': (<Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete: 63>, None)}
     __members__: dict # value = {'Graphic3d_DiagnosticInfo_Device': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Device: 1>, 'Graphic3d_DiagnosticInfo_FrameBuffer': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_FrameBuffer: 2>, 'Graphic3d_DiagnosticInfo_Limits': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Limits: 4>, 'Graphic3d_DiagnosticInfo_Memory': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>, 'Graphic3d_DiagnosticInfo_NativePlatform': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>, 'Graphic3d_DiagnosticInfo_Extensions': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Extensions: 32>, 'Graphic3d_DiagnosticInfo_Short': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>, 'Graphic3d_DiagnosticInfo_Basic': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Basic: 31>, 'Graphic3d_DiagnosticInfo_Complete': <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Complete: 63>}
     pass
+class Graphic3d_DisplayPriority():
+    """
+    Structure priority - range (do not change this range!). Values are between 0 and 10, with 5 used by default. A structure of priority 10 is displayed the last and appears over the others (considering depth test).
+
+    Members:
+
+      Graphic3d_DisplayPriority_INVALID
+
+      Graphic3d_DisplayPriority_Bottom
+
+      Graphic3d_DisplayPriority_AlmostBottom
+
+      Graphic3d_DisplayPriority_Below2
+
+      Graphic3d_DisplayPriority_Below1
+
+      Graphic3d_DisplayPriority_Below
+
+      Graphic3d_DisplayPriority_Normal
+
+      Graphic3d_DisplayPriority_Above
+
+      Graphic3d_DisplayPriority_Above1
+
+      Graphic3d_DisplayPriority_Above2
+
+      Graphic3d_DisplayPriority_Highlight
+
+      Graphic3d_DisplayPriority_Topmost
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    Graphic3d_DisplayPriority_Above: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above: 6>
+    Graphic3d_DisplayPriority_Above1: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above1: 7>
+    Graphic3d_DisplayPriority_Above2: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above2: 8>
+    Graphic3d_DisplayPriority_AlmostBottom: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_AlmostBottom: 1>
+    Graphic3d_DisplayPriority_Below: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below: 4>
+    Graphic3d_DisplayPriority_Below1: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below1: 3>
+    Graphic3d_DisplayPriority_Below2: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below2: 2>
+    Graphic3d_DisplayPriority_Bottom: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Bottom: 0>
+    Graphic3d_DisplayPriority_Highlight: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Highlight: 9>
+    Graphic3d_DisplayPriority_INVALID: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_INVALID: -1>
+    Graphic3d_DisplayPriority_Normal: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Normal: 5>
+    Graphic3d_DisplayPriority_Topmost: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Topmost: 10>
+    __entries: dict # value = {'Graphic3d_DisplayPriority_INVALID': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_INVALID: -1>, None), 'Graphic3d_DisplayPriority_Bottom': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Bottom: 0>, None), 'Graphic3d_DisplayPriority_AlmostBottom': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_AlmostBottom: 1>, None), 'Graphic3d_DisplayPriority_Below2': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below2: 2>, None), 'Graphic3d_DisplayPriority_Below1': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below1: 3>, None), 'Graphic3d_DisplayPriority_Below': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below: 4>, None), 'Graphic3d_DisplayPriority_Normal': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Normal: 5>, None), 'Graphic3d_DisplayPriority_Above': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above: 6>, None), 'Graphic3d_DisplayPriority_Above1': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above1: 7>, None), 'Graphic3d_DisplayPriority_Above2': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above2: 8>, None), 'Graphic3d_DisplayPriority_Highlight': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Highlight: 9>, None), 'Graphic3d_DisplayPriority_Topmost': (<Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Topmost: 10>, None)}
+    __members__: dict # value = {'Graphic3d_DisplayPriority_INVALID': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_INVALID: -1>, 'Graphic3d_DisplayPriority_Bottom': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Bottom: 0>, 'Graphic3d_DisplayPriority_AlmostBottom': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_AlmostBottom: 1>, 'Graphic3d_DisplayPriority_Below2': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below2: 2>, 'Graphic3d_DisplayPriority_Below1': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below1: 3>, 'Graphic3d_DisplayPriority_Below': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below: 4>, 'Graphic3d_DisplayPriority_Normal': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Normal: 5>, 'Graphic3d_DisplayPriority_Above': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above: 6>, 'Graphic3d_DisplayPriority_Above1': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above1: 7>, 'Graphic3d_DisplayPriority_Above2': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above2: 8>, 'Graphic3d_DisplayPriority_Highlight': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Highlight: 9>, 'Graphic3d_DisplayPriority_Topmost': <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Topmost: 10>}
+    pass
 class Graphic3d_FrameStats(OCP.Standard.Standard_Transient):
     """
     Class storing the frame statistics.
@@ -10724,14 +10786,14 @@ class Graphic3d_FrameStats(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FormatStats(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theFlags : Any) -> None: 
+    def FormatStats(self,theFlags : Any) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns formatted string.
 
         Fill in the dictionary with formatted statistic info.
         """
     @overload
-    def FormatStats(self,theFlags : Any) -> OCP.TCollection.TCollection_AsciiString: ...
+    def FormatStats(self,theDict : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theFlags : Any) -> None: ...
     def FrameDuration(self) -> float: 
         """
         Returns duration of the last frame in seconds.
@@ -10769,23 +10831,23 @@ class Graphic3d_FrameStats(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLongLineFormat(self) -> bool: 
         """
         Prefer longer lines over more greater of lines.
@@ -11128,7 +11190,7 @@ class Graphic3d_Fresnel():
     """
     @staticmethod
     @overload
-    def CreateConductor_s(theRefractionIndex : OCP.gp.gp_Vec3f,theAbsorptionIndex : OCP.gp.gp_Vec3f) -> Graphic3d_Fresnel: 
+    def CreateConductor_s(theRefractionIndex : float,theAbsorptionIndex : float) -> Graphic3d_Fresnel: 
         """
         Creates Fresnel factor for physical-based conductor model.
 
@@ -11136,7 +11198,7 @@ class Graphic3d_Fresnel():
         """
     @staticmethod
     @overload
-    def CreateConductor_s(theRefractionIndex : float,theAbsorptionIndex : float) -> Graphic3d_Fresnel: ...
+    def CreateConductor_s(theRefractionIndex : OCP.gp.gp_Vec3f,theAbsorptionIndex : OCP.gp.gp_Vec3f) -> Graphic3d_Fresnel: ...
     @staticmethod
     def CreateConstant_s(theReflection : float) -> Graphic3d_Fresnel: 
         """
@@ -11447,23 +11509,23 @@ class Graphic3d_GraphicDriver(OCP.Standard.Standard_Transient):
         Adds a layer to all views. To add a structure to desired layer on display it is necessary to set the layer ID for the structure.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsVerticalSync(self) -> bool: 
         """
         Returns TRUE if vertical synchronization with display refresh rate (VSync) should be used; TRUE by default.
@@ -11570,23 +11632,23 @@ class Graphic3d_GraphicDriverFactory(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Return driver factory name.
@@ -11625,7 +11687,7 @@ class Graphic3d_GraphicDriverFactoryList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Graphic3d_GraphicDriverFactory) -> Graphic3d_GraphicDriverFactory: 
+    def Append(self,theOther : Graphic3d_GraphicDriverFactoryList) -> None: 
         """
         Append one item at the end
 
@@ -11634,9 +11696,9 @@ class Graphic3d_GraphicDriverFactoryList(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : Graphic3d_GraphicDriverFactoryList) -> None: ...
-    @overload
     def Append(self,theItem : Graphic3d_GraphicDriverFactory,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : Graphic3d_GraphicDriverFactory) -> Graphic3d_GraphicDriverFactory: ...
     def Assign(self,theOther : Graphic3d_GraphicDriverFactoryList) -> Graphic3d_GraphicDriverFactoryList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -11656,23 +11718,23 @@ class Graphic3d_GraphicDriverFactoryList(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : Graphic3d_GraphicDriverFactoryList,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : Graphic3d_GraphicDriverFactory,theIter : Any) -> Graphic3d_GraphicDriverFactory: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : Graphic3d_GraphicDriverFactory,theIter : Any) -> Graphic3d_GraphicDriverFactory: ...
+    def InsertAfter(self,theOther : Graphic3d_GraphicDriverFactoryList,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : Graphic3d_GraphicDriverFactoryList,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : Graphic3d_GraphicDriverFactory,theIter : Any) -> Graphic3d_GraphicDriverFactory: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : Graphic3d_GraphicDriverFactory,theIter : Any) -> Graphic3d_GraphicDriverFactory: ...
+    def InsertBefore(self,theOther : Graphic3d_GraphicDriverFactoryList,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -11684,14 +11746,14 @@ class Graphic3d_GraphicDriverFactoryList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_GraphicDriverFactory) -> Graphic3d_GraphicDriverFactory: 
+    def Prepend(self,theOther : Graphic3d_GraphicDriverFactoryList) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : Graphic3d_GraphicDriverFactoryList) -> None: ...
+    def Prepend(self,theItem : Graphic3d_GraphicDriverFactory) -> Graphic3d_GraphicDriverFactory: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -11721,14 +11783,14 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
     This class allows the definition of groups of primitives inside of graphic objects (presentations). A group contains the primitives and attributes for which the range is limited to this group. The primitives of a group can be globally suppressed.This class allows the definition of groups of primitives inside of graphic objects (presentations). A group contains the primitives and attributes for which the range is limited to this group. The primitives of a group can be globally suppressed.
     """
     @overload
-    def AddPrimitiveArray(self,thePrim : Graphic3d_ArrayOfPrimitives,theToEvalMinMax : bool=True) -> None: 
+    def AddPrimitiveArray(self,theType : Graphic3d_TypeOfPrimitiveArray,theIndices : Graphic3d_IndexBuffer,theAttribs : Graphic3d_Buffer,theBounds : Graphic3d_BoundBuffer,theToEvalMinMax : bool=True) -> None: 
         """
         Adds an array of primitives for display
 
         Adds an array of primitives for display
         """
     @overload
-    def AddPrimitiveArray(self,theType : Graphic3d_TypeOfPrimitiveArray,theIndices : Graphic3d_IndexBuffer,theAttribs : Graphic3d_Buffer,theBounds : Graphic3d_BoundBuffer,theToEvalMinMax : bool=True) -> None: ...
+    def AddPrimitiveArray(self,thePrim : Graphic3d_ArrayOfPrimitives,theToEvalMinMax : bool=True) -> None: ...
     def AddText(self,theTextParams : Graphic3d_Text,theToEvalMinMax : bool=True) -> None: 
         """
         Adds a text for display
@@ -11748,10 +11810,6 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
     def Clear(self,theUpdateStructureMgr : bool=True) -> None: 
         """
         Suppress all primitives and attributes of <me>. To clear group without update in Graphic3d_StructureManager pass Standard_False as <theUpdateStructureMgr>. This used on context and viewer destruction, when the pointer to structure manager in Graphic3d_Structure could be already released (pointers are used here to avoid handle cross-reference);
-        """
-    def ContainsFacet(self) -> bool: 
-        """
-        Returns true if the group contains Polygons, Triangles or Quadrangles.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -11790,23 +11848,23 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
         Returns Standard_True if the group <me> is empty.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Marker(self,thePoint : Graphic3d_Vertex,theToEvalMinMax : bool=True) -> None: ...
     def MinMaxValues(self) -> Tuple[float, float, float, float, float, float]: 
         """
@@ -11857,7 +11915,7 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
         Update presentation aspects after their modification.
         """
     @overload
-    def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: 
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : Graphic3d_TextPath,AHta : Graphic3d_HorizontalTextAlignment,AVta : Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: 
         """
         Creates the string <AText> at position <APoint>. The 3D point of attachment is projected. The text is written in the plane of projection. The attributes are given with respect to the plane of projection. AHeight : Height of text. (Relative to the Normalized Projection Coordinates (NPC) Space). AAngle : Orientation of the text (with respect to the horizontal).
 
@@ -11871,16 +11929,16 @@ class Graphic3d_Group(OCP.Standard.Standard_Transient):
 
         Creates the string <theText> at orientation <theOrientation> in 3D space.
         """
+    @overload
+    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
+    @overload
+    def Text(self,theText : OCP.TCollection.TCollection_ExtendedString,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
+    @overload
+    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     @overload
     def Text(self,AText : str,APoint : Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : Graphic3d_TextPath,AHta : Graphic3d_HorizontalTextAlignment,AVta : Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
     @overload
     def Text(self,AText : str,APoint : Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,AAngle : float,ATp : Graphic3d_TextPath,AHta : Graphic3d_HorizontalTextAlignment,AVta : Graphic3d_VerticalTextAlignment,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,AText : OCP.TCollection.TCollection_ExtendedString,APoint : Graphic3d_Vertex,AHeight : float,EvalMinMax : bool=True) -> None: ...
-    @overload
-    def Text(self,theTextUtf : str,theOrientation : OCP.gp.gp_Ax2,theHeight : float,theAngle : float,theTp : Graphic3d_TextPath,theHTA : Graphic3d_HorizontalTextAlignment,theVTA : Graphic3d_VerticalTextAlignment,theToEvalMinMax : bool=True,theHasOwnAnchor : bool=True) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -11984,23 +12042,23 @@ class Graphic3d_HatchStyle(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Pattern(self) -> int: 
         """
         Returns the pattern of custom hatch style
@@ -12010,9 +12068,9 @@ class Graphic3d_HatchStyle(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,thePattern : OCP.Image.Image_PixMap) -> None: ...
-    @overload
     def __init__(self,theType : OCP.Aspect.Aspect_HatchStyle) -> None: ...
+    @overload
+    def __init__(self,thePattern : OCP.Image.Image_PixMap) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -12147,14 +12205,14 @@ class Graphic3d_IndexBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffer
         Access index at specified position
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: 
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: 
         """
         Allocates new empty array
 
         Allocates new empty array
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: ...
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
     def InitInt32(self,theNbElems : int) -> bool: 
         """
         Allocates new empty index array
@@ -12172,27 +12230,27 @@ class Graphic3d_IndexBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffer
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInterleaved(self) -> bool: 
         """
         Flag indicating that attributes in the buffer are interleaved; TRUE by default. Requires sub-classing for creating a non-interleaved buffer (advanced usage).
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Return TRUE if data can be invalidated; FALSE by default. Requires sub-classing for creating a mutable buffer (advanced usage).
@@ -12269,103 +12327,11 @@ class Graphic3d_IndexBuffer(Graphic3d_Buffer, OCP.NCollection.NCollection_Buffer
     def Stride(self, arg0: int) -> None:
         pass
     pass
-class Graphic3d_IndexedMapOfStructure(OCP.NCollection.NCollection_BaseMap):
-    """
-    Purpose: An indexed map is used to store keys and to bind an index to them. Each new key stored in the map gets an index. Index are incremented as keys are stored in the map. A key can be found by the index and an index by the key. No key but the last can be removed so the indices are in the range 1..Extent. See the class Map from NCollection for a discussion about the number of buckets.
-    """
-    def Add(self,theKey1 : Graphic3d_CStructure) -> int: 
-        """
-        Add
-        """
-    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
-        """
-        Returns attached allocator
-        """
-    def Assign(self,theOther : Graphic3d_IndexedMapOfStructure) -> Graphic3d_IndexedMapOfStructure: 
-        """
-        Assign. This method does not change the internal allocator.
-        """
-    @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
-        """
-        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
-
-        Clear data and reset allocator
-        """
-    @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def Contains(self,theKey1 : Graphic3d_CStructure) -> bool: 
-        """
-        Contains
-        """
-    def Exchange(self,theOther : Graphic3d_IndexedMapOfStructure) -> None: 
-        """
-        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
-        """
-    def Extent(self) -> int: 
-        """
-        Extent
-        """
-    def FindIndex(self,theKey1 : Graphic3d_CStructure) -> int: 
-        """
-        FindIndex
-        """
-    def FindKey(self,theIndex : int) -> Graphic3d_CStructure: 
-        """
-        FindKey
-        """
-    def IsEmpty(self) -> bool: 
-        """
-        IsEmpty
-        """
-    def NbBuckets(self) -> int: 
-        """
-        NbBuckets
-        """
-    def ReSize(self,theExtent : int) -> None: 
-        """
-        ReSize
-        """
-    def RemoveFromIndex(self,theIndex : int) -> None: 
-        """
-        Remove the key of the given index. Caution! The index of the last key can be changed.
-        """
-    def RemoveKey(self,theKey1 : Graphic3d_CStructure) -> bool: 
-        """
-        Remove the given key. Caution! The index of the last key can be changed.
-        """
-    def RemoveLast(self) -> None: 
-        """
-        RemoveLast
-        """
-    def Size(self) -> int: 
-        """
-        Size
-        """
-    def Statistics(self,S : io.BytesIO) -> None: 
-        """
-        Statistics
-        """
-    def Substitute(self,theIndex : int,theKey1 : Graphic3d_CStructure) -> None: 
-        """
-        Substitute
-        """
-    def Swap(self,theIndex1 : int,theIndex2 : int) -> None: 
-        """
-        Swaps two elements with the given indices.
-        """
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : Graphic3d_IndexedMapOfStructure) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    pass
 class Graphic3d_Layer(OCP.Standard.Standard_Transient):
     """
     Presentations list sorted within priorities.
     """
-    def Add(self,theStruct : Graphic3d_CStructure,thePriority : int,isForChangePriority : bool=False) -> None: 
+    def Add(self,theStruct : Graphic3d_CStructure,thePriority : Graphic3d_DisplayPriority,isForChangePriority : bool=False) -> None: 
         """
         None
         """
@@ -12373,7 +12339,7 @@ class Graphic3d_Layer(OCP.Standard.Standard_Transient):
         """
         Append layer of acceptable type (with similar number of priorities or less). Returns Standard_False if the list can not be accepted.
         """
-    def ArrayOfStructures(self) -> Graphic3d_ArrayOfIndexedMapOfStructure: 
+    def ArrayOfStructures(self) -> Any: 
         """
         Returns array of structures.
         """
@@ -12399,7 +12365,7 @@ class Graphic3d_Layer(OCP.Standard.Standard_Transient):
         """
     def FrustumCullingBVHBuilder(self) -> OCP.Select3D.Select3D_BVHBuilder3d: 
         """
-        Returns BVH tree builder for frustom culling.
+        Returns BVH tree builder for frustum culling.
         """
     def GetRefCount(self) -> int: 
         """
@@ -12426,23 +12392,23 @@ class Graphic3d_Layer(OCP.Standard.Standard_Transient):
         Return true if layer was marked with immediate flag.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LayerId(self) -> int: 
         """
         Return layer id.
@@ -12467,21 +12433,25 @@ class Graphic3d_Layer(OCP.Standard.Standard_Transient):
         """
         Number of NOT culled structures in the layer.
         """
-    def NonCullableStructures(self) -> Graphic3d_IndexedMapOfStructure: 
+    def NonCullableStructures(self) -> Any: 
         """
         Returns indexed map of always rendered structures.
         """
-    def Remove(self,theStruct : Graphic3d_CStructure,thePriority : int,isForChangePriority : bool=False) -> bool: 
+    def Remove(self,theStruct : Graphic3d_CStructure,thePriority : Graphic3d_DisplayPriority,isForChangePriority : bool=False) -> bool: 
         """
         Remove structure and returns its priority, if the structure is not found, method returns negative value
         """
     def SetFrustumCullingBVHBuilder(self,theBuilder : OCP.Select3D.Select3D_BVHBuilder3d) -> None: 
         """
-        Assigns BVH tree builder for frustom culling.
+        Assigns BVH tree builder for frustum culling.
         """
     def SetLayerSettings(self,theSettings : Graphic3d_ZLayerSettings) -> None: 
         """
         Sets settings of the layer object.
+        """
+    def Structures(self,thePriority : Graphic3d_DisplayPriority) -> Any: 
+        """
+        Returns structures for specified priority.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -12491,7 +12461,7 @@ class Graphic3d_Layer(OCP.Standard.Standard_Transient):
         """
         Update culling state - should be called before rendering. Traverses through BVH tree to determine which structures are in view volume.
         """
-    def __init__(self,theId : int,theNbPriorities : int,theBuilder : OCP.Select3D.Select3D_BVHBuilder3d) -> None: ...
+    def __init__(self,theId : int,theBuilder : OCP.Select3D.Select3D_BVHBuilder3d) -> None: ...
     def considerZoomPersistenceObjects(self,theViewId : int,theCamera : Graphic3d_Camera,theWindowWidth : int,theWindowHeight : int) -> float: 
         """
         Returns zoom-scale factor.
@@ -12638,23 +12608,23 @@ class Graphic3d_LightSet(OCP.Standard.Standard_Transient):
         Return TRUE if lights list is empty.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def KeyEnabledLong(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns a string defining a list of enabled light sources as concatenation of letters 'd' (Directional), 'p' (Point), 's' (Spot) depending on the type of light source in the list. Example: "dppp".
@@ -12778,23 +12748,23 @@ class Graphic3d_MarkerImage(OCP.Standard.Standard_Transient):
         Return TRUE if marker image has colors (e.g. RGBA and not grayscale).
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def StandardMarker_s(theMarkerType : OCP.Aspect.Aspect_TypeOfMarker,theScale : float,theColor : Graphic3d_Vec4) -> Graphic3d_MarkerImage: 
         """
@@ -12805,9 +12775,9 @@ class Graphic3d_MarkerImage(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theBitMap : OCP.TColStd.TColStd_HArray1OfByte,theWidth : int,theHeight : int) -> None: ...
-    @overload
     def __init__(self,theImage : OCP.Image.Image_PixMap,theImageAlpha : OCP.Image.Image_PixMap=None) -> None: ...
+    @overload
+    def __init__(self,theBitMap : OCP.TColStd.TColStd_HArray1OfByte,theWidth : int,theHeight : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -12902,7 +12872,7 @@ class Graphic3d_Mat4():
         Initialize the zero matrix.
         """
     @overload
-    def Inverted(self,theOutMx : Graphic3d_Mat4,theDet : float) -> bool: 
+    def Inverted(self) -> Graphic3d_Mat4: 
         """
         Compute inverted matrix.
 
@@ -12911,9 +12881,9 @@ class Graphic3d_Mat4():
         Return inverted matrix.
         """
     @overload
-    def Inverted(self) -> Graphic3d_Mat4: ...
-    @overload
     def Inverted(self,theOutMx : Graphic3d_Mat4) -> bool: ...
+    @overload
+    def Inverted(self,theOutMx : Graphic3d_Mat4,theDet : float) -> bool: ...
     def IsEqual(self,theOther : Graphic3d_Mat4) -> bool: 
         """
         Check this matrix for equality with another matrix (without tolerance!).
@@ -12975,23 +12945,23 @@ class Graphic3d_Mat4():
     @overload
     def SetColumn(self,theCol : int,theVec : OCP.gp.gp_Vec3f) -> None: ...
     @overload
-    def SetDiagonal(self,theVec : OCP.gp.gp_Vec3f) -> None: 
+    def SetDiagonal(self,theVec : Graphic3d_Vec4) -> None: 
         """
         Change first 3 elements of the diagonal matrix.
 
         Set diagonal elements of the matrix by the passed vector.
         """
     @overload
-    def SetDiagonal(self,theVec : Graphic3d_Vec4) -> None: ...
+    def SetDiagonal(self,theVec : OCP.gp.gp_Vec3f) -> None: ...
     @overload
-    def SetRow(self,theRow : int,theVec : OCP.gp.gp_Vec3f) -> None: 
+    def SetRow(self,theRow : int,theVec : Graphic3d_Vec4) -> None: 
         """
         Change first 3 row values by the passed vector.
 
         Set row values by the passed 4 element vector.
         """
     @overload
-    def SetRow(self,theRow : int,theVec : Graphic3d_Vec4) -> None: ...
+    def SetRow(self,theRow : int,theVec : OCP.gp.gp_Vec3f) -> None: ...
     def SetValue(self,theRow : int,theCol : int,theValue : float) -> None: 
         """
         Set value for the element specified by row and columns.
@@ -13048,7 +13018,7 @@ class Graphic3d_Mat4():
         Per-component division.
         """
     @overload
-    def __mul__(self,theFactor : float) -> Graphic3d_Mat4: 
+    def __mul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: 
         """
         Multiply by the vector (M * V).
 
@@ -13059,7 +13029,7 @@ class Graphic3d_Mat4():
     @overload
     def __mul__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
     @overload
-    def __mul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
+    def __mul__(self,theFactor : float) -> Graphic3d_Mat4: ...
     @overload
     def __rmul__(self,theFactor : float) -> Graphic3d_Mat4: 
         """
@@ -13070,18 +13040,18 @@ class Graphic3d_Mat4():
         Compute per-element multiplication.
         """
     @overload
-    def __rmul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
-    @overload
     def __rmul__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
     @overload
-    def __sub__(self) -> Graphic3d_Mat4: 
+    def __rmul__(self,theVec : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
+    @overload
+    def __sub__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: 
         """
         Per-component subtraction of another matrix.
 
         Returns matrix with all components negated.
         """
     @overload
-    def __sub__(self,theMat : Graphic3d_Mat4) -> Graphic3d_Mat4: ...
+    def __sub__(self) -> Graphic3d_Mat4: ...
     def __truediv__(self,theScalar : float) -> Graphic3d_Mat4: 
         """
         Divides all the coefficients of the matrix by scalar.
@@ -13170,7 +13140,7 @@ class Graphic3d_Mat4d():
         Initialize the zero matrix.
         """
     @overload
-    def Inverted(self,theOutMx : Graphic3d_Mat4d) -> bool: 
+    def Inverted(self,theOutMx : Graphic3d_Mat4d,theDet : float) -> bool: 
         """
         Compute inverted matrix.
 
@@ -13181,7 +13151,7 @@ class Graphic3d_Mat4d():
     @overload
     def Inverted(self) -> Graphic3d_Mat4d: ...
     @overload
-    def Inverted(self,theOutMx : Graphic3d_Mat4d,theDet : float) -> bool: ...
+    def Inverted(self,theOutMx : Graphic3d_Mat4d) -> bool: ...
     def IsEqual(self,theOther : Graphic3d_Mat4d) -> bool: 
         """
         Check this matrix for equality with another matrix (without tolerance!).
@@ -13234,23 +13204,23 @@ class Graphic3d_Mat4d():
         Get number of rows.
         """
     @overload
-    def SetColumn(self,theCol : int,theVec : OCP.SelectMgr.SelectMgr_Vec3) -> None: 
+    def SetColumn(self,theCol : int,theVec : Graphic3d_Vec4d) -> None: 
         """
         Change first 3 column values by the passed vector.
 
         Set column values by the passed 4 element vector.
         """
     @overload
-    def SetColumn(self,theCol : int,theVec : Graphic3d_Vec4d) -> None: ...
+    def SetColumn(self,theCol : int,theVec : OCP.SelectMgr.SelectMgr_Vec3) -> None: ...
     @overload
-    def SetDiagonal(self,theVec : OCP.SelectMgr.SelectMgr_Vec3) -> None: 
+    def SetDiagonal(self,theVec : Graphic3d_Vec4d) -> None: 
         """
         Change first 3 elements of the diagonal matrix.
 
         Set diagonal elements of the matrix by the passed vector.
         """
     @overload
-    def SetDiagonal(self,theVec : Graphic3d_Vec4d) -> None: ...
+    def SetDiagonal(self,theVec : OCP.SelectMgr.SelectMgr_Vec3) -> None: ...
     @overload
     def SetRow(self,theRow : int,theVec : OCP.SelectMgr.SelectMgr_Vec3) -> None: 
         """
@@ -13316,7 +13286,7 @@ class Graphic3d_Mat4d():
         Per-component division.
         """
     @overload
-    def __mul__(self,theFactor : float) -> Graphic3d_Mat4d: 
+    def __mul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: 
         """
         Multiply by the vector (M * V).
 
@@ -13324,12 +13294,12 @@ class Graphic3d_Mat4d():
 
         Compute per-element multiplication.
         """
-    @overload
-    def __mul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
     @overload
     def __mul__(self,theVec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: ...
     @overload
-    def __rmul__(self,theFactor : float) -> Graphic3d_Mat4d: 
+    def __mul__(self,theFactor : float) -> Graphic3d_Mat4d: ...
+    @overload
+    def __rmul__(self,theVec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Multiply by the vector (M * V).
 
@@ -13338,18 +13308,18 @@ class Graphic3d_Mat4d():
         Compute per-element multiplication.
         """
     @overload
-    def __rmul__(self,theVec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: ...
+    def __rmul__(self,theFactor : float) -> Graphic3d_Mat4d: ...
     @overload
     def __rmul__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
     @overload
-    def __sub__(self) -> Graphic3d_Mat4d: 
+    def __sub__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: 
         """
         Per-component subtraction of another matrix.
 
         Returns matrix with all components negated.
         """
     @overload
-    def __sub__(self,theMat : Graphic3d_Mat4d) -> Graphic3d_Mat4d: ...
+    def __sub__(self) -> Graphic3d_Mat4d: ...
     def __truediv__(self,theScalar : float) -> Graphic3d_Mat4d: 
         """
         Divides all the coefficients of the matrix by scalar.
@@ -13420,14 +13390,14 @@ class Graphic3d_MaterialAspect():
         Returns the name of the predefined material of specified rank within range [1, NumberOfMaterials()].
         """
     @overload
-    def MaterialType(self,theType : Graphic3d_TypeOfMaterial) -> bool: 
+    def MaterialType(self) -> Graphic3d_TypeOfMaterial: 
         """
         Returns material type.
 
         Returns TRUE if type of this material is equal to specified type.
         """
     @overload
-    def MaterialType(self) -> Graphic3d_TypeOfMaterial: ...
+    def MaterialType(self,theType : Graphic3d_TypeOfMaterial) -> bool: ...
     @staticmethod
     def MaterialType_s(theRank : int) -> Graphic3d_TypeOfMaterial: 
         """
@@ -13614,9 +13584,9 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Get the reference counter of this object
         """
-    def HasMipMaps(self) -> bool: 
+    def HasMipmaps(self) -> bool: 
         """
-        Return true if mip-maps should be used.
+        Returns whether mipmaps should be generated or not.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -13631,23 +13601,23 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -13690,9 +13660,9 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
         """
-    def SetMipMaps(self,theToUse : bool) -> None: 
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
         """
-        Set if mip-maps should be used (generated if needed). Note that this method should be called before loading / using the texture.
+        Sets whether to generate mipmaps or not.
         """
     @staticmethod
     def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 
@@ -13716,6 +13686,12 @@ class Graphic3d_Texture2D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
+    @overload
+    def __init__(self,theNOT : Graphic3d_NameOfTexture2D) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -13760,23 +13736,23 @@ class Graphic3d_TextureSet(OCP.Standard.Standard_Transient):
         Return TRUE if texture array is empty.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Lower(self) -> int: 
         """
         Return the lower index in texture set.
@@ -13806,11 +13782,11 @@ class Graphic3d_TextureSet(OCP.Standard.Standard_Transient):
         Return the texture at specified position within [0, Size()) range.
         """
     @overload
-    def __init__(self,theNbTextures : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theTexture : Graphic3d_TextureMap) -> None: ...
+    @overload
+    def __init__(self,theNbTextures : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -13908,27 +13884,27 @@ class Graphic3d_MutableIndexBuffer(Graphic3d_IndexBuffer, Graphic3d_Buffer, OCP.
         Access index at specified position
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: 
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: 
         """
         Allocates new empty array
 
         Allocates new empty array
         """
     @overload
-    def Init(self,theNbElems : int,theAttribs : Graphic3d_Attribute,theNbAttribs : int) -> bool: ...
+    def Init(self,theNbElems : int,theAttribs : Graphic3d_Array1OfAttribute) -> bool: ...
     def InitInt32(self,theNbElems : int) -> bool: 
         """
         Allocates new empty index array
         """
     @overload
-    def Invalidate(self,theIndexLower : int,theIndexUpper : int) -> None: 
+    def Invalidate(self) -> None: 
         """
         Invalidate the entire buffer data.
 
         Invalidate the given indexes (starting from 0)
         """
     @overload
-    def Invalidate(self) -> None: ...
+    def Invalidate(self,theIndexLower : int,theIndexUpper : int) -> None: ...
     def InvalidatedRange(self) -> Graphic3d_BufferRange: 
         """
         Return invalidated range.
@@ -13938,27 +13914,27 @@ class Graphic3d_MutableIndexBuffer(Graphic3d_IndexBuffer, Graphic3d_Buffer, OCP.
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInterleaved(self) -> bool: 
         """
         Flag indicating that attributes in the buffer are interleaved; TRUE by default. Requires sub-classing for creating a non-interleaved buffer (advanced usage).
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Return TRUE if data can be invalidated.
@@ -14549,9 +14525,9 @@ class Graphic3d_PBRMaterial():
         Shows how much times less samples can be used in certain roughness value specular IBL map generation in compare with samples number for map with roughness of 1. Specular IBL maps with less roughness values have higher resolution but require less samples for the same quality of baking. So that reducing samples number is good strategy to improve performance of baking. The samples number for specular IBL map with roughness of 1 (the maximum possible samples number) is expected to be defined as baking parameter. Samples number for other roughness values can be calculated by multiplication origin samples number by this factor.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBSDF : Graphic3d_BSDF) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Graphic3d_PolygonOffset():
     """
@@ -14632,23 +14608,23 @@ class Graphic3d_PresentationAttributes(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Method(self) -> OCP.Aspect.Aspect_TypeOfHighlightMethod: 
         """
         Returns highlight method, Aspect_TOHM_COLOR by default.
@@ -15343,6 +15319,14 @@ class Graphic3d_RenderingParams():
     def ToShowStats(self, arg0: bool) -> None:
         pass
     @property
+    def ToSmoothInterlacing(self) -> bool:
+        """
+        :type: bool
+        """
+    @ToSmoothInterlacing.setter
+    def ToSmoothInterlacing(self, arg0: bool) -> None:
+        pass
+    @property
     def ToneMappingMethod(self) -> Graphic3d_ToneMappingMethod:
         """
         :type: Graphic3d_ToneMappingMethod
@@ -15464,14 +15448,14 @@ class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Graphic3d_Group) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_SequenceOfGroup) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Graphic3d_Group) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Graphic3d_Group) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_SequenceOfGroup) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -15489,23 +15473,23 @@ class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_SequenceOfGroup) -> None: 
+    def Prepend(self,theItem : Graphic3d_Group) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_Group) -> None: ...
+    def Prepend(self,theSeq : Graphic3d_SequenceOfGroup) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -15531,11 +15515,11 @@ class Graphic3d_SequenceOfGroup(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Graphic3d_SequenceOfGroup) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : Graphic3d_SequenceOfGroup) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -15588,32 +15572,32 @@ class Graphic3d_SequenceOfHClipPlane(OCP.Standard.Standard_Transient):
         Return TRUE if sequence is empty.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Remove(self,theItem : Any) -> None: 
+    def Remove(self,theItem : Graphic3d_ClipPlane) -> bool: 
         """
         Remove a plane.
 
         Remove a plane.
         """
     @overload
-    def Remove(self,theItem : Graphic3d_ClipPlane) -> bool: ...
+    def Remove(self,theItem : Any) -> None: ...
     def SetOverrideGlobal(self,theToOverride : bool) -> None: 
         """
         Setup flag defining if local properties should override global properties.
@@ -15651,14 +15635,14 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Graphic3d_SequenceOfStructure) -> None: 
+    def Append(self,theItem : Graphic3d_Structure) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Graphic3d_Structure) -> None: ...
+    def Append(self,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
     def Assign(self,theOther : Graphic3d_SequenceOfStructure) -> Graphic3d_SequenceOfStructure: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -15688,23 +15672,23 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Graphic3d_Structure) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Graphic3d_Structure) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Graphic3d_Structure) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Graphic3d_Structure) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -15722,23 +15706,23 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_Structure) -> None: 
+    def Prepend(self,theSeq : Graphic3d_SequenceOfStructure) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_SequenceOfStructure) -> None: ...
+    def Prepend(self,theItem : Graphic3d_Structure) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -15764,11 +15748,11 @@ class Graphic3d_SequenceOfStructure(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Graphic3d_SequenceOfStructure) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -15801,23 +15785,23 @@ class Graphic3d_ShaderAttribute(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Location(self) -> int: 
         """
         Returns attribute location to be bound on GLSL program linkage stage.
@@ -15897,14 +15881,14 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderAttributeList) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_ShaderAttributeList) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Graphic3d_ShaderAttribute) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Graphic3d_ShaderAttribute) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Graphic3d_ShaderAttributeList) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -15922,23 +15906,23 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_ShaderAttributeList) -> None: 
+    def Prepend(self,theItem : Graphic3d_ShaderAttribute) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_ShaderAttribute) -> None: ...
+    def Prepend(self,theSeq : Graphic3d_ShaderAttributeList) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -15964,11 +15948,11 @@ class Graphic3d_ShaderAttributeList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : Graphic3d_ShaderAttributeList) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -16113,23 +16097,23 @@ class Graphic3d_ShaderManager(OCP.Standard.Standard_Transient):
         Returns true if detected GL version is greater or equal to requested one.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetEmulateDepthClamp(self,theToEmulate : bool) -> None: 
         """
         Set if depth clamping should be emulated by GLSL program.
@@ -16223,23 +16207,23 @@ class Graphic3d_ShaderObject(OCP.Standard.Standard_Transient):
         Checks if the shader object is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Path(self) -> OCP.OSD.OSD_Path: 
         """
         Returns the full path to the shader source.
@@ -16313,14 +16297,14 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderObjectList) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Graphic3d_ShaderObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Graphic3d_ShaderObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Graphic3d_ShaderObjectList) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : Graphic3d_ShaderObject) -> None: 
         """
@@ -16347,23 +16331,23 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Graphic3d_ShaderObject) -> None: 
+    def Prepend(self,theSeq : Graphic3d_ShaderObjectList) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Graphic3d_ShaderObjectList) -> None: ...
+    def Prepend(self,theItem : Graphic3d_ShaderObject) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -16389,11 +16373,11 @@ class Graphic3d_ShaderObjectList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Graphic3d_ShaderObjectList) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : Graphic3d_ShaderObjectList) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -16462,23 +16446,23 @@ class Graphic3d_ShaderProgram(OCP.Standard.Standard_Transient):
         Checks if the program object is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPBR(self) -> bool: 
         """
         Return TRUE if standard program header should define functions and variables used in PBR pipeline. FALSE by default.
@@ -16649,23 +16633,23 @@ class Graphic3d_ShaderVariable(OCP.Standard.Standard_Transient):
         Checks if the shader variable is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns name of shader variable.
@@ -16811,11 +16795,11 @@ class Graphic3d_ShaderVariableList(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : Graphic3d_ShaderVariableList) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -16846,8 +16830,6 @@ class Graphic3d_StereoMode():
       Graphic3d_StereoMode_SoftPageFlip
 
       Graphic3d_StereoMode_OpenVR
-
-      Graphic3d_StereoMode_NB
     """
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
@@ -16871,15 +16853,14 @@ class Graphic3d_StereoMode():
     Graphic3d_StereoMode_Anaglyph: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>
     Graphic3d_StereoMode_ChessBoard: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>
     Graphic3d_StereoMode_ColumnInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>
-    Graphic3d_StereoMode_NB: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>
     Graphic3d_StereoMode_OpenVR: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>
     Graphic3d_StereoMode_OverUnder: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>
     Graphic3d_StereoMode_QuadBuffer: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>
     Graphic3d_StereoMode_RowInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>
     Graphic3d_StereoMode_SideBySide: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>
     Graphic3d_StereoMode_SoftPageFlip: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>
-    __entries: dict # value = {'Graphic3d_StereoMode_QuadBuffer': (<Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>, None), 'Graphic3d_StereoMode_Anaglyph': (<Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>, None), 'Graphic3d_StereoMode_RowInterlaced': (<Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>, None), 'Graphic3d_StereoMode_ColumnInterlaced': (<Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>, None), 'Graphic3d_StereoMode_ChessBoard': (<Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>, None), 'Graphic3d_StereoMode_SideBySide': (<Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>, None), 'Graphic3d_StereoMode_OverUnder': (<Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>, None), 'Graphic3d_StereoMode_SoftPageFlip': (<Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>, None), 'Graphic3d_StereoMode_OpenVR': (<Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>, None), 'Graphic3d_StereoMode_NB': (<Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>, None)}
-    __members__: dict # value = {'Graphic3d_StereoMode_QuadBuffer': <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>, 'Graphic3d_StereoMode_Anaglyph': <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>, 'Graphic3d_StereoMode_RowInterlaced': <Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>, 'Graphic3d_StereoMode_ColumnInterlaced': <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>, 'Graphic3d_StereoMode_ChessBoard': <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>, 'Graphic3d_StereoMode_SideBySide': <Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>, 'Graphic3d_StereoMode_OverUnder': <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>, 'Graphic3d_StereoMode_SoftPageFlip': <Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>, 'Graphic3d_StereoMode_OpenVR': <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>, 'Graphic3d_StereoMode_NB': <Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>}
+    __entries: dict # value = {'Graphic3d_StereoMode_QuadBuffer': (<Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>, None), 'Graphic3d_StereoMode_Anaglyph': (<Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>, None), 'Graphic3d_StereoMode_RowInterlaced': (<Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>, None), 'Graphic3d_StereoMode_ColumnInterlaced': (<Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>, None), 'Graphic3d_StereoMode_ChessBoard': (<Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>, None), 'Graphic3d_StereoMode_SideBySide': (<Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>, None), 'Graphic3d_StereoMode_OverUnder': (<Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>, None), 'Graphic3d_StereoMode_SoftPageFlip': (<Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>, None), 'Graphic3d_StereoMode_OpenVR': (<Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>, None)}
+    __members__: dict # value = {'Graphic3d_StereoMode_QuadBuffer': <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>, 'Graphic3d_StereoMode_Anaglyph': <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>, 'Graphic3d_StereoMode_RowInterlaced': <Graphic3d_StereoMode.Graphic3d_StereoMode_RowInterlaced: 2>, 'Graphic3d_StereoMode_ColumnInterlaced': <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>, 'Graphic3d_StereoMode_ChessBoard': <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>, 'Graphic3d_StereoMode_SideBySide': <Graphic3d_StereoMode.Graphic3d_StereoMode_SideBySide: 5>, 'Graphic3d_StereoMode_OverUnder': <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>, 'Graphic3d_StereoMode_SoftPageFlip': <Graphic3d_StereoMode.Graphic3d_StereoMode_SoftPageFlip: 7>, 'Graphic3d_StereoMode_OpenVR': <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>}
     pass
 class Graphic3d_Structure(OCP.Standard.Standard_Transient):
     """
@@ -16927,10 +16908,6 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
     @overload
     def Connect(self,theStructure : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection,theWithCheck : bool=False) -> None: ...
-    def ContainsFacet(self) -> bool: 
-        """
-        Returns Standard_True if the structure <me> contains Polygons, Triangles or Quadrangles.
-        """
     def CurrentGroup(self) -> Graphic3d_Group: 
         """
         Returns the last created group or creates new one if list is empty.
@@ -16959,7 +16936,7 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         Displays the structure <me> in all the views of the visualiser.
         """
-    def DisplayPriority(self) -> int: 
+    def DisplayPriority(self) -> Graphic3d_DisplayPriority: 
         """
         Returns the current display priority for this structure.
         """
@@ -17044,23 +17021,23 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         Returns Standard_True if the structure <me> is infinite.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if structure has mutable nature (content or location are be changed regularly). Mutable structure will be managed in different way than static onces.
@@ -17100,16 +17077,16 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         Prints information about the network associated with the structure <AStructure>.
         """
     @overload
-    def ReCompute(self,aProjector : Graphic3d_DataStructureManager) -> None: 
+    def ReCompute(self) -> None: 
         """
         Forces a new construction of the structure <me> if <me> is displayed and TOS_COMPUTED.
 
         Forces a new construction of the structure <me> if <me> is displayed in <aProjetor> and TOS_COMPUTED.
         """
     @overload
-    def ReCompute(self) -> None: ...
+    def ReCompute(self,aProjector : Graphic3d_DataStructureManager) -> None: ...
     @overload
-    def Remove(self,thePrs : Graphic3d_Structure) -> None: 
+    def Remove(self,thePtr : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection) -> None: 
         """
         Suppress the structure <me>. It will be erased at the next screen update. Warning: No more graphic operations in <me> after this call. Category: Methods to modify the class definition
 
@@ -17118,16 +17095,16 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         Suppress the structure in the list of descendants or in the list of ancestors.
         """
     @overload
-    def Remove(self,thePtr : Graphic3d_Structure,theType : Graphic3d_TypeOfConnection) -> None: ...
-    @overload
     def Remove(self) -> None: ...
+    @overload
+    def Remove(self,thePrs : Graphic3d_Structure) -> None: ...
     def RemoveAll(self) -> None: 
         """
         None
         """
     def ResetDisplayPriority(self) -> None: 
         """
-        Reset the current priority of the structure to the previous priority. Category: Methods to modify the class definition Warning: If <me> is displayed then the SetDisplayPriority method erase <me> and display <me> with the previous priority.
+        Reset the current priority of the structure to the previous priority. Warning: If structure is displayed then the SetDisplayPriority() method erases it and displays with the previous priority.
         """
     def SetClipPlanes(self,thePlanes : Graphic3d_SequenceOfHClipPlane) -> None: 
         """
@@ -17137,10 +17114,15 @@ class Graphic3d_Structure(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def SetDisplayPriority(self,Priority : int) -> None: 
+    @overload
+    def SetDisplayPriority(self,thePriority : int) -> None: 
         """
-        Modifies the order of displaying the structure. Values are between 0 and 10. Structures are drawn according to their display priorities in ascending order. A structure of priority 10 is displayed the last and appears over the others. The default value is 5. Category: Methods to modify the class definition Warning: If <me> is displayed then the SetDisplayPriority method erase <me> and display <me> with the new priority. Raises PriorityDefinitionError if <Priority> is greater than 10 or a negative value.
+        Modifies the order of displaying the structure. Values are between 0 and 10. Structures are drawn according to their display priorities in ascending order. A structure of priority 10 is displayed the last and appears over the others. The default value is 5. Warning: If structure is displayed then the SetDisplayPriority method erases it and displays with the new priority. Raises Graphic3d_PriorityDefinitionError if Priority is greater than 10 or a negative value.
+
+        None
         """
+    @overload
+    def SetDisplayPriority(self,thePriority : Graphic3d_DisplayPriority) -> None: ...
     def SetHLRValidation(self,theFlag : bool) -> None: 
         """
         None
@@ -17241,7 +17223,7 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
     """
     This class allows the definition of a manager to which the graphic objects are associated. It allows them to be globally manipulated. It defines the global attributes. Keywords: Structure, Structure Manager, Update Mode, Destroy, Highlight, VisibleThis class allows the definition of a manager to which the graphic objects are associated. It allows them to be globally manipulated. It defines the global attributes. Keywords: Structure, Structure Manager, Update Mode, Destroy, Highlight, Visible
     """
-    def ChangeDisplayPriority(self,theStructure : Graphic3d_Structure,theOldPriority : int,theNewPriority : int) -> None: 
+    def ChangeDisplayPriority(self,theStructure : Graphic3d_Structure,theOldPriority : Graphic3d_DisplayPriority,theNewPriority : Graphic3d_DisplayPriority) -> None: 
         """
         Changes the display priority of the structure <AStructure>.
         """
@@ -17332,23 +17314,23 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         Returns TRUE if Device Lost flag has been set and presentation data should be reuploaded onto graphics driver.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxNumOfViews(self) -> int: 
         """
         Returns the theoretical maximum number of definable views in the manager. Warning: It's not possible to accept an infinite number of definable views because each view must have an identification and we have different managers.
@@ -17358,14 +17340,14 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def ReCompute(self,theStructure : Graphic3d_Structure,theProjector : Graphic3d_DataStructureManager) -> None: 
+    def ReCompute(self,theStructure : Graphic3d_Structure) -> None: 
         """
         Forces a new construction of the structure. if <theStructure> is displayed and TOS_COMPUTED.
 
         Forces a new construction of the structure. if <theStructure> is displayed in <theProjector> and TOS_COMPUTED.
         """
     @overload
-    def ReCompute(self,theStructure : Graphic3d_Structure) -> None: ...
+    def ReCompute(self,theStructure : Graphic3d_Structure,theProjector : Graphic3d_DataStructureManager) -> None: ...
     @overload
     def RecomputeStructures(self,theStructures : Any) -> None: 
         """
@@ -17375,7 +17357,7 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         """
     @overload
     def RecomputeStructures(self) -> None: ...
-    def RegisterObject(self,theObject : OCP.Standard.Standard_Transient) -> Graphic3d_ViewAffinity: 
+    def RegisterObject(self,theObject : OCP.Standard.Standard_Transient,theAffinity : Graphic3d_ViewAffinity) -> None: 
         """
         None
         """
@@ -17396,14 +17378,14 @@ class Graphic3d_StructureManager(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def UnHighlight(self,AStructure : Graphic3d_Structure) -> None: 
+    def UnHighlight(self) -> None: 
         """
         Suppress the highlighting on the structure <AStructure>.
 
         Suppresses the highlighting on all the structures in <me>.
         """
     @overload
-    def UnHighlight(self) -> None: ...
+    def UnHighlight(self,AStructure : Graphic3d_Structure) -> None: ...
     def UnIdentification(self,theView : Graphic3d_CView) -> None: 
         """
         Detach the view from this structure manager and release its identification.
@@ -17469,23 +17451,23 @@ class Graphic3d_Text(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Orientation(self) -> OCP.gp.gp_Ax2: 
         """
         Returns text orientation in 3D space.
@@ -17519,7 +17501,7 @@ class Graphic3d_Text(OCP.Standard.Standard_Transient):
         Sets text point.
         """
     @overload
-    def SetText(self,theText : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def SetText(self,theText : OCP.NCollection.NCollection_Utf8String) -> None: 
         """
         Sets text value.
 
@@ -17528,7 +17510,7 @@ class Graphic3d_Text(OCP.Standard.Standard_Transient):
         Sets text value.
         """
     @overload
-    def SetText(self,theText : OCP.NCollection.NCollection_Utf8String) -> None: ...
+    def SetText(self,theText : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def SetText(self,theText : str) -> None: ...
     def SetTextFormatter(self,theFormatter : OCP.Font.Font_TextFormatter) -> None: 
@@ -17671,6 +17653,10 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -17684,23 +17670,23 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -17739,6 +17725,10 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
         """
         Set flag indicating color nature of values within the texture.
         """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
+        """
     @staticmethod
     def TextureName_s(aRank : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -17774,7 +17764,7 @@ class Graphic3d_Texture1D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Stand
     pass
 class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
     """
-    This class provides the implementation of a manual 1D texture. you MUST provides texture coordinates on your facets if you want to see your texture.This class provides the implementation of a manual 1D texture. you MUST provides texture coordinates on your facets if you want to see your texture.This class provides the implementation of a manual 1D texture. you MUST provides texture coordinates on your facets if you want to see your texture.
+    This class provides the implementation of a manual 1D texture. you MUST provide texture coordinates on your facets if you want to see your texture.This class provides the implementation of a manual 1D texture. you MUST provide texture coordinates on your facets if you want to see your texture.
     """
     def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
         """
@@ -17836,6 +17826,10 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -17849,23 +17843,23 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -17904,6 +17898,10 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         """
         Set flag indicating color nature of values within the texture.
         """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
+        """
     @staticmethod
     def TextureName_s(aRank : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -17927,11 +17925,11 @@ class Graphic3d_Texture1Dmanual(Graphic3d_Texture1D, Graphic3d_TextureMap, Graph
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @overload
     def __init__(self,theNOT : Graphic3d_NameOfTexture1D) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -18007,6 +18005,10 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -18020,23 +18022,23 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -18079,6 +18081,10 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
         """
         Set flag indicating color nature of values within the texture.
         """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
+        """
     def SetSegment(self,theX1 : float,theY1 : float,theZ1 : float,theX2 : float,theY2 : float,theZ2 : float) -> None: 
         """
         Sets the texture application bounds. Defines the way the texture is stretched across facets. Default values are <0.0, 0.0, 0.0> , <0.0, 0.0, 1.0>
@@ -18108,9 +18114,9 @@ class Graphic3d_Texture1Dsegment(Graphic3d_Texture1D, Graphic3d_TextureMap, Grap
     @overload
     def __init__(self,theNOT : Graphic3d_NameOfTexture1D) -> None: ...
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -18194,9 +18200,9 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         """
         Get the reference counter of this object
         """
-    def HasMipMaps(self) -> bool: 
+    def HasMipmaps(self) -> bool: 
         """
-        Return true if mip-maps should be used.
+        Returns whether mipmaps should be generated or not.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -18211,23 +18217,23 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -18274,9 +18280,9 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
         """
-    def SetMipMaps(self,theToUse : bool) -> None: 
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
         """
-        Set if mip-maps should be used (generated if needed). Note that this method should be called before loading / using the texture.
+        Sets whether to generate mipmaps or not.
         """
     @staticmethod
     def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 
@@ -18301,189 +18307,6 @@ class Graphic3d_MediaTexture(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
     def __init__(self,theMutex : Any,thePlane : int=-1) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class Graphic3d_Texture2Dmanual(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
-    """
-    This class defined a manual texture 2D facets MUST define texture coordinate if you want to see somethings on.This class defined a manual texture 2D facets MUST define texture coordinate if you want to see somethings on.
-    """
-    def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
-        """
-        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DisableModulate(self) -> None: 
-        """
-        disable texture modulate mode. the image is directly decal on the surface.
-        """
-    def DisableRepeat(self) -> None: 
-        """
-        use this methods if you want to disable texture repetition on your objects.
-        """
-    def DisableSmooth(self) -> None: 
-        """
-        disable texture smoothing
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def EnableModulate(self) -> None: 
-        """
-        enable texture modulate mode. the image is modulate with the shading of the surface.
-        """
-    def EnableRepeat(self) -> None: 
-        """
-        use this methods if you want to enable texture repetition on your objects.
-        """
-    def EnableSmooth(self) -> None: 
-        """
-        enable texture smoothing
-        """
-    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
-        """
-        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
-        """
-    def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
-        """
-        This ID will be used to manage resource in graphic driver.
-        """
-    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
-        """
-        This method will be called by graphic driver each time when texture resource should be created. Default constructors allow defining the texture source as path to texture image or directly as pixmap. If the source is defined as path, then the image will be dynamically loaded when this method is called (and no copy will be preserved in this class instance). Inheritors may dynamically generate the image. Notice, image data should be in Bottom-Up order (see Image_PixMap::IsTopDown())!
-        """
-    def GetParams(self) -> Graphic3d_TextureParams: 
-        """
-        Returns low-level texture parameters
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def HasMipMaps(self) -> bool: 
-        """
-        Return true if mip-maps should be used.
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def IsColorMap(self) -> bool: 
-        """
-        Return flag indicating color nature of values within the texture; TRUE by default.
-        """
-    def IsDone(self) -> bool: 
-        """
-        Checks if a texture class is valid or not.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    def IsModulate(self) -> bool: 
-        """
-        Returns TRUE if the texture is modulate.
-        """
-    def IsRepeat(self) -> bool: 
-        """
-        Returns TRUE if the texture repeat is enable.
-        """
-    def IsSmoothed(self) -> bool: 
-        """
-        Returns TRUE if the texture is smoothed.
-        """
-    def IsTopDown(self) -> bool: 
-        """
-        Returns whether row's memory layout is top-down.
-        """
-    def Name(self) -> Graphic3d_NameOfTexture2D: 
-        """
-        Returns the name of the predefined textures or NOT_2D_UNKNOWN when the name is given as a filename.
-        """
-    @staticmethod
-    def NumberOfTextures_s() -> int: 
-        """
-        Returns the number of predefined textures.
-        """
-    def Path(self) -> OCP.OSD.OSD_Path: 
-        """
-        Returns the full path of the defined texture. It could be empty path if GetImage() is overridden to load image not from file.
-        """
-    def Revision(self) -> int: 
-        """
-        Return image revision.
-        """
-    def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
-    def SetColorMap(self,theIsColor : bool) -> None: 
-        """
-        Set flag indicating color nature of values within the texture.
-        """
-    def SetImage(self,thePixMap : OCP.Image.Image_PixMap) -> None: 
-        """
-        Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
-        """
-    def SetMipMaps(self,theToUse : bool) -> None: 
-        """
-        Set if mip-maps should be used (generated if needed). Note that this method should be called before loading / using the texture.
-        """
-    @staticmethod
-    def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 
-        """
-        Returns the name of the predefined texture of rank <aRank>
-        """
-    @staticmethod
-    def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
-        """
-        The path to textures determined from CSF_MDTVTexturesDirectory or CASROOT environment variables.
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Type(self) -> Graphic3d_TypeOfTexture: 
-        """
-        Returns the texture type.
-        """
-    def UpdateRevision(self) -> None: 
-        """
-        Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
-        """
-    @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
-    def __init__(self,theNOT : Graphic3d_NameOfTexture2D) -> None: ...
-    @overload
-    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -18559,9 +18382,9 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
         """
         Get the reference counter of this object
         """
-    def HasMipMaps(self) -> bool: 
+    def HasMipmaps(self) -> bool: 
         """
-        Return true if mip-maps should be used.
+        Returns whether mipmaps should be generated or not.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -18576,23 +18399,23 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -18659,9 +18482,9 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
         """
-    def SetMipMaps(self,theToUse : bool) -> None: 
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
         """
-        Set if mip-maps should be used (generated if needed). Note that this method should be called before loading / using the texture.
+        Sets whether to generate mipmaps or not.
         """
     def SetPlane(self,thePlane : Graphic3d_NameOfTexturePlane) -> None: 
         """
@@ -18726,9 +18549,178 @@ class Graphic3d_Texture2Dplane(Graphic3d_Texture2D, Graphic3d_TextureMap, Graphi
         Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
         """
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,theNOT : Graphic3d_NameOfTexture2D) -> None: ...
+    @overload
+    def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class Graphic3d_Texture3D(Graphic3d_TextureMap, Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
+    """
+    This abstract class for managing 3D textures.
+    """
+    def AnisoFilter(self) -> Graphic3d_LevelOfTextureAnisotropy: 
+        """
+        Returns level of anisotropy texture filter. Default value is Graphic3d_LOTA_OFF.
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DisableModulate(self) -> None: 
+        """
+        disable texture modulate mode. the image is directly decal on the surface.
+        """
+    def DisableRepeat(self) -> None: 
+        """
+        use this methods if you want to disable texture repetition on your objects.
+        """
+    def DisableSmooth(self) -> None: 
+        """
+        disable texture smoothing
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def EnableModulate(self) -> None: 
+        """
+        enable texture modulate mode. the image is modulate with the shading of the surface.
+        """
+    def EnableRepeat(self) -> None: 
+        """
+        use this methods if you want to enable texture repetition on your objects.
+        """
+    def EnableSmooth(self) -> None: 
+        """
+        enable texture smoothing
+        """
+    def GetCompressedImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_CompressedPixMap: 
+        """
+        This method will be called by graphic driver each time when texture resource should be created. It is called in front of GetImage() for uploading compressed image formats natively supported by GPU.
+        """
+    def GetId(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        This ID will be used to manage resource in graphic driver.
+        """
+    def GetImage(self,theSupported : OCP.Image.Image_SupportedFormats) -> OCP.Image.Image_PixMap: 
+        """
+        Load and return image.
+        """
+    def GetParams(self) -> Graphic3d_TextureParams: 
+        """
+        Returns low-level texture parameters
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsColorMap(self) -> bool: 
+        """
+        Return flag indicating color nature of values within the texture; TRUE by default.
+        """
+    def IsDone(self) -> bool: 
+        """
+        Checks if a texture class is valid or not.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsModulate(self) -> bool: 
+        """
+        Returns TRUE if the texture is modulate.
+        """
+    def IsRepeat(self) -> bool: 
+        """
+        Returns TRUE if the texture repeat is enable.
+        """
+    def IsSmoothed(self) -> bool: 
+        """
+        Returns TRUE if the texture is smoothed.
+        """
+    def IsTopDown(self) -> bool: 
+        """
+        Returns whether row's memory layout is top-down.
+        """
+    def Path(self) -> OCP.OSD.OSD_Path: 
+        """
+        Returns the full path of the defined texture. It could be empty path if GetImage() is overridden to load image not from file.
+        """
+    def Revision(self) -> int: 
+        """
+        Return image revision.
+        """
+    def SetAnisoFilter(self,theLevel : Graphic3d_LevelOfTextureAnisotropy) -> None: ...
+    def SetColorMap(self,theIsColor : bool) -> None: 
+        """
+        Set flag indicating color nature of values within the texture.
+        """
+    def SetImage(self,thePixMap : OCP.Image.Image_PixMap) -> None: 
+        """
+        Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
+        """
+    @staticmethod
+    def TexturesFolder_s() -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        The path to textures determined from CSF_MDTVTexturesDirectory or CASROOT environment variables.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Type(self) -> Graphic3d_TypeOfTexture: 
+        """
+        Returns the texture type.
+        """
+    def UpdateRevision(self) -> None: 
+        """
+        Update image revision. Can be used for signaling changes in the texture source (e.g. file update, pixmap update) without re-creating texture source itself (since unique id should be never modified).
+        """
+    @overload
+    def __init__(self,theFiles : OCP.TColStd.TColStd_Array1OfAsciiString) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @staticmethod
@@ -18778,6 +18770,10 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         """
         Get the reference counter of this object
         """
+    def HasMipmaps(self) -> bool: 
+        """
+        Returns whether mipmaps should be generated or not.
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -18791,23 +18787,23 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Returns whether row's memory layout is top-down.
@@ -18832,6 +18828,10 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
     def SetColorMap(self,theIsColor : bool) -> None: 
         """
         Set flag indicating color nature of values within the texture.
+        """
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
+        """
+        Sets whether to generate mipmaps or not.
         """
     @staticmethod
     def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 
@@ -18858,9 +18858,9 @@ class Graphic3d_TextureEnv(Graphic3d_TextureRoot, OCP.Standard.Standard_Transien
     @overload
     def __init__(self,thePixMap : OCP.Image.Image_PixMap) -> None: ...
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self,theName : Graphic3d_NameOfTextureEnv) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -18961,23 +18961,23 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -19053,9 +19053,9 @@ class Graphic3d_CubeMapPacked(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic3d
         Returns whether Z axis is inverted.
         """
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOrder : Graphic3d_ValidatedCubeMapOrder=Graphic3d_ValidatedCubeMapOrder) -> None: ...
-    @overload
     def __init__(self,theImage : OCP.Image.Image_PixMap,theOrder : Graphic3d_ValidatedCubeMapOrder=Graphic3d_ValidatedCubeMapOrder) -> None: ...
+    @overload
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOrder : Graphic3d_ValidatedCubeMapOrder=Graphic3d_ValidatedCubeMapOrder) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -19116,23 +19116,23 @@ class Graphic3d_TextureParams(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate. Default value is FALSE.
@@ -19289,23 +19289,23 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         Checks if a texture class is valid or not. Returns true if the construction of the class is correct.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -19381,9 +19381,9 @@ class Graphic3d_CubeMapSeparate(Graphic3d_CubeMap, Graphic3d_TextureMap, Graphic
         Returns whether Z axis is inverted.
         """
     @overload
-    def __init__(self,thePaths : OCP.TColStd.TColStd_Array1OfAsciiString) -> None: ...
-    @overload
     def __init__(self,theImages : Any) -> None: ...
+    @overload
+    def __init__(self,thePaths : OCP.TColStd.TColStd_Array1OfAsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -19444,23 +19444,23 @@ class Graphic3d_MediaTextureSet(Graphic3d_TextureSet, OCP.Standard.Standard_Tran
         Return TRUE if YUV range is full.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPlanarYUV(self) -> bool: 
         """
         Return TRUE if texture set defined 3 YUV planes.
@@ -19820,23 +19820,23 @@ class Graphic3d_TransformPers(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTrihedronOr2d(self) -> bool: 
         """
         Return true for Graphic3d_TMF_TriedronPers and Graphic3d_TMF_2d modes.
@@ -19889,11 +19889,11 @@ class Graphic3d_TransformPers(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
+    def __init__(self,theMode : Graphic3d_TransModeFlags) -> None: ...
+    @overload
     def __init__(self,theMode : Graphic3d_TransModeFlags,thePnt : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,theMode : Graphic3d_TransModeFlags,theCorner : OCP.Aspect.Aspect_TypeOfTriedronPosition,theOffset : Graphic3d_Vec2i=Graphic3d_Vec2i) -> None: ...
-    @overload
-    def __init__(self,theMode : Graphic3d_TransModeFlags) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -19904,7 +19904,7 @@ class Graphic3d_TransformPers(OCP.Standard.Standard_Transient):
         """
         None
         """
-    def persistentScale(self,theCamera : Graphic3d_Camera,arg2 : int,theViewportHeight : int) -> float: 
+    def persistentScale(self,theCamera : Graphic3d_Camera,theViewportWidth : int,theViewportHeight : int) -> float: 
         """
         Find scale value based on the camera position and view dimensions
         """
@@ -19950,23 +19950,23 @@ class Graphic3d_TransformPersScaledAbove(Graphic3d_TransformPers, OCP.Standard.S
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTrihedronOr2d(self) -> bool: 
         """
         Return true for Graphic3d_TMF_TriedronPers and Graphic3d_TMF_2d modes.
@@ -20126,6 +20126,8 @@ class Graphic3d_TypeOfBackfacingModel():
 
       Graphic3d_TypeOfBackfacingModel_BackCulled
 
+      Graphic3d_TypeOfBackfacingModel_FrontCulled
+
       Graphic3d_TOBM_AUTOMATIC
 
       Graphic3d_TOBM_FORCE
@@ -20163,11 +20165,12 @@ class Graphic3d_TypeOfBackfacingModel():
     Graphic3d_TypeOfBackfacingModel_Auto: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>
     Graphic3d_TypeOfBackfacingModel_BackCulled: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>
     Graphic3d_TypeOfBackfacingModel_DoubleSided: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>
+    Graphic3d_TypeOfBackfacingModel_FrontCulled: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_FrontCulled: 3>
     V3d_TOBM_ALWAYS_DISPLAYED: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>
     V3d_TOBM_AUTOMATIC: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>
     V3d_TOBM_NEVER_DISPLAYED: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>
-    __entries: dict # value = {'Graphic3d_TypeOfBackfacingModel_Auto': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, None), 'Graphic3d_TypeOfBackfacingModel_DoubleSided': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, None), 'Graphic3d_TypeOfBackfacingModel_BackCulled': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, None), 'Graphic3d_TOBM_AUTOMATIC': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, None), 'Graphic3d_TOBM_FORCE': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, None), 'Graphic3d_TOBM_DISABLE': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, None), 'V3d_TOBM_AUTOMATIC': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, None), 'V3d_TOBM_ALWAYS_DISPLAYED': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, None), 'V3d_TOBM_NEVER_DISPLAYED': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, None)}
-    __members__: dict # value = {'Graphic3d_TypeOfBackfacingModel_Auto': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, 'Graphic3d_TypeOfBackfacingModel_DoubleSided': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, 'Graphic3d_TypeOfBackfacingModel_BackCulled': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, 'Graphic3d_TOBM_AUTOMATIC': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, 'Graphic3d_TOBM_FORCE': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, 'Graphic3d_TOBM_DISABLE': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, 'V3d_TOBM_AUTOMATIC': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, 'V3d_TOBM_ALWAYS_DISPLAYED': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, 'V3d_TOBM_NEVER_DISPLAYED': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>}
+    __entries: dict # value = {'Graphic3d_TypeOfBackfacingModel_Auto': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, None), 'Graphic3d_TypeOfBackfacingModel_DoubleSided': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, None), 'Graphic3d_TypeOfBackfacingModel_BackCulled': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, None), 'Graphic3d_TypeOfBackfacingModel_FrontCulled': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_FrontCulled: 3>, None), 'Graphic3d_TOBM_AUTOMATIC': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, None), 'Graphic3d_TOBM_FORCE': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, None), 'Graphic3d_TOBM_DISABLE': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, None), 'V3d_TOBM_AUTOMATIC': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, None), 'V3d_TOBM_ALWAYS_DISPLAYED': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, None), 'V3d_TOBM_NEVER_DISPLAYED': (<Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, None)}
+    __members__: dict # value = {'Graphic3d_TypeOfBackfacingModel_Auto': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, 'Graphic3d_TypeOfBackfacingModel_DoubleSided': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, 'Graphic3d_TypeOfBackfacingModel_BackCulled': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, 'Graphic3d_TypeOfBackfacingModel_FrontCulled': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_FrontCulled: 3>, 'Graphic3d_TOBM_AUTOMATIC': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, 'Graphic3d_TOBM_FORCE': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, 'Graphic3d_TOBM_DISABLE': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>, 'V3d_TOBM_AUTOMATIC': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>, 'V3d_TOBM_ALWAYS_DISPLAYED': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>, 'V3d_TOBM_NEVER_DISPLAYED': <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>}
     pass
 class Graphic3d_TypeOfBackground():
     """
@@ -20765,11 +20768,19 @@ class Graphic3d_TypeOfTexture():
 
     Members:
 
+      Graphic3d_TypeOfTexture_1D
+
+      Graphic3d_TypeOfTexture_2D
+
+      Graphic3d_TypeOfTexture_3D
+
+      Graphic3d_TypeOfTexture_CUBEMAP
+
+      Graphic3d_TOT_2D_MIPMAP
+
       Graphic3d_TOT_1D
 
       Graphic3d_TOT_2D
-
-      Graphic3d_TOT_2D_MIPMAP
 
       Graphic3d_TOT_CUBEMAP
     """
@@ -20792,12 +20803,16 @@ class Graphic3d_TypeOfTexture():
         """
         :type: int
         """
-    Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>
-    Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>
-    Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>
-    Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>
-    __entries: dict # value = {'Graphic3d_TOT_1D': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>, None), 'Graphic3d_TOT_2D': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>, None), 'Graphic3d_TOT_2D_MIPMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>, None), 'Graphic3d_TOT_CUBEMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>, None)}
-    __members__: dict # value = {'Graphic3d_TOT_1D': <Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>, 'Graphic3d_TOT_2D': <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>, 'Graphic3d_TOT_2D_MIPMAP': <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>, 'Graphic3d_TOT_CUBEMAP': <Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>}
+    Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>
+    Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>
+    Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 4>
+    Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>
+    Graphic3d_TypeOfTexture_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>
+    Graphic3d_TypeOfTexture_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>
+    Graphic3d_TypeOfTexture_3D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_3D: 2>
+    Graphic3d_TypeOfTexture_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>
+    __entries: dict # value = {'Graphic3d_TypeOfTexture_1D': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>, None), 'Graphic3d_TypeOfTexture_2D': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>, None), 'Graphic3d_TypeOfTexture_3D': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_3D: 2>, None), 'Graphic3d_TypeOfTexture_CUBEMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>, None), 'Graphic3d_TOT_2D_MIPMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 4>, None), 'Graphic3d_TOT_1D': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>, None), 'Graphic3d_TOT_2D': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>, None), 'Graphic3d_TOT_CUBEMAP': (<Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>, None)}
+    __members__: dict # value = {'Graphic3d_TypeOfTexture_1D': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>, 'Graphic3d_TypeOfTexture_2D': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>, 'Graphic3d_TypeOfTexture_3D': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_3D: 2>, 'Graphic3d_TypeOfTexture_CUBEMAP': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>, 'Graphic3d_TOT_2D_MIPMAP': <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 4>, 'Graphic3d_TOT_1D': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>, 'Graphic3d_TOT_2D': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>, 'Graphic3d_TOT_CUBEMAP': <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>}
     pass
 class Graphic3d_TypeOfTextureFilter():
     """
@@ -21129,24 +21144,24 @@ class Graphic3d_Vec2b():
     @overload
     def __imul__(self,theFactor : str) -> Graphic3d_Vec2b: ...
     @overload
+    def __init__(self,theX : str,theY : str) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theXY : str) -> None: ...
-    @overload
-    def __init__(self,theX : str,theY : str) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2b) -> Graphic3d_Vec2b: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec2b) -> Graphic3d_Vec2b: 
+    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec2b: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec2b: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec2b) -> Graphic3d_Vec2b: ...
     def __mul__(self,theFactor : str) -> Graphic3d_Vec2b: 
         """
         Compute per-component multiplication by scale factor.
@@ -21268,20 +21283,20 @@ class Graphic3d_Vec2d():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theFactor : float) -> Graphic3d_Vec2d: 
+    def __imul__(self,theRight : Graphic3d_Vec2d) -> Graphic3d_Vec2d: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec2d) -> Graphic3d_Vec2d: ...
+    def __imul__(self,theFactor : float) -> Graphic3d_Vec2d: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theX : float,theY : float) -> None: ...
-    @overload
     def __init__(self,theXY : float) -> None: ...
+    @overload
+    def __init__(self,theX : float,theY : float) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2d) -> Graphic3d_Vec2d: 
         """
         Compute per-component subtraction.
@@ -21416,33 +21431,33 @@ class Graphic3d_Vec2i():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec2i) -> Graphic3d_Vec2i: 
+    def __imul__(self,theFactor : int) -> Graphic3d_Vec2i: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theFactor : int) -> Graphic3d_Vec2i: ...
+    def __imul__(self,theRight : Graphic3d_Vec2i) -> Graphic3d_Vec2i: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theX : int,theY : int) -> None: ...
     @overload
     def __init__(self,theXY : int) -> None: ...
     @overload
-    def __init__(self,theX : int,theY : int) -> None: ...
+    def __init__(self) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2i) -> Graphic3d_Vec2i: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec2i) -> Graphic3d_Vec2i: 
+    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec2i: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec2i: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec2i) -> Graphic3d_Vec2i: ...
     def __mul__(self,theFactor : int) -> Graphic3d_Vec2i: 
         """
         Compute per-component multiplication by scale factor.
@@ -21573,24 +21588,24 @@ class Graphic3d_Vec2ub():
     @overload
     def __imul__(self,theFactor : int) -> Graphic3d_Vec2ub: ...
     @overload
-    def __init__(self,theXY : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theX : int,theY : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theXY : int) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: 
+    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec2ub: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec2ub: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec2ub) -> Graphic3d_Vec2ub: ...
     def __mul__(self,theFactor : int) -> Graphic3d_Vec2ub: 
         """
         Compute per-component multiplication by scale factor.
@@ -21723,14 +21738,14 @@ class Graphic3d_Vec3b():
         Normalize the vector.
         """
     @overload
-    def SetValues(self,theVec2 : Graphic3d_Vec2b,theZ : str) -> None: 
+    def SetValues(self,theX : str,theY : str,theZ : str) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values to the vector.
         """
     @overload
-    def SetValues(self,theX : str,theY : str,theZ : str) -> None: ...
+    def SetValues(self,theVec2 : Graphic3d_Vec2b,theZ : str) -> None: ...
     def SquareModulus(self) -> str: 
         """
         Computes the square of vector modulus (magnitude, length). This method may be used for performance tricks.
@@ -21740,35 +21755,35 @@ class Graphic3d_Vec3b():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: 
+    def __imul__(self,theFactor : str) -> Graphic3d_Vec3b: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication by scale factor.
         """
     @overload
-    def __imul__(self,theFactor : str) -> Graphic3d_Vec3b: ...
-    @overload
-    def __init__(self,theValue : str) -> None: ...
-    @overload
-    def __init__(self,theX : str,theY : str,theZ : str) -> None: ...
+    def __imul__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: ...
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theX : str,theY : str,theZ : str) -> None: ...
+    @overload
     def __init__(self,theVec2 : Graphic3d_Vec2b,theZ : str='\x00') -> None: ...
+    @overload
+    def __init__(self,theValue : str) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3b) -> Graphic3d_Vec3b: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: 
+    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec3b: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec3b: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec3b) -> Graphic3d_Vec3b: ...
     def __mul__(self,theFactor : str) -> Graphic3d_Vec3b: 
         """
         Compute per-component multiplication by scale factor.
@@ -21991,13 +22006,13 @@ class Graphic3d_Vec3i():
     @overload
     def __imul__(self,theFactor : int) -> Graphic3d_Vec3i: ...
     @overload
-    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
-    @overload
     def __init__(self,theVec2 : Graphic3d_Vec2i,theZ : int=0) -> None: ...
+    @overload
+    def __init__(self,theValue : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theValue : int) -> None: ...
+    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3i) -> Graphic3d_Vec3i: 
         """
         Compute per-component subtraction.
@@ -22207,14 +22222,14 @@ class Graphic3d_Vec3ub():
         Normalize the vector.
         """
     @overload
-    def SetValues(self,theX : int,theY : int,theZ : int) -> None: 
+    def SetValues(self,theVec2 : Graphic3d_Vec2ub,theZ : int) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values to the vector.
         """
     @overload
-    def SetValues(self,theVec2 : Graphic3d_Vec2ub,theZ : int) -> None: ...
+    def SetValues(self,theX : int,theY : int,theZ : int) -> None: ...
     def SquareModulus(self) -> int: 
         """
         Computes the square of vector modulus (magnitude, length). This method may be used for performance tricks.
@@ -22233,13 +22248,13 @@ class Graphic3d_Vec3ub():
     @overload
     def __imul__(self,theFactor : int) -> Graphic3d_Vec3ub: ...
     @overload
-    def __init__(self,theValue : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
+    def __init__(self,theValue : int) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2ub,theZ : int=0) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theX : int,theY : int,theZ : int) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec3ub) -> Graphic3d_Vec3ub: 
         """
         Compute per-component subtraction.
@@ -22434,28 +22449,28 @@ class Graphic3d_Vec4():
     @overload
     def __imul__(self,theRight : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
     @overload
-    def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
-    @overload
-    def __init__(self,theVec3 : OCP.gp.gp_Vec3f,theW : float=0.0) -> None: ...
-    @overload
-    def __init__(self,theVec2 : OCP.gp.gp_Vec2f) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theValue : float) -> None: ...
+    @overload
+    def __init__(self,theVec2 : OCP.gp.gp_Vec2f) -> None: ...
+    @overload
+    def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    @overload
+    def __init__(self,theVec3 : OCP.gp.gp_Vec3f,theW : float=0.0) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4) -> Graphic3d_Vec4: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec4) -> Graphic3d_Vec4: 
+    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec4: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec4: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec4) -> Graphic3d_Vec4: ...
     def __mul__(self,theFactor : float) -> Graphic3d_Vec4: 
         """
         Compute per-component multiplication.
@@ -22760,37 +22775,37 @@ class Graphic3d_Vec4b():
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec4b) -> Graphic3d_Vec4b: 
+    def __imul__(self,theFactor : str) -> Graphic3d_Vec4b: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication.
         """
     @overload
-    def __imul__(self,theFactor : str) -> Graphic3d_Vec4b: ...
-    @overload
-    def __init__(self,theVec2 : Graphic3d_Vec2b) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theValue : str) -> None: ...
+    def __imul__(self,theRight : Graphic3d_Vec4b) -> Graphic3d_Vec4b: ...
     @overload
     def __init__(self,theVec3 : Graphic3d_Vec3b,theW : str='\x00') -> None: ...
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theX : str,theY : str,theZ : str,theW : str) -> None: ...
+    @overload
+    def __init__(self,theVec2 : Graphic3d_Vec2b) -> None: ...
+    @overload
+    def __init__(self,theValue : str) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4b) -> Graphic3d_Vec4b: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec4b) -> Graphic3d_Vec4b: 
+    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec4b: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theInvFactor : str) -> Graphic3d_Vec4b: ...
+    def __itruediv__(self,theRight : Graphic3d_Vec4b) -> Graphic3d_Vec4b: ...
     def __mul__(self,theFactor : str) -> Graphic3d_Vec4b: 
         """
         Compute per-component multiplication.
@@ -23082,50 +23097,50 @@ class Graphic3d_Vec4d():
         Compute per-component multiplication.
         """
     @overload
-    def SetValues(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float) -> None: 
+    def SetValues(self,theX : float,theY : float,theZ : float,theW : float) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values as 3-component vector and a 4-th value.
         """
     @overload
-    def SetValues(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    def SetValues(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float) -> None: ...
     def __iadd__(self,theAdd : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theFactor : float) -> Graphic3d_Vec4d: 
+    def __imul__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: ...
-    @overload
-    def __init__(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float=0.0) -> None: ...
-    @overload
-    def __init__(self,theValue : float) -> None: ...
-    @overload
-    def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    def __imul__(self,theFactor : float) -> Graphic3d_Vec4d: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theX : float,theY : float,theZ : float,theW : float) -> None: ...
+    @overload
+    def __init__(self,theValue : float) -> None: ...
+    @overload
+    def __init__(self,theVec3 : OCP.SelectMgr.SelectMgr_Vec3,theW : float=0.0) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec4d: 
+    def __itruediv__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec4d) -> Graphic3d_Vec4d: ...
+    def __itruediv__(self,theInvFactor : float) -> Graphic3d_Vec4d: ...
     def __mul__(self,theFactor : float) -> Graphic3d_Vec4d: 
         """
         Compute per-component multiplication.
@@ -23417,35 +23432,35 @@ class Graphic3d_Vec4i():
         Compute per-component multiplication.
         """
     @overload
-    def SetValues(self,theX : int,theY : int,theZ : int,theW : int) -> None: 
+    def SetValues(self,theVec3 : Graphic3d_Vec3i,theW : int) -> None: 
         """
         Assign new values to the vector.
 
         Assign new values as 3-component vector and a 4-th value.
         """
     @overload
-    def SetValues(self,theVec3 : Graphic3d_Vec3i,theW : int) -> None: ...
+    def SetValues(self,theX : int,theY : int,theZ : int,theW : int) -> None: ...
     def __iadd__(self,theAdd : Graphic3d_Vec4i) -> Graphic3d_Vec4i: 
         """
         Compute per-component summary.
         """
     @overload
-    def __imul__(self,theRight : Graphic3d_Vec4i) -> Graphic3d_Vec4i: 
+    def __imul__(self,theFactor : int) -> Graphic3d_Vec4i: 
         """
         Compute per-component multiplication.
 
         Compute per-component multiplication.
         """
     @overload
-    def __imul__(self,theFactor : int) -> Graphic3d_Vec4i: ...
+    def __imul__(self,theRight : Graphic3d_Vec4i) -> Graphic3d_Vec4i: ...
     @overload
-    def __init__(self,theValue : int) -> None: ...
-    @overload
-    def __init__(self,theX : int,theY : int,theZ : int,theW : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theVec3 : Graphic3d_Vec3i,theW : int=0) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theX : int,theY : int,theZ : int,theW : int) -> None: ...
+    @overload
+    def __init__(self,theValue : int) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2i) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4i) -> Graphic3d_Vec4i: 
@@ -23453,14 +23468,14 @@ class Graphic3d_Vec4i():
         Compute per-component subtraction.
         """
     @overload
-    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec4i: 
+    def __itruediv__(self,theRight : Graphic3d_Vec4i) -> Graphic3d_Vec4i: 
         """
         Compute per-component division by scale factor.
 
         Compute per-component division.
         """
     @overload
-    def __itruediv__(self,theRight : Graphic3d_Vec4i) -> Graphic3d_Vec4i: ...
+    def __itruediv__(self,theInvFactor : int) -> Graphic3d_Vec4i: ...
     def __mul__(self,theFactor : int) -> Graphic3d_Vec4i: 
         """
         Compute per-component multiplication.
@@ -23776,13 +23791,13 @@ class Graphic3d_Vec4ub():
     @overload
     def __init__(self,theVec3 : Graphic3d_Vec3ub,theW : int=0) -> None: ...
     @overload
-    def __init__(self,theValue : int) -> None: ...
-    @overload
     def __init__(self,theX : int,theY : int,theZ : int,theW : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theVec2 : Graphic3d_Vec2ub) -> None: ...
+    @overload
+    def __init__(self,theValue : int) -> None: ...
     def __isub__(self,theDec : Graphic3d_Vec4ub) -> Graphic3d_Vec4ub: 
         """
         Compute per-component subtraction.
@@ -24054,14 +24069,14 @@ class Graphic3d_Vertex():
     This class represents a graphical 3D point.
     """
     @overload
-    def Coord(self,theX : float,theY : float,theZ : float) -> None: 
+    def Coord(self) -> Tuple[float, float, float]: 
         """
         Returns the coordinates.
 
         Returns the coordinates.
         """
     @overload
-    def Coord(self) -> Tuple[float, float, float]: ...
+    def Coord(self,theX : float,theY : float,theZ : float) -> None: ...
     def Distance(self,theOther : Graphic3d_Vertex) -> float: 
         """
         Returns the distance between two points.
@@ -24162,36 +24177,36 @@ class Graphic3d_ViewAffinity(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsVisible(self,theViewId : int) -> bool: 
         """
         Return visibility flag.
         """
     @overload
-    def SetVisible(self,theViewId : int,theIsVisible : bool) -> None: 
+    def SetVisible(self,theIsVisible : bool) -> None: 
         """
         Setup visibility flag for all views.
 
         Setup visibility flag.
         """
     @overload
-    def SetVisible(self,theIsVisible : bool) -> None: ...
+    def SetVisible(self,theViewId : int,theIsVisible : bool) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -24441,6 +24456,19 @@ Graphic3d_DiagnosticInfo_Limits: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value 
 Graphic3d_DiagnosticInfo_Memory: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Memory: 8>
 Graphic3d_DiagnosticInfo_NativePlatform: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_NativePlatform: 16>
 Graphic3d_DiagnosticInfo_Short: OCP.Graphic3d.Graphic3d_DiagnosticInfo # value = <Graphic3d_DiagnosticInfo.Graphic3d_DiagnosticInfo_Short: 7>
+Graphic3d_DisplayPriority_Above: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above: 6>
+Graphic3d_DisplayPriority_Above1: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above1: 7>
+Graphic3d_DisplayPriority_Above2: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Above2: 8>
+Graphic3d_DisplayPriority_AlmostBottom: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_AlmostBottom: 1>
+Graphic3d_DisplayPriority_Below: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below: 4>
+Graphic3d_DisplayPriority_Below1: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below1: 3>
+Graphic3d_DisplayPriority_Below2: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Below2: 2>
+Graphic3d_DisplayPriority_Bottom: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Bottom: 0>
+Graphic3d_DisplayPriority_Highlight: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Highlight: 9>
+Graphic3d_DisplayPriority_INVALID: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_INVALID: -1>
+Graphic3d_DisplayPriority_NB = 11
+Graphic3d_DisplayPriority_Normal: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Normal: 5>
+Graphic3d_DisplayPriority_Topmost: OCP.Graphic3d.Graphic3d_DisplayPriority # value = <Graphic3d_DisplayPriority.Graphic3d_DisplayPriority_Topmost: 10>
 Graphic3d_FM_CONDUCTOR: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_CONDUCTOR: 2>
 Graphic3d_FM_CONSTANT: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_CONSTANT: 1>
 Graphic3d_FM_DIELECTRIC: OCP.Graphic3d.Graphic3d_FresnelModel # value = <Graphic3d_FresnelModel.Graphic3d_FM_DIELECTRIC: 3>
@@ -24617,7 +24645,7 @@ Graphic3d_ShaderFlags_WriteOit: OCP.Graphic3d.Graphic3d_ShaderFlags # value = <G
 Graphic3d_StereoMode_Anaglyph: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_Anaglyph: 1>
 Graphic3d_StereoMode_ChessBoard: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ChessBoard: 4>
 Graphic3d_StereoMode_ColumnInterlaced: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_ColumnInterlaced: 3>
-Graphic3d_StereoMode_NB: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_NB: 9>
+Graphic3d_StereoMode_NB = 9
 Graphic3d_StereoMode_OpenVR: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OpenVR: 8>
 Graphic3d_StereoMode_OverUnder: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_OverUnder: 6>
 Graphic3d_StereoMode_QuadBuffer: OCP.Graphic3d.Graphic3d_StereoMode # value = <Graphic3d_StereoMode.Graphic3d_StereoMode_QuadBuffer: 0>
@@ -24703,10 +24731,10 @@ Graphic3d_TOTM_MANUAL: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Grap
 Graphic3d_TOTM_OBJECT: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_OBJECT: 0>
 Graphic3d_TOTM_SPHERE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPHERE: 1>
 Graphic3d_TOTM_SPRITE: OCP.Graphic3d.Graphic3d_TypeOfTextureMode # value = <Graphic3d_TypeOfTextureMode.Graphic3d_TOTM_SPRITE: 4>
-Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_1D: 0>
-Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D: 1>
-Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 2>
-Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_CUBEMAP: 3>
+Graphic3d_TOT_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>
+Graphic3d_TOT_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>
+Graphic3d_TOT_2D_MIPMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TOT_2D_MIPMAP: 4>
+Graphic3d_TOT_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>
 Graphic3d_TOV_SHADING: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = <Graphic3d_TypeOfVisualization.Graphic3d_TOV_SHADING: 1>
 Graphic3d_TOV_WIREFRAME: OCP.Graphic3d.Graphic3d_TypeOfVisualization # value = <Graphic3d_TypeOfVisualization.Graphic3d_TOV_WIREFRAME: 0>
 Graphic3d_TP_DOWN: OCP.Graphic3d.Graphic3d_TextPath # value = <Graphic3d_TextPath.Graphic3d_TP_DOWN: 1>
@@ -24754,6 +24782,7 @@ Graphic3d_ToneMappingMethod_Filmic: OCP.Graphic3d.Graphic3d_ToneMappingMethod # 
 Graphic3d_TypeOfBackfacingModel_Auto: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_Auto: 0>
 Graphic3d_TypeOfBackfacingModel_BackCulled: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_BackCulled: 2>
 Graphic3d_TypeOfBackfacingModel_DoubleSided: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_DoubleSided: 1>
+Graphic3d_TypeOfBackfacingModel_FrontCulled: OCP.Graphic3d.Graphic3d_TypeOfBackfacingModel # value = <Graphic3d_TypeOfBackfacingModel.Graphic3d_TypeOfBackfacingModel_FrontCulled: 3>
 Graphic3d_TypeOfBackground_NB = 3
 Graphic3d_TypeOfLightSource_Ambient: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TypeOfLightSource_Ambient: 0>
 Graphic3d_TypeOfLightSource_Directional: OCP.Graphic3d.Graphic3d_TypeOfLightSource # value = <Graphic3d_TypeOfLightSource.Graphic3d_TypeOfLightSource_Directional: 1>
@@ -24789,6 +24818,10 @@ Graphic3d_TypeOfShadingModel_PbrFacet: OCP.Graphic3d.Graphic3d_TypeOfShadingMode
 Graphic3d_TypeOfShadingModel_Phong: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TypeOfShadingModel_Phong: 3>
 Graphic3d_TypeOfShadingModel_PhongFacet: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TypeOfShadingModel_PhongFacet: 1>
 Graphic3d_TypeOfShadingModel_Unlit: OCP.Graphic3d.Graphic3d_TypeOfShadingModel # value = <Graphic3d_TypeOfShadingModel.Graphic3d_TypeOfShadingModel_Unlit: 0>
+Graphic3d_TypeOfTexture_1D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_1D: 0>
+Graphic3d_TypeOfTexture_2D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_2D: 1>
+Graphic3d_TypeOfTexture_3D: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_3D: 2>
+Graphic3d_TypeOfTexture_CUBEMAP: OCP.Graphic3d.Graphic3d_TypeOfTexture # value = <Graphic3d_TypeOfTexture.Graphic3d_TypeOfTexture_CUBEMAP: 3>
 Graphic3d_VTA_BOTTOM: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM: 0>
 Graphic3d_VTA_CENTER: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_CENTER: 1>
 Graphic3d_VTA_TOP: OCP.Graphic3d.Graphic3d_VerticalTextAlignment # value = <Graphic3d_VerticalTextAlignment.Graphic3d_VTA_TOP: 2>

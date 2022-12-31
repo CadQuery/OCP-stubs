@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
 import OCP.TopLoc
+import OCP.TCollection
+import OCP.Message
 import OCP.TopAbs
 import OCP.Standard
-import OCP.Message
-import OCP.TCollection
+import io
 __all__  = [
 "TopoDS",
 "TopoDS_AlertAttribute",
@@ -58,7 +58,7 @@ class TopoDS():
     def CompSolid_s(S : TopoDS_Shape) -> TopoDS_CompSolid: ...
     @staticmethod
     @overload
-    def Compound_s(arg0 : TopoDS_Shape) -> TopoDS_Compound: 
+    def Compound_s(S : TopoDS_Shape) -> TopoDS_Compound: 
         """
         Casts shape S to the more specialized return type, Compound. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -66,7 +66,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Compound_s(S : TopoDS_Shape) -> TopoDS_Compound: ...
+    def Compound_s(arg0 : TopoDS_Shape) -> TopoDS_Compound: ...
     @staticmethod
     @overload
     def Edge_s(S : TopoDS_Shape) -> TopoDS_Edge: 
@@ -113,7 +113,7 @@ class TopoDS():
     def Solid_s(S : TopoDS_Shape) -> TopoDS_Solid: ...
     @staticmethod
     @overload
-    def Vertex_s(arg0 : TopoDS_Shape) -> TopoDS_Vertex: 
+    def Vertex_s(S : TopoDS_Shape) -> TopoDS_Vertex: 
         """
         Basic tool to access the data structure. Casts shape S to the more specialized return type, Vertex. Exceptions Standard_TypeMismatch if S cannot be cast to this return type.
 
@@ -121,7 +121,7 @@ class TopoDS():
         """
     @staticmethod
     @overload
-    def Vertex_s(S : TopoDS_Shape) -> TopoDS_Vertex: ...
+    def Vertex_s(arg0 : TopoDS_Shape) -> TopoDS_Vertex: ...
     @staticmethod
     @overload
     def Wire_s(S : TopoDS_Shape) -> TopoDS_Wire: 
@@ -176,23 +176,23 @@ class TopoDS_AlertAttribute(OCP.Message.Message_AttributeStream, OCP.Message.Mes
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def Send_s(theMessenger : OCP.Message.Message_Messenger,theShape : TopoDS_Shape) -> None: 
         """
@@ -263,23 +263,23 @@ class TopoDS_AlertWithShape(OCP.Message.Message_Alert, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Merge(self,theTarget : OCP.Message.Message_Alert) -> bool: 
         """
         Returns false.
@@ -366,14 +366,14 @@ class TopoDS_Shape():
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -391,14 +391,14 @@ class TopoDS_Shape():
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -412,27 +412,27 @@ class TopoDS_Shape():
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -458,14 +458,14 @@ class TopoDS_Shape():
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -510,14 +510,14 @@ class TopoDS_Shape():
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -559,14 +559,14 @@ class TopoDS_Compound(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -584,14 +584,14 @@ class TopoDS_Compound(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -605,27 +605,27 @@ class TopoDS_Compound(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -651,14 +651,14 @@ class TopoDS_Compound(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -703,14 +703,14 @@ class TopoDS_Compound(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -752,14 +752,14 @@ class TopoDS_Edge(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -777,14 +777,14 @@ class TopoDS_Edge(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -798,27 +798,27 @@ class TopoDS_Edge(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -844,14 +844,14 @@ class TopoDS_Edge(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -896,14 +896,14 @@ class TopoDS_Edge(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -945,14 +945,14 @@ class TopoDS_Face(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -970,14 +970,14 @@ class TopoDS_Face(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -991,27 +991,27 @@ class TopoDS_Face(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -1037,14 +1037,14 @@ class TopoDS_Face(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -1089,14 +1089,14 @@ class TopoDS_Face(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1166,25 +1166,25 @@ class TopoDS_HShape(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Shape(self,aShape : TopoDS_Shape) -> None: 
+    def Shape(self) -> TopoDS_Shape: 
         """
         Loads this shape with the shape aShape
 
@@ -1195,7 +1195,7 @@ class TopoDS_HShape(OCP.Standard.Standard_Transient):
         Returns a reference to a constant TopoDS_Shape based on this shape.
         """
     @overload
-    def Shape(self) -> TopoDS_Shape: ...
+    def Shape(self,aShape : TopoDS_Shape) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1265,14 +1265,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -1290,14 +1290,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -1311,27 +1311,27 @@ class TopoDS_CompSolid(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -1357,14 +1357,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -1409,14 +1409,14 @@ class TopoDS_CompSolid(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1458,14 +1458,14 @@ class TopoDS_Shell(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -1483,14 +1483,14 @@ class TopoDS_Shell(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -1504,27 +1504,27 @@ class TopoDS_Shell(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -1550,14 +1550,14 @@ class TopoDS_Shell(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -1602,14 +1602,14 @@ class TopoDS_Shell(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1651,14 +1651,14 @@ class TopoDS_Solid(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -1676,14 +1676,14 @@ class TopoDS_Solid(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -1697,27 +1697,27 @@ class TopoDS_Solid(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -1743,14 +1743,14 @@ class TopoDS_Solid(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -1795,14 +1795,14 @@ class TopoDS_Solid(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -1835,14 +1835,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
     A TShape is a topological structure describing a set of points in a 2D or 3D space.A TShape is a topological structure describing a set of points in a 2D or 3D space.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -1908,23 +1908,23 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -1948,14 +1948,14 @@ class TopoDS_TShape(OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns the type as a term of the ShapeEnum enum : VERTEX, EDGE, WIRE, FACE, ....
@@ -1980,14 +1980,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A TCompound is an all-purpose set of Shapes.A TCompound is an all-purpose set of Shapes.A TCompound is an all-purpose set of Shapes.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2053,23 +2053,23 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2093,14 +2093,14 @@ class TopoDS_TCompound(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns COMPOUND.
@@ -2126,14 +2126,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A topological part of a curve in 2D or 3D, the boundary is a set of oriented Vertices.A topological part of a curve in 2D or 3D, the boundary is a set of oriented Vertices.A topological part of a curve in 2D or 3D, the boundary is a set of oriented Vertices.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2199,23 +2199,23 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2239,14 +2239,14 @@ class TopoDS_TEdge(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns EDGE.
@@ -2271,14 +2271,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A topological part of a surface or of the 2D space. The boundary is a set of wires and vertices.A topological part of a surface or of the 2D space. The boundary is a set of wires and vertices.A topological part of a surface or of the 2D space. The boundary is a set of wires and vertices.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2344,23 +2344,23 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2384,14 +2384,14 @@ class TopoDS_TFace(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns FACE.
@@ -2417,14 +2417,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A set of solids connected by their faces.A set of solids connected by their faces.A set of solids connected by their faces.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2490,23 +2490,23 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2530,14 +2530,14 @@ class TopoDS_TCompSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns COMPSOLID
@@ -2563,14 +2563,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A set of faces connected by their edges.A set of faces connected by their edges.A set of faces connected by their edges.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2636,23 +2636,23 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2676,14 +2676,14 @@ class TopoDS_TShell(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns SHELL.
@@ -2709,14 +2709,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A Topological part of 3D space, bounded by shells, edges and vertices.A Topological part of 3D space, bounded by shells, edges and vertices.A Topological part of 3D space, bounded by shells, edges and vertices.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2782,23 +2782,23 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2822,14 +2822,14 @@ class TopoDS_TSolid(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         returns SOLID.
@@ -2855,14 +2855,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A Vertex is a topological point in two or three dimensions.A Vertex is a topological point in two or three dimensions.A Vertex is a topological point in two or three dimensions.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -2928,23 +2928,23 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -2968,14 +2968,14 @@ class TopoDS_TVertex(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns VERTEX.
@@ -3000,14 +3000,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
     A set of edges connected by their vertices.A set of edges connected by their vertices.A set of edges connected by their vertices.
     """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self) -> bool: 
         """
@@ -3073,23 +3073,23 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
     @overload
     def Infinite(self,theIsInfinite : bool) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -3113,14 +3113,14 @@ class TopoDS_TWire(TopoDS_TShape, OCP.Standard.Standard_Transient):
         Returns the number of direct sub-shapes (children).
         """
     @overload
-    def Orientable(self) -> bool: 
+    def Orientable(self,theIsOrientable : bool) -> None: 
         """
         Returns the orientability flag.
 
         Sets the orientability flag.
         """
     @overload
-    def Orientable(self,theIsOrientable : bool) -> None: ...
+    def Orientable(self) -> bool: ...
     def ShapeType(self) -> OCP.TopAbs.TopAbs_ShapeEnum: 
         """
         Returns WIRE.
@@ -3166,14 +3166,14 @@ class TopoDS_Vertex(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -3191,14 +3191,14 @@ class TopoDS_Vertex(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -3212,27 +3212,27 @@ class TopoDS_Vertex(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -3258,14 +3258,14 @@ class TopoDS_Vertex(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -3310,14 +3310,14 @@ class TopoDS_Vertex(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.
@@ -3359,14 +3359,14 @@ class TopoDS_Wire(TopoDS_Shape):
     @overload
     def Checked(self,theIsChecked : bool) -> None: ...
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,theIsClosed : bool) -> None: 
         """
         Returns the closedness flag.
 
         Sets the closedness flag.
         """
     @overload
-    def Closed(self,theIsClosed : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def Complement(self) -> None: 
         """
         Complements the orientation, using the Complement method from the TopAbs package.
@@ -3384,14 +3384,14 @@ class TopoDS_Wire(TopoDS_Shape):
         Returns a shape similar to <me> with the orientation composed with theOrient, using the Compose method from the TopAbs package.
         """
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
         """
         Dumps the content of me into the stream
@@ -3405,27 +3405,27 @@ class TopoDS_Wire(TopoDS_Shape):
         Replace <me> by a new Shape with the same Orientation and Location and a new TShape with the same geometry and no sub-shapes.
         """
     @overload
-    def Free(self,theIsFree : bool) -> None: 
+    def Free(self) -> bool: 
         """
         Returns the free flag.
 
         Sets the free flag.
         """
     @overload
-    def Free(self) -> bool: ...
+    def Free(self,theIsFree : bool) -> None: ...
     def HashCode(self,theUpperBound : int) -> int: 
         """
         Returns a hashed value denoting <me>. This value is in the range [1, theUpperBound]. It is computed from the TShape and the Location. The Orientation is not used.
         """
     @overload
-    def Infinite(self,theIsInfinite : bool) -> None: 
+    def Infinite(self) -> bool: 
         """
         Returns the infinity flag.
 
         Sets the infinity flag.
         """
     @overload
-    def Infinite(self) -> bool: ...
+    def Infinite(self,theIsInfinite : bool) -> None: ...
     def IsEqual(self,theOther : TopoDS_Shape) -> bool: 
         """
         Returns True if two shapes are equal, i.e. if they share the same TShape with the same Locations and Orientations.
@@ -3451,14 +3451,14 @@ class TopoDS_Wire(TopoDS_Shape):
         Returns a shape similar to <me> with the local coordinate system set to <Loc>.
         """
     @overload
-    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Sets the shape local coordinate system.
 
         Returns the shape local coordinate system.
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,theLoc : OCP.TopLoc.TopLoc_Location,theRaiseExc : bool=True) -> None: ...
     @overload
     def Locked(self,theIsLocked : bool) -> None: 
         """
@@ -3503,14 +3503,14 @@ class TopoDS_Wire(TopoDS_Shape):
     @overload
     def Orientable(self) -> bool: ...
     @overload
-    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         Returns the shape orientation.
 
         Sets the shape orientation.
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     def Oriented(self,theOrient : OCP.TopAbs.TopAbs_Orientation) -> TopoDS_Shape: 
         """
         Returns a shape similar to <me> with the orientation set to <Or>.

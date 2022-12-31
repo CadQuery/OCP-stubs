@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
+import OCP.TCollection
+import OCP.Standard
 import OSD_MemInfo
 import io
-import OCP.Standard
-import OCP.TCollection
+import OCP.Quantity
 __all__  = [
 "OSD_Chronometer",
 "OSD_FileNode",
@@ -20,15 +20,7 @@ __all__  = [
 "OSD_Exception_ACCESS_VIOLATION",
 "OSD_Exception_ARRAY_BOUNDS_EXCEEDED",
 "OSD_Exception_CTRL_BREAK",
-"OSD_Exception_FLT_DENORMAL_OPERAND",
-"OSD_Exception_FLT_DIVIDE_BY_ZERO",
-"OSD_Exception_FLT_INEXACT_RESULT",
-"OSD_Exception_FLT_INVALID_OPERATION",
-"OSD_Exception_FLT_OVERFLOW",
-"OSD_Exception_FLT_STACK_CHECK",
-"OSD_Exception_FLT_UNDERFLOW",
 "OSD_Exception_ILLEGAL_INSTRUCTION",
-"OSD_Exception_INT_DIVIDE_BY_ZERO",
 "OSD_Exception_INT_OVERFLOW",
 "OSD_Exception_INVALID_DISPOSITION",
 "OSD_Exception_IN_PAGE_ERROR",
@@ -170,6 +162,10 @@ class OSD_Chronometer():
         """
         Return true if timer has been started.
         """
+    def IsThisThreadOnly(self) -> bool: 
+        """
+        Return TRUE if current thread CPU time should be measured, and FALSE to measure all threads CPU time; FALSE by default,
+        """
     def Reset(self) -> None: 
         """
         Stops and Reinitializes the Chronometer.
@@ -178,8 +174,12 @@ class OSD_Chronometer():
         """
         Restarts the Chronometer.
         """
+    def SetThisThreadOnly(self,theIsThreadOnly : bool) -> None: 
+        """
+        Set if current thread (TRUE) or all threads (FALSE) CPU time should be measured. Will raise exception if Timer is in started state.
+        """
     @overload
-    def Show(self,theOStream : io.BytesIO) -> None: 
+    def Show(self) -> Tuple[float]: 
         """
         Shows the current CPU user and system time on the standard output stream <cout>. The chronometer can be running (laps Time) or stopped.
 
@@ -192,7 +192,7 @@ class OSD_Chronometer():
     @overload
     def Show(self) -> Tuple[float, float]: ...
     @overload
-    def Show(self) -> Tuple[float]: ...
+    def Show(self,theOStream : io.BytesIO) -> None: ...
     @overload
     def Show(self) -> None: ...
     def Start(self) -> None: ...
@@ -312,9 +312,9 @@ class OSD_DirectoryIterator():
         Returns the next item found .
         """
     @overload
-    def __init__(self,where : OSD_Path,Mask : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,where : OSD_Path,Mask : OCP.TCollection.TCollection_AsciiString) -> None: ...
     pass
 class OSD_Disk():
     """
@@ -355,9 +355,9 @@ class OSD_Disk():
     @overload
     def __init__(self,Name : OSD_Path) -> None: ...
     @overload
-    def __init__(self,PathName : str) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,PathName : str) -> None: ...
     pass
 class OSD_Environment():
     """
@@ -403,9 +403,9 @@ class OSD_Environment():
     @overload
     def __init__(self,Name : OCP.TCollection.TCollection_AsciiString,Value : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Name : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OSD_Error():
     """
@@ -477,83 +477,6 @@ class OSD_Exception_CTRL_BREAK(Exception, BaseException):
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_CTRL_BREAK' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
-class OSD_Exception_FLT_DENORMAL_OPERAND(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_DENORMAL_OPERAND' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_DENORMAL_OPERAND' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_FLT_DIVIDE_BY_ZERO(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_DIVIDE_BY_ZERO' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_DIVIDE_BY_ZERO' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_FLT_INEXACT_RESULT(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_INEXACT_RESULT' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_INEXACT_RESULT' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_FLT_INVALID_OPERATION(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_INVALID_OPERATION' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_INVALID_OPERATION' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_FLT_OVERFLOW(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_OVERFLOW' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_OVERFLOW' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_FLT_STACK_CHECK(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_STACK_CHECK' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_STACK_CHECK' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_FLT_UNDERFLOW(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_FLT_UNDERFLOW' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_FLT_UNDERFLOW' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
 class OSD_Exception_ILLEGAL_INSTRUCTION(Exception, BaseException):
     class type():
         pass
@@ -563,17 +486,6 @@ class OSD_Exception_ILLEGAL_INSTRUCTION(Exception, BaseException):
     __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
     __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_ILLEGAL_INSTRUCTION' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class OSD_Exception_INT_DIVIDE_BY_ZERO(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.OSD', '__weakref__': <attribute '__weakref__' of 'OSD_Exception_INT_DIVIDE_BY_ZERO' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'OSD_Exception_INT_DIVIDE_BY_ZERO' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
 class OSD_Exception_INT_OVERFLOW(Exception, BaseException):
@@ -754,14 +666,14 @@ class OSD_File(OSD_FileNode):
         Returns access mode of <me>.
         """
     @overload
-    def Read(self,Buffer : capsule,Nbyte : int) -> Tuple[int]: 
+    def Read(self,Buffer : OCP.TCollection.TCollection_AsciiString,Nbyte : int) -> None: 
         """
         Attempts to read Nbyte bytes from the file associated with the object file. Upon successful completion, Read returns the number of bytes actually read and placed in the Buffer. This number may be less than Nbyte if the number of bytes left in the file is less than Nbyte bytes. In this case only number of read bytes will be placed in the buffer.
 
         Attempts to read Nbyte bytes from the files associated with the object File. Upon successful completion, Read returns the number of bytes actually read and placed in the Buffer. This number may be less than Nbyte if the number of bytes left in the file is less than Nbyte bytes. For this reason the output parameter Readbyte will contain the number of read bytes.
         """
     @overload
-    def Read(self,Buffer : OCP.TCollection.TCollection_AsciiString,Nbyte : int) -> None: ...
+    def Read(self,Buffer : capsule,Nbyte : int) -> Tuple[int]: ...
     def ReadLastLine(self,aLine : OCP.TCollection.TCollection_AsciiString,aDelay : int,aNbTries : int) -> bool: 
         """
         Enables to emulate unix "tail -f" command. If a line is available in the file <me> returns it. Otherwise attempts to read again aNbTries times in the file waiting aDelay seconds between each read. If meanwhile the file increases returns the next line, otherwise returns FALSE.
@@ -1467,7 +1379,7 @@ class OSD_Path():
     @staticmethod
     def IsNtExtendedPath_s(thePath : str) -> bool: 
         """
-        Detect extended-length NT path (can be only absolute). Approximate maximum path is 32767 characters. Sample path: \?: long path File I/O functions in the Windows API convert "/" to "" as part of converting the name to an NT-style name, except when using the "\?" prefix.
+        Detect extended-length NT path (can be only absolute). Approximate maximum path is 32767 characters. Sample path: \?: long path File I/O functions in the Windows API convert "/" to "\" as part of converting the name to an NT-style name, except when using the "\\?\" prefix.
         """
     @staticmethod
     def IsRelativePath_s(thePath : str) -> bool: 
@@ -1517,14 +1429,14 @@ class OSD_Path():
         Returns the relative file path between the absolute directory path <DirPath> and the absolute file path <AbsFilePath>. If <DirPath> starts with "/", paths are handled as on Unix, if it starts with a letter followed by ":", as on WNT. In particular on WNT directory names are not key sensitive. If handling fails, an empty string is returned.
         """
     @overload
-    def RemoveATrek(self,aName : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def RemoveATrek(self,where : int) -> None: 
         """
         This removes a component of Trek in <me> at position <where>. The first component of Trek is numbered 1. ex: me = "|usr|bin|" me.RemoveATrek(1) gives me = "|bin|" To avoid a 'NumericError' because of a bad <where>, use TrekLength() to know number of components of Trek in <me>.
 
         This removes <aName> from <me> in Trek. No error is raised if <aName> is not in <me>. ex: me = "|usr|sys|etc|doc" me.RemoveATrek("sys") gives me = "|usr|etc|doc".
         """
     @overload
-    def RemoveATrek(self,where : int) -> None: ...
+    def RemoveATrek(self,aName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def SetDisk(self,aName : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Sets Disk of <me>.
@@ -1586,11 +1498,11 @@ class OSD_Path():
         Gets each component of a path.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,aDependentName : OCP.TCollection.TCollection_AsciiString,aSysType : OSD_SysType=OSD_SysType.OSD_Default) -> None: ...
     @overload
     def __init__(self,aNode : OCP.TCollection.TCollection_AsciiString,aUsername : OCP.TCollection.TCollection_AsciiString,aPassword : OCP.TCollection.TCollection_AsciiString,aDisk : OCP.TCollection.TCollection_AsciiString,aTrek : OCP.TCollection.TCollection_AsciiString,aName : OCP.TCollection.TCollection_AsciiString,anExtension : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def __init__(self,aDependentName : OCP.TCollection.TCollection_AsciiString,aSysType : OSD_SysType=OSD_SysType.OSD_Default) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class OSD_PerfMeter():
     """
@@ -1734,9 +1646,9 @@ class OSD_Protection():
         Gets protection of 'World'
         """
     @overload
-    def __init__(self,System : OSD_SingleProtection,User : OSD_SingleProtection,Group : OSD_SingleProtection,World : OSD_SingleProtection) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,System : OSD_SingleProtection,User : OSD_SingleProtection,Group : OSD_SingleProtection,World : OSD_SingleProtection) -> None: ...
     pass
 class OSD_SIGBUS(Exception, BaseException):
     class type():
@@ -1855,9 +1767,9 @@ class OSD_SharedLibrary():
         Sets a name associated to the shared object.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aFilename : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class OSD_Signal(Exception, BaseException):
     class type():
@@ -2084,9 +1996,9 @@ class OSD_Thread():
         Waits till the thread finishes execution.
         """
     @overload
-    def __init__(self,other : OSD_Thread) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,other : OSD_Thread) -> None: ...
     pass
 class OSD_ThreadPool(OCP.Standard.Standard_Transient):
     """
@@ -2127,23 +2039,23 @@ class OSD_ThreadPool(OCP.Standard.Standard_Transient):
         Checks if thread pools has active consumers.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LowerThreadIndex(self) -> int: 
         """
         Return the lower thread index.
@@ -2207,6 +2119,10 @@ class OSD_Timer(OSD_Chronometer):
         """
         Return true if timer has been started.
         """
+    def IsThisThreadOnly(self) -> bool: 
+        """
+        Return TRUE if current thread CPU time should be measured, and FALSE to measure all threads CPU time; FALSE by default,
+        """
     @overload
     def Reset(self,theTimeElapsedSec : float) -> None: 
         """
@@ -2220,8 +2136,12 @@ class OSD_Timer(OSD_Chronometer):
         """
         Restarts the Timer.
         """
+    def SetThisThreadOnly(self,theIsThreadOnly : bool) -> None: 
+        """
+        Set if current thread (TRUE) or all threads (FALSE) CPU time should be measured. Will raise exception if Timer is in started state.
+        """
     @overload
-    def Show(self) -> None: 
+    def Show(self) -> Tuple[float, int, int, float]: 
         """
         Shows both the elapsed time and CPU time on the standard output stream <cout>.The chronometer can be running (Lap Time) or stopped.
 
@@ -2232,7 +2152,7 @@ class OSD_Timer(OSD_Chronometer):
     @overload
     def Show(self,os : io.BytesIO) -> None: ...
     @overload
-    def Show(self) -> Tuple[float, int, int, float]: ...
+    def Show(self) -> None: ...
     def Start(self) -> None: ...
     def Stop(self) -> None: 
         """

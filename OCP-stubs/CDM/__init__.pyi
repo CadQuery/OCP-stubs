@@ -5,12 +5,12 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Resource
-import OCP.NCollection
-import io
-import OCP.Standard
-import OCP.Message
 import OCP.TCollection
+import OCP.NCollection
+import OCP.Message
+import OCP.Standard
 import OCP.TColStd
+import io
 __all__  = [
 "CDM_Application",
 "CDM_CanCloseStatus",
@@ -62,23 +62,23 @@ class CDM_Application(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns default messenger;
@@ -291,54 +291,54 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         returns True if the To Document of the reference identified by aReferenceIdentifier is in session, False if it corresponds to a not yet retrieved document.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModified(self) -> bool: 
         """
         returns true if the version is greater than the storage version
         """
     @overload
-    def IsOpened(self,aReferenceIdentifier : int) -> bool: 
+    def IsOpened(self) -> bool: 
         """
         None
 
         returns true if the document corresponding to the given reference has been retrieved and opened. Otherwise returns false. This method does not retrieve the referenced document
         """
     @overload
-    def IsOpened(self) -> bool: ...
+    def IsOpened(self,aReferenceIdentifier : int) -> bool: ...
     @overload
-    def IsReadOnly(self,aReferenceIdentifier : int) -> bool: 
+    def IsReadOnly(self) -> bool: 
         """
         indicates that this document cannot be modified.
 
         indicates that the referenced document cannot be modified,
         """
     @overload
-    def IsReadOnly(self) -> bool: ...
+    def IsReadOnly(self,aReferenceIdentifier : int) -> bool: ...
     @overload
-    def IsStored(self,aReferenceIdentifier : int) -> bool: 
+    def IsStored(self) -> bool: 
         """
         returns True if the To Document of the reference identified by aReferenceIdentifier has already been stored, False otherwise.
 
         None
         """
     @overload
-    def IsStored(self) -> bool: ...
+    def IsStored(self,aReferenceIdentifier : int) -> bool: ...
     def IsUpToDate(self,aReferenceIdentifier : int) -> bool: 
         """
         returns true if the modification counter found in the given reference is equal to the actual modification counter of the To Document. This method is able to deal with a reference to a not retrieved document.
@@ -481,7 +481,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Update(self,aToDocument : CDM_Document,aReferenceIdentifier : int,aModifContext : capsule) -> None: 
+    def Update(self) -> None: 
         """
         The Update method will be called once for each reference, but it should not perform any computation, to avoid multiple computation of a same document.
 
@@ -492,7 +492,7 @@ class CDM_Document(OCP.Standard.Standard_Transient):
     @overload
     def Update(self,ErrorString : OCP.TCollection.TCollection_ExtendedString) -> bool: ...
     @overload
-    def Update(self) -> None: ...
+    def Update(self,aToDocument : CDM_Document,aReferenceIdentifier : int,aModifContext : capsule) -> None: ...
     def UpdateFromDocuments(self,aModifContext : capsule) -> None: 
         """
         call virtual method Update on all referencing documents. This method keeps the list of the -- documents to process.It may be the starting of an update -- cycle. If not, the reentrant calls made by Update method (without argument) will append the referencing documents to the list and call the Update method (with arguments). Only the first call to UpdateFromDocuments generate call to Update().
@@ -616,9 +616,9 @@ class CDM_ListOfDocument(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : CDM_ListOfDocument) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : CDM_ListOfDocument) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -632,7 +632,7 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : CDM_Reference) -> CDM_Reference: 
+    def Append(self,theItem : CDM_Reference,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -641,9 +641,9 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : CDM_Reference,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : CDM_ListOfReferences) -> None: ...
+    @overload
+    def Append(self,theItem : CDM_Reference) -> CDM_Reference: ...
     def Assign(self,theOther : CDM_ListOfReferences) -> CDM_ListOfReferences: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -663,14 +663,14 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : CDM_ListOfReferences,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : CDM_Reference,theIter : Any) -> CDM_Reference: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : CDM_Reference,theIter : Any) -> CDM_Reference: ...
+    def InsertAfter(self,theOther : CDM_ListOfReferences,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theItem : CDM_Reference,theIter : Any) -> CDM_Reference: 
         """
@@ -691,14 +691,14 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : CDM_Reference) -> CDM_Reference: 
+    def Prepend(self,theOther : CDM_ListOfReferences) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : CDM_ListOfReferences) -> None: ...
+    def Prepend(self,theItem : CDM_Reference) -> CDM_Reference: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -716,9 +716,9 @@ class CDM_ListOfReferences(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : CDM_ListOfReferences) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -744,14 +744,14 @@ class CDM_MapOfDocument(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,K : CDM_Document) -> bool: 
         """
@@ -834,11 +834,11 @@ class CDM_MapOfDocument(OCP.NCollection.NCollection_BaseMap):
         Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : CDM_MapOfDocument) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class CDM_MetaData(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -882,23 +882,23 @@ class CDM_MetaData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsReadOnly(self) -> bool: 
         """
         None
@@ -995,23 +995,23 @@ class CDM_Reference(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsReadOnly(self) -> bool: 
         """
         None

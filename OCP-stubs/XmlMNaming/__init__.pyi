@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.XmlObjMgt
+import OCP.TopoDS
+import OCP.TDocStd
+import OCP.TCollection
+import OCP.LDOM
+import OCP.Message
+import OCP.TopAbs
 import OCP.TDF
 import OCP.TopTools
-import OCP.LDOM
-import OCP.TDocStd
 import OCP.Standard
-import OCP.TopAbs
-import OCP.XmlObjMgt
-import OCP.Message
-import OCP.TopoDS
-import OCP.TCollection
 import OCP.XmlMDF
 __all__  = [
 "XmlMNaming",
@@ -64,23 +64,23 @@ class XmlMNaming_NamedShapeDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -160,23 +160,23 @@ class XmlMNaming_NamingDriver(OCP.XmlMDF.XmlMDF_ADriver, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MessageDriver(self) -> OCP.Message.Message_Messenger: 
         """
         Returns the current message driver of this driver
@@ -257,7 +257,7 @@ class XmlMNaming_Shape1():
         None
         """
     @overload
-    def __init__(self,E : OCP.LDOM.LDOM_Element) -> None: ...
-    @overload
     def __init__(self,Doc : OCP.LDOM.LDOM_Document) -> None: ...
+    @overload
+    def __init__(self,E : OCP.LDOM.LDOM_Element) -> None: ...
     pass

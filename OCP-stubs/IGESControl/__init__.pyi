@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Transfer
-import OCP.IGESData
-import io
-import OCP.gp
-import OCP.Standard
 import OCP.IFSelect
-import OCP.ShapeExtend
-import OCP.Interface
-import OCP.XSControl
-import OCP.IGESToBRep
 import OCP.TopoDS
+import OCP.ShapeExtend
+import OCP.IGESToBRep
+import OCP.IGESData
+import OCP.gp
+import OCP.Interface
+import OCP.Standard
+import OCP.XSControl
+import OCP.Transfer
 import OCP.TColStd
+import io
 __all__  = [
 "IGESControl_ActorWrite",
 "IGESControl_AlgoContainer",
@@ -50,23 +50,23 @@ class IGESControl_ActorWrite(OCP.Transfer.Transfer_ActorOfFinderProcess, OCP.Tra
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -157,23 +157,23 @@ class IGESControl_AlgoContainer(OCP.IGESToBRep.IGESToBRep_AlgoContainer, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetToolContainer(self,TC : OCP.IGESToBRep.IGESToBRep_ToolContainer) -> None: 
         """
         Sets ToolContainer
@@ -256,23 +256,23 @@ class IGESControl_Controller(OCP.XSControl.XSControl_Controller, OCP.Standard.St
         Standard Initialisation. It creates a Controller for IGES and records it to various names, available to select it later Returns True when done, False if could not be done Also, it creates and records an Adaptor for FNES
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModeWrite(self,modetrans : int,shape : bool=True) -> bool: 
         """
         Tells if a value of <modetrans> is a good value(within bounds) Actually only for shapes
@@ -391,36 +391,36 @@ class IGESControl_IGESBoundary(OCP.IGESToBRep.IGESToBRep_IGESBoundary, OCP.Stand
         Inits the object with parameters common for all types of IGES boundaries. <CS>: object to be used for retrieving translation parameters and sending messages, <entity>: boundary entity to be processed, <face>, <trans>, <uFact>: as for IGESToBRep_TopoCurve <filepreference>: preferred representation (2 or 3) given in the IGES file
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.ShapeExtend.ShapeExtend_WireData,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,toreverse2d : bool,number : int,lsewd : OCP.ShapeExtend.ShapeExtend_WireData) -> bool: 
+    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.IGESData.IGESData_IGESEntity,toreverse3d : bool,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,number : int) -> bool: 
         """
         Translates 141 and 142 entities. Returns True if the curve has been successfully translated, otherwise returns False. <okCurve..>: flags that indicate whether corresponding representation has been successfully translated (must be set to True before first call), <curve3d>: model space curve for 142 and current model space curve for 141, <toreverse3d>: False for 142 and current orientation flag for 141, <curves2d>: 1 parameter space curve for 142 or list of them for current model space curves for 141, <number>: 1 for 142 and rank number of model space curve for 141.
 
         Translates 508 entity. Returns True if the curve has been successfully translated, otherwise returns False. Input object IGESBoundary must be created and initialized before. <okCurve..>: flags that indicate whether corresponding representation has been successfully translated (must be set to True before first call), <curve3d>: result of translation of current edge, <curves2d>: list of parameter space curves for edge, <toreverse2d>: orientation flag of current edge in respect to its model space curve, <number>: rank number of edge, <lsewd>: returns the result of translation of current edge.
         """
     @overload
-    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.IGESData.IGESData_IGESEntity,toreverse3d : bool,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,number : int) -> bool: ...
+    def Transfer(self,okCurve : bool,okCurve3d : bool,okCurve2d : bool,curve3d : OCP.ShapeExtend.ShapeExtend_WireData,curves2d : OCP.IGESData.IGESData_HArray1OfIGESEntity,toreverse2d : bool,number : int,lsewd : OCP.ShapeExtend.ShapeExtend_WireData) -> bool: ...
     def WireData(self) -> OCP.ShapeExtend.ShapeExtend_WireData: 
         """
         Returns the resulting wire
@@ -440,9 +440,9 @@ class IGESControl_IGESBoundary(OCP.IGESToBRep.IGESToBRep_IGESBoundary, OCP.Stand
         Returns the wire from 3D curves (edges contain 3D curves and may contain pcurves)
         """
     @overload
-    def __init__(self,CS : OCP.IGESToBRep.IGESToBRep_CurveAndSurface) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,CS : OCP.IGESToBRep.IGESToBRep_CurveAndSurface) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -502,23 +502,23 @@ class IGESControl_Reader(OCP.XSControl.XSControl_Reader):
         Returns all of the results in a single shape which is: - a null shape if there are no results, - a shape if there is one result, - a compound containing the resulting shapes if there are more than one.
         """
     @overload
-    def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintCheckLoad(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Prints the check list attached to loaded data, on the Standard Trace File (starts at std::cout) All messages or fails only, according to <failsonly> mode = 0 : per entity, prints messages mode = 1 : per message, just gives count of entities per check mode = 2 : also gives entity numbers
 
         Prints the check list attached to loaded data.
         """
     @overload
-    def PrintCheckLoad(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
     @overload
-    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities. Only fail messages are displayed if failsonly is true. All messages are displayed if failsonly is false. mode determines the contents and the order of the messages according to the terms of the IFSelect_PrintCount enumeration.
 
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities.
         """
     @overload
-    def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
     @overload
     def PrintStatsTransfer(self,theStream : io.BytesIO,what : int,mode : int=0) -> None: 
         """
@@ -587,9 +587,9 @@ class IGESControl_Reader(OCP.XSControl.XSControl_Reader):
         Returns the session used in <me>
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
 class IGESControl_ToolContainer(OCP.IGESToBRep.IGESToBRep_ToolContainer, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -617,23 +617,23 @@ class IGESControl_ToolContainer(OCP.IGESToBRep.IGESToBRep_ToolContainer, OCP.Sta
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -692,9 +692,9 @@ class IGESControl_Writer():
     @overload
     def Write(self,file : str,fnes : bool=False) -> bool: ...
     @overload
-    def __init__(self,unit : str,modecr : int=0) -> None: ...
-    @overload
     def __init__(self,model : OCP.IGESData.IGESData_IGESModel,modecr : int=0) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,unit : str,modecr : int=0) -> None: ...
     pass

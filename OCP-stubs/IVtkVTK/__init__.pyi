@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Graphic3d
+import OCP.IVtk
 import OCP.gp
 import OCP.Standard
-import OCP.IVtk
-import OCP.Graphic3d
 __all__  = [
 "IVtkVTK_ShapeData",
 "IVtkVTK_View"
@@ -56,14 +56,14 @@ class IVtkVTK_ShapeData(OCP.IVtk.IVtk_IShapeData, OCP.IVtk.IVtk_Interface, OCP.S
     @overload
     def InsertCoordinate(self,thePnt : OCP.gp.gp_Pnt) -> int: ...
     @overload
-    def InsertLine(self,theShapeID : int,thePointIds : OCP.IVtk.IVtk_ShapeIdList,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: 
+    def InsertLine(self,theShapeID : int,thePointId1 : int,thePointId2 : int,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: 
         """
         Insert a line.
 
         Insert a poly-line.
         """
     @overload
-    def InsertLine(self,theShapeID : int,thePointId1 : int,thePointId2 : int,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: ...
+    def InsertLine(self,theShapeID : int,thePointIds : OCP.IVtk.IVtk_ShapeIdList,theMeshType : OCP.IVtk.IVtk_MeshType) -> None: ...
     def InsertPoint(self,thePnt : OCP.gp.gp_Pnt,theNorm : OCP.gp.gp_Vec3f) -> int: 
         """
         Insert a coordinate
@@ -77,23 +77,23 @@ class IVtkVTK_ShapeData(OCP.IVtk.IVtk_IShapeData, OCP.IVtk.IVtk_Interface, OCP.S
         Insert a vertex.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -199,23 +199,23 @@ class IVtkVTK_View(OCP.IVtk.IVtk_IView, OCP.IVtk.IVtk_Interface, OCP.Standard.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPerspective(self) -> bool: 
         """
         Returns true if this is a perspective view, and false otherwise.

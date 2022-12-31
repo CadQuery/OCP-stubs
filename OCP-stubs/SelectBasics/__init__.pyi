@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
-import OCP.gp
-import OCP.SelectMgr
 import OCP.TColgp
+import OCP.SelectMgr
+import OCP.gp
+import io
 __all__  = [
 "SelectBasics",
 "SelectBasics_PickResult",
@@ -138,7 +138,7 @@ class SelectBasics_SelectingVolumeManager():
         Checks if it is possible to scale current active selecting volume
         """
     @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
+    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: 
         """
         None
 
@@ -156,20 +156,20 @@ class SelectBasics_SelectingVolumeManager():
 
         None
         """
+    @overload
+    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePnt3 : OCP.gp.gp_Pnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
+    @overload
+    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
+    @overload
+    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
     @overload
     def Overlaps(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
-    @overload
-    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,theArrayOfPts : OCP.TColgp.TColgp_HArray1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
-    @overload
-    def Overlaps(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
     @overload
     def OverlapsBox(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,thePickResult : SelectBasics_PickResult) -> bool: 
         """
@@ -180,23 +180,32 @@ class SelectBasics_SelectingVolumeManager():
     @overload
     def OverlapsBox(self,theBoxMin : OCP.SelectMgr.SelectMgr_Vec3,theBoxMax : OCP.SelectMgr.SelectMgr_Vec3,theInside : bool=None) -> bool: ...
     @overload
-    def OverlapsCylinder(self,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,thePickResult : SelectBasics_PickResult) -> bool: 
+    def OverlapsCircle(self,theRadius : float,theTrsf : OCP.gp.gp_Trsf,theIsFilled : bool,thePickResult : SelectBasics_PickResult) -> bool: 
         """
-        Returns true if selecting volume is overlapped by cylinder (or cone) with radiuses theBottomRad and theTopRad, height theHeight and transformation to apply theTrsf.
+        Returns true if selecting volume is overlapped by circle with radius theRadius, the boolean theIsFilled, and transformation to apply theTrsf. The position and orientation of the circle are specified via theTrsf transformation for gp::XOY() with center in gp::Origin().
 
-        Returns true if selecting volume is overlapped by cylinder (or cone) with radiuses theBottomRad and theTopRad, height theHeight and transformation to apply theTrsf.
+        Returns true if selecting volume is overlapped by circle with radius theRadius, the boolean theIsFilled, and transformation to apply theTrsf. The position and orientation of the circle are specified via theTrsf transformation for gp::XOY() with center in gp::Origin().
         """
     @overload
-    def OverlapsCylinder(self,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,theInside : bool=None) -> bool: ...
+    def OverlapsCircle(self,theRadius : float,theTrsf : OCP.gp.gp_Trsf,theIsFilled : bool,theInside : bool=None) -> bool: ...
     @overload
-    def OverlapsPoint(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: 
+    def OverlapsCylinder(self,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,theIsHollow : bool,thePickResult : SelectBasics_PickResult) -> bool: 
+        """
+        Returns true if selecting volume is overlapped by cylinder (or cone) with radiuses theBottomRad and theTopRad, height theHeight, the boolean theIsHollow and transformation to apply theTrsf.
+
+        Returns true if selecting volume is overlapped by cylinder (or cone) with radiuses theBottomRad and theTopRad, height theHeight, the boolean theIsHollow and transformation to apply theTrsf.
+        """
+    @overload
+    def OverlapsCylinder(self,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,theIsHollow : bool,theInside : bool=None) -> bool: ...
+    @overload
+    def OverlapsPoint(self,thePnt : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns true if selecting volume is overlapped by point thePnt
 
         Returns true if selecting volume is overlapped by point thePnt. Does not perform depth calculation, so this method is defined as helper function for inclusion test.
         """
     @overload
-    def OverlapsPoint(self,thePnt : OCP.gp.gp_Pnt) -> bool: ...
+    def OverlapsPoint(self,thePnt : OCP.gp.gp_Pnt,thePickResult : SelectBasics_PickResult) -> bool: ...
     def OverlapsPolygon(self,theArrayOfPts : OCP.TColgp.TColgp_Array1OfPnt,theSensType : int,thePickResult : SelectBasics_PickResult) -> bool: 
         """
         Returns true if selecting volume is overlapped by planar convex polygon, which points are stored in theArrayOfPts, taking into account sensitivity type theSensType

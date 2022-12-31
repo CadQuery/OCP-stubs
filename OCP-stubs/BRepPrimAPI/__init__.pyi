@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.BRepSweep
+import OCP.Geom
+import OCP.TopoDS
+import OCP.gp
+import OCP.BRepBuilderAPI
 import OCP.TopTools
 import OCP.BRepPrim
-import OCP.gp
-import OCP.Geom
-import OCP.BRepBuilderAPI
-import OCP.BRepSweep
-import OCP.TopoDS
 __all__  = [
 "BRepPrimAPI_MakeBox",
 "BRepPrimAPI_MakeOneAxis",
@@ -54,7 +54,7 @@ class BRepPrimAPI_MakeBox(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
         Returns the list of shapes generated from the shape <S>.
         """
     @overload
-    def Init(self,thePnt : OCP.gp.gp_Pnt,theDX : float,theDY : float,theDZ : float) -> None: 
+    def Init(self,theAxes : OCP.gp.gp_Ax2,theDX : float,theDY : float,theDZ : float) -> None: 
         """
         Init a box with a corner at 0,0,0 and the other theDX, theDY, theDZ
 
@@ -67,9 +67,9 @@ class BRepPrimAPI_MakeBox(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
     @overload
     def Init(self,theDX : float,theDY : float,theDZ : float) -> None: ...
     @overload
-    def Init(self,theAxes : OCP.gp.gp_Ax2,theDX : float,theDY : float,theDZ : float) -> None: ...
-    @overload
     def Init(self,thePnt1 : OCP.gp.gp_Pnt,thePnt2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def Init(self,thePnt : OCP.gp.gp_Pnt,theDX : float,theDY : float,theDZ : float) -> None: ...
     def IsDeleted(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Returns true if the shape S has been deleted.
@@ -111,15 +111,15 @@ class BRepPrimAPI_MakeBox(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepB
         Returns the internal algorithm.
         """
     @overload
-    def __init__(self,dx : float,dy : float,dz : float) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,dx : float,dy : float,dz : float) -> None: ...
+    @overload
+    def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,dx : float,dy : float,dz : float) -> None: ...
+    def __init__(self,dx : float,dy : float,dz : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
-    @overload
-    def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
     pass
 class BRepPrimAPI_MakeOneAxis(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -225,11 +225,11 @@ class BRepPrimAPI_MakeCylinder(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepB
     @overload
     def __init__(self,R : float,H : float) -> None: ...
     @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R : float,H : float) -> None: ...
+    @overload
     def __init__(self,R : float,H : float,Angle : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R : float,H : float,Angle : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R : float,H : float) -> None: ...
     pass
 class BRepPrimAPI_MakeHalfSpace(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -268,9 +268,9 @@ class BRepPrimAPI_MakeHalfSpace(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP
         Returns the constructed half-space as a solid.
         """
     @overload
-    def __init__(self,Face : OCP.TopoDS.TopoDS_Face,RefPnt : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,Shell : OCP.TopoDS.TopoDS_Shell,RefPnt : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,Face : OCP.TopoDS.TopoDS_Face,RefPnt : OCP.gp.gp_Pnt) -> None: ...
     pass
 class BRepPrimAPI_MakeCone(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -325,13 +325,13 @@ class BRepPrimAPI_MakeCone(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuild
         Returns the constructed rotational primitive as a solid.
         """
     @overload
-    def __init__(self,R1 : float,R2 : float,H : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
-    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float,angle : float) -> None: ...
     @overload
+    def __init__(self,R1 : float,R2 : float,H : float,angle : float) -> None: ...
+    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float) -> None: ...
+    @overload
+    def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
     pass
 class BRepPrimAPI_MakeSweep(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -391,14 +391,14 @@ class BRepPrimAPI_MakeRevol(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilde
         Returns the list of degenerated edges
         """
     @overload
-    def FirstShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def FirstShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the first shape of the revol (coinciding with the generating shape).
 
         Returns the TopoDS Shape of the beginning of the revolution, generated with theShape (subShape of the generating shape).
         """
     @overload
-    def FirstShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def FirstShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     def Generated(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns list of shape generated from shape S Warning: shape S must be shape of type VERTEX, EDGE, FACE, SOLID. For shapes of other types method always returns empty list
@@ -437,9 +437,9 @@ class BRepPrimAPI_MakeRevol(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilde
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,A : OCP.gp.gp_Ax1,D : float,Copy : bool=False) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,A : OCP.gp.gp_Ax1,Copy : bool=False) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,A : OCP.gp.gp_Ax1,D : float,Copy : bool=False) -> None: ...
     pass
 class BRepPrimAPI_MakeRevolution(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -494,21 +494,21 @@ class BRepPrimAPI_MakeRevolution(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRe
         Returns the constructed rotational primitive as a solid.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
-    @overload
-    def __init__(self,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float) -> None: ...
-    @overload
     def __init__(self,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float,angle : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve) -> None: ...
     @overload
-    def __init__(self,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
+    def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
+    @overload
+    def __init__(self,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float) -> None: ...
     @overload
+    def __init__(self,Meridian : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,Meridian : OCP.Geom.Geom_Curve,VMin : float,VMax : float,angle : float) -> None: ...
     @overload
-    def __init__(self,Meridian : OCP.Geom.Geom_Curve) -> None: ...
+    def __init__(self,Meridian : OCP.Geom.Geom_Curve,angle : float) -> None: ...
     pass
 class BRepPrimAPI_MakeSphere(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -563,29 +563,29 @@ class BRepPrimAPI_MakeSphere(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBui
         Returns the algorithm.
         """
     @overload
-    def __init__(self,R : float) -> None: ...
-    @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R : float) -> None: ...
+    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float) -> None: ...
     @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
-    @overload
-    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
-    @overload
-    def __init__(self,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
-    @overload
-    def __init__(self,R : float,angle1 : float,angle2 : float) -> None: ...
+    def __init__(self,R : float) -> None: ...
     @overload
     def __init__(self,Axis : OCP.gp.gp_Ax2,R : float) -> None: ...
     @overload
     def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float) -> None: ...
     @overload
+    def __init__(self,R : float,angle1 : float,angle2 : float) -> None: ...
+    @overload
+    def __init__(self,Axis : OCP.gp.gp_Ax2,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
+    @overload
+    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
+    @overload
+    def __init__(self,Center : OCP.gp.gp_Pnt,R : float,angle : float) -> None: ...
+    @overload
+    def __init__(self,R : float,angle1 : float,angle2 : float,angle3 : float) -> None: ...
+    @overload
     def __init__(self,R : float,angle : float) -> None: ...
+    @overload
+    def __init__(self,Center : OCP.gp.gp_Pnt,R : float) -> None: ...
     pass
 class BRepPrimAPI_MakePrism(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -600,14 +600,14 @@ class BRepPrimAPI_MakePrism(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilde
         Raises NotDone if done is false.
         """
     @overload
-    def FirstShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def FirstShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape of the bottom of the prism.
 
         Returns the TopoDS Shape of the bottom of the prism. generated with theShape (subShape of the generating shape).
         """
     @overload
-    def FirstShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def FirstShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     def Generated(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns ListOfShape from TopTools.
@@ -621,14 +621,14 @@ class BRepPrimAPI_MakePrism(BRepPrimAPI_MakeSweep, OCP.BRepBuilderAPI.BRepBuilde
         None
         """
     @overload
-    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def LastShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns the TopoDS Shape of the top of the prism. In the case of a finite prism, FirstShape returns the basis of the prism, in other words, S if Copy is false; otherwise, the copy of S belonging to the prism. LastShape returns the copy of S translated by V at the time of construction.
 
         Returns the TopoDS Shape of the top of the prism. generated with theShape (subShape of the generating shape).
         """
     @overload
-    def LastShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def LastShape(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def Modified(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns the list of shapes modified from the shape <S>.
@@ -699,21 +699,21 @@ class BRepPrimAPI_MakeTorus(BRepPrimAPI_MakeOneAxis, OCP.BRepBuilderAPI.BRepBuil
         Returns the algorithm.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,R1 : float,R2 : float,angle1 : float,angle2 : float) -> None: ...
-    @overload
-    def __init__(self,R1 : float,R2 : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle1 : float,angle2 : float,angle : float) -> None: ...
-    @overload
     def __init__(self,R1 : float,R2 : float,angle1 : float,angle2 : float,angle : float) -> None: ...
-    @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float) -> None: ...
     @overload
     def __init__(self,R1 : float,R2 : float) -> None: ...
     @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle1 : float,angle2 : float,angle : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float) -> None: ...
+    @overload
+    def __init__(self,R1 : float,R2 : float,angle1 : float,angle2 : float) -> None: ...
+    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,angle1 : float,angle2 : float) -> None: ...
+    @overload
+    def __init__(self,R1 : float,R2 : float,angle : float) -> None: ...
     pass
 class BRepPrimAPI_MakeWedge(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -760,11 +760,11 @@ class BRepPrimAPI_MakeWedge(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRe
         Returns the internal algorithm.
         """
     @overload
-    def __init__(self,dx : float,dy : float,dz : float,xmin : float,zmin : float,xmax : float,zmax : float) -> None: ...
-    @overload
     def __init__(self,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,xmin : float,zmin : float,xmax : float,zmax : float) -> None: ...
-    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
+    @overload
+    def __init__(self,dx : float,dy : float,dz : float,xmin : float,zmin : float,xmax : float,zmax : float) -> None: ...
+    @overload
+    def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,xmin : float,zmin : float,xmax : float,zmax : float) -> None: ...
     pass

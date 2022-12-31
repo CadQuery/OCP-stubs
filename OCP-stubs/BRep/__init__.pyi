@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
+import OCP.Geom
+import OCP.TopLoc
+import OCP.TopoDS
 import OCP.Poly
 import OCP.NCollection
-import io
-import OCP.Geom2d
-import OCP.TopLoc
 import OCP.gp
-import OCP.Standard
-import OCP.Geom
 import OCP.TopAbs
-import OCP.TopoDS
+import OCP.Geom2d
+import OCP.GeomAbs
+import OCP.Standard
+import io
 __all__  = [
 "BRep_Builder",
 "BRep_CurveRepresentation",
@@ -74,7 +74,7 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Make an empty Compound.
         """
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon3D) -> None: 
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,N : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Makes an undefined Edge (no geometry).
 
@@ -99,21 +99,21 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Makes an Edge with a curve and a location.
         """
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
-    @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
-    @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,Tol : float) -> None: ...
     @overload
     def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,N : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,Tol : float) -> None: ...
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon3D) -> None: ...
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,N : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
+    @overload
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
     @overload
     def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def MakeFace(self,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    @overload
+    def MakeFace(self,theFace : OCP.TopoDS.TopoDS_Face,theTriangulations : OCP.Poly.Poly_ListOfTriangulation,theActiveTriangulation : OCP.Poly.Poly_Triangulation=None) -> None: 
         """
         Makes an undefined Face.
 
@@ -128,9 +128,9 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Makes an undefined Face.
         """
     @overload
-    def MakeFace(self,theFace : OCP.TopoDS.TopoDS_Face,theTriangulations : OCP.Poly.Poly_ListOfTriangulation,theActiveTriangulation : OCP.Poly.Poly_Triangulation=None) -> None: ...
-    @overload
     def MakeFace(self,theFace : OCP.TopoDS.TopoDS_Face,theTriangulation : OCP.Poly.Poly_Triangulation) -> None: ...
+    @overload
+    def MakeFace(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def MakeFace(self,F : OCP.TopoDS.TopoDS_Face,S : OCP.Geom.Geom_Surface,Tol : float) -> None: ...
     @overload
@@ -148,7 +148,7 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Make a Solid covering the whole 3D space.
         """
     @overload
-    def MakeVertex(self,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def MakeVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : OCP.gp.gp_Pnt,Tol : float) -> None: 
         """
         Makes an udefined vertex without geometry.
 
@@ -159,7 +159,7 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Makes a vertex from a 3D point.
         """
     @overload
-    def MakeVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
+    def MakeVertex(self,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     def MakeWire(self,W : OCP.TopoDS.TopoDS_Wire) -> None: 
         """
         Make an empty Wire.
@@ -198,16 +198,16 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Sets the same range flag for the edge <E>.
         """
     @overload
-    def Transfert(self,Ein : OCP.TopoDS.TopoDS_Edge,Eout : OCP.TopoDS.TopoDS_Edge,Vin : OCP.TopoDS.TopoDS_Vertex,Vout : OCP.TopoDS.TopoDS_Vertex) -> None: 
+    def Transfert(self,Ein : OCP.TopoDS.TopoDS_Edge,Eout : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Add to <Eout> the geometric representations of <Ein>.
 
         Transfert the parameters of Vin on Ein as the parameter of Vout on Eout.
         """
     @overload
-    def Transfert(self,Ein : OCP.TopoDS.TopoDS_Edge,Eout : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Transfert(self,Ein : OCP.TopoDS.TopoDS_Edge,Eout : OCP.TopoDS.TopoDS_Edge,Vin : OCP.TopoDS.TopoDS_Vertex,Vout : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon2D,S : OCP.TopoDS.TopoDS_Face) -> None: 
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
         Sets a 3D curve for the edge. If <C> is a null handle, remove any existing 3d curve.
 
@@ -260,47 +260,47 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Changes an Edge polygon on Triangulation.
         """
     @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon2D,S : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
+    @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P1 : OCP.Poly.Poly_Polygon2D,P2 : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
     @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,N1 : OCP.Poly.Poly_PolygonOnTriangulation,N2 : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
     @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P1 : OCP.Poly.Poly_PolygonOnTriangulation,P2 : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon3D) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float,Pf : OCP.gp.gp_Pnt2d,Pl : OCP.gp.gp_Pnt2d) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,Tol : float) -> None: ...
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
     @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,N : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,N1 : OCP.Poly.Poly_PolygonOnTriangulation,N2 : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
+    @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,T : OCP.TopLoc.TopLoc_Location) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,N : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
-    @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,N1 : OCP.Poly.Poly_PolygonOnTriangulation,N2 : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
     @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P1 : OCP.Poly.Poly_Polygon2D,P2 : OCP.Poly.Poly_Polygon2D,S : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
-    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float,Pf : OCP.gp.gp_Pnt2d,Pl : OCP.gp.gp_Pnt2d) -> None: ...
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
     @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_Polygon3D,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,N : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
+    @overload
     def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,Tol : float) -> None: ...
     @overload
-    def UpdateFace(self,theFace : OCP.TopoDS.TopoDS_Face,theTriangulation : OCP.Poly.Poly_Triangulation,theToReset : bool=True) -> None: 
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,P1 : OCP.Poly.Poly_PolygonOnTriangulation,P2 : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation) -> None: ...
+    @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,Tol : float) -> None: ...
+    @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float,Pf : OCP.gp.gp_Pnt2d,Pl : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
+    @overload
+    def UpdateEdge(self,E : OCP.TopoDS.TopoDS_Edge,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float,Pf : OCP.gp.gp_Pnt2d,Pl : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def UpdateFace(self,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: 
         """
         Updates the face F using the tolerance value Tol, surface S and location Location.
 
@@ -309,11 +309,11 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Updates the face Tolerance.
         """
     @overload
+    def UpdateFace(self,theFace : OCP.TopoDS.TopoDS_Face,theTriangulation : OCP.Poly.Poly_Triangulation,theToReset : bool=True) -> None: ...
+    @overload
     def UpdateFace(self,F : OCP.TopoDS.TopoDS_Face,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
     @overload
-    def UpdateFace(self,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
-    @overload
-    def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : float,E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: 
+    def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,Tol : float) -> None: 
         """
         Sets a 3D point on the vertex.
 
@@ -330,17 +330,17 @@ class BRep_Builder(OCP.TopoDS.TopoDS_Builder):
         Sets the parameter for the vertex on the edge pcurve on the face.
         """
     @overload
-    def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
+    def UpdateVertex(self,Ve : OCP.TopoDS.TopoDS_Vertex,U : float,V : float,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
     @overload
     def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : float,E : OCP.TopoDS.TopoDS_Edge,Tol : float) -> None: ...
     @overload
-    def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,Tol : float) -> None: ...
-    @overload
     def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
+    @overload
+    def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : OCP.gp.gp_Pnt,Tol : float) -> None: ...
     @overload
     def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,Par : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
     @overload
-    def UpdateVertex(self,Ve : OCP.TopoDS.TopoDS_Vertex,U : float,V : float,F : OCP.TopoDS.TopoDS_Face,Tol : float) -> None: ...
+    def UpdateVertex(self,V : OCP.TopoDS.TopoDS_Vertex,P : float,E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> None: ...
     def __init__(self) -> None: ...
     pass
 class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
@@ -348,27 +348,27 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
     Root class for the curve representations. Contains a location.Root class for the curve representations. Contains a location.Root class for the curve representations. Contains a location.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -411,23 +411,23 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -441,14 +441,14 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -468,7 +468,7 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -479,29 +479,29 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -512,14 +512,14 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -539,14 +539,14 @@ class BRep_CurveRepresentation(OCP.Standard.Standard_Transient):
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Surface(self) -> OCP.Geom.Geom_Surface: 
         """
         None
@@ -592,14 +592,14 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Raises an error.
@@ -646,23 +646,23 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -676,14 +676,14 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -703,7 +703,7 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -714,29 +714,29 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -747,14 +747,14 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -774,14 +774,14 @@ class BRep_CurveOn2Surfaces(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Surface(self) -> OCP.Geom.Geom_Surface: 
         """
         None
@@ -815,27 +815,27 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     Root class for the geometric curves representation. Contains a range. Contains a first and a last parameter.Root class for the geometric curves representation. Contains a range. Contains a first and a last parameter.Root class for the geometric curves representation. Contains a range. Contains a first and a last parameter.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point at parameter U.
@@ -895,23 +895,23 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -925,14 +925,14 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -952,7 +952,7 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Last(self,L : float) -> None: 
+    def Last(self) -> float: 
         """
         None
 
@@ -963,9 +963,9 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Last(self) -> float: ...
+    def Last(self,L : float) -> None: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -976,29 +976,29 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -1009,14 +1009,14 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -1036,14 +1036,14 @@ class BRep_GCurve(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Range(self) -> Tuple[float, float]: 
         """
         None
@@ -1092,27 +1092,27 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
     Representation of a curve by a curve in the parametric space of a surface.Representation of a curve by a curve in the parametric space of a surface.Representation of a curve by a curve in the parametric space of a surface.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point at parameter U.
@@ -1172,23 +1172,23 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -1202,14 +1202,14 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -1229,7 +1229,7 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Last(self,L : float) -> None: 
+    def Last(self) -> float: 
         """
         None
 
@@ -1240,9 +1240,9 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
         None
         """
     @overload
-    def Last(self) -> float: ...
+    def Last(self,L : float) -> None: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -1253,29 +1253,29 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -1286,14 +1286,14 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -1313,14 +1313,14 @@ class BRep_CurveOnSurface(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.St
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Range(self) -> Tuple[float, float]: 
         """
         None
@@ -1382,14 +1382,14 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
     Representation of a curve by a 3D curve.Representation of a curve by a 3D curve.Representation of a curve by a 3D curve.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
@@ -1462,23 +1462,23 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -1492,14 +1492,14 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -1519,7 +1519,7 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Last(self,L : float) -> None: 
+    def Last(self) -> float: 
         """
         None
 
@@ -1530,9 +1530,9 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
         None
         """
     @overload
-    def Last(self) -> float: ...
+    def Last(self,L : float) -> None: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -1543,29 +1543,29 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -1576,14 +1576,14 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -1603,14 +1603,14 @@ class BRep_Curve3D(BRep_GCurve, BRep_CurveRepresentation, OCP.Standard.Standard_
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Range(self) -> Tuple[float, float]: 
         """
         None
@@ -1660,27 +1660,27 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
     Representation of a curve by two pcurves on a closed surface.Representation of a curve by two pcurves on a closed surface.Representation of a curve by two pcurves on a closed surface.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
         Computes the point at parameter U.
@@ -1740,23 +1740,23 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -1770,14 +1770,14 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -1788,16 +1788,16 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
     @overload
     def IsPolygonOnTriangulation(self) -> bool: ...
     @overload
-    def IsRegularity(self) -> bool: 
+    def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         Returns True
 
         A curve on two surfaces (continuity).
         """
     @overload
-    def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsRegularity(self) -> bool: ...
     @overload
-    def Last(self,L : float) -> None: 
+    def Last(self) -> float: 
         """
         None
 
@@ -1808,9 +1808,9 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
         None
         """
     @overload
-    def Last(self) -> float: ...
+    def Last(self,L : float) -> None: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -1821,29 +1821,29 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         Returns Location()
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -1854,14 +1854,14 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -1881,14 +1881,14 @@ class BRep_CurveOnClosedSurface(BRep_CurveOnSurface, BRep_GCurve, BRep_CurveRepr
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Range(self) -> Tuple[float, float]: 
         """
         None
@@ -1975,9 +1975,9 @@ class BRep_ListOfCurveRepresentation(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BRep_CurveRepresentation) -> BRep_CurveRepresentation: ...
-    @overload
     def Append(self,theOther : BRep_ListOfCurveRepresentation) -> None: ...
+    @overload
+    def Append(self,theItem : BRep_CurveRepresentation) -> BRep_CurveRepresentation: ...
     def Assign(self,theOther : BRep_ListOfCurveRepresentation) -> BRep_ListOfCurveRepresentation: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1997,23 +1997,23 @@ class BRep_ListOfCurveRepresentation(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : BRep_ListOfCurveRepresentation,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : BRep_CurveRepresentation,theIter : Any) -> BRep_CurveRepresentation: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : BRep_CurveRepresentation,theIter : Any) -> BRep_CurveRepresentation: ...
+    def InsertAfter(self,theOther : BRep_ListOfCurveRepresentation,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : BRep_CurveRepresentation,theIter : Any) -> BRep_CurveRepresentation: 
+    def InsertBefore(self,theOther : BRep_ListOfCurveRepresentation,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : BRep_ListOfCurveRepresentation,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : BRep_CurveRepresentation,theIter : Any) -> BRep_CurveRepresentation: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2025,14 +2025,14 @@ class BRep_ListOfCurveRepresentation(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : BRep_CurveRepresentation) -> BRep_CurveRepresentation: 
+    def Prepend(self,theOther : BRep_ListOfCurveRepresentation) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : BRep_ListOfCurveRepresentation) -> None: ...
+    def Prepend(self,theItem : BRep_CurveRepresentation) -> BRep_CurveRepresentation: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -2052,9 +2052,9 @@ class BRep_ListOfCurveRepresentation(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theOther : BRep_ListOfCurveRepresentation) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRep_ListOfPointRepresentation(OCP.NCollection.NCollection_BaseList):
@@ -2075,9 +2075,9 @@ class BRep_ListOfPointRepresentation(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BRep_PointRepresentation,theIter : Any) -> None: ...
-    @overload
     def Append(self,theItem : BRep_PointRepresentation) -> BRep_PointRepresentation: ...
+    @overload
+    def Append(self,theItem : BRep_PointRepresentation,theIter : Any) -> None: ...
     def Assign(self,theOther : BRep_ListOfPointRepresentation) -> BRep_ListOfPointRepresentation: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -2097,23 +2097,23 @@ class BRep_ListOfPointRepresentation(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : BRep_PointRepresentation,theIter : Any) -> BRep_PointRepresentation: 
+    def InsertAfter(self,theOther : BRep_ListOfPointRepresentation,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : BRep_ListOfPointRepresentation,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : BRep_PointRepresentation,theIter : Any) -> BRep_PointRepresentation: ...
     @overload
-    def InsertBefore(self,theItem : BRep_PointRepresentation,theIter : Any) -> BRep_PointRepresentation: 
+    def InsertBefore(self,theOther : BRep_ListOfPointRepresentation,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : BRep_ListOfPointRepresentation,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : BRep_PointRepresentation,theIter : Any) -> BRep_PointRepresentation: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -2150,9 +2150,9 @@ class BRep_ListOfPointRepresentation(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : BRep_ListOfPointRepresentation) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BRep_ListOfPointRepresentation) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2195,50 +2195,50 @@ class BRep_PointRepresentation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsPointOnCurve(self) -> bool: 
         """
         A point on a 3d curve.
 
         A point on the curve <C>.
         """
     @overload
-    def IsPointOnCurve(self) -> bool: ...
+    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsPointOnCurveOnSurface(self) -> bool: 
+    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a 2d curve on a surface.
 
         A point on the 2d curve <PC> on the surface <S>.
         """
     @overload
-    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnCurveOnSurface(self) -> bool: ...
     @overload
-    def IsPointOnSurface(self) -> bool: 
+    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a surface.
 
         A point on the surface <S>.
         """
     @overload
-    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnSurface(self) -> bool: ...
     @overload
     def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
@@ -2253,16 +2253,16 @@ class BRep_PointRepresentation(OCP.Standard.Standard_Transient):
     @overload
     def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Parameter(self) -> float: 
+    def Parameter(self,P : float) -> None: 
         """
         None
 
@@ -2273,7 +2273,7 @@ class BRep_PointRepresentation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Parameter(self,P : float) -> None: ...
+    def Parameter(self) -> float: ...
     @overload
     def Parameter2(self) -> float: 
         """
@@ -2284,14 +2284,14 @@ class BRep_PointRepresentation(OCP.Standard.Standard_Transient):
     @overload
     def Parameter2(self,P : float) -> None: ...
     @overload
-    def Surface(self) -> OCP.Geom.Geom_Surface: 
+    def Surface(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Surface(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Surface(self) -> OCP.Geom.Geom_Surface: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2345,50 +2345,50 @@ class BRep_PointsOnSurface(BRep_PointRepresentation, OCP.Standard.Standard_Trans
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsPointOnCurve(self) -> bool: 
         """
         A point on a 3d curve.
 
         A point on the curve <C>.
         """
     @overload
-    def IsPointOnCurve(self) -> bool: ...
+    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsPointOnCurveOnSurface(self) -> bool: 
+    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a 2d curve on a surface.
 
         A point on the 2d curve <PC> on the surface <S>.
         """
     @overload
-    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnCurveOnSurface(self) -> bool: ...
     @overload
-    def IsPointOnSurface(self) -> bool: 
+    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a surface.
 
         A point on the surface <S>.
         """
     @overload
-    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnSurface(self) -> bool: ...
     @overload
     def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
@@ -2403,16 +2403,16 @@ class BRep_PointsOnSurface(BRep_PointRepresentation, OCP.Standard.Standard_Trans
     @overload
     def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Parameter(self) -> float: 
+    def Parameter(self,P : float) -> None: 
         """
         None
 
@@ -2423,7 +2423,7 @@ class BRep_PointsOnSurface(BRep_PointRepresentation, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def Parameter(self,P : float) -> None: ...
+    def Parameter(self) -> float: ...
     @overload
     def Parameter2(self) -> float: 
         """
@@ -2495,50 +2495,50 @@ class BRep_PointOnSurface(BRep_PointsOnSurface, BRep_PointRepresentation, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsPointOnCurve(self) -> bool: 
         """
         A point on a 3d curve.
 
         A point on the curve <C>.
         """
     @overload
-    def IsPointOnCurve(self) -> bool: ...
+    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsPointOnCurveOnSurface(self) -> bool: 
+    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a 2d curve on a surface.
 
         A point on the 2d curve <PC> on the surface <S>.
         """
     @overload
-    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnCurveOnSurface(self) -> bool: ...
     @overload
-    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsPointOnSurface(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def IsPointOnSurface(self) -> bool: ...
+    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
     def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
@@ -2553,16 +2553,16 @@ class BRep_PointOnSurface(BRep_PointsOnSurface, BRep_PointRepresentation, OCP.St
     @overload
     def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Parameter(self) -> float: 
+    def Parameter(self,P : float) -> None: 
         """
         None
 
@@ -2573,7 +2573,7 @@ class BRep_PointOnSurface(BRep_PointsOnSurface, BRep_PointRepresentation, OCP.St
         None
         """
     @overload
-    def Parameter(self,P : float) -> None: ...
+    def Parameter(self) -> float: ...
     @overload
     def Parameter2(self,P : float) -> None: 
         """
@@ -2613,14 +2613,14 @@ class BRep_PointOnCurve(BRep_PointRepresentation, OCP.Standard.Standard_Transien
     Representation by a parameter on a 3D curve.Representation by a parameter on a 3D curve.Representation by a parameter on a 3D curve.
     """
     @overload
-    def Curve(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2646,23 +2646,23 @@ class BRep_PointOnCurve(BRep_PointRepresentation, OCP.Standard.Standard_Transien
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -2673,23 +2673,23 @@ class BRep_PointOnCurve(BRep_PointRepresentation, OCP.Standard.Standard_Transien
     @overload
     def IsPointOnCurve(self) -> bool: ...
     @overload
-    def IsPointOnCurveOnSurface(self) -> bool: 
+    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a 2d curve on a surface.
 
         A point on the 2d curve <PC> on the surface <S>.
         """
     @overload
-    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnCurveOnSurface(self) -> bool: ...
     @overload
-    def IsPointOnSurface(self) -> bool: 
+    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a surface.
 
         A point on the surface <S>.
         """
     @overload
-    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnSurface(self) -> bool: ...
     @overload
     def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
@@ -2704,16 +2704,16 @@ class BRep_PointOnCurve(BRep_PointRepresentation, OCP.Standard.Standard_Transien
     @overload
     def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Parameter(self) -> float: 
+    def Parameter(self,P : float) -> None: 
         """
         None
 
@@ -2724,7 +2724,7 @@ class BRep_PointOnCurve(BRep_PointRepresentation, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def Parameter(self,P : float) -> None: ...
+    def Parameter(self) -> float: ...
     @overload
     def Parameter2(self) -> float: 
         """
@@ -2735,14 +2735,14 @@ class BRep_PointOnCurve(BRep_PointRepresentation, OCP.Standard.Standard_Transien
     @overload
     def Parameter2(self,P : float) -> None: ...
     @overload
-    def Surface(self) -> OCP.Geom.Geom_Surface: 
+    def Surface(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Surface(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Surface(self) -> OCP.Geom.Geom_Surface: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2797,50 +2797,50 @@ class BRep_PointOnCurveOnSurface(BRep_PointsOnSurface, BRep_PointRepresentation,
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsPointOnCurve(self) -> bool: 
         """
         A point on a 3d curve.
 
         A point on the curve <C>.
         """
     @overload
-    def IsPointOnCurve(self) -> bool: ...
+    def IsPointOnCurve(self,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsPointOnCurveOnSurface(self) -> bool: 
         """
         Returns True
 
         None
         """
     @overload
-    def IsPointOnCurveOnSurface(self) -> bool: ...
+    def IsPointOnCurveOnSurface(self,PC : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsPointOnSurface(self) -> bool: 
+    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A point on a surface.
 
         A point on the surface <S>.
         """
     @overload
-    def IsPointOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPointOnSurface(self) -> bool: ...
     @overload
     def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
         """
@@ -2855,16 +2855,16 @@ class BRep_PointOnCurveOnSurface(BRep_PointsOnSurface, BRep_PointRepresentation,
     @overload
     def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Parameter(self) -> float: 
+    def Parameter(self,P : float) -> None: 
         """
         None
 
@@ -2875,7 +2875,7 @@ class BRep_PointOnCurveOnSurface(BRep_PointsOnSurface, BRep_PointRepresentation,
         None
         """
     @overload
-    def Parameter(self,P : float) -> None: ...
+    def Parameter(self) -> float: ...
     @overload
     def Parameter2(self) -> float: 
         """
@@ -2915,27 +2915,27 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     Representation by a 3D polygon.Representation by a 3D polygon.Representation by a 3D polygon.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2978,23 +2978,23 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         Returns True.
@@ -3008,14 +3008,14 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
         A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -3035,7 +3035,7 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -3046,29 +3046,29 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -3079,23 +3079,23 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
+    def Polygon3D(self) -> OCP.Poly.Poly_Polygon3D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon3D(self) -> OCP.Poly.Poly_Polygon3D: ...
+    def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: ...
     @overload
     def PolygonOnTriangulation(self,P : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
@@ -3106,14 +3106,14 @@ class BRep_Polygon3D(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Surface(self) -> OCP.Geom.Geom_Surface: 
         """
         None
@@ -3147,27 +3147,27 @@ class BRep_PolygonOnSurface(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     Representation of a 2D polygon in the parametric space of a surface.Representation of a 2D polygon in the parametric space of a surface.Representation of a 2D polygon in the parametric space of a surface.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -3210,23 +3210,23 @@ class BRep_PolygonOnSurface(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -3267,7 +3267,7 @@ class BRep_PolygonOnSurface(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -3278,493 +3278,29 @@ class BRep_PolygonOnSurface(BRep_CurveRepresentation, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
-    @overload
-    def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
-    @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
-    @overload
-    def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Polygon3D(self) -> OCP.Poly.Poly_Polygon3D: ...
-    @overload
-    def PolygonOnTriangulation(self,P : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
-    @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
-    def Surface(self) -> OCP.Geom.Geom_Surface: 
-        """
-        None
-        """
-    def Surface2(self) -> OCP.Geom.Geom_Surface: 
-        """
-        None
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Triangulation(self) -> OCP.Poly.Poly_Triangulation: 
-        """
-        None
-        """
-    def __init__(self,P : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class BRep_PolygonOnTriangulation(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
-    """
-    A representation by an array of nodes on a triangulation.A representation by an array of nodes on a triangulation.A representation by an array of nodes on a triangulation.
-    """
-    @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
-    def Copy(self) -> BRep_CurveRepresentation: 
-        """
-        Return a copy of this representation.
-        """
-    @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def IsCurve3D(self) -> bool: 
-        """
-        A 3D curve representation.
-        """
-    def IsCurveOnClosedSurface(self) -> bool: 
-        """
-        A curve with two parametric curves on the same surface.
-        """
-    @overload
-    def IsCurveOnSurface(self) -> bool: 
-        """
-        A curve in the parametric space of a surface.
-
-        Is it a curve in the parametric space of <S> with location <L>.
-        """
-    @overload
-    def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    def IsPolygon3D(self) -> bool: 
-        """
-        A 3D polygon representation.
-        """
-    def IsPolygonOnClosedSurface(self) -> bool: 
-        """
-        Two 2D polygon representations in the parametric space of a surface.
-        """
-    def IsPolygonOnClosedTriangulation(self) -> bool: 
-        """
-        A representation by two arrays of nodes on a triangulation.
-        """
-    @overload
-    def IsPolygonOnSurface(self) -> bool: 
-        """
-        A polygon in the parametric space of a surface.
-
-        Is it a polygon in the parametric space of <S> with location <L>.
-        """
-    @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @overload
-    def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
-        """
-        returns True.
-
-        Is it a polygon in the definition of <T> with location <L>.
-        """
-    @overload
-    def IsPolygonOnTriangulation(self) -> bool: ...
-    @overload
-    def IsRegularity(self) -> bool: 
-        """
-        A continuity between two surfaces.
-
-        Is it a regularity between <S1> and <S2> with location <L1> and <L2>.
-        """
-    @overload
-    def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
-        """
-        None
-
-        None
-
-        None
-
-        None
-        """
-    @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
-    def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
-        """
-        None
-        """
-    @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
-    @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
-    @overload
-    def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
-    @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
-    @overload
-    def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Polygon3D(self) -> OCP.Poly.Poly_Polygon3D: ...
-    @overload
-    def PolygonOnTriangulation(self,P : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
-        """
-        returns True.
-
-        None
-        """
-    @overload
-    def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
-    @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
-    def Surface(self) -> OCP.Geom.Geom_Surface: 
-        """
-        None
-        """
-    def Surface2(self) -> OCP.Geom.Geom_Surface: 
-        """
-        None
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def Triangulation(self) -> OCP.Poly.Poly_Triangulation: 
-        """
-        None
-        """
-    def __init__(self,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
-class BRep_PolygonOnClosedSurface(BRep_PolygonOnSurface, BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
-    """
-    Representation by two 2d polygons in the parametric space of a surface.Representation by two 2d polygons in the parametric space of a surface.Representation by two 2d polygons in the parametric space of a surface.
-    """
-    @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
-    def Copy(self) -> BRep_CurveRepresentation: 
-        """
-        Return a copy of this representation.
-        """
-    @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def IsCurve3D(self) -> bool: 
-        """
-        A 3D curve representation.
-        """
-    def IsCurveOnClosedSurface(self) -> bool: 
-        """
-        A curve with two parametric curves on the same surface.
-        """
-    @overload
-    def IsCurveOnSurface(self) -> bool: 
-        """
-        A curve in the parametric space of a surface.
-
-        Is it a curve in the parametric space of <S> with location <L>.
-        """
-    @overload
-    def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    def IsPolygon3D(self) -> bool: 
-        """
-        A 3D polygon representation.
-        """
-    def IsPolygonOnClosedSurface(self) -> bool: 
-        """
-        returns True.
-        """
-    def IsPolygonOnClosedTriangulation(self) -> bool: 
-        """
-        A representation by two arrays of nodes on a triangulation.
-        """
-    @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
-        """
-        A 2D polygon representation in the parametric space of a surface.
-
-        A 2D polygon representation in the parametric space of a surface.
-        """
-    @overload
-    def IsPolygonOnSurface(self) -> bool: ...
-    @overload
-    def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
-        """
-        A representation by an array of nodes on a triangulation.
-
-        Is it a polygon in the definition of <T> with location <L>.
-        """
-    @overload
-    def IsPolygonOnTriangulation(self) -> bool: ...
-    @overload
-    def IsRegularity(self) -> bool: 
-        """
-        A continuity between two surfaces.
-
-        Is it a regularity between <S1> and <S2> with location <L1> and <L2>.
-        """
-    @overload
-    def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
-        """
-        None
-
-        None
-
-        None
-
-        None
-        """
-    @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
-    def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
-        """
-        None
-        """
-    @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
-    @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -3802,14 +3338,14 @@ class BRep_PolygonOnClosedSurface(BRep_PolygonOnSurface, BRep_CurveRepresentatio
     @overload
     def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @overload
-    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
         """
         None
 
         None
         """
     @overload
-    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: ...
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     def Surface(self) -> OCP.Geom.Geom_Surface: 
         """
         None
@@ -3826,7 +3362,7 @@ class BRep_PolygonOnClosedSurface(BRep_PolygonOnSurface, BRep_CurveRepresentatio
         """
         None
         """
-    def __init__(self,P1 : OCP.Poly.Poly_Polygon2D,P2 : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def __init__(self,P : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3838,32 +3374,32 @@ class BRep_PolygonOnClosedSurface(BRep_PolygonOnSurface, BRep_CurveRepresentatio
         None
         """
     pass
-class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
+class BRep_PolygonOnTriangulation(BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
     """
-    A representation by two arrays of nodes on a triangulation.A representation by two arrays of nodes on a triangulation.A representation by two arrays of nodes on a triangulation.
+    A representation by an array of nodes on a triangulation.A representation by an array of nodes on a triangulation.A representation by an array of nodes on a triangulation.
     """
     @overload
-    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: 
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
     def Copy(self) -> BRep_CurveRepresentation: 
         """
         Return a copy of this representation.
         """
     @overload
-    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: 
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
         """
         None
 
         None
         """
     @overload
-    def Curve3D(self) -> OCP.Geom.Geom_Curve: ...
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -3906,23 +3442,23 @@ class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveR
     @overload
     def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPolygon3D(self) -> bool: 
         """
         A 3D polygon representation.
@@ -3933,17 +3469,17 @@ class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveR
         """
     def IsPolygonOnClosedTriangulation(self) -> bool: 
         """
-        Returns True.
+        A representation by two arrays of nodes on a triangulation.
         """
     @overload
-    def IsPolygonOnSurface(self) -> bool: 
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         A polygon in the parametric space of a surface.
 
         Is it a polygon in the parametric space of <S> with location <L>.
         """
     @overload
-    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    def IsPolygonOnSurface(self) -> bool: ...
     @overload
     def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
@@ -3963,7 +3499,7 @@ class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveR
     @overload
     def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @overload
-    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: 
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
 
@@ -3974,29 +3510,29 @@ class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveR
         None
         """
     @overload
-    def Location(self) -> OCP.TopLoc.TopLoc_Location: ...
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
         """
         None
         """
     @overload
-    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         None
 
         None
         """
     @overload
-    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: ...
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
         """
@@ -4007,14 +3543,478 @@ class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveR
     @overload
     def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
-    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: 
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
         """
         None
 
         None
         """
     @overload
-    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: ...
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
+    @overload
+    def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Polygon3D(self) -> OCP.Poly.Poly_Polygon3D: ...
+    @overload
+    def PolygonOnTriangulation(self,P : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
+        """
+        returns True.
+
+        None
+        """
+    @overload
+    def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
+    @overload
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
+    def Surface(self) -> OCP.Geom.Geom_Surface: 
+        """
+        None
+        """
+    def Surface2(self) -> OCP.Geom.Geom_Surface: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Triangulation(self) -> OCP.Poly.Poly_Triangulation: 
+        """
+        None
+        """
+    def __init__(self,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class BRep_PolygonOnClosedSurface(BRep_PolygonOnSurface, BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
+    """
+    Representation by two 2d polygons in the parametric space of a surface.Representation by two 2d polygons in the parametric space of a surface.Representation by two 2d polygons in the parametric space of a surface.
+    """
+    @overload
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
+    def Copy(self) -> BRep_CurveRepresentation: 
+        """
+        Return a copy of this representation.
+        """
+    @overload
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsCurve3D(self) -> bool: 
+        """
+        A 3D curve representation.
+        """
+    def IsCurveOnClosedSurface(self) -> bool: 
+        """
+        A curve with two parametric curves on the same surface.
+        """
+    @overload
+    def IsCurveOnSurface(self) -> bool: 
+        """
+        A curve in the parametric space of a surface.
+
+        Is it a curve in the parametric space of <S> with location <L>.
+        """
+    @overload
+    def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsPolygon3D(self) -> bool: 
+        """
+        A 3D polygon representation.
+        """
+    def IsPolygonOnClosedSurface(self) -> bool: 
+        """
+        returns True.
+        """
+    def IsPolygonOnClosedTriangulation(self) -> bool: 
+        """
+        A representation by two arrays of nodes on a triangulation.
+        """
+    @overload
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+        """
+        A 2D polygon representation in the parametric space of a surface.
+
+        A 2D polygon representation in the parametric space of a surface.
+        """
+    @overload
+    def IsPolygonOnSurface(self) -> bool: ...
+    @overload
+    def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+        """
+        A representation by an array of nodes on a triangulation.
+
+        Is it a polygon in the definition of <T> with location <L>.
+        """
+    @overload
+    def IsPolygonOnTriangulation(self) -> bool: ...
+    @overload
+    def IsRegularity(self) -> bool: 
+        """
+        A continuity between two surfaces.
+
+        Is it a regularity between <S1> and <S2> with location <L1> and <L2>.
+        """
+    @overload
+    def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    @overload
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
+        """
+        None
+
+        None
+
+        None
+
+        None
+        """
+    @overload
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
+        """
+        None
+        """
+    @overload
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
+    @overload
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
+    @overload
+    def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Polygon3D(self) -> OCP.Poly.Poly_Polygon3D: ...
+    @overload
+    def PolygonOnTriangulation(self,P : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PolygonOnTriangulation(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
+    @overload
+    def PolygonOnTriangulation2(self,P2 : OCP.Poly.Poly_PolygonOnTriangulation) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PolygonOnTriangulation2(self) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
+    def Surface(self) -> OCP.Geom.Geom_Surface: 
+        """
+        None
+        """
+    def Surface2(self) -> OCP.Geom.Geom_Surface: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Triangulation(self) -> OCP.Poly.Poly_Triangulation: 
+        """
+        None
+        """
+    def __init__(self,P1 : OCP.Poly.Poly_Polygon2D,P2 : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class BRep_PolygonOnClosedTriangulation(BRep_PolygonOnTriangulation, BRep_CurveRepresentation, OCP.Standard.Standard_Transient):
+    """
+    A representation by two arrays of nodes on a triangulation.A representation by two arrays of nodes on a triangulation.A representation by two arrays of nodes on a triangulation.
+    """
+    @overload
+    def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Continuity(self,C : OCP.GeomAbs.GeomAbs_Shape) -> None: ...
+    def Copy(self) -> BRep_CurveRepresentation: 
+        """
+        Return a copy of this representation.
+        """
+    @overload
+    def Curve3D(self) -> OCP.Geom.Geom_Curve: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Curve3D(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsCurve3D(self) -> bool: 
+        """
+        A 3D curve representation.
+        """
+    def IsCurveOnClosedSurface(self) -> bool: 
+        """
+        A curve with two parametric curves on the same surface.
+        """
+    @overload
+    def IsCurveOnSurface(self) -> bool: 
+        """
+        A curve in the parametric space of a surface.
+
+        Is it a curve in the parametric space of <S> with location <L>.
+        """
+    @overload
+    def IsCurveOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def IsPolygon3D(self) -> bool: 
+        """
+        A 3D polygon representation.
+        """
+    def IsPolygonOnClosedSurface(self) -> bool: 
+        """
+        Two 2D polygon representations in the parametric space of a surface.
+        """
+    def IsPolygonOnClosedTriangulation(self) -> bool: 
+        """
+        Returns True.
+        """
+    @overload
+    def IsPolygonOnSurface(self,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+        """
+        A polygon in the parametric space of a surface.
+
+        Is it a polygon in the parametric space of <S> with location <L>.
+        """
+    @overload
+    def IsPolygonOnSurface(self) -> bool: ...
+    @overload
+    def IsPolygonOnTriangulation(self,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: 
+        """
+        returns True.
+
+        Is it a polygon in the definition of <T> with location <L>.
+        """
+    @overload
+    def IsPolygonOnTriangulation(self) -> bool: ...
+    @overload
+    def IsRegularity(self) -> bool: 
+        """
+        A continuity between two surfaces.
+
+        Is it a regularity between <S1> and <S2> with location <L1> and <L2>.
+        """
+    @overload
+    def IsRegularity(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> bool: ...
+    @overload
+    def Location(self) -> OCP.TopLoc.TopLoc_Location: 
+        """
+        None
+
+        None
+
+        None
+
+        None
+        """
+    @overload
+    def Location(self,L : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def Location2(self) -> OCP.TopLoc.TopLoc_Location: 
+        """
+        None
+        """
+    @overload
+    def PCurve(self) -> OCP.Geom2d.Geom2d_Curve: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PCurve(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def PCurve2(self) -> OCP.Geom2d.Geom2d_Curve: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def PCurve2(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    @overload
+    def Polygon(self) -> OCP.Poly.Poly_Polygon2D: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Polygon(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
+    @overload
+    def Polygon2(self) -> OCP.Poly.Poly_Polygon2D: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Polygon2(self,P : OCP.Poly.Poly_Polygon2D) -> None: ...
     @overload
     def Polygon3D(self,P : OCP.Poly.Poly_Polygon3D) -> None: 
         """
@@ -4081,14 +4081,14 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
         None
         """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -4099,14 +4099,14 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def Curves(self) -> BRep_ListOfCurveRepresentation: 
         """
         None
@@ -4118,14 +4118,14 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Degenerated(self,S : bool) -> None: 
+    def Degenerated(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Degenerated(self) -> bool: ...
+    def Degenerated(self,S : bool) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -4169,23 +4169,23 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
     @overload
     def Infinite(self) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -4196,14 +4196,14 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
     @overload
     def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
@@ -4244,7 +4244,7 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Tolerance(self,T : float) -> None: 
+    def Tolerance(self) -> float: 
         """
         None
 
@@ -4255,7 +4255,7 @@ class BRep_TEdge(OCP.TopoDS.TopoDS_TEdge, OCP.TopoDS.TopoDS_TShape, OCP.Standard
         None
         """
     @overload
-    def Tolerance(self) -> float: ...
+    def Tolerance(self,T : float) -> None: ...
     def UpdateTolerance(self,T : float) -> None: 
         """
         Sets the tolerance to the max of <T> and the current tolerance.
@@ -4283,14 +4283,14 @@ class BRep_TFace(OCP.TopoDS.TopoDS_TFace, OCP.TopoDS.TopoDS_TShape, OCP.Standard
         Returns current active triangulation.
         """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -4301,14 +4301,14 @@ class BRep_TFace(OCP.TopoDS.TopoDS_TFace, OCP.TopoDS.TopoDS_TShape, OCP.Standard
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -4356,23 +4356,23 @@ class BRep_TFace(OCP.TopoDS.TopoDS_TFace, OCP.TopoDS.TopoDS_TShape, OCP.Standard
     @overload
     def Infinite(self) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Location(self) -> OCP.TopLoc.TopLoc_Location: 
         """
@@ -4392,23 +4392,23 @@ class BRep_TFace(OCP.TopoDS.TopoDS_TFace, OCP.TopoDS.TopoDS_TShape, OCP.Standard
     @overload
     def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     @overload
-    def NaturalRestriction(self,theRestriction : bool) -> None: 
+    def NaturalRestriction(self) -> bool: 
         """
         Returns TRUE if the boundary of this face is known to be the parametric space (Umin, UMax, VMin, VMax).
 
         Sets the flag that is TRUE if the boundary of this face is known to be the parametric space.
         """
     @overload
-    def NaturalRestriction(self) -> bool: ...
+    def NaturalRestriction(self,theRestriction : bool) -> None: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
@@ -4493,14 +4493,14 @@ class BRep_TVertex(OCP.TopoDS.TopoDS_TVertex, OCP.TopoDS.TopoDS_TShape, OCP.Stan
         None
         """
     @overload
-    def Checked(self,theIsChecked : bool) -> None: 
+    def Checked(self) -> bool: 
         """
         Returns the checked flag.
 
         Sets the checked flag.
         """
     @overload
-    def Checked(self) -> bool: ...
+    def Checked(self,theIsChecked : bool) -> None: ...
     @overload
     def Closed(self,theIsClosed : bool) -> None: 
         """
@@ -4511,14 +4511,14 @@ class BRep_TVertex(OCP.TopoDS.TopoDS_TVertex, OCP.TopoDS.TopoDS_TShape, OCP.Stan
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Convex(self,theIsConvex : bool) -> None: 
+    def Convex(self) -> bool: 
         """
         Returns the convexness flag.
 
         Sets the convexness flag.
         """
     @overload
-    def Convex(self) -> bool: ...
+    def Convex(self,theIsConvex : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -4566,23 +4566,23 @@ class BRep_TVertex(OCP.TopoDS.TopoDS_TVertex, OCP.TopoDS.TopoDS_TShape, OCP.Stan
     @overload
     def Infinite(self) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Locked(self) -> bool: 
         """
@@ -4593,14 +4593,14 @@ class BRep_TVertex(OCP.TopoDS.TopoDS_TVertex, OCP.TopoDS.TopoDS_TShape, OCP.Stan
     @overload
     def Locked(self,theIsLocked : bool) -> None: ...
     @overload
-    def Modified(self) -> bool: 
+    def Modified(self,theIsModified : bool) -> None: 
         """
         Returns the modification flag.
 
         Sets the modification flag.
         """
     @overload
-    def Modified(self,theIsModified : bool) -> None: ...
+    def Modified(self) -> bool: ...
     def NbChildren(self) -> int: 
         """
         Returns the number of direct sub-shapes (children).
@@ -4615,7 +4615,7 @@ class BRep_TVertex(OCP.TopoDS.TopoDS_TVertex, OCP.TopoDS.TopoDS_TShape, OCP.Stan
     @overload
     def Orientable(self,theIsOrientable : bool) -> None: ...
     @overload
-    def Pnt(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Pnt(self) -> OCP.gp.gp_Pnt: 
         """
         None
 
@@ -4626,7 +4626,7 @@ class BRep_TVertex(OCP.TopoDS.TopoDS_TVertex, OCP.TopoDS.TopoDS_TShape, OCP.Stan
         None
         """
     @overload
-    def Pnt(self) -> OCP.gp.gp_Pnt: ...
+    def Pnt(self,P : OCP.gp.gp_Pnt) -> None: ...
     def Points(self) -> BRep_ListOfPointRepresentation: 
         """
         None
@@ -4678,7 +4678,7 @@ class BRep_Tool():
     """
     @staticmethod
     @overload
-    def Continuity_s(E : OCP.TopoDS.TopoDS_Edge,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         Returns the continuity.
 
@@ -4686,7 +4686,7 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def Continuity_s(E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity_s(E : OCP.TopoDS.TopoDS_Edge,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,L1 : OCP.TopLoc.TopLoc_Location,L2 : OCP.TopLoc.TopLoc_Location) -> OCP.GeomAbs.GeomAbs_Shape: ...
     @staticmethod
     def CurveOnPlane_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,First : float,Last : float) -> OCP.Geom2d.Geom2d_Curve: 
         """
@@ -4694,7 +4694,7 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def CurveOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Index : int) -> Tuple[float, float]: 
+    def CurveOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,First : float,Last : float,theIsStored : bool=None) -> OCP.Geom2d.Geom2d_Curve: 
         """
         Returns the curve associated to the edge in the parametric space of the face. Returns a NULL handle if this curve does not exist. Returns in <First> and <Last> the parameter range. If the surface is a plane the curve can be not stored but created a new each time. The flag pointed by <theIsStored> serves to indicate storage status. It is valued if the pointer is non-null.
 
@@ -4706,7 +4706,7 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def CurveOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,First : float,Last : float,theIsStored : bool=None) -> OCP.Geom2d.Geom2d_Curve: ...
+    def CurveOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Index : int) -> Tuple[float, float]: ...
     @staticmethod
     @overload
     def CurveOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,First : float,Last : float,theIsStored : bool=None) -> OCP.Geom2d.Geom2d_Curve: ...
@@ -4741,13 +4741,13 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def HasContinuity_s(E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> bool: ...
-    @staticmethod
-    @overload
     def HasContinuity_s(E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
     @staticmethod
     @overload
-    def IsClosed_s(S : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def HasContinuity_s(E : OCP.TopoDS.TopoDS_Edge,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    @staticmethod
+    @overload
+    def IsClosed_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: 
         """
         If S is Shell, returns True if it has no free boundaries (edges). If S is Wire, returns True if it has no free ends (vertices). (Internal and External sub-shepes are ignored in these checks) If S is Edge, returns True if its vertices are the same. For other shape types returns S.Closed().
 
@@ -4759,13 +4759,13 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def IsClosed_s(E : OCP.TopoDS.TopoDS_Edge,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @staticmethod
-    @overload
-    def IsClosed_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
-    @staticmethod
-    @overload
     def IsClosed_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    @staticmethod
+    @overload
+    def IsClosed_s(S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
+    @staticmethod
+    @overload
+    def IsClosed_s(E : OCP.TopoDS.TopoDS_Edge,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> bool: ...
     @staticmethod
     @overload
     def IsGeometric_s(F : OCP.TopoDS.TopoDS_Face) -> bool: 
@@ -4794,7 +4794,7 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def Parameter_s(V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> float: 
+    def Parameter_s(V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> float: 
         """
         Finds the parameter of <theV> on <theE>.
 
@@ -4806,13 +4806,13 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def Parameter_s(V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
-    @staticmethod
-    @overload
     def Parameter_s(theV : OCP.TopoDS.TopoDS_Vertex,theE : OCP.TopoDS.TopoDS_Edge,theParam : float) -> bool: ...
     @staticmethod
     @overload
-    def Parameter_s(V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> float: ...
+    def Parameter_s(V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
+    @staticmethod
+    @overload
+    def Parameter_s(V : OCP.TopoDS.TopoDS_Vertex,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> float: ...
     @staticmethod
     def Parameters_s(V : OCP.TopoDS.TopoDS_Vertex,F : OCP.TopoDS.TopoDS_Face) -> OCP.gp.gp_Pnt2d: 
         """
@@ -4830,7 +4830,7 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def PolygonOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,C : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Index : int) -> None: 
+    def PolygonOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> OCP.Poly.Poly_Polygon2D: 
         """
         Returns the polygon associated to the edge in the parametric space of the face. Returns a NULL handle if this polygon does not exist.
 
@@ -4845,13 +4845,13 @@ class BRep_Tool():
     def PolygonOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_Polygon2D: ...
     @staticmethod
     @overload
-    def PolygonOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> OCP.Poly.Poly_Polygon2D: ...
+    def PolygonOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,C : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,Index : int) -> None: ...
     @staticmethod
     @overload
     def PolygonOnSurface_s(E : OCP.TopoDS.TopoDS_Edge,C : OCP.Poly.Poly_Polygon2D,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @staticmethod
     @overload
-    def PolygonOnTriangulation_s(E : OCP.TopoDS.TopoDS_Edge,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_PolygonOnTriangulation: 
+    def PolygonOnTriangulation_s(E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location,Index : int) -> None: 
         """
         Returns the polygon associated to the edge in the parametric space of the face. Returns a NULL handle if this polygon does not exist.
 
@@ -4861,13 +4861,13 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def PolygonOnTriangulation_s(E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location,Index : int) -> None: ...
+    def PolygonOnTriangulation_s(E : OCP.TopoDS.TopoDS_Edge,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> OCP.Poly.Poly_PolygonOnTriangulation: ...
     @staticmethod
     @overload
     def PolygonOnTriangulation_s(E : OCP.TopoDS.TopoDS_Edge,P : OCP.Poly.Poly_PolygonOnTriangulation,T : OCP.Poly.Poly_Triangulation,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @staticmethod
     @overload
-    def Range_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> Tuple[float, float]: 
+    def Range_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> Tuple[float, float]: 
         """
         Gets the range of the 3d curve.
 
@@ -4877,10 +4877,10 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def Range_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> Tuple[float, float]: ...
+    def Range_s(E : OCP.TopoDS.TopoDS_Edge) -> Tuple[float, float]: ...
     @staticmethod
     @overload
-    def Range_s(E : OCP.TopoDS.TopoDS_Edge) -> Tuple[float, float]: ...
+    def Range_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> Tuple[float, float]: ...
     @staticmethod
     def SameParameter_s(E : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
@@ -4904,7 +4904,7 @@ class BRep_Tool():
     def SetUVPoints_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,PFirst : OCP.gp.gp_Pnt2d,PLast : OCP.gp.gp_Pnt2d) -> None: ...
     @staticmethod
     @overload
-    def Surface_s(F : OCP.TopoDS.TopoDS_Face) -> OCP.Geom.Geom_Surface: 
+    def Surface_s(F : OCP.TopoDS.TopoDS_Face,L : OCP.TopLoc.TopLoc_Location) -> OCP.Geom.Geom_Surface: 
         """
         Returns the geometric surface of the face. Returns in <L> the location for the surface.
 
@@ -4912,10 +4912,10 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def Surface_s(F : OCP.TopoDS.TopoDS_Face,L : OCP.TopLoc.TopLoc_Location) -> OCP.Geom.Geom_Surface: ...
+    def Surface_s(F : OCP.TopoDS.TopoDS_Face) -> OCP.Geom.Geom_Surface: ...
     @staticmethod
     @overload
-    def Tolerance_s(F : OCP.TopoDS.TopoDS_Face) -> float: 
+    def Tolerance_s(V : OCP.TopoDS.TopoDS_Vertex) -> float: 
         """
         Returns the tolerance of the face.
 
@@ -4925,10 +4925,10 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def Tolerance_s(E : OCP.TopoDS.TopoDS_Edge) -> float: ...
+    def Tolerance_s(F : OCP.TopoDS.TopoDS_Face) -> float: ...
     @staticmethod
     @overload
-    def Tolerance_s(V : OCP.TopoDS.TopoDS_Vertex) -> float: ...
+    def Tolerance_s(E : OCP.TopoDS.TopoDS_Edge) -> float: ...
     @staticmethod
     def Triangulation_s(theFace : OCP.TopoDS.TopoDS_Face,theLocation : OCP.TopLoc.TopLoc_Location,theMeshPurpose : int=0) -> OCP.Poly.Poly_Triangulation: 
         """
@@ -4941,7 +4941,7 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def UVPoints_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,PFirst : OCP.gp.gp_Pnt2d,PLast : OCP.gp.gp_Pnt2d) -> None: 
+    def UVPoints_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,PFirst : OCP.gp.gp_Pnt2d,PLast : OCP.gp.gp_Pnt2d) -> None: 
         """
         Gets the UV locations of the extremities of the edge.
 
@@ -4949,6 +4949,6 @@ class BRep_Tool():
         """
     @staticmethod
     @overload
-    def UVPoints_s(E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face,PFirst : OCP.gp.gp_Pnt2d,PLast : OCP.gp.gp_Pnt2d) -> None: ...
+    def UVPoints_s(E : OCP.TopoDS.TopoDS_Edge,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,PFirst : OCP.gp.gp_Pnt2d,PLast : OCP.gp.gp_Pnt2d) -> None: ...
     def __init__(self) -> None: ...
     pass

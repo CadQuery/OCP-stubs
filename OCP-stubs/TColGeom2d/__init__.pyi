@@ -97,13 +97,13 @@ class TColGeom2d_Array1OfBSplineCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.Geom2d.Geom2d_BSplineCurve,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColGeom2d_Array1OfBSplineCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TColGeom2d_Array1OfBezierCurve():
@@ -183,13 +183,13 @@ class TColGeom2d_Array1OfBezierCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : OCP.Geom2d.Geom2d_BezierCurve,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColGeom2d_Array1OfBezierCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TColGeom2d_Array1OfCurve():
@@ -269,11 +269,11 @@ class TColGeom2d_Array1OfCurve():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.Geom2d.Geom2d_Curve,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : TColGeom2d_Array1OfCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -344,23 +344,23 @@ class TColGeom2d_HArray1OfBSplineCurve(TColGeom2d_Array1OfBSplineCurve, OCP.Stan
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         Returns last element
@@ -402,9 +402,9 @@ class TColGeom2d_HArray1OfBSplineCurve(TColGeom2d_Array1OfBSplineCurve, OCP.Stan
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -487,23 +487,23 @@ class TColGeom2d_HArray1OfBezierCurve(TColGeom2d_Array1OfBezierCurve, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.Geom2d.Geom2d_BezierCurve: 
         """
         Returns last element
@@ -545,11 +545,11 @@ class TColGeom2d_HArray1OfBezierCurve(TColGeom2d_Array1OfBezierCurve, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TColGeom2d_Array1OfBezierCurve) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.Geom2d.Geom2d_BezierCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -630,23 +630,23 @@ class TColGeom2d_HArray1OfCurve(TColGeom2d_Array1OfCurve, OCP.Standard.Standard_
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         Returns last element
@@ -688,13 +688,13 @@ class TColGeom2d_HArray1OfCurve(TColGeom2d_Array1OfCurve, OCP.Standard.Standard_
         Constant value access
         """
     @overload
-    def __init__(self,theOther : TColGeom2d_Array1OfCurve) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : TColGeom2d_Array1OfCurve) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -787,14 +787,14 @@ class TColGeom2d_SequenceOfBoundedCurve(OCP.NCollection.NCollection_BaseSequence
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.Geom2d.Geom2d_BoundedCurve) -> None: 
+    def Prepend(self,theSeq : TColGeom2d_SequenceOfBoundedCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColGeom2d_SequenceOfBoundedCurve) -> None: ...
+    def Prepend(self,theItem : OCP.Geom2d.Geom2d_BoundedCurve) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -829,11 +829,11 @@ class TColGeom2d_SequenceOfBoundedCurve(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : TColGeom2d_SequenceOfBoundedCurve) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -887,14 +887,14 @@ class TColGeom2d_SequenceOfCurve(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColGeom2d_SequenceOfCurve) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColGeom2d_SequenceOfCurve) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : TColGeom2d_SequenceOfCurve) -> None: 
         """
@@ -921,23 +921,23 @@ class TColGeom2d_SequenceOfCurve(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Prepend(self,theSeq : TColGeom2d_SequenceOfCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColGeom2d_SequenceOfCurve) -> None: ...
+    def Prepend(self,theItem : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -963,11 +963,11 @@ class TColGeom2d_SequenceOfCurve(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : TColGeom2d_SequenceOfCurve) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1064,23 +1064,23 @@ class TColGeom2d_HSequenceOfBoundedCurve(TColGeom2d_SequenceOfBoundedCurve, OCP.
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.Geom2d.Geom2d_BoundedCurve: 
         """
         Last item access
@@ -1094,14 +1094,14 @@ class TColGeom2d_HSequenceOfBoundedCurve(TColGeom2d_SequenceOfBoundedCurve, OCP.
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.Geom2d.Geom2d_BoundedCurve) -> None: 
+    def Prepend(self,theSeq : TColGeom2d_SequenceOfBoundedCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColGeom2d_SequenceOfBoundedCurve) -> None: ...
+    def Prepend(self,theItem : OCP.Geom2d.Geom2d_BoundedCurve) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1144,9 +1144,9 @@ class TColGeom2d_HSequenceOfBoundedCurve(TColGeom2d_SequenceOfBoundedCurve, OCP.
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColGeom2d_SequenceOfBoundedCurve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1170,14 +1170,14 @@ class TColGeom2d_HSequenceOfCurve(TColGeom2d_SequenceOfCurve, OCP.NCollection.NC
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Append(self,theSequence : TColGeom2d_SequenceOfCurve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : TColGeom2d_SequenceOfCurve) -> None: ...
+    def Append(self,theItem : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def Assign(self,theOther : TColGeom2d_SequenceOfCurve) -> TColGeom2d_SequenceOfCurve: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1231,14 +1231,14 @@ class TColGeom2d_HSequenceOfCurve(TColGeom2d_SequenceOfCurve, OCP.NCollection.NC
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : TColGeom2d_SequenceOfCurve) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : TColGeom2d_SequenceOfCurve) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : TColGeom2d_SequenceOfCurve) -> None: 
         """
@@ -1253,23 +1253,23 @@ class TColGeom2d_HSequenceOfCurve(TColGeom2d_SequenceOfCurve, OCP.NCollection.NC
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.Geom2d.Geom2d_Curve: 
         """
         Last item access
@@ -1283,23 +1283,23 @@ class TColGeom2d_HSequenceOfCurve(TColGeom2d_SequenceOfCurve, OCP.NCollection.NC
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def Prepend(self,theSeq : TColGeom2d_SequenceOfCurve) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : TColGeom2d_SequenceOfCurve) -> None: ...
+    def Prepend(self,theItem : OCP.Geom2d.Geom2d_Curve) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1333,9 +1333,9 @@ class TColGeom2d_HSequenceOfCurve(TColGeom2d_SequenceOfCurve, OCP.NCollection.NC
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : TColGeom2d_SequenceOfCurve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1433,14 +1433,14 @@ class TColGeom2d_SequenceOfGeometry(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : TColGeom2d_SequenceOfGeometry) -> None: 
+    def Prepend(self,theItem : OCP.Geom2d.Geom2d_Geometry) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : OCP.Geom2d.Geom2d_Geometry) -> None: ...
+    def Prepend(self,theSeq : TColGeom2d_SequenceOfGeometry) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -1477,9 +1477,9 @@ class TColGeom2d_SequenceOfGeometry(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : TColGeom2d_SequenceOfGeometry) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : TColGeom2d_SequenceOfGeometry) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

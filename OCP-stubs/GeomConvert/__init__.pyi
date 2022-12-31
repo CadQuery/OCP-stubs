@@ -4,14 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.GeomAbs
-import OCP.TColgp
-import io
-import OCP.Geom2d
+import OCP.math
 import OCP.Geom
-import OCP.TColStd
 import OCP.TColGeom
+import OCP.Adaptor3d
+import OCP.gp
+import OCP.Geom2d
+import OCP.TColgp
+import OCP.GeomAbs
+import io
+import OCP.TColStd
 __all__  = [
 "GeomConvert",
 "GeomConvert_ApproxCurve",
@@ -22,7 +24,16 @@ __all__  = [
 "GeomConvert_BSplineSurfaceToBezierSurface",
 "GeomConvert_CompBezierSurfacesToBSplineSurface",
 "GeomConvert_CompCurveToBSplineCurve",
-"GeomConvert_Units"
+"GeomConvert_ConvType",
+"GeomConvert_CurveToAnaCurve",
+"GeomConvert_FuncConeLSDist",
+"GeomConvert_FuncCylinderLSDist",
+"GeomConvert_FuncSphereLSDist",
+"GeomConvert_SurfToAnaSurf",
+"GeomConvert_Units",
+"GeomConvert_MinGap",
+"GeomConvert_Simplest",
+"GeomConvert_Target"
 ]
 class GeomConvert():
     """
@@ -30,7 +41,7 @@ class GeomConvert():
     """
     @staticmethod
     @overload
-    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,AngularTolerance : float,tolerance : float) -> None: 
+    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,tolerance : float) -> None: 
         """
         This Method reduces as far as it is possible the multiplicities of the knots of the BSpline BS.(keeping the geometry). It returns an array of BSpline C1. tolerance is a geometrical tolerance.
 
@@ -38,7 +49,7 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,tolerance : float) -> None: ...
+    def C0BSplineToArrayOfC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tabBS : OCP.TColGeom.TColGeom_HArray1OfBSplineCurve,AngularTolerance : float,tolerance : float) -> None: ...
     @staticmethod
     def C0BSplineToC1BSplineCurve_s(BS : OCP.Geom.Geom_BSplineCurve,tolerance : float,AngularTolerance : float=1e-07) -> None: 
         """
@@ -78,7 +89,7 @@ class GeomConvert():
     def SplitBSplineCurve_s(C : OCP.Geom.Geom_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineCurve: ...
     @staticmethod
     @overload
-    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromParam1 : float,ToParam2 : float,USplit : bool,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: 
+    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromUK1 : int,ToUK2 : int,FromVK1 : int,ToVK2 : int,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: 
         """
         Computes the B-spline surface patche between the knots values FromUK1, ToUK2, FromVK1, ToVK2. If S is periodic in one direction the patche has the same orientation as S in this direction if the flag is true in this direction (SameUOrientation, SameVOrientation). If S is not periodic SameUOrientation and SameVOrientation are not used for the computation and S is oriented FromUK1 ToUK2 and FromVK1 ToVK2. Raised if FromUK1 = ToUK2 or FromVK1 = ToVK2 FromUK1 or ToUK2 are out of the bounds [FirstUKnotIndex, LastUKnotIndex] FromVK1 or ToVK2 are out of the bounds [FirstVKnotIndex, LastVKnotIndex]
 
@@ -90,13 +101,13 @@ class GeomConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromK1 : int,ToK2 : int,USplit : bool,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
-    @staticmethod
-    @overload
     def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromU1 : float,ToU2 : float,FromV1 : float,ToV2 : float,ParametricTolerance : float,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
     @staticmethod
     @overload
-    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromUK1 : int,ToUK2 : int,FromVK1 : int,ToVK2 : int,SameUOrientation : bool=True,SameVOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
+    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromParam1 : float,ToParam2 : float,USplit : bool,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
+    @staticmethod
+    @overload
+    def SplitBSplineSurface_s(S : OCP.Geom.Geom_BSplineSurface,FromK1 : int,ToK2 : int,USplit : bool,SameOrientation : bool=True) -> OCP.Geom.Geom_BSplineSurface: ...
     @staticmethod
     def SurfaceToBSplineSurface_s(S : OCP.Geom.Geom_Surface) -> OCP.Geom.Geom_BSplineSurface: 
         """
@@ -129,9 +140,9 @@ class GeomConvert_ApproxCurve():
         Returns the greatest distance between a point on the source conic and the BSpline curve resulting from the approximation. (>0 when an approximation has been done, 0 if no approximation)
         """
     @overload
-    def __init__(self,Curve : OCP.Geom.Geom_Curve,Tol3d : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> None: ...
-    @overload
     def __init__(self,Curve : OCP.Adaptor3d.Adaptor3d_Curve,Tol3d : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> None: ...
+    @overload
+    def __init__(self,Curve : OCP.Geom.Geom_Curve,Tol3d : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> None: ...
     pass
 class GeomConvert_ApproxSurface():
     """
@@ -201,9 +212,9 @@ class GeomConvert_BSplineCurveToBezierCurve():
         Returns the number of BezierCurve arcs. If at the creation time you have decomposed the basis curve between the parametric values UFirst, ULast the number of BezierCurve arcs depends on the number of knots included inside the interval [UFirst, ULast]. If you have decomposed the whole basis B-spline curve the number of BezierCurve arcs NbArcs is equal to the number of knots less one.
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom.Geom_BSplineCurve) -> None: ...
-    @overload
     def __init__(self,BasisCurve : OCP.Geom.Geom_BSplineCurve,U1 : float,U2 : float,ParametricTolerance : float) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom.Geom_BSplineCurve) -> None: ...
     pass
 class GeomConvert_BSplineSurfaceKnotSplitting():
     """
@@ -260,9 +271,9 @@ class GeomConvert_BSplineSurfaceToBezierSurface():
         This methode returns the bspline's v-knots associated to the converted Patches Raised if the length of Curves is not equal to NbVPatches + 1.
         """
     @overload
-    def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface,U1 : float,U2 : float,V1 : float,V2 : float,ParametricTolerance : float) -> None: ...
-    @overload
     def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface) -> None: ...
+    @overload
+    def __init__(self,BasisSurface : OCP.Geom.Geom_BSplineSurface,U1 : float,U2 : float,V1 : float,V2 : float,ParametricTolerance : float) -> None: ...
     pass
 class GeomConvert_CompBezierSurfacesToBSplineSurface():
     """
@@ -339,9 +350,9 @@ class GeomConvert_CompBezierSurfacesToBSplineSurface():
         -- Returns the multiplicities table for the v parametric direction of the knots of the BSpline surface whose data is computed in this framework.
         """
     @overload
-    def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,VContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,Tolerance : float=0.0001) -> None: ...
-    @overload
     def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface) -> None: ...
+    @overload
+    def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,VContinuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C0,Tolerance : float=0.0001) -> None: ...
     @overload
     def __init__(self,Beziers : OCP.TColGeom.TColGeom_Array2OfBezierSurface,Tolerance : float,RemoveKnots : bool=True) -> None: ...
     pass
@@ -362,9 +373,261 @@ class GeomConvert_CompCurveToBSplineCurve():
         Clear a result curve
         """
     @overload
-    def __init__(self,BasisCurve : OCP.Geom.Geom_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
-    @overload
     def __init__(self,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    @overload
+    def __init__(self,BasisCurve : OCP.Geom.Geom_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    pass
+class GeomConvert_ConvType():
+    """
+    None
+
+    Members:
+
+      GeomConvert_Target
+
+      GeomConvert_Simplest
+
+      GeomConvert_MinGap
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    GeomConvert_MinGap: OCP.GeomConvert.GeomConvert_ConvType # value = <GeomConvert_ConvType.GeomConvert_MinGap: 2>
+    GeomConvert_Simplest: OCP.GeomConvert.GeomConvert_ConvType # value = <GeomConvert_ConvType.GeomConvert_Simplest: 1>
+    GeomConvert_Target: OCP.GeomConvert.GeomConvert_ConvType # value = <GeomConvert_ConvType.GeomConvert_Target: 0>
+    __entries: dict # value = {'GeomConvert_Target': (<GeomConvert_ConvType.GeomConvert_Target: 0>, None), 'GeomConvert_Simplest': (<GeomConvert_ConvType.GeomConvert_Simplest: 1>, None), 'GeomConvert_MinGap': (<GeomConvert_ConvType.GeomConvert_MinGap: 2>, None)}
+    __members__: dict # value = {'GeomConvert_Target': <GeomConvert_ConvType.GeomConvert_Target: 0>, 'GeomConvert_Simplest': <GeomConvert_ConvType.GeomConvert_Simplest: 1>, 'GeomConvert_MinGap': <GeomConvert_ConvType.GeomConvert_MinGap: 2>}
+    pass
+class GeomConvert_CurveToAnaCurve():
+    """
+    None
+    """
+    @staticmethod
+    def ComputeCircle_s(curve : OCP.Geom.Geom_Curve,tolerance : float,c1 : float,c2 : float,cf : float,cl : float,Deviation : float) -> OCP.Geom.Geom_Curve: 
+        """
+        Tries to convert the given curve to circle with given tolerance. Returns NULL curve if conversion is not possible.
+        """
+    @staticmethod
+    def ComputeCurve_s(curve : OCP.Geom.Geom_Curve,tolerance : float,c1 : float,c2 : float,cf : float,cl : float,theGap : float,theCurvType : GeomConvert_ConvType=GeomConvert_ConvType.GeomConvert_MinGap,theTarget : OCP.GeomAbs.GeomAbs_CurveType=GeomAbs_CurveType.GeomAbs_Line) -> OCP.Geom.Geom_Curve: 
+        """
+        None
+        """
+    @staticmethod
+    def ComputeEllipse_s(curve : OCP.Geom.Geom_Curve,tolerance : float,c1 : float,c2 : float,cf : float,cl : float,Deviation : float) -> OCP.Geom.Geom_Curve: 
+        """
+        Tries to convert the given curve to ellipse with given tolerance. Returns NULL curve if conversion is not possible.
+        """
+    @staticmethod
+    def ComputeLine_s(curve : OCP.Geom.Geom_Curve,tolerance : float,c1 : float,c2 : float,cf : float,cl : float,Deviation : float) -> OCP.Geom.Geom_Line: 
+        """
+        Tries to convert the given curve to line with given tolerance. Returns NULL curve if conversion is not possible.
+        """
+    def ConvertToAnalytical(self,theTol : float,theResultCurve : OCP.Geom.Geom_Curve,F : float,L : float,newF : float,newL : float) -> bool: 
+        """
+        Converts me to analytical if possible with given tolerance. The new first and last parameters are returned to newF, newL
+        """
+    def Gap(self) -> float: 
+        """
+        Returns maximal deviation of converted surface from the original one computed by last call to ConvertToAnalytical
+        """
+    @staticmethod
+    def GetCircle_s(Circ : OCP.gp.gp_Circ,P0 : OCP.gp.gp_Pnt,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> bool: 
+        """
+        Creates circle on points. Returns true if OK.
+        """
+    def GetConvType(self) -> GeomConvert_ConvType: 
+        """
+        Returns conversion type
+        """
+    @staticmethod
+    def GetLine_s(P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt,cf : float,cl : float) -> OCP.gp.gp_Lin: 
+        """
+        Creates line on two points. Resulting parameters returned
+        """
+    def GetTarget(self) -> OCP.GeomAbs.GeomAbs_CurveType: 
+        """
+        Returns target curve type
+        """
+    def Init(self,C : OCP.Geom.Geom_Curve) -> None: 
+        """
+        None
+        """
+    @staticmethod
+    def IsLinear_s(aPoints : OCP.TColgp.TColgp_Array1OfPnt,tolerance : float,Deviation : float) -> bool: 
+        """
+        Returns true if the set of points is linear with given tolerance
+        """
+    def SetConvType(self,theConvType : GeomConvert_ConvType) -> None: 
+        """
+        Sets type of convertion
+        """
+    def SetTarget(self,theTarget : OCP.GeomAbs.GeomAbs_CurveType) -> None: 
+        """
+        Sets target curve type
+        """
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    pass
+class GeomConvert_FuncConeLSDist(OCP.math.math_MultipleVarFunction):
+    """
+    Function for search of Cone canonic parameters: coordinates of center local coordinate system, direction of axis, radius and semi-angle from set of points by least square method.
+    """
+    def GetStateNumber(self) -> int: 
+        """
+        return the state of the function corresponding to the latestt call of any methods associated to the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
+        """
+    def NbVariables(self) -> int: 
+        """
+        Number of variables.
+        """
+    def SetDir(self,theDir : OCP.gp.gp_Dir) -> None: 
+        """
+        None
+        """
+    def SetPoints(self,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ) -> None: 
+        """
+        None
+        """
+    def Value(self,X : OCP.math.math_Vector,F : float) -> bool: 
+        """
+        Value.
+        """
+    @overload
+    def __init__(self,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ,theDir : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    pass
+class GeomConvert_FuncCylinderLSDist(OCP.math.math_MultipleVarFunctionWithGradient, OCP.math.math_MultipleVarFunction):
+    """
+    Function for search of cylinder canonic parameters: coordinates of center local coordinate system, direction of axis and radius from set of points by least square method.
+    """
+    def GetStateNumber(self) -> int: 
+        """
+        return the state of the function corresponding to the latestt call of any methods associated to the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
+        """
+    def Gradient(self,X : OCP.math.math_Vector,G : OCP.math.math_Vector) -> bool: 
+        """
+        Gradient.
+        """
+    def NbVariables(self) -> int: 
+        """
+        Number of variables.
+        """
+    def SetDir(self,theDir : OCP.gp.gp_Dir) -> None: 
+        """
+        None
+        """
+    def SetPoints(self,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ) -> None: 
+        """
+        None
+        """
+    def Value(self,X : OCP.math.math_Vector,F : float) -> bool: 
+        """
+        Value.
+        """
+    def Values(self,X : OCP.math.math_Vector,F : float,G : OCP.math.math_Vector) -> bool: 
+        """
+        Value and gradient.
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ,theDir : OCP.gp.gp_Dir) -> None: ...
+    pass
+class GeomConvert_FuncSphereLSDist(OCP.math.math_MultipleVarFunctionWithGradient, OCP.math.math_MultipleVarFunction):
+    """
+    Function for search of sphere canonic parameters: coordinates of center and radius from set of moints by least square method. //! The class inherits math_MultipleVarFunctionWithGradient and thus is intended for use in math_BFGS algorithm.
+    """
+    def GetStateNumber(self) -> int: 
+        """
+        return the state of the function corresponding to the latestt call of any methods associated to the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
+        """
+    def Gradient(self,X : OCP.math.math_Vector,G : OCP.math.math_Vector) -> bool: 
+        """
+        Gradient.
+        """
+    def NbVariables(self) -> int: 
+        """
+        Number of variables.
+        """
+    def SetPoints(self,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ) -> None: 
+        """
+        None
+        """
+    def Value(self,X : OCP.math.math_Vector,F : float) -> bool: 
+        """
+        Value.
+        """
+    def Values(self,X : OCP.math.math_Vector,F : float,G : OCP.math.math_Vector) -> bool: 
+        """
+        Value and gradient.
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ) -> None: ...
+    pass
+class GeomConvert_SurfToAnaSurf():
+    """
+    Converts a surface to the analitical form with given precision. Conversion is done only the surface is bspline of bezier and this can be approximed by some analytical surface with that precision.
+    """
+    @overload
+    def ConvertToAnalytical(self,InitialToler : float) -> OCP.Geom.Geom_Surface: 
+        """
+        Tries to convert the Surface to an Analytic form Returns the result In case of failure, returns a Null Handle
+
+        None
+        """
+    @overload
+    def ConvertToAnalytical(self,InitialToler : float,Umin : float,Umax : float,Vmin : float,Vmax : float) -> OCP.Geom.Geom_Surface: ...
+    def Gap(self) -> float: 
+        """
+        Returns maximal deviation of converted surface from the original one computed by last call to ConvertToAnalytical
+        """
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
+        """
+        None
+        """
+    @staticmethod
+    def IsCanonical_s(S : OCP.Geom.Geom_Surface) -> bool: 
+        """
+        Returns true, if surface is canonical
+        """
+    @staticmethod
+    def IsSame_s(S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,tol : float) -> bool: 
+        """
+        Returns true if surfaces is same with the given tolerance
+        """
+    def SetConvType(self,theConvType : GeomConvert_ConvType=GeomConvert_ConvType.GeomConvert_Simplest) -> None: 
+        """
+        None
+        """
+    def SetTarget(self,theSurfType : OCP.GeomAbs.GeomAbs_SurfaceType=GeomAbs_SurfaceType.GeomAbs_Plane) -> None: 
+        """
+        None
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.Geom.Geom_Surface) -> None: ...
     pass
 class GeomConvert_Units():
     """
@@ -387,3 +650,6 @@ class GeomConvert_Units():
         """
     def __init__(self) -> None: ...
     pass
+GeomConvert_MinGap: OCP.GeomConvert.GeomConvert_ConvType # value = <GeomConvert_ConvType.GeomConvert_MinGap: 2>
+GeomConvert_Simplest: OCP.GeomConvert.GeomConvert_ConvType # value = <GeomConvert_ConvType.GeomConvert_Simplest: 1>
+GeomConvert_Target: OCP.GeomConvert.GeomConvert_ConvType # value = <GeomConvert_ConvType.GeomConvert_Target: 0>

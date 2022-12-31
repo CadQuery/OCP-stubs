@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import OCP.NCollection
-import io
-import OCP.Standard
 import OCP.TCollection
+import OCP.NCollection
+import OCP.Standard
+import OCP.Quantity
 import OCP.TColStd
+import io
 __all__  = [
 "Image_PixMap",
 "Image_ColorBGR",
@@ -48,7 +48,9 @@ __all__  = [
 "Image_Format_BGRAF",
 "Image_Format_BGRF",
 "Image_Format_Gray",
+"Image_Format_Gray16",
 "Image_Format_GrayF",
+"Image_Format_GrayF_half",
 "Image_Format_NB",
 "Image_Format_RGB",
 "Image_Format_RGB32",
@@ -66,19 +68,45 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
     """
     def ChangeData(self) -> int: 
         """
-        Returns data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
+        Return data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
         """
     def ChangeRawValue(self,theRow : int,theCol : int) -> int: 
         """
-        Access image pixel as raw data pointer. This method does not perform any type checks - use on own risk (check Format() before)!
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in the decreasing majority following memory layout - e.g. row first, column next.
+        """
+    def ChangeRawValueXY(self,theX : int,theY : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y order.
+        """
+    def ChangeRawValueXYZ(self,theX : int,theY : int,theZ : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y, Z order.
         """
     def ChangeRow(self,theRow : int) -> int: 
         """
-        Returns data pointer to requested row (first column).
+        Return data pointer to requested row (first column). Indexation starts from 0.
+        """
+    def ChangeSlice(self,theSlice : int) -> int: 
+        """
+        Return data pointer to requested 2D slice. Indexation starts from 0.
+        """
+    def ChangeSliceRow(self,theSlice : int,theRow : int) -> int: 
+        """
+        Return data pointer to requested row (first column). Indexation starts from 0.
         """
     def Clear(self) -> None: 
         """
         Method correctly deallocate internal buffer.
+        """
+    @staticmethod
+    def ColorFromRawPixel_s(theRawValue : int,theFormat : Image_Format,theToLinearize : bool=False) -> OCP.Quantity.Quantity_ColorRGBA: 
+        """
+        Convert raw pixel value into Quantity_ColorRGBA. This function is relatively slow.
+        """
+    @staticmethod
+    def ColorToRawPixel_s(theRawValue : int,theFormat : Image_Format,theColor : OCP.Quantity.Quantity_ColorRGBA,theToDeLinearize : bool=False) -> None: 
+        """
+        Set raw pixel value from Quantity_ColorRGBA. This function is relatively slow.
         """
     @staticmethod
     def ConvertFromHalfFloat_s(theHalf : int) -> float: 
@@ -92,7 +120,7 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
     def Data(self) -> int: 
         """
-        Returns data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
+        Return data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -107,6 +135,10 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
+    def Depth(self) -> int: 
+        """
+        Return image depth in pixels.
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -118,7 +150,7 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
     def Format(self) -> Image_Format: 
         """
-        None
+        Return pixel format.
         """
     def GetRefCount(self) -> int: 
         """
@@ -126,7 +158,7 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
     def Height(self) -> int: 
         """
-        Returns image height in pixels
+        Return image height in pixels.
         """
     @staticmethod
     @overload
@@ -151,13 +183,25 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
         Initialize image plane with required dimensions. Memory will be left uninitialized (performance trick).
         """
+    def InitTrash3D(self,thePixelFormat : Image_Format,theSizeXYZ : Any,theSizeRowBytes : int=0) -> bool: 
+        """
+        Initialize 2D/3D image with required dimensions. Memory will be left uninitialized (performance trick).
+        """
     def InitWrapper(self,thePixelFormat : Image_Format,theDataPtr : int,theSizeX : int,theSizeY : int,theSizeRowBytes : int=0) -> bool: 
         """
         Initialize image plane as wrapper over alien data. Data will not be copied! Notice that caller should ensure that data pointer will not be released during this wrapper lifetime. You may call InitCopy() to perform data copying.
         """
+    def InitWrapper3D(self,thePixelFormat : Image_Format,theDataPtr : int,theSizeXYZ : Any,theSizeRowBytes : int=0) -> bool: 
+        """
+        Initialize 2D/3D image as wrapper over alien data. Data will not be copied! Notice that caller should ensure that data pointer will not be released during this wrapper lifetime. You may call InitCopy() to perform data copying.
+        """
     def InitZero(self,thePixelFormat : Image_Format,theSizeX : int,theSizeY : int,theSizeRowBytes : int=0,theValue : int=0) -> bool: 
         """
         Initialize image plane with required dimensions. Buffer will be zeroed (black color for most formats).
+        """
+    def InitZero3D(self,thePixelFormat : Image_Format,theSizeXYZ : Any,theSizeRowBytes : int=0,theValue : int=0) -> bool: 
+        """
+        Initialize 2D/3D image with required dimensions. Buffer will be zeroed (black color for most formats).
         """
     @staticmethod
     def IsBigEndianHost_s() -> bool: 
@@ -166,26 +210,26 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
     def IsEmpty(self) -> bool: 
         """
-        Returns true if data is NULL.
+        Return true if data is NULL.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Returns TRUE if image data is stored from Top to the Down. By default Bottom Up order is used instead (topmost scanlines starts from the bottom in memory). which is most image frameworks naturally support.
@@ -200,61 +244,89 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
     def Ratio(self) -> float: 
         """
-        Returns width / height.
+        Return width / height.
         """
     def RawValue(self,theRow : int,theCol : int) -> int: 
         """
-        Access image pixel as raw data pointer. This method does not perform any type checks - use on own risk (check Format() before)!
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in the decreasing majority following memory layout - e.g. row first, column next.
+        """
+    def RawValueXY(self,theX : int,theY : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y order.
+        """
+    def RawValueXYZ(self,theX : int,theY : int,theZ : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y, Z order.
         """
     def Row(self,theRow : int) -> int: 
         """
-        Returns data pointer to requested row (first column).
+        Return data pointer to requested row (first column). Indexation starts from 0.
         """
     def RowExtraBytes(self) -> int: 
         """
-        Returns the extra bytes in the row.
+        Return the extra bytes in the row.
         """
     def SetFormat(self,thePixelFormat : Image_Format) -> None: 
         """
         Override pixel format specified by InitXXX() methods. Will throw exception if pixel size of new format is not equal to currently initialized format. Intended to switch formats indicating different interpretation of the same data (e.g. ImgGray and ImgAlpha).
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color,theToDeLinearize : bool=False) -> None: 
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA,theToDeLinearize : bool=False) -> None: 
         """
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
 
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA,theToDeLinearize : bool=False) -> None: ...
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color,theToDeLinearize : bool=False) -> None: ...
     def SetTopDown(self,theIsTopDown : bool) -> None: 
         """
         Setup scanlines order in memory - top-down or bottom-up. Drawers should explicitly specify this value if current state IsTopDown() was ignored!
         """
     def SizeBytes(self) -> int: 
         """
-        Returns buffer size
+        Return buffer size
         """
     def SizePixelBytes(self) -> int: 
         """
-        Returns bytes reserved for one pixel (may include extra bytes for alignment).
+        Return bytes reserved for one pixel (may include extra bytes for alignment).
         """
     @staticmethod
     def SizePixelBytes_s(thePixelFormat : Image_Format) -> int: 
         """
-        Returns bytes reserved for one pixel (may include extra bytes for alignment).
+        Return bytes reserved for one pixel (may include extra bytes for alignment).
         """
     def SizeRowBytes(self) -> int: 
         """
-        Returns bytes reserved per row. Could be larger than needed to store packed row (extra bytes for alignment etc.).
+        Return bytes reserved per row. Could be larger than needed to store packed row (extra bytes for alignment etc.).
+        """
+    def SizeSliceBytes(self) -> int: 
+        """
+        Return number of bytes per 2D slice.
         """
     def SizeX(self) -> int: 
         """
-        Returns image width in pixels
+        Return image width in pixels.
+        """
+    def SizeXYZ(self) -> Any: 
+        """
+        Return image width x height x depth in pixels.
         """
     def SizeY(self) -> int: 
         """
-        Returns image height in pixels
+        Return image height in pixels.
+        """
+    def SizeZ(self) -> int: 
+        """
+        Return image depth in pixels.
+        """
+    def Slice(self,theSlice : int) -> int: 
+        """
+        Return data pointer to requested 2D slice. Indexation starts from 0.
+        """
+    def SliceRow(self,theSlice : int,theRow : int) -> int: 
+        """
+        Return data pointer to requested row (first column). Indexation starts from 0.
         """
     @staticmethod
     def SwapRgbaBgra_s(theImage : Image_PixMap) -> bool: 
@@ -276,7 +348,7 @@ class Image_PixMap(OCP.Standard.Standard_Transient):
         """
     def Width(self) -> int: 
         """
-        Returns image width in pixels
+        Return image width in pixels.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -674,13 +746,13 @@ class Image_CompressedFormat():
         """
         :type: int
         """
-    Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>
-    Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>
-    Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>
-    Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>
+    Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 21>
+    Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 22>
+    Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 23>
+    Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 20>
     Image_CompressedFormat_UNKNOWN: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>
-    __entries: dict # value = {'Image_CompressedFormat_UNKNOWN': (<Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, None), 'Image_CompressedFormat_RGB_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT3': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT5': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>, None)}
-    __members__: dict # value = {'Image_CompressedFormat_UNKNOWN': <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, 'Image_CompressedFormat_RGB_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>, 'Image_CompressedFormat_RGBA_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>, 'Image_CompressedFormat_RGBA_S3TC_DXT3': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>, 'Image_CompressedFormat_RGBA_S3TC_DXT5': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>}
+    __entries: dict # value = {'Image_CompressedFormat_UNKNOWN': (<Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, None), 'Image_CompressedFormat_RGB_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 20>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT1': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 21>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT3': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 22>, None), 'Image_CompressedFormat_RGBA_S3TC_DXT5': (<Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 23>, None)}
+    __members__: dict # value = {'Image_CompressedFormat_UNKNOWN': <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>, 'Image_CompressedFormat_RGB_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 20>, 'Image_CompressedFormat_RGBA_S3TC_DXT1': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 21>, 'Image_CompressedFormat_RGBA_S3TC_DXT3': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 22>, 'Image_CompressedFormat_RGBA_S3TC_DXT5': <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 23>}
     pass
 class Image_CompressedPixMap(OCP.Standard.Standard_Transient):
     """
@@ -731,23 +803,23 @@ class Image_CompressedPixMap(OCP.Standard.Standard_Transient):
         Return TRUE if complete mip map level set (up to 1x1 resolution).
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Return TRUE if image layout is top-down (always true).
@@ -862,36 +934,36 @@ class Image_Diff(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theImgPathRef : OCP.TCollection.TCollection_AsciiString,theImgPathNew : OCP.TCollection.TCollection_AsciiString,theToBlackWhite : bool=False) -> bool: 
+    def Init(self,theImageRef : Image_PixMap,theImageNew : Image_PixMap,theToBlackWhite : bool=False) -> bool: 
         """
         Initialize algorithm by two images.
 
         Initialize algorithm by two images (will be loaded from files).
         """
     @overload
-    def Init(self,theImageRef : Image_PixMap,theImageNew : Image_PixMap,theToBlackWhite : bool=False) -> bool: ...
+    def Init(self,theImgPathRef : OCP.TCollection.TCollection_AsciiString,theImgPathNew : OCP.TCollection.TCollection_AsciiString,theToBlackWhite : bool=False) -> bool: ...
     def IsBorderFilterOn(self) -> bool: 
         """
         Returns a flag of taking into account (ignoring) a border effect in comparison of images.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def SaveDiffImage(self,theDiffImage : Image_PixMap) -> bool: 
         """
@@ -963,9 +1035,13 @@ class Image_Format():
 
       Image_Format_BGRAF
 
+      Image_Format_GrayF_half
+
       Image_Format_RGF_half
 
       Image_Format_RGBAF_half
+
+      Image_Format_Gray16
     """
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
@@ -994,18 +1070,20 @@ class Image_Format():
     Image_Format_BGRAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_BGRAF: 15>
     Image_Format_BGRF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_BGRF: 13>
     Image_Format_Gray: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Gray: 1>
+    Image_Format_Gray16: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Gray16: 19>
     Image_Format_GrayF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_GrayF: 9>
+    Image_Format_GrayF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_GrayF_half: 16>
     Image_Format_RGB: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB: 3>
     Image_Format_RGB32: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB32: 5>
     Image_Format_RGBA: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBA: 7>
     Image_Format_RGBAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF: 14>
-    Image_Format_RGBAF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF_half: 17>
+    Image_Format_RGBAF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF_half: 18>
     Image_Format_RGBF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBF: 12>
     Image_Format_RGF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF: 11>
-    Image_Format_RGF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF_half: 16>
+    Image_Format_RGF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF_half: 17>
     Image_Format_UNKNOWN: OCP.Image.Image_Format # value = <Image_Format.Image_Format_UNKNOWN: 0>
-    __entries: dict # value = {'Image_Format_UNKNOWN': (<Image_Format.Image_Format_UNKNOWN: 0>, None), 'Image_Format_Gray': (<Image_Format.Image_Format_Gray: 1>, None), 'Image_Format_Alpha': (<Image_Format.Image_Format_Alpha: 2>, None), 'Image_Format_RGB': (<Image_Format.Image_Format_RGB: 3>, None), 'Image_Format_BGR': (<Image_Format.Image_Format_BGR: 4>, None), 'Image_Format_RGB32': (<Image_Format.Image_Format_RGB32: 5>, None), 'Image_Format_BGR32': (<Image_Format.Image_Format_BGR32: 6>, None), 'Image_Format_RGBA': (<Image_Format.Image_Format_RGBA: 7>, None), 'Image_Format_BGRA': (<Image_Format.Image_Format_BGRA: 8>, None), 'Image_Format_GrayF': (<Image_Format.Image_Format_GrayF: 9>, None), 'Image_Format_AlphaF': (<Image_Format.Image_Format_AlphaF: 10>, None), 'Image_Format_RGF': (<Image_Format.Image_Format_RGF: 11>, None), 'Image_Format_RGBF': (<Image_Format.Image_Format_RGBF: 12>, None), 'Image_Format_BGRF': (<Image_Format.Image_Format_BGRF: 13>, None), 'Image_Format_RGBAF': (<Image_Format.Image_Format_RGBAF: 14>, None), 'Image_Format_BGRAF': (<Image_Format.Image_Format_BGRAF: 15>, None), 'Image_Format_RGF_half': (<Image_Format.Image_Format_RGF_half: 16>, None), 'Image_Format_RGBAF_half': (<Image_Format.Image_Format_RGBAF_half: 17>, None)}
-    __members__: dict # value = {'Image_Format_UNKNOWN': <Image_Format.Image_Format_UNKNOWN: 0>, 'Image_Format_Gray': <Image_Format.Image_Format_Gray: 1>, 'Image_Format_Alpha': <Image_Format.Image_Format_Alpha: 2>, 'Image_Format_RGB': <Image_Format.Image_Format_RGB: 3>, 'Image_Format_BGR': <Image_Format.Image_Format_BGR: 4>, 'Image_Format_RGB32': <Image_Format.Image_Format_RGB32: 5>, 'Image_Format_BGR32': <Image_Format.Image_Format_BGR32: 6>, 'Image_Format_RGBA': <Image_Format.Image_Format_RGBA: 7>, 'Image_Format_BGRA': <Image_Format.Image_Format_BGRA: 8>, 'Image_Format_GrayF': <Image_Format.Image_Format_GrayF: 9>, 'Image_Format_AlphaF': <Image_Format.Image_Format_AlphaF: 10>, 'Image_Format_RGF': <Image_Format.Image_Format_RGF: 11>, 'Image_Format_RGBF': <Image_Format.Image_Format_RGBF: 12>, 'Image_Format_BGRF': <Image_Format.Image_Format_BGRF: 13>, 'Image_Format_RGBAF': <Image_Format.Image_Format_RGBAF: 14>, 'Image_Format_BGRAF': <Image_Format.Image_Format_BGRAF: 15>, 'Image_Format_RGF_half': <Image_Format.Image_Format_RGF_half: 16>, 'Image_Format_RGBAF_half': <Image_Format.Image_Format_RGBAF_half: 17>}
+    __entries: dict # value = {'Image_Format_UNKNOWN': (<Image_Format.Image_Format_UNKNOWN: 0>, None), 'Image_Format_Gray': (<Image_Format.Image_Format_Gray: 1>, None), 'Image_Format_Alpha': (<Image_Format.Image_Format_Alpha: 2>, None), 'Image_Format_RGB': (<Image_Format.Image_Format_RGB: 3>, None), 'Image_Format_BGR': (<Image_Format.Image_Format_BGR: 4>, None), 'Image_Format_RGB32': (<Image_Format.Image_Format_RGB32: 5>, None), 'Image_Format_BGR32': (<Image_Format.Image_Format_BGR32: 6>, None), 'Image_Format_RGBA': (<Image_Format.Image_Format_RGBA: 7>, None), 'Image_Format_BGRA': (<Image_Format.Image_Format_BGRA: 8>, None), 'Image_Format_GrayF': (<Image_Format.Image_Format_GrayF: 9>, None), 'Image_Format_AlphaF': (<Image_Format.Image_Format_AlphaF: 10>, None), 'Image_Format_RGF': (<Image_Format.Image_Format_RGF: 11>, None), 'Image_Format_RGBF': (<Image_Format.Image_Format_RGBF: 12>, None), 'Image_Format_BGRF': (<Image_Format.Image_Format_BGRF: 13>, None), 'Image_Format_RGBAF': (<Image_Format.Image_Format_RGBAF: 14>, None), 'Image_Format_BGRAF': (<Image_Format.Image_Format_BGRAF: 15>, None), 'Image_Format_GrayF_half': (<Image_Format.Image_Format_GrayF_half: 16>, None), 'Image_Format_RGF_half': (<Image_Format.Image_Format_RGF_half: 17>, None), 'Image_Format_RGBAF_half': (<Image_Format.Image_Format_RGBAF_half: 18>, None), 'Image_Format_Gray16': (<Image_Format.Image_Format_Gray16: 19>, None)}
+    __members__: dict # value = {'Image_Format_UNKNOWN': <Image_Format.Image_Format_UNKNOWN: 0>, 'Image_Format_Gray': <Image_Format.Image_Format_Gray: 1>, 'Image_Format_Alpha': <Image_Format.Image_Format_Alpha: 2>, 'Image_Format_RGB': <Image_Format.Image_Format_RGB: 3>, 'Image_Format_BGR': <Image_Format.Image_Format_BGR: 4>, 'Image_Format_RGB32': <Image_Format.Image_Format_RGB32: 5>, 'Image_Format_BGR32': <Image_Format.Image_Format_BGR32: 6>, 'Image_Format_RGBA': <Image_Format.Image_Format_RGBA: 7>, 'Image_Format_BGRA': <Image_Format.Image_Format_BGRA: 8>, 'Image_Format_GrayF': <Image_Format.Image_Format_GrayF: 9>, 'Image_Format_AlphaF': <Image_Format.Image_Format_AlphaF: 10>, 'Image_Format_RGF': <Image_Format.Image_Format_RGF: 11>, 'Image_Format_RGBF': <Image_Format.Image_Format_RGBF: 12>, 'Image_Format_BGRF': <Image_Format.Image_Format_BGRF: 13>, 'Image_Format_RGBAF': <Image_Format.Image_Format_RGBAF: 14>, 'Image_Format_BGRAF': <Image_Format.Image_Format_BGRAF: 15>, 'Image_Format_GrayF_half': <Image_Format.Image_Format_GrayF_half: 16>, 'Image_Format_RGF_half': <Image_Format.Image_Format_RGF_half: 17>, 'Image_Format_RGBAF_half': <Image_Format.Image_Format_RGBAF_half: 18>, 'Image_Format_Gray16': <Image_Format.Image_Format_Gray16: 19>}
     pass
 class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
     """
@@ -1017,19 +1095,45 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def ChangeData(self) -> int: 
         """
-        Returns data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
+        Return data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
         """
     def ChangeRawValue(self,theRow : int,theCol : int) -> int: 
         """
-        Access image pixel as raw data pointer. This method does not perform any type checks - use on own risk (check Format() before)!
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in the decreasing majority following memory layout - e.g. row first, column next.
+        """
+    def ChangeRawValueXY(self,theX : int,theY : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y order.
+        """
+    def ChangeRawValueXYZ(self,theX : int,theY : int,theZ : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y, Z order.
         """
     def ChangeRow(self,theRow : int) -> int: 
         """
-        Returns data pointer to requested row (first column).
+        Return data pointer to requested row (first column). Indexation starts from 0.
+        """
+    def ChangeSlice(self,theSlice : int) -> int: 
+        """
+        Return data pointer to requested 2D slice. Indexation starts from 0.
+        """
+    def ChangeSliceRow(self,theSlice : int,theRow : int) -> int: 
+        """
+        Return data pointer to requested row (first column). Indexation starts from 0.
         """
     def Clear(self) -> None: 
         """
         Method correctly deallocate internal buffer.
+        """
+    @staticmethod
+    def ColorFromRawPixel_s(theRawValue : int,theFormat : Image_Format,theToLinearize : bool=False) -> OCP.Quantity.Quantity_ColorRGBA: 
+        """
+        Convert raw pixel value into Quantity_ColorRGBA. This function is relatively slow.
+        """
+    @staticmethod
+    def ColorToRawPixel_s(theRawValue : int,theFormat : Image_Format,theColor : OCP.Quantity.Quantity_ColorRGBA,theToDeLinearize : bool=False) -> None: 
+        """
+        Set raw pixel value from Quantity_ColorRGBA. This function is relatively slow.
         """
     @staticmethod
     def ConvertFromHalfFloat_s(theHalf : int) -> float: 
@@ -1043,7 +1147,7 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def Data(self) -> int: 
         """
-        Returns data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
+        Return data pointer for low-level operations (copying entire buffer, parsing with extra tools etc.).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1058,6 +1162,10 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
         Memory deallocator for transient classes
         """
+    def Depth(self) -> int: 
+        """
+        Return image depth in pixels.
+        """
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -1069,7 +1177,7 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def Format(self) -> Image_Format: 
         """
-        None
+        Return pixel format.
         """
     def GetRefCount(self) -> int: 
         """
@@ -1077,7 +1185,7 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def Height(self) -> int: 
         """
-        Returns image height in pixels
+        Return image height in pixels.
         """
     @staticmethod
     @overload
@@ -1102,13 +1210,25 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
         Initialize image plane with required dimensions. thePixelFormat - if specified pixel format doesn't supported by image library than nearest supported will be used instead! theSizeRowBytes - may be ignored by this class and required alignment will be used instead!
         """
+    def InitTrash3D(self,thePixelFormat : Image_Format,theSizeXYZ : Any,theSizeRowBytes : int=0) -> bool: 
+        """
+        Initialize 2D/3D image with required dimensions. Memory will be left uninitialized (performance trick).
+        """
     def InitWrapper(self,thePixelFormat : Image_Format,theDataPtr : int,theSizeX : int,theSizeY : int,theSizeRowBytes : int=0) -> bool: 
         """
         Initialize image plane as wrapper over alien data. Data will not be copied! Notice that caller should ensure that data pointer will not be released during this wrapper lifetime. You may call InitCopy() to perform data copying.
         """
+    def InitWrapper3D(self,thePixelFormat : Image_Format,theDataPtr : int,theSizeXYZ : Any,theSizeRowBytes : int=0) -> bool: 
+        """
+        Initialize 2D/3D image as wrapper over alien data. Data will not be copied! Notice that caller should ensure that data pointer will not be released during this wrapper lifetime. You may call InitCopy() to perform data copying.
+        """
     def InitZero(self,thePixelFormat : Image_Format,theSizeX : int,theSizeY : int,theSizeRowBytes : int=0,theValue : int=0) -> bool: 
         """
         Initialize image plane with required dimensions. Buffer will be zeroed (black color for most formats).
+        """
+    def InitZero3D(self,thePixelFormat : Image_Format,theSizeXYZ : Any,theSizeRowBytes : int=0,theValue : int=0) -> bool: 
+        """
+        Initialize 2D/3D image with required dimensions. Buffer will be zeroed (black color for most formats).
         """
     @staticmethod
     def IsBigEndianHost_s() -> bool: 
@@ -1117,26 +1237,26 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def IsEmpty(self) -> bool: 
         """
-        Returns true if data is NULL.
+        Return true if data is NULL.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTopDown(self) -> bool: 
         """
         Returns TRUE if image data is stored from Top to the Down. By default Bottom Up order is used instead (topmost scanlines starts from the bottom in memory). which is most image frameworks naturally support.
@@ -1156,19 +1276,27 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def Ratio(self) -> float: 
         """
-        Returns width / height.
+        Return width / height.
         """
     def RawValue(self,theRow : int,theCol : int) -> int: 
         """
-        Access image pixel as raw data pointer. This method does not perform any type checks - use on own risk (check Format() before)!
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in the decreasing majority following memory layout - e.g. row first, column next.
+        """
+    def RawValueXY(self,theX : int,theY : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y order.
+        """
+    def RawValueXYZ(self,theX : int,theY : int,theZ : int) -> int: 
+        """
+        Access image pixel as raw data pointer. Indexation starts from 0. This method does not perform any type checks - use on own risk (check Format() before)! WARNING: Input parameters are defined in traditional X, Y, Z order.
         """
     def Row(self,theRow : int) -> int: 
         """
-        Returns data pointer to requested row (first column).
+        Return data pointer to requested row (first column). Indexation starts from 0.
         """
     def RowExtraBytes(self) -> int: 
         """
-        Returns the extra bytes in the row.
+        Return the extra bytes in the row.
         """
     def Save(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
@@ -1179,42 +1307,62 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         Override pixel format specified by InitXXX() methods. Will throw exception if pixel size of new format is not equal to currently initialized format. Intended to switch formats indicating different interpretation of the same data (e.g. ImgGray and ImgAlpha).
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color,theToDeLinearize : bool=False) -> None: 
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA,theToDeLinearize : bool=False) -> None: 
         """
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
 
         Sets the pixel color. This function is relatively slow. Beware that this method takes coordinates in opposite order in contrast to ::Value() and ::ChangeValue().
         """
     @overload
-    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_ColorRGBA,theToDeLinearize : bool=False) -> None: ...
+    def SetPixelColor(self,theX : int,theY : int,theColor : OCP.Quantity.Quantity_Color,theToDeLinearize : bool=False) -> None: ...
     def SetTopDown(self,theIsTopDown : bool) -> None: 
         """
         Setup scanlines order in memory - top-down or bottom-up. Drawers should explicitly specify this value if current state IsTopDown() was ignored!
         """
     def SizeBytes(self) -> int: 
         """
-        Returns buffer size
+        Return buffer size
         """
     def SizePixelBytes(self) -> int: 
         """
-        Returns bytes reserved for one pixel (may include extra bytes for alignment).
+        Return bytes reserved for one pixel (may include extra bytes for alignment).
         """
     @staticmethod
     def SizePixelBytes_s(thePixelFormat : Image_Format) -> int: 
         """
-        Returns bytes reserved for one pixel (may include extra bytes for alignment).
+        Return bytes reserved for one pixel (may include extra bytes for alignment).
         """
     def SizeRowBytes(self) -> int: 
         """
-        Returns bytes reserved per row. Could be larger than needed to store packed row (extra bytes for alignment etc.).
+        Return bytes reserved per row. Could be larger than needed to store packed row (extra bytes for alignment etc.).
+        """
+    def SizeSliceBytes(self) -> int: 
+        """
+        Return number of bytes per 2D slice.
         """
     def SizeX(self) -> int: 
         """
-        Returns image width in pixels
+        Return image width in pixels.
+        """
+    def SizeXYZ(self) -> Any: 
+        """
+        Return image width x height x depth in pixels.
         """
     def SizeY(self) -> int: 
         """
-        Returns image height in pixels
+        Return image height in pixels.
+        """
+    def SizeZ(self) -> int: 
+        """
+        Return image depth in pixels.
+        """
+    def Slice(self,theSlice : int) -> int: 
+        """
+        Return data pointer to requested 2D slice. Indexation starts from 0.
+        """
+    def SliceRow(self,theSlice : int,theRow : int) -> int: 
+        """
+        Return data pointer to requested row (first column). Indexation starts from 0.
         """
     @staticmethod
     def SwapRgbaBgra_s(theImage : Image_PixMap) -> bool: 
@@ -1236,7 +1384,7 @@ class Image_AlienPixMap(Image_PixMap, OCP.Standard.Standard_Transient):
         """
     def Width(self) -> int: 
         """
-        Returns image width in pixels
+        Return image width in pixels.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -1268,11 +1416,27 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         """
     def ChangeRow(self,theRow : int) -> int: 
         """
-        Returns data pointer to requested row (first column).
+        Return data pointer to requested row (first column).
+        """
+    def ChangeSlice(self,theSlice : int) -> int: 
+        """
+        Return data pointer to requested 2D slice.
+        """
+    def ChangeSliceRow(self,theSlice : int,theRow : int) -> int: 
+        """
+        Return data pointer to requested row (first column).
         """
     def ChangeValue(self,theRow : int,theCol : int) -> int: 
         """
-        Returns data pointer to requested position.
+        Return data pointer to requested position.
+        """
+    def ChangeValueXY(self,theX : int,theY : int) -> int: 
+        """
+        Return data pointer to requested position.
+        """
+    def ChangeValueXYZ(self,theX : int,theY : int,theZ : int) -> int: 
+        """
+        Return data pointer to requested position.
         """
     def Data(self) -> int: 
         """
@@ -1306,39 +1470,44 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         """
         Increments the reference counter of this object
         """
+    @overload
     def Init(self,theAlloc : OCP.NCollection.NCollection_BaseAllocator,theSizeBPP : int,theSizeX : int,theSizeY : int,theSizeRowBytes : int,theDataPtr : int) -> bool: 
         """
         Initializer.
+
+        Initializer.
         """
+    @overload
+    def Init(self,theAlloc : OCP.NCollection.NCollection_BaseAllocator,theSizeBPP : int,theSizeXYZ : Any,theSizeRowBytes : int,theDataPtr : int) -> bool: ...
     def IsEmpty(self) -> bool: 
         """
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxRowAligmentBytes(self) -> int: 
         """
         Compute the maximal row alignment for current row size.
         """
     def Row(self,theRow : int) -> int: 
         """
-        Returns data pointer to requested row (first column).
+        Return data pointer to requested row (first column).
         """
     def SetAllocator(self,theAlloc : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
@@ -1352,13 +1521,29 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
         """
         Return buffer length in bytes.
         """
+    def Slice(self,theSlice : int) -> int: 
+        """
+        Return data pointer to requested 2D slice.
+        """
+    def SliceRow(self,theSlice : int,theRow : int) -> int: 
+        """
+        Return data pointer to requested row (first column).
+        """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     def Value(self,theRow : int,theCol : int) -> int: 
         """
-        Returns data pointer to requested position.
+        Return data pointer to requested position.
+        """
+    def ValueXY(self,theX : int,theY : int) -> int: 
+        """
+        Return data pointer to requested position.
+        """
+    def ValueXYZ(self,theX : int,theY : int,theZ : int) -> int: 
+        """
+        Return data pointer to requested position.
         """
     def ZeroData(self) -> None: 
         """
@@ -1392,6 +1577,14 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
     def SizeRowBytes(self, arg0: int) -> None:
         pass
     @property
+    def SizeSliceBytes(self) -> int:
+        """
+        :type: int
+        """
+    @SizeSliceBytes.setter
+    def SizeSliceBytes(self, arg0: int) -> None:
+        pass
+    @property
     def SizeX(self) -> int:
         """
         :type: int
@@ -1408,6 +1601,14 @@ class Image_PixMapData(OCP.NCollection.NCollection_Buffer, OCP.Standard.Standard
     def SizeY(self, arg0: int) -> None:
         pass
     @property
+    def SizeZ(self) -> int:
+        """
+        :type: int
+        """
+    @SizeZ.setter
+    def SizeZ(self, arg0: int) -> None:
+        pass
+    @property
     def TopToDown(self) -> int:
         """
         :type: int
@@ -1421,14 +1622,14 @@ class Image_SupportedFormats(OCP.Standard.Standard_Transient):
     Structure holding information about supported texture formats.
     """
     @overload
-    def Add(self,theFormat : Image_Format) -> None: 
+    def Add(self,theFormat : Image_CompressedFormat) -> None: 
         """
         Set if image format is supported or not.
 
         Set if compressed image format is supported or not.
         """
     @overload
-    def Add(self,theFormat : Image_CompressedFormat) -> None: ...
+    def Add(self,theFormat : Image_Format) -> None: ...
     def Clear(self) -> None: 
         """
         Reset flags.
@@ -1458,23 +1659,23 @@ class Image_SupportedFormats(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def IsSupported(self,theFormat : Image_CompressedFormat) -> bool: 
         """
@@ -1555,23 +1756,23 @@ class Image_Texture(OCP.Standard.Standard_Transient):
         Matching two instances, for Map interface.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MimeType(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Return mime-type of image file based on ProbeImageFileFormat().
@@ -1597,20 +1798,20 @@ class Image_Texture(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def WriteImage(self,theStream : io.BytesIO,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def WriteImage(self,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: 
         """
         Write image to specified file without decoding data.
 
         Write image to specified stream without decoding data.
         """
     @overload
-    def WriteImage(self,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: ...
+    def WriteImage(self,theStream : io.BytesIO,theFile : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     @overload
-    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOffset : int,theLength : int) -> None: ...
+    def __init__(self,theBuffer : OCP.NCollection.NCollection_Buffer,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
     def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def __init__(self,theBuffer : OCP.NCollection.NCollection_Buffer,theId : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def __init__(self,theFileName : OCP.TCollection.TCollection_AsciiString,theOffset : int,theLength : int) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1738,23 +1939,23 @@ class Image_VideoRecorder(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Open(self,theFileName : str,theParams : Image_VideoParams) -> bool: 
         """
         Open output stream - initialize recorder.
@@ -1779,11 +1980,11 @@ class Image_VideoRecorder(OCP.Standard.Standard_Transient):
         None
         """
     pass
-Image_CompressedFormat_NB = 22
-Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 19>
-Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 20>
-Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 21>
-Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 18>
+Image_CompressedFormat_NB = 24
+Image_CompressedFormat_RGBA_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT1: 21>
+Image_CompressedFormat_RGBA_S3TC_DXT3: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT3: 22>
+Image_CompressedFormat_RGBA_S3TC_DXT5: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGBA_S3TC_DXT5: 23>
+Image_CompressedFormat_RGB_S3TC_DXT1: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_RGB_S3TC_DXT1: 20>
 Image_CompressedFormat_UNKNOWN: OCP.Image.Image_CompressedFormat # value = <Image_CompressedFormat.Image_CompressedFormat_UNKNOWN: 0>
 Image_Format_Alpha: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Alpha: 2>
 Image_Format_AlphaF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_AlphaF: 10>
@@ -1793,14 +1994,16 @@ Image_Format_BGRA: OCP.Image.Image_Format # value = <Image_Format.Image_Format_B
 Image_Format_BGRAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_BGRAF: 15>
 Image_Format_BGRF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_BGRF: 13>
 Image_Format_Gray: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Gray: 1>
+Image_Format_Gray16: OCP.Image.Image_Format # value = <Image_Format.Image_Format_Gray16: 19>
 Image_Format_GrayF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_GrayF: 9>
-Image_Format_NB = 18
+Image_Format_GrayF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_GrayF_half: 16>
+Image_Format_NB = 20
 Image_Format_RGB: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB: 3>
 Image_Format_RGB32: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGB32: 5>
 Image_Format_RGBA: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBA: 7>
 Image_Format_RGBAF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF: 14>
-Image_Format_RGBAF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF_half: 17>
+Image_Format_RGBAF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBAF_half: 18>
 Image_Format_RGBF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGBF: 12>
 Image_Format_RGF: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF: 11>
-Image_Format_RGF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF_half: 16>
+Image_Format_RGF_half: OCP.Image.Image_Format # value = <Image_Format.Image_Format_RGF_half: 17>
 Image_Format_UNKNOWN: OCP.Image.Image_Format # value = <Image_Format.Image_Format_UNKNOWN: 0>

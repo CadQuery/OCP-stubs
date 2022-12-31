@@ -4,21 +4,21 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.NCollection
+import IntPatch_WLine
+import OCP.Intf
+import OCP.Adaptor3d
+import IntPatch_ImpImpIntersection
+import OCP.IntAna
 import OCP.Geom2d
 import OCP.Standard
 import OCP.TColStd
-import OCP.IntAna
-import IntPatch_ImpImpIntersection
-import OCP.Adaptor3d
-import OCP.Intf
 import OCP.IntSurf
-import OCP.Adaptor2d
 import OCP.math
+import OCP.NCollection
 import OCP.gp
-import IntPatch_WLine
 import OCP.Bnd
+import OCP.GeomAbs
+import OCP.Adaptor2d
 __all__  = [
 "IntPatch_Line",
 "IntPatch_ALineToWLine",
@@ -108,23 +108,23 @@ class IntPatch_Line(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTangent(self) -> bool: 
         """
         Returns TRUE if the intersection is a line of tangency between the 2 patches.
@@ -205,14 +205,14 @@ class IntPatch_ALineToWLine():
     None
     """
     @overload
-    def MakeWLine(self,aline : IntPatch_ALine,paraminf : float,paramsup : float,theLines : IntPatch_SequenceOfLine) -> None: 
+    def MakeWLine(self,aline : IntPatch_ALine,theLines : IntPatch_SequenceOfLine) -> None: 
         """
         Converts aline to the set of Walking-lines and adds them in theLines.
 
         Converts aline (limited by paraminf and paramsup) to the set of Walking-lines and adds them in theLines.
         """
     @overload
-    def MakeWLine(self,aline : IntPatch_ALine,theLines : IntPatch_SequenceOfLine) -> None: ...
+    def MakeWLine(self,aline : IntPatch_ALine,paraminf : float,paramsup : float,theLines : IntPatch_SequenceOfLine) -> None: ...
     def SetTol3D(self,aT : float) -> None: 
         """
         None
@@ -274,7 +274,7 @@ class IntPatch_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_F
         None
         """
     @overload
-    def Set(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
+    def Set(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
@@ -285,7 +285,7 @@ class IntPatch_ArcFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_F
         None
         """
     @overload
-    def Set(self,A : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    def Set(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     def SetQuadric(self,Q : OCP.IntSurf.IntSurf_Quadric) -> None: 
         """
         None
@@ -472,23 +472,23 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTangent(self) -> bool: 
         """
         Returns TRUE if the intersection is a line of tangency between the 2 patches.
@@ -600,35 +600,35 @@ class IntPatch_GLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Returns the vertex of range Index on the line.
         """
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
-    @overload
     def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
-    @overload
-    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
-    @overload
-    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool) -> None: ...
-    @overload
-    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
+    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    @overload
+    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool) -> None: ...
+    @overload
     def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool) -> None: ...
+    def __init__(self,E : OCP.gp.gp_Elips,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin,Tang : bool) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,H : OCP.gp.gp_Hypr,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Parab,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1032,9 +1032,9 @@ class IntPatch_ImpImpIntersection():
         Returns True if the two patches are considered as entirely tangent, i.e every restriction arc of one patch is inside the geometric base of the other patch.
         """
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,theIsReqToKeepRLine : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,theIsReqToKeepRLine : bool=False) -> None: ...
     IntStatus_Fail: OCP.IntPatch.IntStatus_e # value = <IntStatus_e.IntStatus_Fail: 2>
     IntStatus_InfiniteSectionCurve: OCP.IntPatch.IntStatus_e # value = <IntStatus_e.IntStatus_InfiniteSectionCurve: 1>
     IntStatus_OK: OCP.IntPatch.IntStatus_e # value = <IntStatus_e.IntStatus_OK: 0>
@@ -1111,14 +1111,14 @@ class IntPatch_InterferencePolyhedron(OCP.Intf.Intf_Interference):
         Gives the tolerance used for the calculation.
         """
     @overload
-    def Insert(self,pdeb : OCP.Intf.Intf_SectionPoint,pfin : OCP.Intf.Intf_SectionPoint) -> None: 
+    def Insert(self,TheZone : OCP.Intf.Intf_TangentZone) -> bool: 
         """
         Inserts a new zone of tangence in the current list of tangent zones of the interference and returns True when done.
 
         Insert a new segment of intersection in the current list of polylines of intersection of the interference.
         """
     @overload
-    def Insert(self,TheZone : OCP.Intf.Intf_TangentZone) -> bool: ...
+    def Insert(self,pdeb : OCP.Intf.Intf_SectionPoint,pfin : OCP.Intf.Intf_SectionPoint) -> None: ...
     def LineValue(self,Index : int) -> OCP.Intf.Intf_SectionLine: 
         """
         Gives the polyline of intersection at address <Index> in the interference.
@@ -1165,16 +1165,26 @@ class IntPatch_InterferencePolyhedron(OCP.Intf.Intf_Interference):
         Gives the zone of tangence at address Index in the interference.
         """
     @overload
-    def __init__(self,Obje1 : IntPatch_Polyhedron,Obje2 : IntPatch_Polyhedron) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Obje : IntPatch_Polyhedron) -> None: ...
+    @overload
+    def __init__(self,Obje1 : IntPatch_Polyhedron,Obje2 : IntPatch_Polyhedron) -> None: ...
     pass
 class IntPatch_Intersection():
     """
     This class provides a generic algorithm to intersect 2 surfaces.
     """
+    @staticmethod
+    def CheckSingularPoints_s(theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theD1 : OCP.Adaptor3d.Adaptor3d_TopolTool,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theDist : float) -> bool: 
+        """
+        Checks if surface theS1 has degenerated boundary (dS/du or dS/dv = 0) and calculates minimal distance between corresponding singular points and surface theS2 If singular point exists the method returns "true" and stores minimal distance in theDist.
+        """
+    @staticmethod
+    def DefineUVMaxStep_s(theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theD1 : OCP.Adaptor3d.Adaptor3d_TopolTool,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theD2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> float: 
+        """
+        Calculates recommended value for myUVMaxStep depending on surfaces and their domains
+        """
     def Dump(self,Mode : int,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: 
         """
         Dump of each result line. Mode for more accurate dumps.
@@ -1227,16 +1237,21 @@ class IntPatch_Intersection():
         Uses for finding self-intersected surfaces.
         """
     @overload
+    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
+    @overload
     def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,isGeomInt : bool=True,theIsReqToKeepRLine : bool=False,theIsReqToPostWLProc : bool=True) -> None: ...
     @overload
     def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float,LOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S,isGeomInt : bool=True,theIsReqToKeepRLine : bool=False,theIsReqToPostWLProc : bool=True) -> None: ...
-    @overload
-    def Perform(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
     def Point(self,Index : int) -> IntPatch_Point: 
         """
         Returns the point of range Index. An exception is raised if Index<=0 or Index>NbPnt.
 
         Returns the point of range Index. An exception is raised if Index<=0 or Index>NbPnt.
+        """
+    @staticmethod
+    def PrepareSurfaces_s(theS1 : OCP.Adaptor3d.Adaptor3d_Surface,theD1 : OCP.Adaptor3d.Adaptor3d_TopolTool,theS2 : OCP.Adaptor3d.Adaptor3d_Surface,theD2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Tol : float,theSeqHS1 : Any,theSeqHS2 : Any) -> None: 
+        """
+        Prepares surfaces for intersection
         """
     def SequenceOfLine(self) -> IntPatch_SequenceOfLine: 
         """
@@ -1253,11 +1268,11 @@ class IntPatch_Intersection():
         Returns True if the two patches are considered as entirely tangent, i-e every restriction arc of one patch is inside the geometric base of the other patch.
         """
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.Adaptor3d.Adaptor3d_Surface,D2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
+    def __init__(self,S1 : OCP.Adaptor3d.Adaptor3d_Surface,D1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolArc : float,TolTang : float) -> None: ...
     pass
 class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
     """
@@ -1304,14 +1319,14 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def FindParameter(self,theP : OCP.gp.gp_Pnt,theParams : OCP.TColStd.TColStd_ListOfReal) -> None: 
+    def FindParameter(self,P : OCP.gp.gp_Pnt,theParams : OCP.TColStd.TColStd_ListOfReal) -> None: 
         """
         Tries to find the parameters of the point P on the curve. If the method returns False, the "projection" is impossible. If the method returns True at least one parameter has been found. theParams is always sorted in ascending order.
 
         Tries to find the parameters of the point P on the curve. If the method returns False, the "projection" is impossible. If the method returns True at least one parameter has been found. theParams is always sorted in ascending order.
         """
     @overload
-    def FindParameter(self,P : OCP.gp.gp_Pnt,theParams : OCP.TColStd.TColStd_ListOfReal) -> None: ...
+    def FindParameter(self,theP : OCP.gp.gp_Pnt,theParams : OCP.TColStd.TColStd_ListOfReal) -> None: ...
     def FirstParameter(self,IsIncluded : bool) -> float: 
         """
         Returns the first parameter on the intersection line. If IsIncluded returns True, Value and D1 methods can be call with a parameter equal to FirstParameter. Otherwise, the parameter must be greater than FirstParameter.
@@ -1345,23 +1360,23 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTangent(self) -> bool: 
         """
         Returns TRUE if the intersection is a line of tangency between the 2 patches.
@@ -1475,11 +1490,11 @@ class IntPatch_ALine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Returns the vertex of range Index on the line.
         """
     @overload
-    def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
-    @overload
     def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool) -> None: ...
+    @overload
+    def __init__(self,C : OCP.IntAna.IntAna_Curve,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1635,7 +1650,7 @@ class IntPatch_Point():
         None
         """
     @overload
-    def SetValue(self,Pt : OCP.gp.gp_Pnt,Tol : float,Tangent : bool) -> None: 
+    def SetValue(self,Pt : OCP.gp.gp_Pnt) -> None: 
         """
         Sets the values of a point which is on no domain, when both surfaces are implicit ones. If Tangent is True, the point is a point of tangency between the surfaces.
 
@@ -1648,9 +1663,9 @@ class IntPatch_Point():
         Sets the value of <pt> member
         """
     @overload
-    def SetValue(self,Pt : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def SetValue(self,thePOn2S : OCP.IntSurf.IntSurf_PntOn2S) -> None: ...
+    @overload
+    def SetValue(self,Pt : OCP.gp.gp_Pnt,Tol : float,Tangent : bool) -> None: ...
     def SetVertex(self,OnFirst : bool,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
         """
         Sets the values of a point which is a vertex on the initial facet of restriction of one of the surface. If OnFirst is True, the point is on the domain of the first patch, otherwise the point is on the domain of the second surface.
@@ -1757,23 +1772,23 @@ class IntPatch_PointLine(IntPatch_Line, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOutBox(self,P : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if P is out of the box built from 3D-points.
@@ -1995,9 +2010,9 @@ class IntPatch_PolyLine(IntPatch_Polygo, OCP.Intf.Intf_Polygon2d):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,InitDefle : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntPatch_PolyArc(IntPatch_Polygo, OCP.Intf.Intf_Polygon2d):
     """
@@ -2080,14 +2095,14 @@ class IntPatch_Polyhedron():
         None
         """
     @overload
-    def DeflectionOverEstimation(self,flec : float) -> None: 
+    def DeflectionOverEstimation(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def DeflectionOverEstimation(self) -> float: ...
+    def DeflectionOverEstimation(self,flec : float) -> None: ...
     def Destroy(self) -> None: 
         """
         None
@@ -2128,11 +2143,11 @@ class IntPatch_Polyhedron():
         Give the point of index i in the MaTriangle.
         """
     @overload
-    def Point(self,Index : int,U : float,V : float) -> OCP.gp.gp_Pnt: ...
-    @overload
     def Point(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: ...
+    @overload
+    def Point(self,Index : int,U : float,V : float) -> OCP.gp.gp_Pnt: ...
     def Size(self) -> Tuple[int, int]: 
         """
         Get the size of the MaTriangle.
@@ -2146,9 +2161,9 @@ class IntPatch_Polyhedron():
         Give the 3 points of the triangle of address Index in the double array of triangles.
         """
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
-    @overload
     def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,nbdU : int,nbdV : int) -> None: ...
+    @overload
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     pass
 class IntPatch_PolyhedronTool():
     """
@@ -2238,14 +2253,14 @@ class IntPatch_PrmPrmIntersection():
         Returns true if the is no intersection.
         """
     @overload
-    def Line(self,Index : int) -> IntPatch_Line: 
+    def Line(self,n : int) -> IntPatch_Line: 
         """
         Returns the line of range Index. An exception is raised if Index<=0 or Index>NbLine.
 
         Returns the line of range Index. An exception is raised if Index<=0 or Index>NbLine.
         """
     @overload
-    def Line(self,n : int) -> IntPatch_Line: ...
+    def Line(self,Index : int) -> IntPatch_Line: ...
     def NbLines(self) -> int: 
         """
         Returns the number of intersection lines.
@@ -2263,7 +2278,7 @@ class IntPatch_PrmPrmIntersection():
         Computes about <NbPoints> Intersection Points on the Line <IndexLine> between the Points of Index <LowPoint> and <HighPoint>.
         """
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: 
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,U1 : float,V1 : float,U2 : float,V2 : float,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: 
         """
         Performs the intersection between <Caro1> and <Caro2>. Associated Polyhedrons <Polyhedron1> and <Polyhedron2> are given.
 
@@ -2282,19 +2297,19 @@ class IntPatch_PrmPrmIntersection():
         Performs the intersection between <Caro1> and <Caro2>.
         """
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
     def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ListOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S) -> None: ...
-    @overload
     def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,U1 : float,V1 : float,U2 : float,V2 : float,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron2 : IntPatch_Polyhedron,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    @overload
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
+    @overload
+    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ListOfPnts : OCP.IntSurf.IntSurf_ListOfPntOn2S) -> None: ...
     @overload
     def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,Caro2 : OCP.Adaptor3d.Adaptor3d_Surface,Domain2 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float,ClearFlag : bool=True) -> None: ...
-    @overload
-    def Perform(self,Caro1 : OCP.Adaptor3d.Adaptor3d_Surface,Polyhedron1 : IntPatch_Polyhedron,Domain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,TolTangency : float,Epsilon : float,Deflection : float,Increment : float) -> None: ...
     def PointDepart(self,LineOn2S : OCP.IntSurf.IntSurf_LineOn2S,S1 : OCP.Adaptor3d.Adaptor3d_Surface,SU1 : int,SV1 : int,S2 : OCP.Adaptor3d.Adaptor3d_Surface,SU2 : int,SV2 : int) -> Any: 
         """
         None
@@ -2320,21 +2335,13 @@ class IntPatch_PrmPrmIntersection_T3Bits():
     def Add(self,t : int) -> None: 
         """
         None
-
-        None
         """
     def And(self,Oth : IntPatch_PrmPrmIntersection_T3Bits,indiceprecedent : int) -> int: 
         """
         None
         """
-    def Destroy(self) -> None: 
-        """
-        None
-        """
     def Raz(self,t : int) -> None: 
         """
-        None
-
         None
         """
     def ResetAnd(self) -> None: 
@@ -2343,8 +2350,6 @@ class IntPatch_PrmPrmIntersection_T3Bits():
         """
     def Val(self,t : int) -> int: 
         """
-        None
-
         None
         """
     def __init__(self,size : int) -> None: ...
@@ -2360,14 +2365,14 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         None
         """
     @overload
-    def AddVertex(self,Pnt : IntPatch_Point,theIsPrepend : bool=False) -> None: 
+    def AddVertex(self,thePnt : IntPatch_Point,theIsPrepend : bool) -> None: 
         """
         Adds a vertex in the list. If theIsPrepend == TRUE the new vertex will be added before the first element of vertices sequence. Otherwise, to the end of the sequence
 
         Adds a vertex in the list. If theIsPrepend == TRUE the new vertex will be added before the first element of vertices sequence. Otherwise, to the end of the sequence
         """
     @overload
-    def AddVertex(self,thePnt : IntPatch_Point,theIsPrepend : bool) -> None: ...
+    def AddVertex(self,Pnt : IntPatch_Point,theIsPrepend : bool=False) -> None: ...
     def ArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         Returns the concerned arc.
@@ -2469,23 +2474,23 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Returns True if the intersection is on the domain of the first patch. Returns False if the intersection is on the domain of the second patch.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOutBox(self,theP : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if theP is out of the box built from 3D-points.
@@ -2641,11 +2646,11 @@ class IntPatch_RLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Returns the vertex of range Index on the line.
         """
     @overload
+    def __init__(self,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
+    @overload
     def __init__(self,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def __init__(self,Tang : bool) -> None: ...
-    @overload
-    def __init__(self,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2677,14 +2682,14 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: 
+    def Append(self,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
+    def Append(self,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: ...
     def Assign(self,theOther : IntPatch_SequenceOfIWLineOfTheIWalking) -> IntPatch_SequenceOfIWLineOfTheIWalking: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2714,14 +2719,14 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
         """
@@ -2748,23 +2753,23 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: 
+    def Prepend(self,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
+    def Prepend(self,theItem : IntPatch_TheIWLineOfTheIWalking) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2790,11 +2795,11 @@ class IntPatch_SequenceOfIWLineOfTheIWalking(OCP.NCollection.NCollection_BaseSeq
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : IntPatch_SequenceOfIWLineOfTheIWalking) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2848,14 +2853,14 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntPatch_Line) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPatch_Line) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfLine) -> None: 
         """
@@ -2882,23 +2887,23 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : IntPatch_SequenceOfLine) -> None: 
+    def Prepend(self,theItem : IntPatch_Line) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : IntPatch_Line) -> None: ...
+    def Prepend(self,theSeq : IntPatch_SequenceOfLine) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2924,11 +2929,11 @@ class IntPatch_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : IntPatch_SequenceOfLine) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : IntPatch_SequenceOfLine) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2945,14 +2950,14 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
+    def Append(self,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
+    def Append(self,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: ...
     def Assign(self,theOther : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> IntPatch_SequenceOfPathPointOfTheSOnBounds: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2982,14 +2987,14 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
         """
@@ -3016,23 +3021,23 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: 
+    def Prepend(self,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
+    def Prepend(self,theItem : IntPatch_ThePathPointOfTheSOnBounds) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3058,11 +3063,11 @@ class IntPatch_SequenceOfPathPointOfTheSOnBounds(OCP.NCollection.NCollection_Bas
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : IntPatch_SequenceOfPathPointOfTheSOnBounds) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3079,14 +3084,14 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : IntPatch_Point) -> None: 
+    def Append(self,theSeq : IntPatch_SequenceOfPoint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : IntPatch_SequenceOfPoint) -> None: ...
+    def Append(self,theItem : IntPatch_Point) -> None: ...
     def Assign(self,theOther : IntPatch_SequenceOfPoint) -> IntPatch_SequenceOfPoint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -3125,14 +3130,14 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : IntPatch_SequenceOfPoint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : IntPatch_Point) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfPoint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : IntPatch_SequenceOfPoint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : IntPatch_Point) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -3150,23 +3155,23 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : IntPatch_Point) -> None: 
+    def Prepend(self,theSeq : IntPatch_SequenceOfPoint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : IntPatch_SequenceOfPoint) -> None: ...
+    def Prepend(self,theItem : IntPatch_Point) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -3192,9 +3197,9 @@ class IntPatch_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : IntPatch_SequenceOfPoint) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : IntPatch_SequenceOfPoint) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -3328,9 +3333,9 @@ class IntPatch_SequenceOfSegmentOfTheSOnBounds(OCP.NCollection.NCollection_BaseS
     @overload
     def __init__(self,theOther : IntPatch_SequenceOfSegmentOfTheSOnBounds) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -3438,14 +3443,14 @@ class IntPatch_TheIWLineOfTheIWalking(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def AddStatusLast(self,HasLast : bool) -> None: 
+    def AddStatusLast(self,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: 
         """
         None
 
         None
         """
     @overload
-    def AddStatusLast(self,HasLast : bool,Index : int,P : OCP.IntSurf.IntSurf_PathPoint) -> None: ...
+    def AddStatusLast(self,HasLast : bool) -> None: ...
     def Cut(self,Index : int) -> None: 
         """
         Cut the line at the point of rank Index.
@@ -3491,23 +3496,23 @@ class IntPatch_TheIWLineOfTheIWalking(OCP.Standard.Standard_Transient):
         Returns True if the line is closed.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTangentAtBegining(self) -> bool: 
         """
         None
@@ -3657,11 +3662,11 @@ class IntPatch_ThePathPointOfTheSOnBounds():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Parameter : float) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Tol : float,V : OCP.Adaptor3d.Adaptor3d_HVertex,A : OCP.Adaptor2d.Adaptor2d_Curve2d,Parameter : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IntPatch_TheSOnBounds():
     """
@@ -3723,9 +3728,9 @@ class IntPatch_TheSearchInside():
         Returns the point of range Index. The exception NotDone if raised if IsDone returns False. The exception OutOfRange if raised if Index <= 0 or Index > NbPoints.
         """
     @overload
-    def __init__(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_Surface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : IntPatch_TheSurfFunction,Surf : OCP.Adaptor3d.Adaptor3d_Surface,T : OCP.Adaptor3d.Adaptor3d_TopolTool,Epsilon : float) -> None: ...
     pass
 class IntPatch_TheSegmentOfTheSOnBounds():
     """
@@ -3810,14 +3815,14 @@ class IntPatch_TheSurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.mat
         None
         """
     @overload
-    def Set(self,PS : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
+    def Set(self,Tolerance : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Set(self,Tolerance : float) -> None: ...
+    def Set(self,PS : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     def SetImplicitSurface(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: 
         """
         None
@@ -3835,11 +3840,11 @@ class IntPatch_TheSurfFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.mat
         None
         """
     @overload
-    def __init__(self,PS : OCP.Adaptor3d.Adaptor3d_Surface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
-    @overload
     def __init__(self,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,PS : OCP.Adaptor3d.Adaptor3d_Surface,IS : OCP.IntSurf.IntSurf_Quadric) -> None: ...
     pass
 class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Transient):
     """
@@ -3943,7 +3948,7 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Allows or forbids purging of existing WLine
         """
     @overload
-    def FirstPoint(self) -> IntPatch_Point: 
+    def FirstPoint(self,Indfirst : int) -> IntPatch_Point: 
         """
         Returns the Point corresponding to the FirstPoint. Indfirst is the index of the first in the list of vertices.
 
@@ -3954,7 +3959,7 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         Returns the Point corresponding to the FirstPoint.
         """
     @overload
-    def FirstPoint(self,Indfirst : int) -> IntPatch_Point: ...
+    def FirstPoint(self) -> IntPatch_Point: ...
     def GetArcOnS1(self) -> OCP.Adaptor2d.Adaptor2d_Curve2d: 
         """
         None
@@ -4002,23 +4007,23 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOutBox(self,theP : OCP.gp.gp_Pnt) -> bool: 
         """
         Returns TRUE if theP is out of the box built from 3D-points.
@@ -4199,9 +4204,9 @@ class IntPatch_WLine(IntPatch_PointLine, IntPatch_Line, OCP.Standard.Standard_Tr
     @overload
     def __init__(self,Line : OCP.IntSurf.IntSurf_LineOn2S,Tang : bool) -> None: ...
     @overload
-    def __init__(self,Line : OCP.IntSurf.IntSurf_LineOn2S,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
-    @overload
     def __init__(self,Line : OCP.IntSurf.IntSurf_LineOn2S,Tang : bool,Trans1 : OCP.IntSurf.IntSurf_TypeTrans,Trans2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    @overload
+    def __init__(self,Line : OCP.IntSurf.IntSurf_LineOn2S,Tang : bool,Situ1 : OCP.IntSurf.IntSurf_Situation,Situ2 : OCP.IntSurf.IntSurf_Situation) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

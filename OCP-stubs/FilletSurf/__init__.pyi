@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Geom
 import OCP.Law
 import OCP.Adaptor3d
-import OCP.TopTools
-import OCP.GeomAbs
 import OCP.ChFiDS
-import OCP.Geom2d
-import OCP.ChFi3d
-import OCP.gp
-import OCP.Geom
-import OCP.TopOpeBRepBuild
 import OCP.TopoDS
+import OCP.gp
+import OCP.Geom2d
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.ChFi3d
+import OCP.TopOpeBRepBuild
 __all__  = [
 "FilletSurf_Builder",
 "FilletSurf_ErrorTypeStatus",
@@ -268,14 +268,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         returns True if a partial result has been calculated
         """
     @overload
-    def IsConstant(self,IC : int) -> bool: 
+    def IsConstant(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Returns true the contour is flagged as edge constant.
 
         Returns true E is flagged as edge constant.
         """
     @overload
-    def IsConstant(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
+    def IsConstant(self,IC : int) -> bool: ...
     def IsDone(self) -> bool: 
         """
         returns True if the computation is success
@@ -394,7 +394,7 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         None
         """
     @overload
-    def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: 
+    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Set the radius of the contour of index IC.
 
@@ -405,11 +405,11 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         Set a vertex on the point of parametre U in the edge IinC of the contour of index IC
         """
     @overload
-    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: ...
-    @overload
     def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: ...
+    @overload
+    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         if (Isdone()) makes the result. if (!Isdone())
@@ -447,14 +447,14 @@ class FilletSurf_InternalBuilder(OCP.ChFi3d.ChFi3d_FilBuilder, OCP.ChFi3d.ChFi3d
         gives the 3d tolerance reached during approximation of the surface of index Index
         """
     @overload
-    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: 
         """
         Extracts the flag constant and the vector of edge E.
 
         Extracts the vector of the vertex V.
         """
     @overload
-    def UnSet(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def UnSet(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def Value(self,I : int) -> OCP.ChFiDS.ChFiDS_Spine: 
         """
         gives the n'th set of edges (contour) if I >NbElements()

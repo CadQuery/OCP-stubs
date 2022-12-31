@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor2d
-import OCP.GeomAbs
 import OCP.math
-import OCP.TColgp
 import OCP.NCollection
 import OCP.gp
+import OCP.TColgp
+import OCP.GeomAbs
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "Blend_AppFunction",
 "Blend_CSFunction",
@@ -71,14 +71,14 @@ class Blend_AppFunction(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_
         Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: 
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
         """
         Returns in the vector Tolerance the parametric tolerance for each of the 4 variables; Tol is the tolerance used in 3d space.
 
         Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
         """
     @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -268,7 +268,7 @@ class Blend_CSFunction(Blend_AppFunction, OCP.math.math_FunctionSetWithDerivativ
         None
         """
     @overload
-    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False.
 
@@ -279,16 +279,16 @@ class Blend_CSFunction(Blend_AppFunction, OCP.math.math_FunctionSetWithDerivativ
     @overload
     def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,Param : float) -> None: 
+    def Set(self,First : float,Last : float) -> None: 
         """
         Sets the value of the parameter along the guide line. This determines the plane in which the solution has to be found.
 
         Sets the bounds of the parametric interval on the guide line. This determines the derivatives in these values if the function is not Cn.
         """
     @overload
-    def Set(self,First : float,Last : float) -> None: ...
+    def Set(self,Param : float) -> None: ...
     def Tangent(self,U : float,V : float,TgS : OCP.gp.gp_Vec,NormS : OCP.gp.gp_Vec) -> None: 
         """
         Returns the tangent vector at the section, at the beginning and the end of the section, and returns the normal (of the surfaces) at these points.
@@ -477,14 +477,14 @@ class Blend_Function(Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives
         Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: 
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
         """
         Returns in the vector Tolerance the parametric tolerance for each of the 4 variables; Tol is the tolerance used in 3d space.
 
         Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
         """
     @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -546,14 +546,14 @@ class Blend_Function(Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives
         None
         """
     @overload
-    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
         Used for the first and last section The method returns Standard_True if the derivatives are computed, otherwise it returns Standard_False
         """
     @overload
-    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Set(self,Param : float) -> None: 
         """
@@ -695,7 +695,7 @@ class Blend_Point():
         Changes parameter on existing point
         """
     @overload
-    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: 
+    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC1 : float,PC2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: 
         """
         Set the values for a point on 2 surfaces, with tangents.
 
@@ -716,21 +716,21 @@ class Blend_Point():
         Creates a point on two curves.
         """
     @overload
-    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC1 : float,PC2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
-    @overload
-    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC1 : float,PC2 : float) -> None: ...
-    @overload
     def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
-    @overload
-    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
     @overload
     def SetValue(self,Pts : OCP.gp.gp_Pnt,Ptc : OCP.gp.gp_Pnt,Param : float,U : float,V : float,W : float,Tgs : OCP.gp.gp_Vec,Tgc : OCP.gp.gp_Vec,Tg2d : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,PC1 : float,PC2 : float) -> None: ...
-    @overload
     def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float) -> None: ...
     @overload
+    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
     def SetValue(self,Pts : OCP.gp.gp_Pnt,Ptc : OCP.gp.gp_Pnt,Param : float,U : float,V : float,W : float) -> None: ...
+    @overload
+    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,PC1 : float,PC2 : float) -> None: ...
+    @overload
+    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC1 : float,PC2 : float) -> None: ...
+    @overload
+    def SetValue(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
     def Tangent2d(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -786,23 +786,23 @@ class Blend_Point():
         None
         """
     @overload
-    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
-    @overload
-    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
-    @overload
     def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC1 : float,PC2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def __init__(self,Pts : OCP.gp.gp_Pnt,Ptc : OCP.gp.gp_Pnt,Param : float,U : float,V : float,W : float,Tgs : OCP.gp.gp_Vec,Tgc : OCP.gp.gp_Vec,Tg2d : OCP.gp.gp_Vec2d) -> None: ...
-    @overload
-    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float) -> None: ...
+    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
     @overload
     def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC1 : float,PC2 : float) -> None: ...
     @overload
-    def __init__(self,Pts : OCP.gp.gp_Pnt,Ptc : OCP.gp.gp_Pnt,Param : float,U : float,V : float,W : float) -> None: ...
+    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
+    def __init__(self,Pts : OCP.gp.gp_Pnt,Ptc : OCP.gp.gp_Pnt,Param : float,U : float,V : float,W : float,Tgs : OCP.gp.gp_Vec,Tgc : OCP.gp.gp_Vec,Tg2d : OCP.gp.gp_Vec2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float) -> None: ...
+    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,Tg1 : OCP.gp.gp_Vec,Tg2 : OCP.gp.gp_Vec,Tg12d : OCP.gp.gp_Vec2d,Tg22d : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
+    def __init__(self,Pts : OCP.gp.gp_Pnt,Ptc : OCP.gp.gp_Pnt,Param : float,U : float,V : float,W : float) -> None: ...
+    @overload
+    def __init__(self,Pt1 : OCP.gp.gp_Pnt,Pt2 : OCP.gp.gp_Pnt,Param : float,U1 : float,V1 : float,U2 : float,V2 : float,PC : float) -> None: ...
     pass
 class Blend_RstRstFunction(Blend_AppFunction, OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
     """
@@ -841,14 +841,14 @@ class Blend_RstRstFunction(Blend_AppFunction, OCP.math.math_FunctionSetWithDeriv
         Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: 
         """
         Returns in the vector Tolerance the parametric tolerance for each variable; Tol is the tolerance used in 3d space.
 
         Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
         """
     @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -981,14 +981,14 @@ class Blend_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Blend_SequenceOfPoint) -> None: 
+    def Append(self,theItem : Blend_Point) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Blend_Point) -> None: ...
+    def Append(self,theSeq : Blend_SequenceOfPoint) -> None: ...
     def Assign(self,theOther : Blend_SequenceOfPoint) -> Blend_SequenceOfPoint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1027,14 +1027,14 @@ class Blend_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Blend_Point) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Blend_Point) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Blend_SequenceOfPoint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Blend_SequenceOfPoint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Blend_Point) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1094,11 +1094,11 @@ class Blend_SequenceOfPoint(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Blend_SequenceOfPoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : Blend_SequenceOfPoint) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1285,14 +1285,14 @@ class Blend_SurfRstFunction(Blend_AppFunction, OCP.math.math_FunctionSetWithDeri
         Returns the state of the function corresponding to the latestcall of any methods associated with the function. This function is called by each of the algorithms described later which define the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: 
+    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: 
         """
         Returns in the vector Tolerance the parametric tolerance for each variable; Tol is the tolerance used in 3d space.
 
         Returns the tolerance to reach in approximation to respecte BoundTol error at the Boundary AngleTol tangent error at the Boundary SurfTol error inside the surface.
         """
     @overload
-    def GetTolerance(self,Tolerance : OCP.math.math_Vector,Tol : float) -> None: ...
+    def GetTolerance(self,BoundTol : float,SurfTol : float,AngleTol : float,Tol3d : OCP.math.math_Vector,Tol1D : OCP.math.math_Vector) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -1375,9 +1375,9 @@ class Blend_SurfRstFunction(Blend_AppFunction, OCP.math.math_FunctionSetWithDeri
         None
         """
     @overload
-    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
-    @overload
     def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def Section(self,P : Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Set(self,Param : float) -> None: 
         """

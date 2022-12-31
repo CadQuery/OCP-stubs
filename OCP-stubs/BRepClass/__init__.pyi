@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
+import OCP.Geom2dInt
+import OCP.TopoDS
 import OCP.gp
 import OCP.TopAbs
 import OCP.IntRes2d
-import OCP.TopoDS
-import OCP.Geom2dInt
+import OCP.TopTools
 __all__  = [
 "BRepClass_Edge",
 "BRepClass_FClass2dOfFClassifier",
@@ -139,9 +139,9 @@ class BRepClass_FClassifier():
         Returns the result of the classification.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,F : BRepClass_FaceExplorer,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepClass_FaceClassifier(BRepClass_FClassifier):
     """
@@ -160,14 +160,14 @@ class BRepClass_FaceClassifier(BRepClass_FClassifier):
         Returns True if the face contains no wire. The state is IN.
         """
     @overload
-    def Perform(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: 
+    def Perform(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt2d,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: 
         """
         Classify the Point P with Tolerance <T> on the face described by <F>. Recommended to use Bnd_Box if the number of edges > 10 and the geometry is mostly spline
 
         Classify the Point P with Tolerance <T> on the face described by <F>. Recommended to use Bnd_Box if the number of edges > 10 and the geometry is mostly spline
         """
     @overload
-    def Perform(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt2d,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
+    def Perform(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
     def Position(self) -> OCP.IntRes2d.IntRes2d_Position: 
         """
         Returns the position of the point on the edge returned by Edge.
@@ -181,13 +181,13 @@ class BRepClass_FaceClassifier(BRepClass_FClassifier):
         Returns the result of the classification.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
     @overload
-    def __init__(self,F : BRepClass_FaceExplorer,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
-    @overload
     def __init__(self,theF : OCP.TopoDS.TopoDS_Face,theP : OCP.gp.gp_Pnt2d,theTol : float,theUseBndBox : bool=False,theGapCheckTol : float=0.1) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,F : BRepClass_FaceExplorer,P : OCP.gp.gp_Pnt2d,Tol : float) -> None: ...
     pass
 class BRepClass_FaceExplorer():
     """

@@ -34,9 +34,9 @@ class Geom2dToIGES_Geom2dEntity():
         Sets the value of the UnitFlag
         """
     @overload
-    def __init__(self,GE : Geom2dToIGES_Geom2dEntity) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,GE : Geom2dToIGES_Geom2dEntity) -> None: ...
     pass
 class Geom2dToIGES_Geom2dCurve(Geom2dToIGES_Geom2dEntity):
     """
@@ -63,9 +63,9 @@ class Geom2dToIGES_Geom2dCurve(Geom2dToIGES_Geom2dEntity):
         Transfert an Entity from Geom2d to IGES. If this Entity could not be converted, this member returns a NullEntity.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,G2dE : Geom2dToIGES_Geom2dEntity) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Geom2dToIGES_Geom2dPoint(Geom2dToIGES_Geom2dEntity):
     """
@@ -97,9 +97,9 @@ class Geom2dToIGES_Geom2dPoint(Geom2dToIGES_Geom2dEntity):
     @overload
     def Transfer2dPoint(self,start : OCP.Geom2d.Geom2d_CartesianPoint) -> OCP.IGESGeom.IGESGeom_Point: ...
     @overload
-    def __init__(self,G2dE : Geom2dToIGES_Geom2dEntity) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,G2dE : Geom2dToIGES_Geom2dEntity) -> None: ...
     pass
 class Geom2dToIGES_Geom2dVector(Geom2dToIGES_Geom2dEntity):
     """
@@ -122,7 +122,7 @@ class Geom2dToIGES_Geom2dVector(Geom2dToIGES_Geom2dEntity):
         Sets the value of the UnitFlag
         """
     @overload
-    def Transfer2dVector(self,start : OCP.Geom2d.Geom2d_Direction) -> OCP.IGESGeom.IGESGeom_Direction: 
+    def Transfer2dVector(self,start : OCP.Geom2d.Geom2d_VectorWithMagnitude) -> OCP.IGESGeom.IGESGeom_Direction: 
         """
         Transfert a GeometryEntity which answer True to the member : BRepToIGES::IsGeomVector(Geometry). If this Entity could not be converted, this member returns a NullEntity.
 
@@ -131,11 +131,11 @@ class Geom2dToIGES_Geom2dVector(Geom2dToIGES_Geom2dEntity):
         None
         """
     @overload
+    def Transfer2dVector(self,start : OCP.Geom2d.Geom2d_Direction) -> OCP.IGESGeom.IGESGeom_Direction: ...
+    @overload
     def Transfer2dVector(self,start : OCP.Geom2d.Geom2d_Vector) -> OCP.IGESGeom.IGESGeom_Direction: ...
     @overload
-    def Transfer2dVector(self,start : OCP.Geom2d.Geom2d_VectorWithMagnitude) -> OCP.IGESGeom.IGESGeom_Direction: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,G2dE : Geom2dToIGES_Geom2dEntity) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass

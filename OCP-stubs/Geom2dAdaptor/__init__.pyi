@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor2d
-import OCP.GeomAbs
-import OCP.Geom2d
 import OCP.gp
+import OCP.Geom2d
+import OCP.GeomAbs
 import OCP.Standard
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "Geom2dAdaptor",
 "Geom2dAdaptor_Curve"
@@ -118,23 +118,23 @@ class Geom2dAdaptor_Curve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.Standard
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -152,14 +152,14 @@ class Geom2dAdaptor_Curve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.Standard
         None
         """
     @overload
-    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve,theUFirst : float,theULast : float) -> None: 
+    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         None
 
         Standard_ConstructionError is raised if theUFirst>theULast
         """
     @overload
-    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve,theUFirst : float,theULast : float) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.

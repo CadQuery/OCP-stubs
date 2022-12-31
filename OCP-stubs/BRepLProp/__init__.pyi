@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.BRepAdaptor
-import OCP.gp
 import OCP.GeomAbs
+import OCP.gp
 __all__  = [
 "BRepLProp",
 "BRepLProp_CLProps",
@@ -20,7 +20,7 @@ class BRepLProp():
     """
     @staticmethod
     @overload
-    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float,tl : float,ta : float) -> OCP.GeomAbs.GeomAbs_Shape: 
+    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
         Computes the regularity at the junction between C1 and C2. The point u1 on C1 and the point u2 on C2 must be confused. tl and ta are the linear and angular tolerance used two compare the derivative.
 
@@ -28,7 +28,7 @@ class BRepLProp():
         """
     @staticmethod
     @overload
-    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float) -> OCP.GeomAbs.GeomAbs_Shape: ...
+    def Continuity_s(C1 : OCP.BRepAdaptor.BRepAdaptor_Curve,C2 : OCP.BRepAdaptor.BRepAdaptor_Curve,u1 : float,u2 : float,tl : float,ta : float) -> OCP.GeomAbs.GeomAbs_Shape: ...
     def __init__(self) -> None: ...
     pass
 class BRepLProp_CLProps():
@@ -80,11 +80,11 @@ class BRepLProp_CLProps():
         Returns the Point.
         """
     @overload
-    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,N : int,Resolution : float) -> None: ...
+    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,U : float,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
-    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,U : float,N : int,Resolution : float) -> None: ...
+    def __init__(self,C : OCP.BRepAdaptor.BRepAdaptor_Curve,N : int,Resolution : float) -> None: ...
     pass
 class BRepLProp_CurveTool():
     """
@@ -216,11 +216,11 @@ class BRepLProp_SLProps():
         Returns the point.
         """
     @overload
-    def __init__(self,S : OCP.BRepAdaptor.BRepAdaptor_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
+    def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,S : OCP.BRepAdaptor.BRepAdaptor_Surface,N : int,Resolution : float) -> None: ...
     @overload
-    def __init__(self,N : int,Resolution : float) -> None: ...
+    def __init__(self,S : OCP.BRepAdaptor.BRepAdaptor_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
     pass
 class BRepLProp_SurfaceTool():
     """

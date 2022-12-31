@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.TColStd
 import OCP.TCollection
 import OCP.NCollection
 import OCP.Standard
-import OCP.TColStd
 __all__  = [
 "Units",
 "Units_Dimensions",
@@ -102,7 +102,7 @@ class Units():
         """
     @staticmethod
     @overload
-    def ToSI_s(aData : float,aUnit : str) -> float: 
+    def ToSI_s(aData : float,aUnit : str,aDim : Units_Dimensions) -> float: 
         """
         None
 
@@ -110,7 +110,7 @@ class Units():
         """
     @staticmethod
     @overload
-    def ToSI_s(aData : float,aUnit : str,aDim : Units_Dimensions) -> float: ...
+    def ToSI_s(aData : float,aUnit : str) -> float: ...
     @staticmethod
     def UnitsFile_s(afile : str) -> None: 
         """
@@ -217,23 +217,23 @@ class Units_Dimensions(OCP.Standard.Standard_Transient):
         Returns true if <me> and <adimensions> have the same dimensions, false otherwise.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNotEqual(self,adimensions : Units_Dimensions) -> bool: 
         """
         Returns false if <me> and <adimensions> have the same dimensions, true otherwise.
@@ -326,9 +326,9 @@ class Units_Explorer():
     @overload
     def Init(self,aunitssystem : Units_UnitsSystem) -> None: ...
     @overload
-    def Init(self,aunitssystem : Units_UnitsSystem,aquantity : str) -> None: ...
-    @overload
     def Init(self,aunitsdictionary : Units_UnitsDictionary,aquantity : str) -> None: ...
+    @overload
+    def Init(self,aunitssystem : Units_UnitsSystem,aquantity : str) -> None: ...
     def IsActive(self) -> bool: 
         """
         If the units system to explore is a user system, returns True if the current unit is active, False otherwise.
@@ -360,13 +360,13 @@ class Units_Explorer():
     @overload
     def __init__(self,aunitsdictionary : Units_UnitsDictionary,aquantity : str) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aunitssystem : Units_UnitsSystem,aquantity : str) -> None: ...
     @overload
-    def __init__(self,aunitsdictionary : Units_UnitsDictionary) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,aunitssystem : Units_UnitsSystem) -> None: ...
+    @overload
+    def __init__(self,aunitsdictionary : Units_UnitsDictionary) -> None: ...
     pass
 class Units_Lexicon(OCP.Standard.Standard_Transient):
     """
@@ -407,23 +407,23 @@ class Units_Lexicon(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Sequence(self) -> Units_TokensSequence: 
         """
         Returns the first item of the sequence of tokens.
@@ -543,11 +543,11 @@ class Units_Measurement():
         None
         """
     @overload
+    def __init__(self,avalue : float,atoken : Units_Token) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,avalue : float,aunit : str) -> None: ...
-    @overload
-    def __init__(self,avalue : float,atoken : Units_Token) -> None: ...
     @overload
     def __mul__(self,avalue : float) -> Units_Measurement: 
         """
@@ -691,14 +691,14 @@ class Units_QtsSequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : Units_QtsSequence) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -742,14 +742,14 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Units_Quantity) -> None: 
+    def Append(self,theSequence : Units_QtsSequence) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : Units_QtsSequence) -> None: ...
+    def Append(self,theItem : Units_Quantity) -> None: ...
     def Assign(self,theOther : Units_QtsSequence) -> Units_QtsSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -825,23 +825,23 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Units_Quantity: 
         """
         Last item access
@@ -864,14 +864,14 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
     @overload
     def Prepend(self,theSeq : Units_QtsSequence) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -905,9 +905,9 @@ class Units_QuantitiesSequence(Units_QtsSequence, OCP.NCollection.NCollection_Ba
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Units_QtsSequence) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Units_QtsSequence) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -964,23 +964,23 @@ class Units_Quantity(OCP.Standard.Standard_Transient):
         Returns True if the name of the Quantity <me> is equal to <astring>, False otherwise.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns in a AsciiString from TCollection the name of the quantity.
@@ -1109,16 +1109,16 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsEqual(self,atoken : Units_Token) -> bool: 
+    def IsEqual(self,astring : str) -> bool: 
         """
         Returns true if the field <theword> and the string <astring> are the same, false otherwise.
 
         Returns true if the field <theword> and the string <theword> contained in the token <atoken> are the same, false otherwise.
         """
     @overload
-    def IsEqual(self,astring : str) -> bool: ...
+    def IsEqual(self,atoken : Units_Token) -> bool: ...
     @overload
-    def IsGreater(self,atoken : Units_Token) -> bool: 
+    def IsGreater(self,astring : str) -> bool: 
         """
         Returns false if the field <theword> is strictly contained at the beginning of the string <astring>, true otherwise.
 
@@ -1129,7 +1129,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Returns false if the field <theword> is strictly contained at the beginning of the string <astring>, true otherwise.
         """
     @overload
-    def IsGreater(self,astring : str) -> bool: ...
+    def IsGreater(self,atoken : Units_Token) -> bool: ...
     def IsGreaterOrEqual(self,atoken : Units_Token) -> bool: 
         """
         Returns true if the string <astring> is strictly contained at the beginning of the field <theword> false otherwise.
@@ -1137,23 +1137,23 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Returns true if the string <astring> is strictly contained at the beginning of the field <theword> false otherwise.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLessOrEqual(self,astring : str) -> bool: 
         """
         Returns true if the field <theword> is strictly contained at the beginning of the string <astring>, false otherwise.
@@ -1161,7 +1161,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Returns true if the field <theword> is strictly contained at the beginning of the string <astring>, false otherwise.
         """
     @overload
-    def IsNotEqual(self,atoken : Units_Token) -> bool: 
+    def IsNotEqual(self,astring : str) -> bool: 
         """
         Returns false if the field <theword> and the string <astring> are the same, true otherwise.
 
@@ -1172,7 +1172,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Returns false if the field <theword> and the string <theword> contained in the token <atoken> are the same, true otherwise.
         """
     @overload
-    def IsNotEqual(self,astring : str) -> bool: ...
+    def IsNotEqual(self,atoken : Units_Token) -> bool: ...
     def Length(self) -> int: 
         """
         Returns the length of the word.
@@ -1233,7 +1233,7 @@ class Units_Token(OCP.Standard.Standard_Transient):
     @overload
     def Value(self,avalue : float) -> None: ...
     @overload
-    def Word(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def Word(self,aword : str) -> None: 
         """
         Returns the string <theword>
 
@@ -1244,13 +1244,13 @@ class Units_Token(OCP.Standard.Standard_Transient):
         Sets the field <theword> to <aword>.
         """
     @overload
-    def Word(self,aword : str) -> None: ...
-    @overload
-    def __init__(self,aword : str,amean : str) -> None: ...
+    def Word(self) -> OCP.TCollection.TCollection_AsciiString: ...
     @overload
     def __init__(self,aword : str) -> None: ...
     @overload
     def __init__(self,aword : str,amean : str,avalue : float) -> None: ...
+    @overload
+    def __init__(self,aword : str,amean : str) -> None: ...
     @overload
     def __init__(self,aword : str,amean : str,avalue : float,adimension : Units_Dimensions) -> None: ...
     @overload
@@ -1301,23 +1301,23 @@ class Units_Unit(OCP.Standard.Standard_Transient):
         Compares all the symbols linked within <me> with the name of <atoken>, and returns True if there is one symbol equal to the name, False otherwise.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Returns the name of the unit <thename>
@@ -1325,7 +1325,7 @@ class Units_Unit(OCP.Standard.Standard_Transient):
         Returns the name of the unit <thename>
         """
     @overload
-    def Quantity(self,aquantity : Units_Quantity) -> None: 
+    def Quantity(self) -> Units_Quantity: 
         """
         Returns <thequantity> contained in <me>.
 
@@ -1336,7 +1336,7 @@ class Units_Unit(OCP.Standard.Standard_Transient):
         Sets the physical Quantity <aquantity> to <me>.
         """
     @overload
-    def Quantity(self) -> Units_Quantity: ...
+    def Quantity(self,aquantity : Units_Quantity) -> None: ...
     def Symbol(self,asymbol : str) -> None: 
         """
         Adds a new symbol <asymbol> attached to <me>.
@@ -1369,9 +1369,9 @@ class Units_Unit(OCP.Standard.Standard_Transient):
     @overload
     def Value(self,avalue : float) -> None: ...
     @overload
-    def __init__(self,aname : str,asymbol : str) -> None: ...
-    @overload
     def __init__(self,aname : str,asymbol : str,avalue : float,aquantity : Units_Quantity) -> None: ...
+    @overload
+    def __init__(self,aname : str,asymbol : str) -> None: ...
     @overload
     def __init__(self,aname : str) -> None: ...
     @staticmethod
@@ -1394,14 +1394,14 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Units_Token) -> None: 
+    def Append(self,theSeq : Units_TksSequence) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Units_TksSequence) -> None: ...
+    def Append(self,theItem : Units_Token) -> None: ...
     def Assign(self,theOther : Units_TksSequence) -> Units_TksSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1431,23 +1431,23 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Units_Token) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Units_TksSequence) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Units_TksSequence) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Units_Token) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1465,14 +1465,14 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Units_Token) -> None: 
+    def Prepend(self,theSeq : Units_TksSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Units_TksSequence) -> None: ...
+    def Prepend(self,theItem : Units_Token) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1507,9 +1507,9 @@ class Units_TksSequence(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Units_TksSequence) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : Units_TksSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1580,16 +1580,16 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsEqual(self,atoken : Units_Token) -> bool: 
+    def IsEqual(self,astring : str) -> bool: 
         """
         Returns true if the field <theword> and the string <astring> are the same, false otherwise.
 
         Returns true if the field <theword> and the string <theword> contained in the token <atoken> are the same, false otherwise.
         """
     @overload
-    def IsEqual(self,astring : str) -> bool: ...
+    def IsEqual(self,atoken : Units_Token) -> bool: ...
     @overload
-    def IsGreater(self,atoken : Units_Token) -> bool: 
+    def IsGreater(self,astring : str) -> bool: 
         """
         Returns false if the field <theword> is strictly contained at the beginning of the string <astring>, true otherwise.
 
@@ -1600,7 +1600,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Returns false if the field <theword> is strictly contained at the beginning of the string <astring>, true otherwise.
         """
     @overload
-    def IsGreater(self,astring : str) -> bool: ...
+    def IsGreater(self,atoken : Units_Token) -> bool: ...
     def IsGreaterOrEqual(self,atoken : Units_Token) -> bool: 
         """
         Returns true if the string <astring> is strictly contained at the beginning of the field <theword> false otherwise.
@@ -1608,23 +1608,23 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Returns true if the string <astring> is strictly contained at the beginning of the field <theword> false otherwise.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLessOrEqual(self,astring : str) -> bool: 
         """
         Returns true if the field <theword> is strictly contained at the beginning of the string <astring>, false otherwise.
@@ -1632,7 +1632,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Returns true if the field <theword> is strictly contained at the beginning of the string <astring>, false otherwise.
         """
     @overload
-    def IsNotEqual(self,atoken : Units_Token) -> bool: 
+    def IsNotEqual(self,astring : str) -> bool: 
         """
         Returns false if the field <theword> and the string <astring> are the same, true otherwise.
 
@@ -1643,7 +1643,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Returns false if the field <theword> and the string <theword> contained in the token <atoken> are the same, true otherwise.
         """
     @overload
-    def IsNotEqual(self,astring : str) -> bool: ...
+    def IsNotEqual(self,atoken : Units_Token) -> bool: ...
     def Length(self) -> int: 
         """
         Returns the length of the word.
@@ -1708,7 +1708,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
     @overload
     def Value(self,avalue : float) -> None: ...
     @overload
-    def Word(self) -> OCP.TCollection.TCollection_AsciiString: 
+    def Word(self,aword : str) -> None: 
         """
         Returns the string <theword>
 
@@ -1719,7 +1719,7 @@ class Units_ShiftedToken(Units_Token, OCP.Standard.Standard_Transient):
         Sets the field <theword> to <aword>.
         """
     @overload
-    def Word(self,aword : str) -> None: ...
+    def Word(self) -> OCP.TCollection.TCollection_AsciiString: ...
     def __init__(self,aword : str,amean : str,avalue : float,amove : float,adimensions : Units_Dimensions) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1799,45 +1799,45 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Units_Token) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Units_TksSequence) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Units_Token) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Units_TksSequence) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Units_TksSequence) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Units_Token) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Units_Token: 
         """
         Last item access
@@ -1851,14 +1851,14 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Units_Token) -> None: 
+    def Prepend(self,theSeq : Units_TksSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Units_TksSequence) -> None: ...
+    def Prepend(self,theItem : Units_Token) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -1901,9 +1901,9 @@ class Units_TokensSequence(Units_TksSequence, OCP.NCollection.NCollection_BaseSe
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Units_TksSequence) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1954,23 +1954,23 @@ class Units_ShiftedUnit(Units_Unit, OCP.Standard.Standard_Transient):
         Compares all the symbols linked within <me> with the name of <atoken>, and returns True if there is one symbol equal to the name, False otherwise.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Move(self,amove : float) -> None: 
         """
@@ -1987,7 +1987,7 @@ class Units_ShiftedUnit(Units_Unit, OCP.Standard.Standard_Transient):
         Returns the name of the unit <thename>
         """
     @overload
-    def Quantity(self,aquantity : Units_Quantity) -> None: 
+    def Quantity(self) -> Units_Quantity: 
         """
         Returns <thequantity> contained in <me>.
 
@@ -1998,7 +1998,7 @@ class Units_ShiftedUnit(Units_Unit, OCP.Standard.Standard_Transient):
         Sets the physical Quantity <aquantity> to <me>.
         """
     @overload
-    def Quantity(self) -> Units_Quantity: ...
+    def Quantity(self,aquantity : Units_Quantity) -> None: ...
     def Symbol(self,asymbol : str) -> None: 
         """
         Adds a new symbol <asymbol> attached to <me>.
@@ -2031,11 +2031,11 @@ class Units_ShiftedUnit(Units_Unit, OCP.Standard.Standard_Transient):
     @overload
     def Value(self,avalue : float) -> None: ...
     @overload
-    def __init__(self,aname : str) -> None: ...
+    def __init__(self,aname : str,asymbol : str) -> None: ...
     @overload
     def __init__(self,aname : str,asymbol : str,avalue : float,amove : float,aquantity : Units_Quantity) -> None: ...
     @overload
-    def __init__(self,aname : str,asymbol : str) -> None: ...
+    def __init__(self,aname : str) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2093,9 +2093,9 @@ class Units_UnitSentence(Units_Sentence):
         For each token which represents a unit, finds in the sequence of physical quantities all the characteristics of the unit found.
         """
     @overload
-    def __init__(self,astring : str,aquantitiessequence : Units_QuantitiesSequence) -> None: ...
-    @overload
     def __init__(self,astring : str) -> None: ...
+    @overload
+    def __init__(self,astring : str,aquantitiessequence : Units_QuantitiesSequence) -> None: ...
     pass
 class Units_UnitsDictionary(OCP.Standard.Standard_Transient):
     """
@@ -2118,7 +2118,7 @@ class Units_UnitsDictionary(OCP.Standard.Standard_Transient):
         Memory deallocator for transient classes
         """
     @overload
-    def Dump(self,alevel : int) -> None: 
+    def Dump(self,adimensions : Units_Dimensions) -> None: 
         """
         Dumps only the sequence of quantities without the units if <alevel> is equal to zero, and for each quantity all the units stored if <alevel> is equal to one.
 
@@ -2129,7 +2129,7 @@ class Units_UnitsDictionary(OCP.Standard.Standard_Transient):
         Dumps for a designated physical dimensions <adimensions> all the previously stored units.
         """
     @overload
-    def Dump(self,adimensions : Units_Dimensions) -> None: ...
+    def Dump(self,alevel : int) -> None: ...
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
@@ -2143,23 +2143,23 @@ class Units_UnitsDictionary(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Sequence(self) -> Units_QuantitiesSequence: 
         """
         Returns the head of the sequence of physical quantities.
@@ -2221,23 +2221,23 @@ class Units_UnitsLexicon(Units_Lexicon, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Sequence(self) -> Units_TokensSequence: 
         """
         Returns the first item of the sequence of tokens.
@@ -2269,14 +2269,14 @@ class Units_UtsSequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Units_UtsSequence) -> None: 
+    def Append(self,theItem : Units_Unit) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Units_Unit) -> None: ...
+    def Append(self,theSeq : Units_UtsSequence) -> None: ...
     def Assign(self,theOther : Units_UtsSequence) -> Units_UtsSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2315,14 +2315,14 @@ class Units_UtsSequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theItem : Units_Unit) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2384,9 +2384,9 @@ class Units_UtsSequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : Units_UtsSequence) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2455,23 +2455,23 @@ class Units_UnitsSystem(OCP.Standard.Standard_Transient):
         Returns TRUE if no units has been defined in the system.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def QuantitiesSequence(self) -> Units_QuantitiesSequence: 
         """
         Returns the sequence of refined quantities.
@@ -2489,9 +2489,9 @@ class Units_UnitsSystem(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,aName : str,Verbose : bool=False) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aName : str,Verbose : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2509,14 +2509,14 @@ class Units_UnitsSequence(Units_UtsSequence, OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : Units_UtsSequence) -> None: 
+    def Append(self,theItem : Units_Unit) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : Units_Unit) -> None: ...
+    def Append(self,theSequence : Units_UtsSequence) -> None: ...
     def Assign(self,theOther : Units_UtsSequence) -> Units_UtsSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2579,36 +2579,36 @@ class Units_UnitsSequence(Units_UtsSequence, OCP.NCollection.NCollection_BaseSeq
     @overload
     def InsertAfter(self,theIndex : int,theItem : Units_Unit) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Units_UtsSequence) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Units_Unit) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Units_Unit: 
         """
         Last item access
@@ -2713,31 +2713,31 @@ def __mul__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
 def __mul__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
     pass
 @overload
-def __rmul__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
+def __rmul__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
     """
     None
 
     None
     """
 @overload
-def __rmul__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
+def __rmul__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     pass
 def __sub__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     """
     None
     """
 @overload
-def __truediv__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
+def __truediv__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
     """
     None
 
     None
     """
 @overload
-def __truediv__(arg0 : Units_Dimensions,arg1 : Units_Dimensions) -> Units_Dimensions:
+def __truediv__(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     pass
 @overload
-def pow(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
+def pow(arg0 : Units_Dimensions,arg1 : float) -> Units_Dimensions:
     """
     None
 
@@ -2746,7 +2746,7 @@ def pow(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     None
     """
 @overload
-def pow(arg0 : Units_Dimensions,arg1 : float) -> Units_Dimensions:
+def pow(arg0 : Units_Token,arg1 : Units_Token) -> Units_Token:
     pass
 @overload
 def pow(arg0 : Units_Token,arg1 : float) -> Units_Token:

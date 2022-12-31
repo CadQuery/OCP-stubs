@@ -42,7 +42,7 @@ class TopExp():
         """
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape,cumOri : bool=True,cumLoc : bool=True) -> None: 
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape,cumOri : bool=True,cumLoc : bool=True) -> None: 
         """
         Tool to explore a topological data structure. Stores in the map <M> all the sub-shapes of <S> of type <T>.
 
@@ -52,7 +52,7 @@ class TopExp():
         """
     @staticmethod
     @overload
-    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_MapOfShape,cumOri : bool=True,cumLoc : bool=True) -> None: ...
+    def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,M : OCP.TopTools.TopTools_IndexedMapOfShape,cumOri : bool=True,cumLoc : bool=True) -> None: ...
     @staticmethod
     @overload
     def MapShapes_s(S : OCP.TopoDS.TopoDS_Shape,T : OCP.TopAbs.TopAbs_ShapeEnum,M : OCP.TopTools.TopTools_IndexedMapOfShape) -> None: ...
@@ -110,7 +110,7 @@ class TopExp_Explorer():
         Returns the current shape in the exploration. Exceptions Standard_NoSuchObject if this explorer has no more shapes to explore.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape,ToFind : OCP.TopAbs.TopAbs_ShapeEnum,ToAvoid : OCP.TopAbs.TopAbs_ShapeEnum=TopAbs_ShapeEnum.TopAbs_SHAPE) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

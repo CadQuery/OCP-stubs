@@ -4,12 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Vrml
 import OCP.TopoDS
 import OCP.TDocStd
+import OCP.Vrml
+import OCP.Standard
 import OCP.Quantity
 __all__  = [
 "VrmlAPI",
+"VrmlAPI_CafReader",
 "VrmlAPI_RepresentationOfShape",
 "VrmlAPI_Writer",
 "VrmlAPI_BothRepresentation",
@@ -26,6 +28,26 @@ class VrmlAPI():
         With help of this class user can change parameters of writing. Converts the shape aShape to VRML format of the passed version and writes it to the file identified by aFileName using default parameters.
         """
     def __init__(self) -> None: ...
+    pass
+class VrmlAPI_CafReader():
+    """
+    The Vrml mesh reader into XDE document.
+    """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class VrmlAPI_RepresentationOfShape():
     """

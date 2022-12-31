@@ -21,7 +21,7 @@ class GeomTools():
     """
     @staticmethod
     @overload
-    def Dump_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO) -> None: 
+    def Dump_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: 
         """
         A set of Curves from Geom2d. Dumps the surface on the stream.
 
@@ -34,7 +34,7 @@ class GeomTools():
     def Dump_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO) -> None: ...
     @staticmethod
     @overload
-    def Dump_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: ...
+    def Dump_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO) -> None: ...
     @staticmethod
     def GetReal_s(IS : io.BytesIO) -> Tuple[float]: 
         """
@@ -47,7 +47,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Read_s(C : OCP.Geom.Geom_Curve,IS : io.BytesIO) -> None: 
+    def Read_s(S : OCP.Geom.Geom_Surface,IS : io.BytesIO) -> None: 
         """
         Reads the surface from the stream.
 
@@ -57,10 +57,10 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Read_s(C : OCP.Geom2d.Geom2d_Curve,IS : io.BytesIO) -> None: ...
+    def Read_s(C : OCP.Geom.Geom_Curve,IS : io.BytesIO) -> None: ...
     @staticmethod
     @overload
-    def Read_s(S : OCP.Geom.Geom_Surface,IS : io.BytesIO) -> None: ...
+    def Read_s(C : OCP.Geom2d.Geom2d_Curve,IS : io.BytesIO) -> None: ...
     @staticmethod
     def SetUndefinedTypeHandler_s(aHandler : GeomTools_UndefinedTypeHandler) -> None: 
         """
@@ -68,7 +68,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Write_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO) -> None: 
+    def Write_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: 
         """
         Writes the surface on the stream.
 
@@ -78,7 +78,7 @@ class GeomTools():
         """
     @staticmethod
     @overload
-    def Write_s(C : OCP.Geom2d.Geom2d_Curve,OS : io.BytesIO) -> None: ...
+    def Write_s(C : OCP.Geom.Geom_Curve,OS : io.BytesIO) -> None: ...
     @staticmethod
     @overload
     def Write_s(S : OCP.Geom.Geom_Surface,OS : io.BytesIO) -> None: ...
@@ -238,23 +238,23 @@ class GeomTools_UndefinedTypeHandler(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def PrintCurve(self,C : OCP.Geom.Geom_Curve,OS : io.BytesIO,compact : bool=False) -> None: 
         """
         None

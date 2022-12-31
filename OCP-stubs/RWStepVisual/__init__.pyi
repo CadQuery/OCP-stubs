@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepData
 import OCP.StepVisual
+import OCP.StepData
 import OCP.Interface
 __all__  = [
 "RWStepVisual_RWAnnotationCurveOccurrence",
@@ -28,11 +28,15 @@ __all__  = [
 "RWStepVisual_RWColour",
 "RWStepVisual_RWColourRgb",
 "RWStepVisual_RWColourSpecification",
+"RWStepVisual_RWComplexTriangulatedFace",
+"RWStepVisual_RWComplexTriangulatedSurfaceSet",
 "RWStepVisual_RWCompositeText",
 "RWStepVisual_RWCompositeTextWithExtent",
 "RWStepVisual_RWContextDependentInvisibility",
 "RWStepVisual_RWContextDependentOverRidingStyledItem",
 "RWStepVisual_RWCoordinatesList",
+"RWStepVisual_RWCubicBezierTessellatedEdge",
+"RWStepVisual_RWCubicBezierTriangulatedFace",
 "RWStepVisual_RWCurveStyle",
 "RWStepVisual_RWCurveStyleFont",
 "RWStepVisual_RWCurveStyleFontPattern",
@@ -63,6 +67,8 @@ __all__  = [
 "RWStepVisual_RWPresentationStyleByContext",
 "RWStepVisual_RWPresentationView",
 "RWStepVisual_RWPresentedItemRepresentation",
+"RWStepVisual_RWRepositionedTessellatedGeometricSet",
+"RWStepVisual_RWRepositionedTessellatedItem",
 "RWStepVisual_RWStyledItem",
 "RWStepVisual_RWSurfaceSideStyle",
 "RWStepVisual_RWSurfaceStyleBoundary",
@@ -79,13 +85,24 @@ __all__  = [
 "RWStepVisual_RWTemplate",
 "RWStepVisual_RWTemplateInstance",
 "RWStepVisual_RWTessellatedAnnotationOccurrence",
+"RWStepVisual_RWTessellatedConnectingEdge",
 "RWStepVisual_RWTessellatedCurveSet",
+"RWStepVisual_RWTessellatedEdge",
 "RWStepVisual_RWTessellatedGeometricSet",
 "RWStepVisual_RWTessellatedItem",
+"RWStepVisual_RWTessellatedPointSet",
+"RWStepVisual_RWTessellatedShapeRepresentation",
+"RWStepVisual_RWTessellatedShapeRepresentationWithAccuracyParameters",
+"RWStepVisual_RWTessellatedShell",
+"RWStepVisual_RWTessellatedSolid",
+"RWStepVisual_RWTessellatedStructuredItem",
+"RWStepVisual_RWTessellatedVertex",
+"RWStepVisual_RWTessellatedWire",
 "RWStepVisual_RWTextLiteral",
 "RWStepVisual_RWTextStyle",
 "RWStepVisual_RWTextStyleForDefinedFont",
 "RWStepVisual_RWTextStyleWithBoxCharacteristics",
+"RWStepVisual_RWTriangulatedFace",
 "RWStepVisual_RWViewVolume"
 ]
 class RWStepVisual_RWAnnotationCurveOccurrence():
@@ -432,6 +449,42 @@ class RWStepVisual_RWColourSpecification():
         """
     def __init__(self) -> None: ...
     pass
+class RWStepVisual_RWComplexTriangulatedFace():
+    """
+    Read & Write tool for ComplexTriangulatedFace
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_ComplexTriangulatedFace) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_ComplexTriangulatedFace,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_ComplexTriangulatedFace) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWComplexTriangulatedSurfaceSet():
+    """
+    Read & Write tool for ComplexTriangulatedSurfaceSet
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_ComplexTriangulatedSurfaceSet) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_ComplexTriangulatedSurfaceSet,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_ComplexTriangulatedSurfaceSet) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
 class RWStepVisual_RWCompositeText():
     """
     Read & Write Module for CompositeText
@@ -513,6 +566,42 @@ class RWStepVisual_RWCoordinatesList():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_CoordinatesList) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWCubicBezierTessellatedEdge():
+    """
+    Read & Write tool for CubicBezierTessellatedEdge
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_CubicBezierTessellatedEdge) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_CubicBezierTessellatedEdge,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_CubicBezierTessellatedEdge) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWCubicBezierTriangulatedFace():
+    """
+    Read & Write tool for CubicBezierTriangulatedFace
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_CubicBezierTriangulatedFace) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_CubicBezierTriangulatedFace,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_CubicBezierTriangulatedFace) -> None: 
         """
         None
         """
@@ -1026,6 +1115,38 @@ class RWStepVisual_RWPresentedItemRepresentation():
         """
     def __init__(self) -> None: ...
     pass
+class RWStepVisual_RWRepositionedTessellatedGeometricSet():
+    """
+    Read & Write tool for complex RepositionedTessellatedGeometricSet
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theAch : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_RepositionedTessellatedGeometricSet) -> Any: 
+        """
+        Reads RepositionedTessellatedGeometricSet
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_RepositionedTessellatedGeometricSet,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        Fills data for graph (shared items)
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_RepositionedTessellatedGeometricSet) -> None: 
+        """
+        Writes RepositionedTessellatedGeometricSet
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWRepositionedTessellatedItem():
+    """
+    Read & Write tool for RepositionedTessellatedItem
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theAch : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_RepositionedTessellatedItem) -> Any: 
+        """
+        Reads RepositionedTessellatedItem
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_RepositionedTessellatedItem) -> None: 
+        """
+        Writes RepositionedTessellatedItem
+        """
+    def __init__(self) -> None: ...
+    pass
 class RWStepVisual_RWStyledItem():
     """
     Read & Write Module for StyledItem
@@ -1314,6 +1435,24 @@ class RWStepVisual_RWTessellatedAnnotationOccurrence():
         """
     def __init__(self) -> None: ...
     pass
+class RWStepVisual_RWTessellatedConnectingEdge():
+    """
+    Read & Write tool for TessellatedConnectingEdge
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedConnectingEdge) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedConnectingEdge,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedConnectingEdge) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
 class RWStepVisual_RWTessellatedCurveSet():
     """
     Read & Write Module for AnnotationOccurrence
@@ -1327,6 +1466,24 @@ class RWStepVisual_RWTessellatedCurveSet():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_TessellatedCurveSet) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedEdge():
+    """
+    Read & Write tool for TessellatedEdge
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedEdge) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedEdge,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedEdge) -> None: 
         """
         None
         """
@@ -1359,6 +1516,150 @@ class RWStepVisual_RWTessellatedItem():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_TessellatedItem) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedPointSet():
+    """
+    Read & Write tool for TessellatedPointSet
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedPointSet) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedPointSet,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedPointSet) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedShapeRepresentation():
+    """
+    Read & Write tool for TessellatedShapeRepresentation
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedShapeRepresentation) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedShapeRepresentation,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedShapeRepresentation) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedShapeRepresentationWithAccuracyParameters():
+    """
+    Read & Write tool for TessellatedShapeRepresentationWithAccuracyParameters
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedShapeRepresentationWithAccuracyParameters) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedShapeRepresentationWithAccuracyParameters,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedShapeRepresentationWithAccuracyParameters) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedShell():
+    """
+    Read & Write tool for TessellatedShell
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedShell) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedShell,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedShell) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedSolid():
+    """
+    Read & Write tool for TessellatedSolid
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedSolid) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedSolid,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedSolid) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedStructuredItem():
+    """
+    Read & Write tool for TessellatedStructuredItem
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedStructuredItem) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedStructuredItem,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedStructuredItem) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedVertex():
+    """
+    Read & Write tool for TessellatedVertex
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedVertex) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedVertex,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedVertex) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTessellatedWire():
+    """
+    Read & Write tool for TessellatedWire
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TessellatedWire) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TessellatedWire,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TessellatedWire) -> None: 
         """
         None
         """
@@ -1431,6 +1732,24 @@ class RWStepVisual_RWTextStyleWithBoxCharacteristics():
         None
         """
     def WriteStep(self,SW : OCP.StepData.StepData_StepWriter,ent : OCP.StepVisual.StepVisual_TextStyleWithBoxCharacteristics) -> None: 
+        """
+        None
+        """
+    def __init__(self) -> None: ...
+    pass
+class RWStepVisual_RWTriangulatedFace():
+    """
+    Read & Write tool for TriangulatedFace
+    """
+    def ReadStep(self,theData : OCP.StepData.StepData_StepReaderData,theNum : int,theCheck : OCP.Interface.Interface_Check,theEnt : OCP.StepVisual.StepVisual_TriangulatedFace) -> Any: 
+        """
+        None
+        """
+    def Share(self,theEnt : OCP.StepVisual.StepVisual_TriangulatedFace,theIter : OCP.Interface.Interface_EntityIterator) -> None: 
+        """
+        None
+        """
+    def WriteStep(self,theSW : OCP.StepData.StepData_StepWriter,theEnt : OCP.StepVisual.StepVisual_TriangulatedFace) -> None: 
         """
         None
         """

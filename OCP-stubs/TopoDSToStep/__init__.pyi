@@ -4,11 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Transfer
-import OCP.Standard
-import OCP.StepShape
 import OCP.TopoDS
 import OCP.TCollection
+import OCP.Standard
+import OCP.StepShape
+import OCP.Transfer
+import OCP.StepVisual
 import OCP.TColStd
 __all__  = [
 "TopoDSToStep",
@@ -28,6 +29,7 @@ __all__  = [
 "TopoDSToStep_MakeStepFace",
 "TopoDSToStep_MakeStepVertex",
 "TopoDSToStep_MakeStepWire",
+"TopoDSToStep_MakeTessellatedItem",
 "TopoDSToStep_MakeVertexError",
 "TopoDSToStep_MakeWireError",
 "TopoDSToStep_Builder",
@@ -205,6 +207,10 @@ class TopoDSToStep_MakeBrepWithVoids(TopoDSToStep_Root):
         """
         None
         """
+    def TessellatedValue(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
+        """
+        None
+        """
     def Value(self) -> OCP.StepShape.StepShape_BrepWithVoids: 
         """
         None
@@ -307,6 +313,10 @@ class TopoDSToStep_MakeFacetedBrep(TopoDSToStep_Root):
         """
         None
         """
+    def TessellatedValue(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
+        """
+        None
+        """
     def Value(self) -> OCP.StepShape.StepShape_FacetedBrep: 
         """
         None
@@ -329,6 +339,10 @@ class TopoDSToStep_MakeFacetedBrepAndBrepWithVoids(TopoDSToStep_Root):
     This class implements the mapping between classes Solid from TopoDS and FacetedBrepAndBrepWithVoids from StepShape. All the topology and geometry comprised into the shell or the solid are taken into account and translated.
     """
     def IsDone(self) -> bool: 
+        """
+        None
+        """
+    def TessellatedValue(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
         """
         None
         """
@@ -376,6 +390,10 @@ class TopoDSToStep_MakeManifoldSolidBrep(TopoDSToStep_Root):
         """
         None
         """
+    def TessellatedValue(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
+        """
+        None
+        """
     def Value(self) -> OCP.StepShape.StepShape_ManifoldSolidBrep: 
         """
         None
@@ -401,14 +419,18 @@ class TopoDSToStep_MakeShellBasedSurfaceModel(TopoDSToStep_Root):
         """
         None
         """
+    def TessellatedValue(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
+        """
+        None
+        """
     def Value(self) -> OCP.StepShape.StepShape_ShellBasedSurfaceModel: 
         """
         None
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Solid,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shell,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
@@ -507,9 +529,9 @@ class TopoDSToStep_MakeStepVertex(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,V : OCP.TopoDS.TopoDS_Vertex,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -543,6 +565,42 @@ class TopoDSToStep_MakeStepWire(TopoDSToStep_Root):
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @property
+    def Tolerance(self) -> float:
+        """
+        :type: float
+        """
+    @Tolerance.setter
+    def Tolerance(self, arg1: float) -> None:
+        pass
+    pass
+class TopoDSToStep_MakeTessellatedItem(TopoDSToStep_Root):
+    """
+    This class implements the mapping between Face, Shell fromTopoDS and TriangulatedFace from StepVisual.
+    """
+    @overload
+    def Init(self,theFace : OCP.TopoDS.TopoDS_Face,theTool : TopoDSToStep_Tool,theFP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Init(self,theShell : OCP.TopoDS.TopoDS_Shell,theTool : TopoDSToStep_Tool,theFP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def IsDone(self) -> bool: 
+        """
+        None
+        """
+    def Value(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
+        """
+        None
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theShell : OCP.TopoDS.TopoDS_Shell,theTool : TopoDSToStep_Tool,theFP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @overload
+    def __init__(self,theFace : OCP.TopoDS.TopoDS_Face,theTool : TopoDSToStep_Tool,theFP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -631,11 +689,15 @@ class TopoDSToStep_Builder(TopoDSToStep_Root):
         """
         None
         """
-    def Init(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
+    def Init(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess,theTessellatedGeomParam : int,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         None
         """
     def IsDone(self) -> bool: 
+        """
+        None
+        """
+    def TessellatedValue(self) -> OCP.StepVisual.StepVisual_TessellatedItem: 
         """
         None
         """
@@ -644,9 +706,9 @@ class TopoDSToStep_Builder(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess,theTessellatedGeomParam : int,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def __init__(self) -> None: ...
     @property
     def Tolerance(self) -> float:
         """
@@ -741,9 +803,9 @@ class TopoDSToStep_Tool():
         None
         """
     @overload
-    def __init__(self,M : Any,FacetedContext : bool) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,M : Any,FacetedContext : bool) -> None: ...
     pass
 class TopoDSToStep_WireframeBuilder(TopoDSToStep_Root):
     """
@@ -778,9 +840,9 @@ class TopoDSToStep_WireframeBuilder(TopoDSToStep_Root):
         None
         """
     @overload
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,T : TopoDSToStep_Tool,FP : OCP.Transfer.Transfer_FinderProcess) -> None: ...
     @property
     def Tolerance(self) -> float:
         """

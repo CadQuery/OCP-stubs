@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import OCP.Storage
 import OCP.TCollection
 import OCP.LDOM
+import OCP.gp
 __all__  = [
 "XmlObjMgt",
 "XmlObjMgt_Array1",
@@ -128,7 +128,7 @@ class XmlObjMgt_GP():
     """
     @staticmethod
     @overload
-    def Translate_s(aTrsf : OCP.gp.gp_Trsf) -> LDOMString: 
+    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_XYZ) -> bool: 
         """
         None
 
@@ -142,21 +142,21 @@ class XmlObjMgt_GP():
 
         None
         """
+    @staticmethod
+    @overload
+    def Translate_s(aMat : OCP.gp.gp_Mat) -> LDOMString: ...
     @staticmethod
     @overload
     def Translate_s(anXYZ : OCP.gp.gp_XYZ) -> LDOMString: ...
     @staticmethod
     @overload
-    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Mat) -> bool: ...
-    @staticmethod
-    @overload
-    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_XYZ) -> bool: ...
-    @staticmethod
-    @overload
     def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Trsf) -> bool: ...
     @staticmethod
     @overload
-    def Translate_s(aMat : OCP.gp.gp_Mat) -> LDOMString: ...
+    def Translate_s(aTrsf : OCP.gp.gp_Trsf) -> LDOMString: ...
+    @staticmethod
+    @overload
+    def Translate_s(aStr : LDOMString,T : OCP.gp.gp_Mat) -> bool: ...
     def __init__(self) -> None: ...
     pass
 class XmlObjMgt_Persistent():

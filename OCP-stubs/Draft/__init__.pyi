@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.NCollection
-import OCP.Poly
-import OCP.BRepTools
-import io
-import OCP.gp
-import OCP.Geom2d
-import OCP.TopLoc
 import OCP.Geom
-import OCP.Standard
+import OCP.TopLoc
 import OCP.TopoDS
+import OCP.NCollection
+import OCP.BRepTools
+import OCP.gp
+import OCP.Poly
+import OCP.Standard
+import OCP.Geom2d
+import OCP.GeomAbs
+import OCP.TopTools
+import io
 __all__  = [
 "Draft",
 "Draft_EdgeInfo",
@@ -108,18 +108,18 @@ class Draft_EdgeInfo():
         None
         """
     @overload
-    def Tolerance(self) -> float: 
+    def Tolerance(self,tol : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Tolerance(self,tol : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def Tolerance(self) -> float: ...
     @overload
     def __init__(self,HasNewGeometry : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Draft_ErrorStatus():
     """
@@ -194,14 +194,14 @@ class Draft_FaceInfo():
         None
         """
     @overload
-    def RootFace(self) -> OCP.TopoDS.TopoDS_Face: 
+    def RootFace(self,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         None
 
         None
         """
     @overload
-    def RootFace(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def RootFace(self) -> OCP.TopoDS.TopoDS_Face: ...
     def SecondFace(self) -> OCP.TopoDS.TopoDS_Face: 
         """
         None
@@ -326,11 +326,11 @@ class Draft_IndexedDataMapOfEdgeEdgeInfo(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    def __init__(self,theOther : Draft_IndexedDataMapOfEdgeEdgeInfo) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Draft_IndexedDataMapOfEdgeEdgeInfo) -> None: ...
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
@@ -362,14 +362,14 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         Contains
@@ -387,14 +387,14 @@ class Draft_IndexedDataMapOfFaceFaceInfo(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face,theValue : Draft_FaceInfo) -> bool: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> Draft_FaceInfo: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> Draft_FaceInfo: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Face,theValue : Draft_FaceInfo) -> bool: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Face) -> int: 
         """
         FindIndex
@@ -627,23 +627,23 @@ class Draft_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standard.Stan
         Returns True if Perform has been successfully called. Otherwise more information can be obtained using the methods Error() and ProblematicShape().
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ModifiedFaces(self) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns all the faces on which a modification has been given.

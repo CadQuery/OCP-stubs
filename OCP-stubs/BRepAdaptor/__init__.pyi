@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Geom
 import OCP.Adaptor3d
 import OCP.Geom2dAdaptor
-import OCP.Adaptor2d
-import OCP.GeomAbs
-import OCP.Geom2d
-import OCP.gp
-import OCP.Standard
-import OCP.Geom
-import OCP.GeomAdaptor
 import OCP.TopoDS
+import OCP.gp
+import OCP.GeomAdaptor
+import OCP.Geom2d
+import OCP.GeomAbs
+import OCP.Standard
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "BRepAdaptor_Array1OfCurve",
 "BRepAdaptor_CompCurve",
@@ -100,13 +100,13 @@ class BRepAdaptor_Array1OfCurve():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : BRepAdaptor_Curve,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : BRepAdaptor_Array1OfCurve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Transient):
@@ -211,23 +211,23 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -293,11 +293,11 @@ class BRepAdaptor_CompCurve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard
         Returns the wire.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool,First : float,Last : float,Tol : float) -> None: ...
     @overload
     def __init__(self,W : OCP.TopoDS.TopoDS_Wire,KnotByCurvilinearAbcissa : bool=False) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -402,14 +402,14 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Tra
         Increments the reference counter of this object
         """
     @overload
-    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Sets the Curve <me> to access the geometry of edge <E>.
 
         Sets the Curve <me> to access the geometry of edge <E>. The geometry will be computed using the parametric curve of <E> on the face <F>. An Error is raised if the edge does not have a pcurve on the face.
         """
     @overload
-    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Initialize(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     def Intervals(self,T : OCP.TColStd.TColStd_Array1OfReal,S : OCP.GeomAbs.GeomAbs_Shape) -> None: 
         """
         Stores in <T> the parameters bounding the intervals of continuity <S>.
@@ -427,23 +427,23 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Tra
         Returns True if the edge geometry is computed from a pcurve on a surface.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -517,11 +517,11 @@ class BRepAdaptor_Curve(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standard_Tra
         Computes the point of parameter U on the curve
         """
     @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    def __init__(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -638,23 +638,23 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -672,14 +672,14 @@ class BRepAdaptor_Curve2d(OCP.Geom2dAdaptor.Geom2dAdaptor_Curve, OCP.Adaptor2d.A
         None
         """
     @overload
-    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve,theUFirst : float,theULast : float) -> None: 
+    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve) -> None: 
         """
         None
 
         Standard_ConstructionError is raised if theUFirst>theULast
         """
     @overload
-    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve) -> None: ...
+    def Load(self,theCurve : OCP.Geom2d.Geom2d_Curve,theUFirst : float,theULast : float) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <S>. And returns the number of intervals.
@@ -809,23 +809,23 @@ class BRepAdaptor_HArray1OfCurve(BRepAdaptor_Array1OfCurve, OCP.Standard.Standar
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> BRepAdaptor_Curve: 
         """
         Returns last element
@@ -987,23 +987,23 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface, OCP.Standard.Standard
         Sets the surface to the geometry of <F>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         None
@@ -1146,12 +1146,12 @@ class BRepAdaptor_Surface(OCP.Adaptor3d.Adaptor3d_Surface, OCP.Standard.Standard
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameters U,V on the surface.
+        Computes the point of parameters U,V on the surface. Tip: use GeomLib::NormEstim() to calculate surface normal at specified (U, V) point.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,R : bool=True) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

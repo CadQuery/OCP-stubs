@@ -4,25 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Blend
-import OCP.GeomAbs
+import OCP.Geom
+import OCP.Law
+import OCP.Adaptor3d
+import OCP.ChFiDS
 import OCP.BlendFunc
-import OCP.NCollection
-import OCP.AppBlend
+import OCP.Blend
 import OCP.Geom2d
 import OCP.Standard
 import OCP.TColStd
-import OCP.Adaptor3d
-import OCP.Law
-import OCP.Adaptor2d
 import OCP.IntSurf
 import OCP.math
-import OCP.TColgp
-import OCP.ChFiDS
+import OCP.NCollection
 import OCP.gp
-import OCP.Geom
 import OCP.TopAbs
+import OCP.TColgp
 import OCP.Approx
+import OCP.GeomAbs
+import OCP.AppBlend
+import OCP.Adaptor2d
 __all__  = [
 "BRepBlend_AppFuncRoot",
 "BRepBlend_AppFunc",
@@ -104,23 +104,23 @@ class BRepBlend_AppFuncRoot(OCP.Approx.Approx_SweepFunction, OCP.Standard.Standa
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -237,23 +237,23 @@ class BRepBlend_AppFunc(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunction, 
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -371,23 +371,23 @@ class BRepBlend_AppFuncRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunctio
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -505,23 +505,23 @@ class BRepBlend_AppFuncRstRst(BRepBlend_AppFuncRoot, OCP.Approx.Approx_SweepFunc
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the section is rationnal or not
@@ -712,9 +712,9 @@ class BRepBlend_AppSurf(OCP.AppBlend.AppBlend_Approx):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Degmin : int,Degmax : int,Tol3d : float,Tol2d : float,NbIt : int,KnownParameters : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepBlend_BlendTool():
     """
@@ -787,14 +787,6 @@ class BRepBlend_CSWalking():
     None
     """
     def Complete(self,F : OCP.Blend.Blend_CSFunction,Pmin : float) -> bool: 
-        """
-        None
-        """
-    def IsDone(self) -> bool: 
-        """
-        None
-        """
-    def Line(self) -> BRepBlend_Line: 
         """
         None
         """
@@ -912,7 +904,7 @@ class BRepBlend_Extremity():
         Set the tangent vector for an extremity on a surface.
         """
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: 
+    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
         """
         Set the values for an extremity on a surface.
 
@@ -921,9 +913,9 @@ class BRepBlend_Extremity():
         Set the values for an extremity on curve.
         """
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,W : float,Param : float,Tol : float) -> None: ...
+    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: ...
     @overload
-    def SetValue(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
+    def SetValue(self,P : OCP.gp.gp_Pnt,W : float,Param : float,Tol : float) -> None: ...
     def SetVertex(self,V : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: 
         """
         Set the values for an extremity on a curve.
@@ -953,13 +945,13 @@ class BRepBlend_Extremity():
         Returns the vertex when IsVertex returns Standard_True.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,W : float,Param : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float,Vtx : OCP.Adaptor3d.Adaptor3d_HVertex) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,U : float,V : float,Param : float,Tol : float) -> None: ...
     pass
 class BRepBlend_HCurve2dTool():
     """
@@ -1263,23 +1255,23 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
         Adds a point in the line at the first place.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbPoints(self) -> int: 
         """
         Returns the number of points in the line.
@@ -1305,14 +1297,14 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
         Removes from <me> all the items of positions between <FromIndex> and <ToIndex>. Raises an exception if the indices are out of bounds.
         """
     @overload
-    def Set(self,TranS1 : OCP.IntSurf.IntSurf_TypeTrans,TranS2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: 
+    def Set(self,Trans : OCP.IntSurf.IntSurf_TypeTrans) -> None: 
         """
         Sets the value of the transition of the line on S1 and the line on S2.
 
         Sets the value of the transition of the line on a surface
         """
     @overload
-    def Set(self,Trans : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
+    def Set(self,TranS1 : OCP.IntSurf.IntSurf_TypeTrans,TranS2 : OCP.IntSurf.IntSurf_TypeTrans) -> None: ...
     @overload
     def SetEndPoints(self,EndPt1 : BRepBlend_Extremity,EndPt2 : BRepBlend_Extremity) -> None: 
         """
@@ -1323,14 +1315,14 @@ class BRepBlend_Line(OCP.Standard.Standard_Transient):
     @overload
     def SetEndPoints(self,EndPtOnS1 : BRepBlend_Extremity,EndPtOnS2 : BRepBlend_Extremity) -> None: ...
     @overload
-    def SetStartPoints(self,StartPtOnS1 : BRepBlend_Extremity,StartPtOnS2 : BRepBlend_Extremity) -> None: 
+    def SetStartPoints(self,StartPt1 : BRepBlend_Extremity,StartPt2 : BRepBlend_Extremity) -> None: 
         """
         Sets the values of the start points for the line.
 
         Sets the values of the start points for the line.
         """
     @overload
-    def SetStartPoints(self,StartPt1 : BRepBlend_Extremity,StartPt2 : BRepBlend_Extremity) -> None: ...
+    def SetStartPoints(self,StartPtOnS1 : BRepBlend_Extremity,StartPtOnS2 : BRepBlend_Extremity) -> None: ...
     def StartPointOnFirst(self) -> BRepBlend_Extremity: 
         """
         Returns the start point on S1.
@@ -1540,7 +1532,7 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: 
         """
         Used for the first and last section
 
@@ -1551,13 +1543,13 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
         None
         """
     @overload
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
-    @overload
-    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: 
+    def Set(self,Radius : float,Choix : int) -> None: 
         """
         None
 
@@ -1572,9 +1564,9 @@ class BRepBlend_RstRstConstRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_A
     @overload
     def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef1 : OCP.Adaptor2d.Adaptor2d_Curve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
-    def Set(self,First : float,Last : float) -> None: ...
+    def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
     @overload
-    def Set(self,Radius : float,Choix : int) -> None: ...
+    def Set(self,First : float,Last : float) -> None: ...
     @overload
     def Set(self,Param : float) -> None: ...
     def Tangent2dOnRst1(self) -> OCP.gp.gp_Vec2d: 
@@ -1729,7 +1721,7 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         None
         """
     @overload
-    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Used for the first and last section
 
@@ -1740,13 +1732,13 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
-    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef1 : OCP.Adaptor2d.Adaptor2d_Curve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
+    def Section(self,Param : float,U : float,V : float,C : OCP.gp.gp_Circ) -> Tuple[float, float]: ...
+    @overload
+    def Set(self,Param : float) -> None: 
         """
         None
 
@@ -1759,13 +1751,13 @@ class BRepBlend_RstRstEvolRad(OCP.Blend.Blend_RstRstFunction, OCP.Blend.Blend_Ap
         Sets the type of section generation for the approximations.
         """
     @overload
+    def Set(self,Choix : int) -> None: ...
+    @overload
     def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
     @overload
+    def Set(self,SurfRef1 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef1 : OCP.Adaptor2d.Adaptor2d_Curve2d,SurfRef2 : OCP.Adaptor3d.Adaptor3d_Surface,RstRef2 : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
     def Set(self,First : float,Last : float) -> None: ...
-    @overload
-    def Set(self,Param : float) -> None: ...
-    @overload
-    def Set(self,Choix : int) -> None: ...
     def Tangent2dOnRst1(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -1855,14 +1847,14 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : BRepBlend_SequenceOfLine) -> None: 
+    def Append(self,theItem : BRepBlend_Line) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : BRepBlend_Line) -> None: ...
+    def Append(self,theSeq : BRepBlend_SequenceOfLine) -> None: ...
     def Assign(self,theOther : BRepBlend_SequenceOfLine) -> BRepBlend_SequenceOfLine: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1892,23 +1884,23 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : BRepBlend_Line) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : BRepBlend_Line) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : BRepBlend_Line) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : BRepBlend_Line) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfLine) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1935,14 +1927,14 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : BRepBlend_Line) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1968,9 +1960,9 @@ class BRepBlend_SequenceOfLine(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : BRepBlend_SequenceOfLine) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepBlend_SequenceOfLine) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -1989,14 +1981,14 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
+    def Append(self,theItem : BRepBlend_PointOnRst) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : BRepBlend_PointOnRst) -> None: ...
+    def Append(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
     def Assign(self,theOther : BRepBlend_SequenceOfPointOnRst) -> BRepBlend_SequenceOfPointOnRst: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2026,23 +2018,23 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : BRepBlend_PointOnRst) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : BRepBlend_PointOnRst) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : BRepBlend_PointOnRst) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : BRepBlend_PointOnRst) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2060,23 +2052,23 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : BRepBlend_PointOnRst) -> None: 
+    def Prepend(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : BRepBlend_SequenceOfPointOnRst) -> None: ...
+    def Prepend(self,theItem : BRepBlend_PointOnRst) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2102,9 +2094,9 @@ class BRepBlend_SequenceOfPointOnRst(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : BRepBlend_SequenceOfPointOnRst) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2147,14 +2139,14 @@ class BRepBlend_SurfCurvConstRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.ma
         Returns 3.
         """
     @overload
-    def Set(self,R : float,Choix : int) -> None: 
+    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
         """
         None
 
         Set the restriction on which a solution has to be found.
         """
     @overload
-    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    def Set(self,R : float,Choix : int) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2198,14 +2190,14 @@ class BRepBlend_SurfCurvEvolRadInv(OCP.Blend.Blend_SurfCurvFuncInv, OCP.math.mat
         Returns 3.
         """
     @overload
-    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: 
+    def Set(self,Choix : int) -> None: 
         """
         None
 
         Set the restriction on which a solution has to be found.
         """
     @overload
-    def Set(self,Choix : int) -> None: ...
+    def Set(self,Rst : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2300,14 +2292,14 @@ class BRepBlend_SurfPointEvolRadInv(OCP.Blend.Blend_SurfPointFuncInv, OCP.math.m
         Returns 3.
         """
     @overload
-    def Set(self,P : OCP.gp.gp_Pnt) -> None: 
+    def Set(self,Choix : int) -> None: 
         """
         None
 
         Set the Point on which a solution has to be found.
         """
     @overload
-    def Set(self,Choix : int) -> None: ...
+    def Set(self,P : OCP.gp.gp_Pnt) -> None: ...
     def Value(self,X : OCP.math.math_Vector,F : OCP.math.math_Vector) -> bool: 
         """
         computes the values <F> of the Functions for the variable <X>. Returns True if the computation was done successfully, False otherwise.
@@ -2436,7 +2428,7 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         Used for the first and last section
 
@@ -2447,7 +2439,7 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         None
         """
     @overload
-    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,DPoles : OCP.TColgp.TColgp_Array1OfVec,D2Poles : OCP.TColgp.TColgp_Array1OfVec,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,DPoles2d : OCP.TColgp.TColgp_Array1OfVec2d,D2Poles2d : OCP.TColgp.TColgp_Array1OfVec2d,Weigths : OCP.TColStd.TColStd_Array1OfReal,DWeigths : OCP.TColStd.TColStd_Array1OfReal,D2Weigths : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
     @overload
     def Section(self,P : OCP.Blend.Blend_Point,Poles : OCP.TColgp.TColgp_Array1OfPnt,Poles2d : OCP.TColgp.TColgp_Array1OfPnt2d,Weigths : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
@@ -2466,13 +2458,13 @@ class BRepBlend_SurfRstConstRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_Surface,RstRef : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
-    @overload
-    def Set(self,Radius : float,Choix : int) -> None: ...
-    @overload
     def Set(self,First : float,Last : float) -> None: ...
     @overload
     def Set(self,TypeSection : OCP.BlendFunc.BlendFunc_SectionShape) -> None: ...
+    @overload
+    def Set(self,SurfRef : OCP.Adaptor3d.Adaptor3d_Surface,RstRef : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
+    def Set(self,Radius : float,Choix : int) -> None: ...
     def Tangent2dOnRst(self) -> OCP.gp.gp_Vec2d: 
         """
         None
@@ -2647,9 +2639,9 @@ class BRepBlend_SurfRstEvolRad(OCP.Blend.Blend_SurfRstFunction, OCP.Blend.Blend_
         Sets the type of section generation for the approximations.
         """
     @overload
-    def Set(self,First : float,Last : float) -> None: ...
-    @overload
     def Set(self,Param : float) -> None: ...
+    @overload
+    def Set(self,First : float,Last : float) -> None: ...
     @overload
     def Set(self,Choix : int) -> None: ...
     @overload
@@ -2776,14 +2768,14 @@ class BRepBlend_Walking():
         None
         """
     @overload
-    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,Pdep : float,Pmax : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,RecOnS1 : bool,RecOnS2 : bool,Psol : float,ParSol : OCP.math.math_Vector) -> bool: 
+    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,Pdep : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,Pos1 : OCP.TopAbs.TopAbs_State,Pos2 : OCP.TopAbs.TopAbs_State) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,Pdep : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,Pos1 : OCP.TopAbs.TopAbs_State,Pos2 : OCP.TopAbs.TopAbs_State) -> bool: ...
+    def PerformFirstSection(self,F : OCP.Blend.Blend_Function,FInv : OCP.Blend.Blend_FuncInv,Pdep : float,Pmax : float,ParDep : OCP.math.math_Vector,Tolesp : float,TolGuide : float,RecOnS1 : bool,RecOnS2 : bool,Psol : float,ParSol : OCP.math.math_Vector) -> bool: ...
     def SetDomainsToRecadre(self,RecDomain1 : OCP.Adaptor3d.Adaptor3d_TopolTool,RecDomain2 : OCP.Adaptor3d.Adaptor3d_TopolTool) -> None: 
         """
         To define different domains for control and clipping.

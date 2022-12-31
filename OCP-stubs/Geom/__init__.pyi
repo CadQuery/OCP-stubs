@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TColgp
 import OCP.NCollection
-import io
 import OCP.gp
+import OCP.TColgp
+import OCP.GeomAbs
 import OCP.Standard
 import OCP.TColStd
+import io
 __all__  = [
 "Geom_Geometry",
 "Geom_AxisPlacement",
@@ -88,25 +88,25 @@ class Geom_Geometry(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -115,11 +115,11 @@ class Geom_Geometry(OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -127,10 +127,10 @@ class Geom_Geometry(OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Rotate(self,A1 : OCP.gp.gp_Ax1,Ang : float) -> None: 
         """
         Rotates a Geometry. A1 is the axis of the rotation. Ang is the angular value of the rotation in radians.
@@ -160,23 +160,23 @@ class Geom_Geometry(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -233,29 +233,29 @@ class Geom_AxisPlacement(Geom_Geometry, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Location(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the Location point (origin) of the axis placement.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -264,11 +264,11 @@ class Geom_AxisPlacement(Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -276,10 +276,10 @@ class Geom_AxisPlacement(Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Rotate(self,A1 : OCP.gp.gp_Ax1,Ang : float) -> None: 
         """
         Rotates a Geometry. A1 is the axis of the rotation. Ang is the angular value of the rotation in radians.
@@ -321,23 +321,23 @@ class Geom_AxisPlacement(Geom_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -398,29 +398,29 @@ class Geom_Axis1Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Location(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the Location point (origin) of the axis placement.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -429,11 +429,11 @@ class Geom_Axis1Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -441,10 +441,10 @@ class Geom_Axis1Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Reverse(self) -> None: 
         """
         Reverses the direction of the axis placement.
@@ -494,27 +494,27 @@ class Geom_Axis1Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Dir) -> None: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     @overload
     def __init__(self,A1 : OCP.gp.gp_Ax1) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Dir) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -595,23 +595,23 @@ class Geom_Curve(Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns true if the curve is closed. Some curves such as circle are always closed, others such as line are never closed (by definition). Some Curves such as OffsetCurve can be closed or not. These curves are considered as closed if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp which is a fixed criterion independent of the application.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Is the parametrization of the curve periodic ? It is possible only if the curve is closed and if the following relation is satisfied : for each parametric value U the distance between the point P(u) and the point P (u + T) is lower or equal to Resolution from package gp, T is the period and must be a constant. There are three possibilities : . the curve is never periodic by definition (SegmentLine) . the curve is always periodic by definition (Circle) . the curve can be defined as periodic (BSpline). In this case a function SetPeriodic allows you to give the shape of the curve. The general rule for this case is : if a curve can be periodic or not the default periodicity set is non periodic and you have to turn (explicitly) the curve into a periodic curve if you want the curve to be periodic.
@@ -621,7 +621,7 @@ class Geom_Curve(Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns the value of the last parameter. Warnings : It can be RealLast from package Standard if the curve is infinite
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -630,11 +630,11 @@ class Geom_Curve(Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -642,10 +642,10 @@ class Geom_Curve(Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> float: 
         """
         Returns a coefficient to compute the parameter on the transformed curve for the transform of the point on <me>.
@@ -699,23 +699,23 @@ class Geom_Curve(Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -733,7 +733,7 @@ class Geom_Curve(Geom_Geometry, OCP.Standard.Standard_Transient):
     pass
 class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
     """
-    Describes the common behavior of surfaces in 3D space. The Geom package provides many implementations of concrete derived surfaces, such as planes, cylinders, cones, spheres and tori, surfaces of linear extrusion, surfaces of revolution, Bezier and BSpline surfaces, and so on. The key characteristic of these surfaces is that they are parameterized. Geom_Surface demonstrates: - how to work with the parametric equation of a surface to compute the point of parameters (u, v), and, at this point, the 1st, 2nd ... Nth derivative, - how to find global information about a surface in each parametric direction (for example, level of continuity, whether the surface is closed, its periodicity, the bounds of the parameters and so on), and - how the parameters change when geometric transformations are applied to the surface, or the orientation is modified. Note that all surfaces must have a geometric continuity, and any surface is at least "C0". Generally, continuity is checked at construction time or when the curve is edited. Where this is not the case, the documentation makes this explicit. Warning The Geom package does not prevent the construction of surfaces with null areas, or surfaces which self-intersect.Describes the common behavior of surfaces in 3D space. The Geom package provides many implementations of concrete derived surfaces, such as planes, cylinders, cones, spheres and tori, surfaces of linear extrusion, surfaces of revolution, Bezier and BSpline surfaces, and so on. The key characteristic of these surfaces is that they are parameterized. Geom_Surface demonstrates: - how to work with the parametric equation of a surface to compute the point of parameters (u, v), and, at this point, the 1st, 2nd ... Nth derivative, - how to find global information about a surface in each parametric direction (for example, level of continuity, whether the surface is closed, its periodicity, the bounds of the parameters and so on), and - how the parameters change when geometric transformations are applied to the surface, or the orientation is modified. Note that all surfaces must have a geometric continuity, and any surface is at least "C0". Generally, continuity is checked at construction time or when the curve is edited. Where this is not the case, the documentation makes this explicit. Warning The Geom package does not prevent the construction of surfaces with null areas, or surfaces which self-intersect.Describes the common behavior of surfaces in 3D space. The Geom package provides many implementations of concrete derived surfaces, such as planes, cylinders, cones, spheres and tori, surfaces of linear extrusion, surfaces of revolution, Bezier and BSpline surfaces, and so on. The key characteristic of these surfaces is that they are parameterized. Geom_Surface demonstrates: - how to work with the parametric equation of a surface to compute the point of parameters (u, v), and, at this point, the 1st, 2nd ... Nth derivative, - how to find global information about a surface in each parametric direction (for example, level of continuity, whether the surface is closed, its periodicity, the bounds of the parameters and so on), and - how the parameters change when geometric transformations are applied to the surface, or the orientation is modified. Note that all surfaces must have a geometric continuity, and any surface is at least "C0". Generally, continuity is checked at construction time or when the curve is edited. Where this is not the case, the documentation makes this explicit. Warning The Geom package does not prevent the construction of surfaces with null areas, or surfaces which self-intersect.
+    Describes the common behavior of surfaces in 3D space. The Geom package provides many implementations of concrete derived surfaces, such as planes, cylinders, cones, spheres and tori, surfaces of linear extrusion, surfaces of revolution, Bezier and BSpline surfaces, and so on. The key characteristic of these surfaces is that they are parameterized. Geom_Surface demonstrates: - how to work with the parametric equation of a surface to compute the point of parameters (u, v), and, at this point, the 1st, 2nd ... Nth derivative; - how to find global information about a surface in each parametric direction (for example, level of continuity, whether the surface is closed, its periodicity, the bounds of the parameters and so on); - how the parameters change when geometric transformations are applied to the surface, or the orientation is modified.Describes the common behavior of surfaces in 3D space. The Geom package provides many implementations of concrete derived surfaces, such as planes, cylinders, cones, spheres and tori, surfaces of linear extrusion, surfaces of revolution, Bezier and BSpline surfaces, and so on. The key characteristic of these surfaces is that they are parameterized. Geom_Surface demonstrates: - how to work with the parametric equation of a surface to compute the point of parameters (u, v), and, at this point, the 1st, 2nd ... Nth derivative; - how to find global information about a surface in each parametric direction (for example, level of continuity, whether the surface is closed, its periodicity, the bounds of the parameters and so on); - how the parameters change when geometric transformations are applied to the surface, or the orientation is modified.Describes the common behavior of surfaces in 3D space. The Geom package provides many implementations of concrete derived surfaces, such as planes, cylinders, cones, spheres and tori, surfaces of linear extrusion, surfaces of revolution, Bezier and BSpline surfaces, and so on. The key characteristic of these surfaces is that they are parameterized. Geom_Surface demonstrates: - how to work with the parametric equation of a surface to compute the point of parameters (u, v), and, at this point, the 1st, 2nd ... Nth derivative; - how to find global information about a surface in each parametric direction (for example, level of continuity, whether the surface is closed, its periodicity, the bounds of the parameters and so on); - how the parameters change when geometric transformations are applied to the surface, or the orientation is modified.
     """
     def Bounds(self) -> Tuple[float, float, float, float]: 
         """
@@ -741,7 +741,7 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         """
     def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
-        Returns the Global Continuity of the surface in direction U and V : C0 : only geometric continuity, C1 : continuity of the first derivative all along the surface, C2 : continuity of the second derivative all along the surface, C3 : continuity of the third derivative all along the surface, G1 : tangency continuity all along the surface, G2 : curvature continuity all along the surface, CN : the order of continuity is infinite. Example : If the surface is C1 in the V parametric direction and C2 in the U parametric direction Shape = C1.
+        Returns the Global Continuity of the surface in direction U and V : - C0: only geometric continuity, - C1: continuity of the first derivative all along the surface, - C2: continuity of the second derivative all along the surface, - C3: continuity of the third derivative all along the surface, - G1: tangency continuity all along the surface, - G2: curvature continuity all along the surface, - CN: the order of continuity is infinite.
         """
     def Copy(self) -> Geom_Geometry: 
         """
@@ -765,7 +765,7 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         """
     def DN(self,U : float,V : float,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
         """
-        ---Purpose ; Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
+        Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -800,30 +800,30 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns the order of continuity of the surface in the V parametric direction. Raised if N < 0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Checks whether this surface is closed in the u parametric direction. Returns true if, in the u parametric direction: taking uFirst and uLast as the parametric bounds in the u parametric direction, for each parameter v, the distance between the points P(uFirst, v) and P(uLast, v) is less than or equal to gp::Resolution().
         """
     def IsUPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the u parametric direction.
+        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     def IsVClosed(self) -> bool: 
         """
@@ -831,10 +831,10 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         """
     def IsVPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the v parametric direction.
+        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -843,11 +843,11 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -855,10 +855,10 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
@@ -896,30 +896,30 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -955,7 +955,7 @@ class Geom_Surface(Geom_Geometry, OCP.Standard.Standard_Transient):
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1041,23 +1041,23 @@ class Geom_BoundedCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transie
         Returns true if the curve is closed. Some curves such as circle are always closed, others such as line are never closed (by definition). Some Curves such as OffsetCurve can be closed or not. These curves are considered as closed if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp which is a fixed criterion independent of the application.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Is the parametrization of the curve periodic ? It is possible only if the curve is closed and if the following relation is satisfied : for each parametric value U the distance between the point P(u) and the point P (u + T) is lower or equal to Resolution from package gp, T is the period and must be a constant. There are three possibilities : . the curve is never periodic by definition (SegmentLine) . the curve is always periodic by definition (Circle) . the curve can be defined as periodic (BSpline). In this case a function SetPeriodic allows you to give the shape of the curve. The general rule for this case is : if a curve can be periodic or not the default periodicity set is non periodic and you have to turn (explicitly) the curve into a periodic curve if you want the curve to be periodic.
@@ -1067,7 +1067,7 @@ class Geom_BoundedCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transie
         Returns the value of the last parameter. Warnings : It can be RealLast from package Standard if the curve is infinite
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -1076,11 +1076,11 @@ class Geom_BoundedCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transie
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -1088,10 +1088,10 @@ class Geom_BoundedCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transie
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> float: 
         """
         Returns a coefficient to compute the parameter on the transformed curve for the transform of the point on <me>.
@@ -1149,23 +1149,23 @@ class Geom_BoundedCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transie
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -1191,7 +1191,7 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         """
     def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
-        Returns the Global Continuity of the surface in direction U and V : C0 : only geometric continuity, C1 : continuity of the first derivative all along the surface, C2 : continuity of the second derivative all along the surface, C3 : continuity of the third derivative all along the surface, G1 : tangency continuity all along the surface, G2 : curvature continuity all along the surface, CN : the order of continuity is infinite. Example : If the surface is C1 in the V parametric direction and C2 in the U parametric direction Shape = C1.
+        Returns the Global Continuity of the surface in direction U and V : - C0: only geometric continuity, - C1: continuity of the first derivative all along the surface, - C2: continuity of the second derivative all along the surface, - C3: continuity of the third derivative all along the surface, - G1: tangency continuity all along the surface, - G2: curvature continuity all along the surface, - CN: the order of continuity is infinite.
         """
     def Copy(self) -> Geom_Geometry: 
         """
@@ -1215,7 +1215,7 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         """
     def DN(self,U : float,V : float,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
         """
-        ---Purpose ; Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
+        Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -1250,30 +1250,30 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         Returns the order of continuity of the surface in the V parametric direction. Raised if N < 0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Checks whether this surface is closed in the u parametric direction. Returns true if, in the u parametric direction: taking uFirst and uLast as the parametric bounds in the u parametric direction, for each parameter v, the distance between the points P(uFirst, v) and P(uLast, v) is less than or equal to gp::Resolution().
         """
     def IsUPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the u parametric direction.
+        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     def IsVClosed(self) -> bool: 
         """
@@ -1281,10 +1281,10 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         """
     def IsVPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the v parametric direction.
+        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -1293,11 +1293,11 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -1305,10 +1305,10 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
@@ -1346,30 +1346,30 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -1405,7 +1405,7 @@ class Geom_BoundedSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tra
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1532,23 +1532,23 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Check if curve has at least G1 continuity in interval [theTf, theTl] Returns true if IsCN(1) or angle between "left" and "right" first derivatives at knots with C0 continuity is less then theAngTol only knots in interval [theTf, theTl] is checked
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns True if the curve is periodic.
@@ -1566,23 +1566,23 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Returns NonUniform or Uniform or QuasiUniform or PiecewiseBezier. If all the knots differ by a positive constant from the preceding knot the BSpline Curve can be : - Uniform if all the knots are of multiplicity 1, - QuasiUniform if all the knots are of multiplicity 1 except for the first and last knot which are of multiplicity Degree + 1, - PiecewiseBezier if the first and last knots have multiplicity Degree + 1 and if interior knots have multiplicity Degree A piecewise Bezier with only two knots is a BezierCurve. else the curve is non uniform. The tolerance criterion is Epsilon from class Real.
         """
     @overload
-    def KnotSequence(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def KnotSequence(self) -> OCP.TColStd.TColStd_Array1OfReal: 
         """
         Returns K, the knots sequence of this BSpline curve. In this sequence, knots with a multiplicity greater than 1 are repeated. In the case of a non-periodic curve the length of the sequence must be equal to the sum of the NbKnots multiplicities of the knots of the curve (where NbKnots is the number of knots of this BSpline curve). This sum is also equal to : NbPoles + Degree + 1 where NbPoles is the number of poles and Degree the degree of this BSpline curve. In the case of a periodic curve, if there are k periodic knots, the period is Knot(k+1) - Knot(1). The initial sequence is built by writing knots 1 to k+1, which are repeated according to their corresponding multiplicities. If Degree is the degree of the curve, the degree of continuity of the curve at the knot of index 1 (or k+1) is equal to c = Degree + 1 - Mult(1). c knots are then inserted at the beginning and end of the initial sequence: - the c values of knots preceding the first item Knot(k+1) in the initial sequence are inserted at the beginning; the period is subtracted from these c values; - the c values of knots following the last item Knot(1) in the initial sequence are inserted at the end; the period is added to these c values. The length of the sequence must therefore be equal to: NbPoles + 2*Degree - Mult(1) + 2. Example For a non-periodic BSpline curve of degree 2 where: - the array of knots is: { k1 k2 k3 k4 }, - with associated multiplicities: { 3 1 2 3 }, the knot sequence is: K = { k1 k1 k1 k2 k3 k3 k4 k4 k4 } For a periodic BSpline curve of degree 4 , which is "C1" continuous at the first knot, and where : - the periodic knots are: { k1 k2 k3 (k4) } (3 periodic knots: the points of parameter k1 and k4 are identical, the period is p = k4 - k1), - with associated multiplicities: { 3 1 2 (3) }, the degree of continuity at knots k1 and k4 is: Degree + 1 - Mult(i) = 2. 2 supplementary knots are added at the beginning and end of the sequence: - at the beginning: the 2 knots preceding k4 minus the period; in this example, this is k3 - p both times; - at the end: the 2 knots following k1 plus the period; in this example, this is k2 + p and k3 + p. The knot sequence is therefore: K = { k3-p k3-p k1 k1 k1 k2 k3 k3 k4 k4 k4 k2+p k3+p } Exceptions Raised if K.Lower() is less than number of first knot in knot sequence with repetitions or K.Upper() is more than number of last knot in knot sequence with repetitions.
 
         returns the knots of the B-spline curve. Knots with multiplicit greater than 1 are repeated
         """
     @overload
-    def KnotSequence(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
+    def KnotSequence(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def Knots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Knots(self) -> OCP.TColStd.TColStd_Array1OfReal: 
         """
         returns the knot values of the B-spline curve; Warning A knot with a multiplicity greater than 1 is not repeated in the knot table. The Multiplicity function can be used to obtain the multiplicity of each knot.
 
         returns the knot values of the B-spline curve; Warning A knot with a multiplicity greater than 1 is not repeated in the knot table. The Multiplicity function can be used to obtain the multiplicity of each knot.
         """
     @overload
-    def Knots(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
+    def Knots(self,K : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def LastParameter(self) -> float: 
         """
         Computes the parametric value of the end point of the curve. It is a knot value.
@@ -1625,7 +1625,7 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Returns the value of the maximum degree of the normalized B-spline basis functions in this package.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -1634,11 +1634,11 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -1646,10 +1646,10 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def MovePoint(self,U : float,P : OCP.gp.gp_Pnt,Index1 : int,Index2 : int) -> Tuple[int, int]: 
         """
         Moves the point of parameter U of this BSpline curve to P. Index1 and Index2 are the indexes in the table of poles of this BSpline curve of the first and last poles designated to be moved. FirstModifiedPole and LastModifiedPole are the indexes of the first and last poles which are effectively modified. In the event of incompatibility between Index1, Index2 and the value U: - no change is made to this BSpline curve, and - the FirstModifiedPole and LastModifiedPole are returned null. Exceptions Standard_OutOfRange if: - Index1 is greater than or equal to Index2, or - Index1 or Index2 is less than 1 or greater than the number of poles of this BSpline curve.
@@ -1659,14 +1659,14 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Move a point with parameter U to P. and makes it tangent at U be Tangent. StartingCondition = -1 means first can move EndingCondition = -1 means last point can move StartingCondition = 0 means the first point cannot move EndingCondition = 0 means the last point cannot move StartingCondition = 1 means the first point and tangent cannot move EndingCondition = 1 means the last point and tangent cannot move and so forth ErrorStatus != 0 means that there are not enough degree of freedom with the constrain to deform the curve accordingly
         """
     @overload
-    def Multiplicities(self,M : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
+    def Multiplicities(self) -> OCP.TColStd.TColStd_Array1OfInteger: 
         """
         Returns the multiplicity of the knots of the curve.
 
         returns the multiplicity of the knots of the curve.
         """
     @overload
-    def Multiplicities(self) -> OCP.TColStd.TColStd_Array1OfInteger: ...
+    def Multiplicities(self,M : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     def Multiplicity(self,Index : int) -> int: 
         """
         Returns the multiplicity of the knots of range Index. Raised if Index < 1 or Index > NbKnots
@@ -1775,14 +1775,14 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Changes this BSpline curve into a periodic curve. To become periodic, the curve must first be closed. Next, the knot sequence must be periodic. For this, FirstUKnotIndex and LastUKnotIndex are used to compute I1 and I2, the indexes in the knots array of the knots corresponding to the first and last parameters of this BSpline curve. The period is therefore: Knots(I2) - Knots(I1). Consequently, the knots and poles tables are modified. Exceptions Standard_ConstructionError if this BSpline curve is not closed.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt,Weight : float) -> None: 
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt) -> None: 
         """
         Modifies this BSpline curve by assigning P to the pole of index Index in the poles table. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table. Standard_ConstructionError if Weight is negative or null.
 
         Modifies this BSpline curve by assigning P to the pole of index Index in the poles table. This syntax also allows you to modify the weight of the modified pole, which becomes Weight. In this case, if this BSpline curve is non-rational, it can become rational and vice versa. Exceptions Standard_OutOfRange if Index is outside the bounds of the poles table. Standard_ConstructionError if Weight is negative or null.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt,Weight : float) -> None: ...
     def SetWeight(self,Index : int,Weight : float) -> None: 
         """
         Changes the weight for the pole of range Index. If the curve was non rational it can become rational. If the curve was rational it can become non rational.
@@ -1808,23 +1808,23 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -1843,9 +1843,9 @@ class Geom_BSplineCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
     @overload
     def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False,CheckRational : bool=True) -> None: ...
-    @overload
     def __init__(self,Poles : OCP.TColgp.TColgp_Array1OfPnt,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False) -> None: ...
+    @overload
+    def __init__(self,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Multiplicities : OCP.TColStd.TColStd_Array1OfInteger,Degree : int,Periodic : bool=False,CheckRational : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1934,14 +1934,14 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         Increases the degrees of this BSpline surface to UDegree and VDegree in the u and v parametric directions respectively. As a result, the tables of poles, weights and multiplicities are modified. The tables of knots is not changed. Note: Nothing is done if the given degree is less than or equal to the current degree in the corresponding parametric direction. Exceptions Standard_ConstructionError if UDegree or VDegree is greater than Geom_BSplineSurface::MaxDegree().
         """
     @overload
-    def IncreaseUMultiplicity(self,FromI1 : int,ToI2 : int,M : int) -> None: 
+    def IncreaseUMultiplicity(self,UIndex : int,M : int) -> None: 
         """
         Increases the multiplicity of the knot of range UIndex in the UKnots sequence. M is the new multiplicity. M must be greater than the previous multiplicity and lower or equal to the degree of the surface in the U parametric direction. Raised if M is not in the range [1, UDegree]
 
         Increases until order M the multiplicity of the set of knots FromI1,...., ToI2 in the U direction. This method can be used to make a B_spline surface into a PiecewiseBezier B_spline surface. If <me> was uniform, it can become non uniform.
         """
     @overload
-    def IncreaseUMultiplicity(self,UIndex : int,M : int) -> None: ...
+    def IncreaseUMultiplicity(self,FromI1 : int,ToI2 : int,M : int) -> None: ...
     @overload
     def IncreaseVMultiplicity(self,VIndex : int,M : int) -> None: 
         """
@@ -1988,23 +1988,23 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         Returns True if the order of continuity of the surface in the V direction is N. Raised if N < 0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns true if the first control points row and the last control points row are identical. The tolerance criterion is Resolution from package gp.
@@ -2075,7 +2075,7 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         Returns the value of the maximum degree of the normalized B-spline basis functions in the u and v directions.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -2084,11 +2084,11 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -2096,10 +2096,10 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def MovePoint(self,U : float,V : float,P : OCP.gp.gp_Pnt,UIndex1 : int,UIndex2 : int,VIndex1 : int,VIndex2 : int) -> Tuple[int, int, int, int]: 
         """
         Move a point with parameter U and V to P. given u,v as parameters) to reach a new position UIndex1, UIndex2, VIndex1, VIndex2: indicates the poles which can be moved if Problem in BSplineBasis calculation, no change for the curve and UFirstIndex, VLastIndex = 0 VFirstIndex, VLastIndex = 0
@@ -2192,23 +2192,23 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
     @overload
     def SetPoleCol(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         Changes a row of poles or a part of this row with the corresponding weights. If the surface was rational it can become non rational. If the surface was non rational it can become rational. Raised if Uindex < 1 or UIndex > NbUPoles.
 
         Changes a row of poles or a part of this row. Raised if Uindex < 1 or UIndex > NbUPoles.
         """
     @overload
-    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def SetUKnot(self,UIndex : int,K : float,M : int) -> None: 
+    def SetUKnot(self,UIndex : int,K : float) -> None: 
         """
         Substitutes the UKnots of range UIndex with K.
 
         Changes the value of the UKnots of range UIndex and increases its multiplicity.
         """
     @overload
-    def SetUKnot(self,UIndex : int,K : float) -> None: ...
+    def SetUKnot(self,UIndex : int,K : float,M : int) -> None: ...
     def SetUKnots(self,UK : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Changes all the U-knots of the surface. The multiplicity of the knots are not modified.
@@ -2226,14 +2226,14 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         Sets the surface U periodic. Modifies this surface to be periodic in the U parametric direction. To become periodic in a given parametric direction a surface must be closed in that parametric direction, and the knot sequence relative to that direction must be periodic. To generate this periodic sequence of knots, the functions FirstUKnotIndex and LastUKnotIndex are used to compute I1 and I2. These are the indexes, in the knot array associated with the given parametric direction, of the knots that correspond to the first and last parameters of this BSpline surface in the given parametric direction. Hence the period is: Knots(I1) - Knots(I2) As a result, the knots and poles tables are modified. Exceptions Standard_ConstructionError if the surface is not closed in the given parametric direction.
         """
     @overload
-    def SetVKnot(self,VIndex : int,K : float) -> None: 
+    def SetVKnot(self,VIndex : int,K : float,M : int) -> None: 
         """
         Substitutes the VKnots of range VIndex with K.
 
         Changes the value of the VKnots of range VIndex and increases its multiplicity.
         """
     @overload
-    def SetVKnot(self,VIndex : int,K : float,M : int) -> None: ...
+    def SetVKnot(self,VIndex : int,K : float) -> None: ...
     def SetVKnots(self,VK : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Changes all the V-knots of the surface. The multiplicity of the knots are not modified.
@@ -2279,23 +2279,23 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UDegree(self) -> int: 
         """
         Returns the degree of the normalized B-splines Ni,n in the U direction.
@@ -2327,14 +2327,14 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
     @overload
     def UKnotSequence(self,Ku : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def UKnots(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def UKnots(self,Ku : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Returns the knots in the U direction.
 
         Returns the knots in the U direction.
         """
     @overload
-    def UKnots(self,Ku : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def UKnots(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     @overload
     def UMultiplicities(self,Mu : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
@@ -2350,7 +2350,7 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -2386,32 +2386,32 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         Returns NonUniform or Uniform or QuasiUniform or PiecewiseBezier. If all the knots differ by a positive constant from the preceding knot in the V direction the B-spline surface can be : - Uniform if all the knots are of multiplicity 1, - QuasiUniform if all the knots are of multiplicity 1 except for the first and last knot which are of multiplicity Degree + 1, - PiecewiseBezier if the first and last knots have multiplicity Degree + 1 and if interior knots have multiplicity Degree otherwise the surface is non uniform in the V direction. The tolerance criterion is Resolution from package gp.
         """
     @overload
-    def VKnotSequence(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def VKnotSequence(self,Kv : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Returns the vknots sequence. In this sequence the knots with a multiplicity greater than 1 are repeated. Example : Kv = {k1, k1, k1, k2, k3, k3, k4, k4, k4}
 
         Returns the vknots sequence. In this sequence the knots with a multiplicity greater than 1 are repeated. Example : Ku = {k1, k1, k1, k2, k3, k3, k4, k4, k4}
         """
     @overload
-    def VKnotSequence(self,Kv : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def VKnotSequence(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     @overload
-    def VKnots(self) -> OCP.TColStd.TColStd_Array1OfReal: 
+    def VKnots(self,Kv : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Returns the knots in the V direction.
 
         Returns the knots in the V direction.
         """
     @overload
-    def VKnots(self,Kv : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def VKnots(self) -> OCP.TColStd.TColStd_Array1OfReal: ...
     @overload
-    def VMultiplicities(self,Mv : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
+    def VMultiplicities(self) -> OCP.TColStd.TColStd_Array1OfInteger: 
         """
         Returns the multiplicities of the knots in the V direction.
 
         Returns the multiplicities of the knots in the V direction.
         """
     @overload
-    def VMultiplicities(self) -> OCP.TColStd.TColStd_Array1OfInteger: ...
+    def VMultiplicities(self,Mv : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     def VMultiplicity(self,VIndex : int) -> int: 
         """
         Returns the multiplicity value of knot of range VIndex in the v direction. Raised if VIndex < 1 or VIndex > NbVKnots
@@ -2434,25 +2434,25 @@ class Geom_BSplineSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def Weight(self,UIndex : int,VIndex : int) -> float: 
         """
         Returns the weight value of range UIndex, VIndex.
         """
     @overload
-    def Weights(self) -> OCP.TColStd.TColStd_Array2OfReal: 
+    def Weights(self,W : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Returns the weights of the B-spline surface.
 
         Returns the weights of the B-spline surface. value and derivatives computation
         """
     @overload
-    def Weights(self,W : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
-    @overload
-    def __init__(self,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UMults : OCP.TColStd.TColStd_Array1OfInteger,VMults : OCP.TColStd.TColStd_Array1OfInteger,UDegree : int,VDegree : int,UPeriodic : bool=False,VPeriodic : bool=False) -> None: ...
+    def Weights(self) -> OCP.TColStd.TColStd_Array2OfReal: ...
     @overload
     def __init__(self,Poles : OCP.TColgp.TColgp_Array2OfPnt,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UMults : OCP.TColStd.TColStd_Array1OfInteger,VMults : OCP.TColStd.TColStd_Array1OfInteger,UDegree : int,VDegree : int,UPeriodic : bool=False,VPeriodic : bool=False) -> None: ...
+    @overload
+    def __init__(self,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,UKnots : OCP.TColStd.TColStd_Array1OfReal,VKnots : OCP.TColStd.TColStd_Array1OfReal,UMults : OCP.TColStd.TColStd_Array1OfInteger,VMults : OCP.TColStd.TColStd_Array1OfInteger,UDegree : int,VDegree : int,UPeriodic : bool=False,VPeriodic : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2505,25 +2505,25 @@ class Geom_Point(Geom_Geometry, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -2532,11 +2532,11 @@ class Geom_Point(Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -2544,10 +2544,10 @@ class Geom_Point(Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Pnt(self) -> OCP.gp.gp_Pnt: 
         """
         returns a non transient copy of <me>
@@ -2585,23 +2585,23 @@ class Geom_Point(Geom_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def X(self) -> float: 
         """
         returns the X coordinate of <me>.
@@ -2702,23 +2702,23 @@ class Geom_Conic(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns true if the curve is closed. Some curves such as circle are always closed, others such as line are never closed (by definition). Some Curves such as OffsetCurve can be closed or not. These curves are considered as closed if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp which is a fixed criterion independent of the application.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Is the parametrization of the curve periodic ? It is possible only if the curve is closed and if the following relation is satisfied : for each parametric value U the distance between the point P(u) and the point P (u + T) is lower or equal to Resolution from package gp, T is the period and must be a constant. There are three possibilities : . the curve is never periodic by definition (SegmentLine) . the curve is always periodic by definition (Circle) . the curve can be defined as periodic (BSpline). In this case a function SetPeriodic allows you to give the shape of the curve. The general rule for this case is : if a curve can be periodic or not the default periodicity set is non periodic and you have to turn (explicitly) the curve into a periodic curve if you want the curve to be periodic.
@@ -2732,7 +2732,7 @@ class Geom_Conic(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns the location point of the conic. For the circle, the ellipse and the hyperbola it is the center of the conic. For the parabola it is the Apex of the parabola.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -2741,11 +2741,11 @@ class Geom_Conic(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -2753,10 +2753,10 @@ class Geom_Conic(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> float: 
         """
         Returns a coefficient to compute the parameter on the transformed curve for the transform of the point on <me>.
@@ -2826,23 +2826,23 @@ class Geom_Conic(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -2947,23 +2947,23 @@ class Geom_Circle(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_T
         returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         returns True.
@@ -2977,7 +2977,7 @@ class Geom_Circle(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_T
         Returns the location point of the conic. For the circle, the ellipse and the hyperbola it is the center of the conic. For the parabola it is the Apex of the parabola.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -2986,11 +2986,11 @@ class Geom_Circle(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_T
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -2998,10 +2998,10 @@ class Geom_Circle(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_T
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> float: 
         """
         Returns a coefficient to compute the parameter on the transformed curve for the transform of the point on <me>.
@@ -3083,23 +3083,23 @@ class Geom_Circle(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_T
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -3165,7 +3165,7 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
         """
     def DN(self,U : float,V : float,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
         """
-        ---Purpose ; Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
+        Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -3200,30 +3200,30 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
         Returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Checks whether this surface is closed in the u parametric direction. Returns true if, in the u parametric direction: taking uFirst and uLast as the parametric bounds in the u parametric direction, for each parameter v, the distance between the points P(uFirst, v) and P(uLast, v) is less than or equal to gp::Resolution().
         """
     def IsUPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the u parametric direction.
+        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     def IsVClosed(self) -> bool: 
         """
@@ -3231,14 +3231,14 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
         """
     def IsVPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the v parametric direction.
+        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     def Location(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the location point of the local coordinate system of the surface.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -3247,11 +3247,11 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -3259,10 +3259,10 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
@@ -3316,30 +3316,30 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -3375,7 +3375,7 @@ class Geom_ElementarySurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -3487,23 +3487,23 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
         Returns True if the distance between the first point and the last point of the curve is lower or equal to the Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns True if the parametrization of a curve is periodic. (P(u) = P(u + T) T = constante)
@@ -3522,7 +3522,7 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
         Returns the value of the maximum polynomial degree of any Geom_BezierCurve curve. This value is 25.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -3531,11 +3531,11 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -3543,10 +3543,10 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def NbPoles(self) -> int: 
         """
         Returns the number of poles of this Bezier curve.
@@ -3564,14 +3564,14 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
         Returns the pole of range Index. Raised if Index is not in the range [1, NbPoles]
         """
     @overload
-    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt: 
         """
         Returns all the poles of the curve.
 
         Returns all the poles of the curve.
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_Array1OfPnt: ...
+    def Poles(self,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     def RemovePole(self,Index : int) -> None: 
         """
         Removes the pole of range Index. If the curve was rational it can become non rational. Raised if Index is not in the range [1, NbPoles] Raised if Degree is lower than 2.
@@ -3613,14 +3613,14 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
         Segments the curve between U1 and U2 which can be out of the bounds of the curve. The curve is oriented from U1 to U2. The control points are modified, the first and the last point are not the same but the parametrization range is [0, 1] else it could not be a Bezier curve. Warnings : Even if <me> is not closed it can become closed after the segmentation for example if U1 or U2 are out of the bounds of the curve <me> or if the curve makes loop. After the segmentation the length of a curve can be null.
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt) -> None: 
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt,Weight : float) -> None: 
         """
         Substitutes the pole of range index with P. If the curve <me> is rational the weight of range Index is not modified. raiseD if Index is not in the range [1, NbPoles]
 
         Substitutes the pole and the weights of range Index. If the curve <me> is not rational it can become rational if all the weights are not identical. If the curve was rational it can become non rational if all the weights are identical. Raised if Index is not in the range [1, NbPoles] Raised if Weight <= Resolution from package gp
         """
     @overload
-    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt,Weight : float) -> None: ...
+    def SetPole(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
     def SetWeight(self,Index : int,Weight : float) -> None: 
         """
         Changes the weight of the pole of range Index. If the curve <me> is not rational it can become rational if all the weights are not identical. If the curve was rational it can become non rational if all the weights are identical. Raised if Index is not in the range [1, NbPoles] Raised if Weight <= Resolution from package gp
@@ -3646,23 +3646,23 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -3681,9 +3681,9 @@ class Geom_BezierCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standar
     @overload
     def Weights(self,W : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
-    @overload
     def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt,PoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def __init__(self,CurvePoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3776,23 +3776,23 @@ class Geom_CylindricalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometr
         Returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns True.
@@ -3814,7 +3814,7 @@ class Geom_CylindricalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometr
         Returns the location point of the local coordinate system of the surface.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -3823,11 +3823,11 @@ class Geom_CylindricalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometr
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -3835,10 +3835,10 @@ class Geom_CylindricalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometr
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns a scale centered on the U axis with T.ScaleFactor
@@ -3904,30 +3904,30 @@ class Geom_CylindricalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometr
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         The UIso curve is a Line. The location point of this line is on the placement plane (XAxis, YAxis) of the surface. This line is parallel to the axis of symmetry of the surface.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -3963,7 +3963,7 @@ class Geom_CylindricalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometr
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @overload
     def __init__(self,C : OCP.gp.gp_Cylinder) -> None: ...
@@ -4049,29 +4049,29 @@ class Geom_Vector(Geom_Geometry, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Magnitude(self) -> float: 
         """
         Returns the Magnitude of <me>.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -4080,11 +4080,11 @@ class Geom_Vector(Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -4092,10 +4092,10 @@ class Geom_Vector(Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Reverse(self) -> None: 
         """
         Reverses the vector <me>.
@@ -4137,23 +4137,23 @@ class Geom_Vector(Geom_Geometry, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Vec(self) -> OCP.gp.gp_Vec: 
         """
         Converts this vector into a gp_Vec vector.
@@ -4266,23 +4266,23 @@ class Geom_ConicalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, O
         Returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         returns True.
@@ -4304,7 +4304,7 @@ class Geom_ConicalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, O
         Returns the location point of the local coordinate system of the surface.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -4313,11 +4313,11 @@ class Geom_ConicalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, O
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -4325,10 +4325,10 @@ class Geom_ConicalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, O
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns a scale centered on the U axis with T.ScaleFactor
@@ -4402,30 +4402,30 @@ class Geom_ConicalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, O
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Builds the U isoparametric line of this cone. The origin of this line is on the reference plane of this cone (i.e. the plane defined by the origin, "X Direction" and "Y Direction" of the local coordinate system of this cone).
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -4461,12 +4461,12 @@ class Geom_ConicalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, O
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @overload
-    def __init__(self,A3 : OCP.gp.gp_Ax3,Ang : float,Radius : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.gp.gp_Cone) -> None: ...
+    @overload
+    def __init__(self,A3 : OCP.gp.gp_Ax3,Ang : float,Radius : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -4579,23 +4579,23 @@ class Geom_Ellipse(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_
         return True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         return True.
@@ -4617,7 +4617,7 @@ class Geom_Ellipse(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_
         Returns the minor radius of this ellipse.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -4626,11 +4626,11 @@ class Geom_Ellipse(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -4638,10 +4638,10 @@ class Geom_Ellipse(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Parameter(self) -> float: 
         """
         Returns p = (1 - e * e) * MajorRadius where e is the eccentricity of the ellipse. Returns 0 if MajorRadius = 0
@@ -4727,23 +4727,23 @@ class Geom_Ellipse(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard_
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -4820,29 +4820,29 @@ class Geom_Axis2Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Location(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the Location point (origin) of the axis placement.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -4851,11 +4851,11 @@ class Geom_Axis2Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -4863,10 +4863,10 @@ class Geom_Axis2Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Rotate(self,A1 : OCP.gp.gp_Ax1,Ang : float) -> None: 
         """
         Rotates a Geometry. A1 is the axis of the rotation. Ang is the angular value of the rotation in radians.
@@ -4920,23 +4920,23 @@ class Geom_Axis2Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def XDirection(self) -> OCP.gp.gp_Dir: 
         """
         Returns the "XDirection". This is a unit vector.
@@ -4946,9 +4946,9 @@ class Geom_Axis2Placement(Geom_AxisPlacement, Geom_Geometry, OCP.Standard.Standa
         Returns the "YDirection". This is a unit vector.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,N : OCP.gp.gp_Dir,Vx : OCP.gp.gp_Dir) -> None: ...
-    @overload
     def __init__(self,A2 : OCP.gp.gp_Ax2) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,N : OCP.gp.gp_Dir,Vx : OCP.gp.gp_Dir) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5006,23 +5006,23 @@ class Geom_SequenceOfBSplineSurface(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -5049,14 +5049,14 @@ class Geom_SequenceOfBSplineSurface(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : Geom_BSplineSurface) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -5082,11 +5082,11 @@ class Geom_SequenceOfBSplineSurface(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Geom_SequenceOfBSplineSurface) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Geom_SequenceOfBSplineSurface) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -5211,23 +5211,23 @@ class Geom_Hyperbola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standar
         Returns False.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         return False for an hyperbola.
@@ -5249,7 +5249,7 @@ class Geom_Hyperbola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standar
         Returns the major or minor radius of this hyperbola. The minor radius is also the distance between the center of the hyperbola and the apex of a conjugate branch (located on the "Y Axis" of the hyperbola).
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -5258,11 +5258,11 @@ class Geom_Hyperbola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standar
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -5270,10 +5270,10 @@ class Geom_Hyperbola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standar
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def OtherBranch(self) -> OCP.gp.gp_Hypr: 
         """
         Computes the "other" branch of this hyperbola. This is the symmetrical branch with respect to the center of this hyperbola. Note: The diagram given under the class purpose indicates where the "other" branch is positioned in relation to this branch of the hyperbola.
@@ -5363,23 +5363,23 @@ class Geom_Hyperbola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standar
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -5393,9 +5393,9 @@ class Geom_Hyperbola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standar
         Returns the YAxis of the conic. The YAxis is perpendicular to the Xaxis. This axis and the Xaxis define the plane of the conic.
         """
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr) -> None: ...
-    @overload
     def __init__(self,A2 : OCP.gp.gp_Ax2,MajorRadius : float,MinorRadius : float) -> None: ...
+    @overload
+    def __init__(self,H : OCP.gp.gp_Hypr) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5476,23 +5476,23 @@ class Geom_Line(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         returns False
@@ -5506,7 +5506,7 @@ class Geom_Line(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns non transient line from gp with the same geometric properties as <me>
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -5515,11 +5515,11 @@ class Geom_Line(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -5527,10 +5527,10 @@ class Geom_Line(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> float: 
         """
         Returns a coefficient to compute the parameter on the transformed curve for the transform of the point on <me>.
@@ -5604,33 +5604,33 @@ class Geom_Line(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transient):
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
         """
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin) -> None: ...
+    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Dir) -> None: ...
     @overload
     def __init__(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Dir) -> None: ...
+    def __init__(self,L : OCP.gp.gp_Lin) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -5723,23 +5723,23 @@ class Geom_OffsetCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transien
         Returns True if the distance between the start point and the end point of the curve is lower or equal to Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns true if this offset curve is periodic, i.e. if the basis curve of this offset curve is periodic.
@@ -5749,7 +5749,7 @@ class Geom_OffsetCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transien
         Returns the value of the last parameter of this offset curve. The last parameter corresponds to the end point. Note: the first and last parameters of this offset curve are also the ones of its basis curve.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -5758,11 +5758,11 @@ class Geom_OffsetCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transien
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -5770,10 +5770,10 @@ class Geom_OffsetCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transien
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Offset(self) -> float: 
         """
         Returns the offset value of this offset curve.
@@ -5843,23 +5843,23 @@ class Geom_OffsetCurve(Geom_Curve, Geom_Geometry, OCP.Standard.Standard_Transien
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>. me->Transformed(T)->Value(me->TransformedParameter(U,T)) is the same point as me->Value(U).Transformed(T) This methods calls the basis curve method.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -5953,23 +5953,23 @@ class Geom_OffsetSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tran
         This method answer True if the continuity of the basis surface is N + 1 in the V parametric direction. We suppose in this class that a unique normal is defined at any point on the basis surface. Raised if N <0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Checks whether this offset surface is closed in the u parametric direction. Returns true if, taking uFirst and uLast as the parametric bounds in the u parametric direction, the distance between the points P(uFirst,v) and P(uLast,v) is less than or equal to gp::Resolution() for each value of the parameter v.
@@ -5987,7 +5987,7 @@ class Geom_OffsetSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tran
         Returns true if this offset surface is periodic in the v parametric direction, i.e. if the basis surface of this offset surface is periodic in this direction.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -5996,11 +5996,11 @@ class Geom_OffsetSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tran
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -6008,10 +6008,10 @@ class Geom_OffsetSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tran
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Offset(self) -> float: 
         """
         Returns the offset value of this offset surface.
@@ -6069,23 +6069,23 @@ class Geom_OffsetSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve.
@@ -6136,7 +6136,7 @@ class Geom_OffsetSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Tran
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def __init__(self,S : Geom_Surface,Offset : float,isNotCheckC0 : bool=False) -> None: ...
     @staticmethod
@@ -6184,23 +6184,23 @@ class Geom_OsculatingSurface(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -6218,9 +6218,9 @@ class Geom_OsculatingSurface(OCP.Standard.Standard_Transient):
         if Standard_True, L is the local osculating surface along V at the point U,V.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,BS : Geom_Surface,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6321,23 +6321,23 @@ class Geom_Parabola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard
         Returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns False
@@ -6351,7 +6351,7 @@ class Geom_Parabola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard
         Returns the location point of the conic. For the circle, the ellipse and the hyperbola it is the center of the conic. For the parabola it is the Apex of the parabola.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -6360,11 +6360,11 @@ class Geom_Parabola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -6372,10 +6372,10 @@ class Geom_Parabola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Parab(self) -> OCP.gp.gp_Parab: 
         """
         Returns the non transient parabola from gp with the same geometric properties as <me>.
@@ -6461,23 +6461,23 @@ class Geom_Parabola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -6491,11 +6491,11 @@ class Geom_Parabola(Geom_Conic, Geom_Curve, Geom_Geometry, OCP.Standard.Standard
         Returns the YAxis of the conic. The YAxis is perpendicular to the Xaxis. This axis and the Xaxis define the plane of the conic.
         """
     @overload
-    def __init__(self,A2 : OCP.gp.gp_Ax2,Focal : float) -> None: ...
-    @overload
     def __init__(self,D : OCP.gp.gp_Ax1,F : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,Prb : OCP.gp.gp_Parab) -> None: ...
+    @overload
+    def __init__(self,A2 : OCP.gp.gp_Ax2,Focal : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6584,23 +6584,23 @@ class Geom_Plane(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, OCP.Standa
         Returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         return False
@@ -6622,7 +6622,7 @@ class Geom_Plane(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, OCP.Standa
         Returns the location point of the local coordinate system of the surface.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -6631,11 +6631,11 @@ class Geom_Plane(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, OCP.Standa
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -6643,10 +6643,10 @@ class Geom_Plane(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, OCP.Standa
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns a scale centered on the origin with T.ScaleFactor
@@ -6708,30 +6708,30 @@ class Geom_Plane(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, OCP.Standa
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve. This is a Line parallel to the YAxis of the plane.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -6767,16 +6767,16 @@ class Geom_Plane(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, OCP.Standa
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Dir) -> None: ...
-    @overload
-    def __init__(self,Pl : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self,A : float,B : float,C : float,D : float) -> None: ...
     @overload
     def __init__(self,A3 : OCP.gp.gp_Ax3) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Dir) -> None: ...
+    @overload
+    def __init__(self,Pl : OCP.gp.gp_Pln) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6829,25 +6829,25 @@ class Geom_CartesianPoint(Geom_Point, Geom_Geometry, OCP.Standard.Standard_Trans
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -6856,11 +6856,11 @@ class Geom_CartesianPoint(Geom_Point, Geom_Geometry, OCP.Standard.Standard_Trans
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -6868,10 +6868,10 @@ class Geom_CartesianPoint(Geom_Point, Geom_Geometry, OCP.Standard.Standard_Trans
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Pnt(self) -> OCP.gp.gp_Pnt: 
         """
         Returns a non transient cartesian point with the same coordinates as <me>.
@@ -6929,23 +6929,23 @@ class Geom_CartesianPoint(Geom_Point, Geom_Geometry, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def X(self) -> float: 
         """
         Returns the X coordinate of <me>.
@@ -7046,23 +7046,23 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
         Returns true if the order of derivation in the V parametric direction is N. Raised if N < 0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns true if this patch is closed in the given parametric direction.
@@ -7080,7 +7080,7 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
         Returns true if this patch is periodic and not trimmed in the given parametric direction.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -7089,11 +7089,11 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -7101,10 +7101,10 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method calls the basis surface method.
@@ -7126,14 +7126,14 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
         None
         """
     @overload
-    def SetTrim(self,Param1 : float,Param2 : float,UTrim : bool,Sense : bool=True) -> None: 
+    def SetTrim(self,U1 : float,U2 : float,V1 : float,V2 : float,USense : bool=True,VSense : bool=True) -> None: 
         """
         Modifies this patch by changing the trim values applied to the original surface The u parametric direction of this patch is oriented from U1 to U2. The v parametric direction of this patch is oriented from V1 to V2. USense and VSense are used for the construction only if the surface is periodic in the corresponding parametric direction, and define the available part of the surface; by default in this case, this patch has the same orientation as the basis surface. Raised if The BasisSurface is not periodic in the UDirection and U1 or U2 are out of the bounds of the BasisSurface. The BasisSurface is not periodic in the VDirection and V1 or V2 are out of the bounds of the BasisSurface. U1 = U2 or V1 = V2
 
         Modifies this patch by changing the trim values applied to the original surface The basis surface is trimmed only in one parametric direction: if UTrim is true, the surface is trimmed in the u parametric direction; if it is false, it is trimmed in the v parametric direction. In the "trimmed" direction, this patch is oriented from Param1 to Param2. If the basis surface is periodic in the "trimmed" direction, Sense defines its available part. By default in this case, this patch has the same orientation as the basis surface in this parametric direction. If the basis surface is closed or periodic in the other parametric direction (i.e. not the "trimmed" direction), this patch has the same characteristics as the basis surface in that parametric direction. Raised if The BasisSurface is not periodic in the considered direction and Param1 or Param2 are out of the bounds of the BasisSurface. Param1 = Param2
         """
     @overload
-    def SetTrim(self,U1 : float,U2 : float,V1 : float,V2 : float,USense : bool=True,VSense : bool=True) -> None: ...
+    def SetTrim(self,Param1 : float,Param2 : float,UTrim : bool,Sense : bool=True) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -7151,23 +7151,23 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         computes the U isoparametric curve.
@@ -7210,7 +7210,7 @@ class Geom_RectangularTrimmedSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geo
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @overload
     def __init__(self,S : Geom_Surface,Param1 : float,Param2 : float,UTrim : bool,Sense : bool=True) -> None: ...
@@ -7294,45 +7294,45 @@ class Geom_HSequenceOfBSplineSurface(Geom_SequenceOfBSplineSurface, OCP.NCollect
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Geom_BSplineSurface) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Geom_SequenceOfBSplineSurface) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Geom_BSplineSurface: 
         """
         Last item access
@@ -7355,14 +7355,14 @@ class Geom_HSequenceOfBSplineSurface(Geom_SequenceOfBSplineSurface, OCP.NCollect
     @overload
     def Prepend(self,theItem : Geom_BSplineSurface) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -7497,23 +7497,23 @@ class Geom_SphericalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry,
         Returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns True.
@@ -7535,7 +7535,7 @@ class Geom_SphericalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry,
         Returns the location point of the local coordinate system of the surface.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -7544,11 +7544,11 @@ class Geom_SphericalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry,
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -7556,10 +7556,10 @@ class Geom_SphericalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry,
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
@@ -7629,30 +7629,30 @@ class Geom_SphericalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry,
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve. The U isoparametric curves of the surface are defined by the section of the spherical surface with plane obtained by rotation of the plane (Location, XAxis, ZAxis) around ZAxis. This plane defines the origin of parametrization u. For a SphericalSurface the UIso curve is a Circle. Warnings : The radius of this circle can be zero.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -7688,16 +7688,16 @@ class Geom_SphericalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry,
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def Volume(self) -> float: 
         """
         Computes the volume of the spherical surface.
         """
     @overload
-    def __init__(self,A3 : OCP.gp.gp_Ax3,Radius : float) -> None: ...
-    @overload
     def __init__(self,S : OCP.gp.gp_Sphere) -> None: ...
+    @overload
+    def __init__(self,A3 : OCP.gp.gp_Ax3,Radius : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -7778,23 +7778,23 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         Increments the reference counter of this object
         """
     @overload
-    def InsertPoleColAfter(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def InsertPoleColAfter(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         Inserts a column of poles. If the surface is rational the weights values associated with CPoles are equal defaulted to 1.
 
         Inserts a column of poles and weights. If the surface was non-rational it can become rational.
         """
     @overload
-    def InsertPoleColAfter(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def InsertPoleColAfter(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def InsertPoleColBefore(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def InsertPoleColBefore(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         Inserts a column of poles. If the surface is rational the weights values associated with CPoles are equal defaulted to 1.
 
         Inserts a column of poles and weights. If the surface was non-rational it can become rational.
         """
     @overload
-    def InsertPoleColBefore(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def InsertPoleColBefore(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
     def InsertPoleRowAfter(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -7822,23 +7822,23 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         Returns True, a BezierSurface is always CN
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns True if the first control points row and the last control points row are identical. The tolerance criterion is Resolution from package gp.
@@ -7869,7 +7869,7 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         Returns the value of the maximum polynomial degree of a Bezier surface. This value is 25.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -7878,11 +7878,11 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -7890,10 +7890,10 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def NbUPoles(self) -> int: 
         """
         Returns the number of poles in the U direction.
@@ -7911,14 +7911,14 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         Returns the pole of range UIndex, VIndex Raised if UIndex < 1 or UIndex > NbUPoles, or VIndex < 1 or VIndex > NbVPoles.
         """
     @overload
-    def Poles(self,P : OCP.TColgp.TColgp_Array2OfPnt) -> None: 
+    def Poles(self) -> OCP.TColgp.TColgp_Array2OfPnt: 
         """
         Returns the poles of the Bezier surface.
 
         Returns the poles of the Bezier surface.
         """
     @overload
-    def Poles(self) -> OCP.TColgp.TColgp_Array2OfPnt: ...
+    def Poles(self,P : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
     def RemovePoleCol(self,VIndex : int) -> None: 
         """
         Removes a column of poles. If the surface was rational it can become non-rational.
@@ -7952,32 +7952,32 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         Modifies this Bezier surface by segmenting it between U1 and U2 in the u parametric direction, and between V1 and V2 in the v parametric direction. U1, U2, V1, and V2 can be outside the bounds of this surface. - U1 and U2 isoparametric Bezier curves, segmented between V1 and V2, become the two bounds of the surface in the v parametric direction (0. and 1. u isoparametric curves). - V1 and V2 isoparametric Bezier curves, segmented between U1 and U2, become the two bounds of the surface in the u parametric direction (0. and 1. v isoparametric curves). The poles and weights tables are modified, but the degree of this surface in the u and v parametric directions does not change. U1 can be greater than U2, and V1 can be greater than V2. In these cases, the corresponding parametric direction is inverted. The orientation of the surface is inverted if one (and only one) parametric direction is inverted.
         """
     @overload
-    def SetPole(self,UIndex : int,VIndex : int,P : OCP.gp.gp_Pnt) -> None: 
+    def SetPole(self,UIndex : int,VIndex : int,P : OCP.gp.gp_Pnt,Weight : float) -> None: 
         """
         Modifies a pole value. If the surface is rational the weight of range (UIndex, VIndex) is not modified.
 
         Substitutes the pole and the weight of range UIndex, VIndex. If the surface <me> is not rational it can become rational. if the surface was rational it can become non-rational.
         """
     @overload
-    def SetPole(self,UIndex : int,VIndex : int,P : OCP.gp.gp_Pnt,Weight : float) -> None: ...
+    def SetPole(self,UIndex : int,VIndex : int,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def SetPoleCol(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoleCol(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         Modifies a column of poles. The length of CPoles can be lower but not greater than NbUPoles so you can modify just a part of the column. Raised if VIndex < 1 or VIndex > NbVPoles
 
         Modifies a column of poles. If the surface was rational it can become non-rational If the surface was non-rational it can become rational. The length of CPoles can be lower but not greater than NbUPoles so you can modify just a part of the column. Raised if VIndex < 1 or VIndex > NbVPoles
         """
     @overload
-    def SetPoleCol(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def SetPoleCol(self,VIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @overload
-    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
         """
         Modifies a row of poles. The length of CPoles can be lower but not greater than NbVPoles so you can modify just a part of the row. Raised if UIndex < 1 or UIndex > NbUPoles
 
         Modifies a row of poles and weights. If the surface was rational it can become non-rational. If the surface was non-rational it can become rational. The length of CPoles can be lower but not greater than NbVPoles so you can modify just a part of the row. Raised if UIndex < 1 or UIndex > NbUPoles
         """
     @overload
-    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def SetPoleRow(self,UIndex : int,CPoles : OCP.TColgp.TColgp_Array1OfPnt,CPoleWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def SetWeight(self,UIndex : int,VIndex : int,Weight : float) -> None: 
         """
         Modifies the weight of the pole of range UIndex, VIndex. If the surface was non-rational it can become rational. If the surface was rational it can become non-rational.
@@ -8007,23 +8007,23 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UDegree(self) -> int: 
         """
         Returns the degree of the surface in the U direction it is NbUPoles - 1
@@ -8034,7 +8034,7 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -8074,21 +8074,21 @@ class Geom_BezierSurface(Geom_BoundedSurface, Geom_Surface, Geom_Geometry, OCP.S
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def Weight(self,UIndex : int,VIndex : int) -> float: 
         """
         Returns the weight of range UIndex, VIndex
         """
     @overload
-    def Weights(self) -> OCP.TColStd.TColStd_Array2OfReal: 
+    def Weights(self,W : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Returns the weights of the Bezier surface.
 
         Returns the weights of the Bezier surface.
         """
     @overload
-    def Weights(self,W : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def Weights(self) -> OCP.TColStd.TColStd_Array2OfReal: ...
     @overload
     def __init__(self,SurfacePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
     @overload
@@ -8142,7 +8142,7 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
         """
     def DN(self,U : float,V : float,Nu : int,Nv : int) -> OCP.gp.gp_Vec: 
         """
-        ---Purpose ; Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
+        Computes the derivative of order Nu in the direction U and Nv in the direction V at the point P(U, V).
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -8181,30 +8181,30 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
         Returns the order of continuity of the surface in the V parametric direction. Raised if N < 0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Checks whether this surface is closed in the u parametric direction. Returns true if, in the u parametric direction: taking uFirst and uLast as the parametric bounds in the u parametric direction, for each parameter v, the distance between the points P(uFirst, v) and P(uLast, v) is less than or equal to gp::Resolution().
         """
     def IsUPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the u parametric direction.
+        Checks if this surface is periodic in the u parametric direction. Returns true if: - this surface is closed in the u parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     def IsVClosed(self) -> bool: 
         """
@@ -8212,10 +8212,10 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
         """
     def IsVPeriodic(self) -> bool: 
         """
-        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution(). Note: T is the parametric period in the v parametric direction.
+        Checks if this surface is periodic in the v parametric direction. Returns true if: - this surface is closed in the v parametric direction, and - there is a constant T such that the distance between the points P (u, v) and P (u + T, v) (or the points P (u, v) and P (u, v + T)) is less than or equal to gp::Resolution().
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -8224,11 +8224,11 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -8236,10 +8236,10 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
@@ -8277,30 +8277,30 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -8336,7 +8336,7 @@ class Geom_SweptSurface(Geom_Surface, Geom_Geometry, OCP.Standard.Standard_Trans
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -8430,23 +8430,23 @@ class Geom_SurfaceOfRevolution(Geom_SweptSurface, Geom_Surface, Geom_Geometry, O
         IsCNv returns true if the degree of continuity of the meridian of this surface of revolution is at least N. Raised if N < 0.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         IsUClosed always returns true.
@@ -8468,7 +8468,7 @@ class Geom_SurfaceOfRevolution(Geom_SweptSurface, Geom_Surface, Geom_Geometry, O
         Returns the location point of the axis of revolution.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -8477,11 +8477,11 @@ class Geom_SurfaceOfRevolution(Geom_SweptSurface, Geom_Surface, Geom_Geometry, O
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -8489,10 +8489,10 @@ class Geom_SurfaceOfRevolution(Geom_SweptSurface, Geom_Surface, Geom_Geometry, O
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns a scale centered on the U axis with BasisCurve()->ParametricTransformation(T)
@@ -8550,30 +8550,30 @@ class Geom_SurfaceOfRevolution(Geom_SweptSurface, Geom_Surface, Geom_Geometry, O
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve of this surface of revolution. It is the curve obtained by rotating the meridian through an angle U about the axis of revolution.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -8609,7 +8609,7 @@ class Geom_SurfaceOfRevolution(Geom_SweptSurface, Geom_Surface, Geom_Geometry, O
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def __init__(self,C : Geom_Curve,A1 : OCP.gp.gp_Ax1) -> None: ...
     @staticmethod
@@ -8700,23 +8700,23 @@ class Geom_SurfaceOfLinearExtrusion(Geom_SweptSurface, Geom_Surface, Geom_Geomet
         IsCNv always returns true.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         IsUClosed returns true if the "basis curve" of this surface of linear extrusion is closed.
@@ -8734,7 +8734,7 @@ class Geom_SurfaceOfLinearExtrusion(Geom_SweptSurface, Geom_Surface, Geom_Geomet
         IsVPeriodic always returns false.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -8743,11 +8743,11 @@ class Geom_SurfaceOfLinearExtrusion(Geom_SweptSurface, Geom_Surface, Geom_Geomet
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -8755,10 +8755,10 @@ class Geom_SurfaceOfLinearExtrusion(Geom_SweptSurface, Geom_Surface, Geom_Geomet
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns a scale U by BasisCurve()->ParametricTransformation(T) V by T.ScaleFactor()
@@ -8804,30 +8804,30 @@ class Geom_SurfaceOfLinearExtrusion(Geom_SweptSurface, Geom_Surface, Geom_Geomet
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve of this surface of linear extrusion. This is the line parallel to the direction of extrusion, passing through the point of parameter U of the basis curve.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -8863,7 +8863,7 @@ class Geom_SurfaceOfLinearExtrusion(Geom_SweptSurface, Geom_Surface, Geom_Geomet
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def __init__(self,C : Geom_Curve,V : OCP.gp.gp_Dir) -> None: ...
     @staticmethod
@@ -8958,23 +8958,23 @@ class Geom_ToroidalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, 
         Returns True.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         Returns True.
@@ -9004,7 +9004,7 @@ class Geom_ToroidalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, 
         Returns the major radius, or the minor radius, of this torus.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -9013,11 +9013,11 @@ class Geom_ToroidalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, 
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -9025,10 +9025,10 @@ class Geom_ToroidalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, 
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns a 2d transformation used to find the new parameters of a point on the transformed surface. is the same point as Where U',V' are obtained by transforming U,V with the 2d transformation returned by This method returns an identity transformation
@@ -9098,30 +9098,30 @@ class Geom_ToroidalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, 
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def UIso(self,U : float) -> Geom_Curve: 
         """
         Computes the U isoparametric curve.
         """
     def UPeriod(self) -> float: 
         """
-        Returns the period of this surface in the u parametric direction. raises if the surface is not uperiodic.
+        Returns the period of this surface in the u parametric direction. Raises if the surface is not uperiodic.
         """
     def UReverse(self) -> None: 
         """
@@ -9157,7 +9157,7 @@ class Geom_ToroidalSurface(Geom_ElementarySurface, Geom_Surface, Geom_Geometry, 
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameter U on the surface.
+        Computes the point of parameter (U, V) on the surface.
         """
     def Volume(self) -> float: 
         """
@@ -9223,23 +9223,23 @@ class Geom_Transformation(OCP.Standard.Standard_Transient):
         Raised if the transformation is singular. This means that the ScaleFactor is lower or equal to Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNegative(self) -> bool: 
         """
         Checks whether this transformation is an indirect transformation: returns true if the determinant of the matrix of the vectorial part of the transformation is less than 0.
@@ -9269,7 +9269,7 @@ class Geom_Transformation(OCP.Standard.Standard_Transient):
         Returns the scale value of the transformation.
         """
     @overload
-    def SetMirror(self,thePnt : OCP.gp.gp_Pnt) -> None: 
+    def SetMirror(self,theA2 : OCP.gp.gp_Ax2) -> None: 
         """
         Makes the transformation into a symmetrical transformation with respect to a point P. P is the center of the symmetry.
 
@@ -9278,9 +9278,9 @@ class Geom_Transformation(OCP.Standard.Standard_Transient):
         Makes the transformation into a symmetrical transformation with respect to a plane. The plane of the symmetry is defined with the axis placement A2. It is the plane (Location, XDirection, YDirection).
         """
     @overload
-    def SetMirror(self,theA2 : OCP.gp.gp_Ax2) -> None: ...
-    @overload
     def SetMirror(self,theA1 : OCP.gp.gp_Ax1) -> None: ...
+    @overload
+    def SetMirror(self,thePnt : OCP.gp.gp_Pnt) -> None: ...
     def SetRotation(self,theA1 : OCP.gp.gp_Ax1,theAng : float) -> None: 
         """
         Makes the transformation into a rotation. A1 is the axis rotation and Ang is the angular value of the rotation in radians.
@@ -9299,14 +9299,14 @@ class Geom_Transformation(OCP.Standard.Standard_Transient):
     @overload
     def SetTransformation(self,theFromSystem1 : OCP.gp.gp_Ax3,theToSystem2 : OCP.gp.gp_Ax3) -> None: ...
     @overload
-    def SetTranslation(self,theVec : OCP.gp.gp_Vec) -> None: 
+    def SetTranslation(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Makes the transformation into a translation. V is the vector of the translation.
 
         Makes the transformation into a translation from the point P1 to the point P2.
         """
     @overload
-    def SetTranslation(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def SetTranslation(self,theVec : OCP.gp.gp_Vec) -> None: ...
     def SetTrsf(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Converts the gp_Trsf transformation T into this transformation.
@@ -9328,9 +9328,9 @@ class Geom_Transformation(OCP.Standard.Standard_Transient):
         Returns the coefficients of the global matrix of transformation. It is a 3 rows X 4 columns matrix.
         """
     @overload
-    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -9419,23 +9419,23 @@ class Geom_TrimmedCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Returns True if the distance between the StartPoint and the EndPoint is lower or equal to Resolution from package gp.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Always returns FALSE (independently of the type of basis curve).
@@ -9445,7 +9445,7 @@ class Geom_TrimmedCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Returns the value of the last parameter of <me>. The last parameter is the parameter of the "EndPoint" of the trimmed curve.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -9454,11 +9454,11 @@ class Geom_TrimmedCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -9466,10 +9466,10 @@ class Geom_TrimmedCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def ParametricTransformation(self,T : OCP.gp.gp_Trsf) -> float: 
         """
         Returns a coefficient to compute the parameter on the transformed curve for the transform of the point on <me>.
@@ -9531,23 +9531,23 @@ class Geom_TrimmedCurve(Geom_BoundedCurve, Geom_Curve, Geom_Geometry, OCP.Standa
         Returns the parameter on the transformed curve for the transform of the point of parameter U on <me>.
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Value(self,U : float) -> OCP.gp.gp_Pnt: 
         """
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve. it is implemented with D0.
@@ -9659,29 +9659,29 @@ class Geom_Direction(Geom_Vector, Geom_Geometry, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Magnitude(self) -> float: 
         """
         returns 1.0 which is the magnitude of any unit vector.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -9690,11 +9690,11 @@ class Geom_Direction(Geom_Vector, Geom_Geometry, OCP.Standard.Standard_Transient
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -9702,10 +9702,10 @@ class Geom_Direction(Geom_Vector, Geom_Geometry, OCP.Standard.Standard_Transient
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Reverse(self) -> None: 
         """
         Reverses the vector <me>.
@@ -9767,23 +9767,23 @@ class Geom_Direction(Geom_Vector, Geom_Geometry, OCP.Standard.Standard_Transient
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Vec(self) -> OCP.gp.gp_Vec: 
         """
         Converts this vector into a gp_Vec vector.
@@ -9900,29 +9900,29 @@ class Geom_VectorWithMagnitude(Geom_Vector, Geom_Geometry, OCP.Standard.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Magnitude(self) -> float: 
         """
         Returns the magnitude of <me>.
         """
     @overload
-    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry.
 
@@ -9931,11 +9931,11 @@ class Geom_VectorWithMagnitude(Geom_Vector, Geom_Geometry, OCP.Standard.Standard
         Performs the symmetrical transformation of a Geometry with respect to a plane. The axis placement A2 locates the plane of the symmetry : (Location, XDirection, YDirection).
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt) -> None: ...
+    def Mirror(self,A1 : OCP.gp.gp_Ax1) -> None: ...
     @overload
     def Mirror(self,A2 : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: 
+    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
@@ -9943,10 +9943,10 @@ class Geom_VectorWithMagnitude(Geom_Vector, Geom_Geometry, OCP.Standard.Standard
 
         None
         """
-    @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
     @overload
     def Mirrored(self,A2 : OCP.gp.gp_Ax2) -> Geom_Geometry: ...
+    @overload
+    def Mirrored(self,A1 : OCP.gp.gp_Ax1) -> Geom_Geometry: ...
     def Multiplied(self,Scalar : float) -> Geom_VectorWithMagnitude: 
         """
         Computes the product of the vector <me> by a scalar. A new vector is returned.
@@ -10032,23 +10032,23 @@ class Geom_VectorWithMagnitude(Geom_Vector, Geom_Geometry, OCP.Standard.Standard
         None
         """
     @overload
-    def Translate(self,V : OCP.gp.gp_Vec) -> None: 
+    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: 
         """
         Translates a Geometry. V is the vector of the translation.
 
         Translates a Geometry from the point P1 to the point P2.
         """
     @overload
-    def Translate(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    def Translate(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: 
+    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Translated(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> Geom_Geometry: ...
+    def Translated(self,V : OCP.gp.gp_Vec) -> Geom_Geometry: ...
     def Vec(self) -> OCP.gp.gp_Vec: 
         """
         Converts this vector into a gp_Vec vector.
@@ -10068,9 +10068,9 @@ class Geom_VectorWithMagnitude(Geom_Vector, Geom_Geometry, OCP.Standard.Standard
     @overload
     def __init__(self,X : float,Y : float,Z : float) -> None: ...
     @overload
-    def __init__(self,V : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self,P1 : OCP.gp.gp_Pnt,P2 : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,V : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

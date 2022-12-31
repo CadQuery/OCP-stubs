@@ -44,7 +44,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def Print_s(St : TopAbs_State,S : io.BytesIO) -> io.BytesIO: 
+    def Print_s(theOrientation : TopAbs_Orientation,theStream : io.BytesIO) -> io.BytesIO: 
         """
         Prints the name of Shape type as a String on the Stream.
 
@@ -57,7 +57,7 @@ class TopAbs():
     def Print_s(theShapeType : TopAbs_ShapeEnum,theStream : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     @overload
-    def Print_s(theOrientation : TopAbs_Orientation,theStream : io.BytesIO) -> io.BytesIO: ...
+    def Print_s(St : TopAbs_State,S : io.BytesIO) -> io.BytesIO: ...
     @staticmethod
     def Reverse_s(Or : TopAbs_Orientation) -> TopAbs_Orientation: 
         """
@@ -65,7 +65,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeOrientationFromString_s(theOrientationString : str,theOrientation : TopAbs_Orientation) -> bool: 
+    def ShapeOrientationFromString_s(theOrientationString : str) -> TopAbs_Orientation: 
         """
         Returns the shape orientation from the given string identifier (using case-insensitive comparison).
 
@@ -73,7 +73,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeOrientationFromString_s(theOrientationString : str) -> TopAbs_Orientation: ...
+    def ShapeOrientationFromString_s(theOrientationString : str,theOrientation : TopAbs_Orientation) -> bool: ...
     @staticmethod
     def ShapeOrientationToString_s(theOrientation : TopAbs_Orientation) -> str: 
         """
@@ -81,7 +81,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeTypeFromString_s(theTypeString : str) -> TopAbs_ShapeEnum: 
+    def ShapeTypeFromString_s(theTypeString : str,theType : TopAbs_ShapeEnum) -> bool: 
         """
         Returns the shape type from the given string identifier (using case-insensitive comparison).
 
@@ -89,7 +89,7 @@ class TopAbs():
         """
     @staticmethod
     @overload
-    def ShapeTypeFromString_s(theTypeString : str,theType : TopAbs_ShapeEnum) -> bool: ...
+    def ShapeTypeFromString_s(theTypeString : str) -> TopAbs_ShapeEnum: ...
     @staticmethod
     def ShapeTypeToString_s(theType : TopAbs_ShapeEnum) -> str: 
         """

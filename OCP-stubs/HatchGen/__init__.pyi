@@ -60,7 +60,7 @@ class HatchGen_Domain():
         Returns the second point of the domain. The exception DomainError is raised if HasSecondPoint returns False.
         """
     @overload
-    def SetFirstPoint(self) -> None: 
+    def SetFirstPoint(self,P : HatchGen_PointOnHatching) -> None: 
         """
         Sets the first point of the domain.
 
@@ -71,7 +71,7 @@ class HatchGen_Domain():
         Sets the first point of the domain at the infinite.
         """
     @overload
-    def SetFirstPoint(self,P : HatchGen_PointOnHatching) -> None: ...
+    def SetFirstPoint(self) -> None: ...
     @overload
     def SetPoints(self,P1 : HatchGen_PointOnHatching,P2 : HatchGen_PointOnHatching) -> None: 
         """
@@ -86,7 +86,7 @@ class HatchGen_Domain():
     @overload
     def SetPoints(self) -> None: ...
     @overload
-    def SetSecondPoint(self,P : HatchGen_PointOnHatching) -> None: 
+    def SetSecondPoint(self) -> None: 
         """
         Sets the second point of the domain.
 
@@ -97,13 +97,13 @@ class HatchGen_Domain():
         Sets the second point of the domain at the infinite.
         """
     @overload
-    def SetSecondPoint(self) -> None: ...
+    def SetSecondPoint(self,P : HatchGen_PointOnHatching) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,P : HatchGen_PointOnHatching,First : bool) -> None: ...
     @overload
     def __init__(self,P1 : HatchGen_PointOnHatching,P2 : HatchGen_PointOnHatching) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -194,14 +194,14 @@ class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : HatchGen_Domains) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -227,11 +227,11 @@ class HatchGen_Domains(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : HatchGen_Domains) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : HatchGen_Domains) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -573,9 +573,9 @@ class HatchGen_PointOnHatching(HatchGen_IntersectionPoint):
         Returns the transition state before the intersection.
         """
     @overload
-    def __init__(self,Point : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Point : OCP.IntRes2d.IntRes2d_IntersectionPoint) -> None: ...
     pass
 class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -623,14 +623,14 @@ class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : HatchGen_PointsOnElement) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : HatchGen_PointOnElement) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : HatchGen_PointOnElement) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : HatchGen_PointsOnElement) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : HatchGen_PointsOnElement) -> None: 
         """
@@ -657,23 +657,23 @@ class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : HatchGen_PointsOnElement) -> None: 
+    def Prepend(self,theItem : HatchGen_PointOnElement) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : HatchGen_PointOnElement) -> None: ...
+    def Prepend(self,theSeq : HatchGen_PointsOnElement) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -699,9 +699,9 @@ class HatchGen_PointsOnElement(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self,theOther : HatchGen_PointsOnElement) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -800,14 +800,14 @@ class HatchGen_PointsOnHatching(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theSeq : HatchGen_PointsOnHatching) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -833,11 +833,11 @@ class HatchGen_PointsOnHatching(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : HatchGen_PointsOnHatching) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : HatchGen_PointsOnHatching) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

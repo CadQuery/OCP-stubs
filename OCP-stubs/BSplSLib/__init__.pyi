@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import OCP.TColgp
-import OCP.Standard
 import OCP.TColStd
+import OCP.gp
+import OCP.Standard
 __all__  = [
 "BSplSLib",
 "BSplSLib_Cache",
@@ -19,7 +19,7 @@ class BSplSLib():
     """
     @staticmethod
     @overload
-    def BuildCache_s(U : float,V : float,USpanDomain : float,VSpanDomain : float,UPeriodicFlag : bool,VPeriodicFlag : bool,UDegree : int,VDegree : int,UIndex : int,VIndex : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def BuildCache_s(theU : float,theV : float,theUSpanDomain : float,theVSpanDomain : float,theUPeriodic : bool,theVPeriodic : bool,theUDegree : int,theVDegree : int,theUIndex : int,theVIndex : int,theUFlatKnots : OCP.TColStd.TColStd_Array1OfReal,theVFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array2OfPnt,theWeights : OCP.TColStd.TColStd_Array2OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Perform the evaluation of the Taylor expansion of the Bspline normalized between 0 and 1. If rational computes the homogeneous Taylor expension for the numerator and stores it in CachePoles
 
@@ -27,7 +27,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def BuildCache_s(theU : float,theV : float,theUSpanDomain : float,theVSpanDomain : float,theUPeriodic : bool,theVPeriodic : bool,theUDegree : int,theVDegree : int,theUIndex : int,theVIndex : int,theUFlatKnots : OCP.TColStd.TColStd_Array1OfReal,theVFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array2OfPnt,theWeights : OCP.TColStd.TColStd_Array2OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def BuildCache_s(U : float,V : float,USpanDomain : float,VSpanDomain : float,UPeriodicFlag : bool,VPeriodicFlag : bool,UDegree : int,VDegree : int,UIndex : int,VIndex : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     def CacheD0_s(U : float,V : float,UDegree : int,VDegree : int,UCacheParameter : float,VCacheParameter : float,USpanLenght : float,VSpanLength : float,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,Point : OCP.gp.gp_Pnt) -> None: 
         """
@@ -121,7 +121,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Interpolate_s(UDegree : int,VDegree : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,UParameters : OCP.TColStd.TColStd_Array1OfReal,VParameters : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt) -> Tuple[int]: 
+    def Interpolate_s(UDegree : int,VDegree : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,UParameters : OCP.TColStd.TColStd_Array1OfReal,VParameters : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal) -> Tuple[int]: 
         """
         Performs the interpolation of the data points given in the Poles array in the form [1,...,RL][1,...,RC][1...PolesDimension] . The ColLength CL and the Length of UParameters must be the same. The length of VFlatKnots is VDegree + CL + 1.
 
@@ -129,7 +129,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Interpolate_s(UDegree : int,VDegree : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,UParameters : OCP.TColStd.TColStd_Array1OfReal,VParameters : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal) -> Tuple[int]: ...
+    def Interpolate_s(UDegree : int,VDegree : int,UFlatKnots : OCP.TColStd.TColStd_Array1OfReal,VFlatKnots : OCP.TColStd.TColStd_Array1OfReal,UParameters : OCP.TColStd.TColStd_Array1OfReal,VParameters : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt) -> Tuple[int]: ...
     @staticmethod
     def IsRational_s(Weights : OCP.TColStd.TColStd_Array2OfReal,I1 : int,I2 : int,J1 : int,J2 : int,Epsilon : float=0.0) -> bool: 
         """
@@ -152,7 +152,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: 
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Warning! To be used for BezierSurfaces ONLY!!!
 
@@ -160,7 +160,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,CachePoles : OCP.TColgp.TColgp_Array2OfPnt,CacheWeights : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,CachePoles : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
     @staticmethod
     def RationalDerivative_s(UDeg : int,VDeg : int,N : int,M : int,All : bool=True) -> Tuple[float, float]: 
         """
@@ -178,7 +178,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Last : int,UDirection : bool) -> None: 
+    def Reverse_s(Weights : OCP.TColStd.TColStd_Array2OfReal,Last : int,UDirection : bool) -> None: 
         """
         Reverses the array of poles. Last is the Index of the new first Row( Col) of Poles. On a non periodic surface Last is Poles.Upper(). On a periodic curve last is (number of flat knots - degree - 1) or (sum of multiplicities(but for the last) + degree - 1)
 
@@ -186,7 +186,7 @@ class BSplSLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Weights : OCP.TColStd.TColStd_Array2OfReal,Last : int,UDirection : bool) -> None: ...
+    def Reverse_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Last : int,UDirection : bool) -> None: ...
     @staticmethod
     @overload
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array2OfPnt,Weights : OCP.TColStd.TColStd_Array2OfReal,FP : OCP.TColStd.TColStd_Array1OfReal,UDirection : bool) -> None: 
@@ -250,23 +250,23 @@ class BSplSLib_Cache(OCP.Standard.Standard_Transient):
         Verifies validity of the cache using parameters of the point
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

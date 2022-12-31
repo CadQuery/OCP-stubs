@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.math
-import io
-import OCP.Geom2d
 import OCP.gp
-import OCP.Standard
+import OCP.Geom2d
 import OCP.IntRes2d
+import OCP.GeomAbs
+import OCP.Standard
+import io
 __all__  = [
 "Bisector",
 "Bisector_Bisec",
@@ -44,7 +44,7 @@ class Bisector_Bisec():
         Returns the Curve of <me>.
         """
     @overload
-    def Perform(self,Cu1 : OCP.Geom2d.Geom2d_Curve,Cu2 : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,ajointype : OCP.GeomAbs.GeomAbs_JoinType,Tolerance : float,oncurve : bool=True) -> None: 
+    def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: 
         """
         Performs the bisecting line between the curves <Cu1> and <Cu2>. <oncurve> is True if the point <P> is common to <Cu1> and <Cu2>.
 
@@ -57,9 +57,9 @@ class Bisector_Bisec():
     @overload
     def Perform(self,Pnt : OCP.Geom2d.Geom2d_Point,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
     @overload
-    def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
+    def Perform(self,Cu1 : OCP.Geom2d.Geom2d_Curve,Cu2 : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,ajointype : OCP.GeomAbs.GeomAbs_JoinType,Tolerance : float,oncurve : bool=True) -> None: ...
     @overload
-    def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: ...
+    def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
     def Value(self) -> OCP.Geom2d.Geom2d_TrimmedCurve: 
         """
         Returns the Curve of <me>.
@@ -148,23 +148,23 @@ class Bisector_Curve(OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2d_Geometry, OCP.St
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         Returns true if the parameter of the curve is periodic. It is possible only if the curve is closed and if the following relation is satisfied : for each parametric value U the distance between the point P(u) and the point P (u + T) is lower or equal to Resolution from package gp, T is the period and must be a constant. There are three possibilities : . the curve is never periodic by definition (SegmentLine) . the curve is always periodic by definition (Circle) . the curve can be defined as periodic (BSpline). In this case a function SetPeriodic allows you to give the shape of the curve. The general rule for this case is : if a curve can be periodic or not the default periodicity set is non periodic and you have to turn (explicitly) the curve into a periodic curve if you want the curve to be periodic.
@@ -174,23 +174,23 @@ class Bisector_Curve(OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2d_Geometry, OCP.St
         Value of the last parameter. Warnings : It can be RealFirst or RealLast from package Standard if the curve is infinite
         """
     @overload
-    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry and assigns the result to this geometric object.
 
         Performs the symmetrical transformation of a Geometry with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
+    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -389,23 +389,23 @@ class Bisector_BisecCC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -423,23 +423,23 @@ class Bisector_BisecCC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Returns the reciproque of LinkBisCurve.
         """
     @overload
-    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry and assigns the result to this geometric object.
 
         Performs the symmetrical transformation of a Geometry with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
+    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -654,23 +654,23 @@ class Bisector_BisecPC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Returns True if the bisector is extended at start.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -688,23 +688,23 @@ class Bisector_BisecPC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Returns the reciproque of LinkBisCurve.
         """
     @overload
-    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry and assigns the result to this geometric object.
 
         Performs the symmetrical transformation of a Geometry with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
+    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -792,9 +792,9 @@ class Bisector_BisecPC(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom2
         Computes the point of parameter U on <me>. If the curve is periodic then the returned point is P(U) with U = Ustart + (U - Uend) where Ustart and Uend are the parametric bounds of the curve.
         """
     @overload
-    def __init__(self,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,Side : float,UMin : float,UMax : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,Side : float,UMin : float,UMax : float) -> None: ...
     @overload
     def __init__(self,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,Side : float,DistMax : float=500.0) -> None: ...
     @staticmethod
@@ -905,23 +905,23 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -931,23 +931,23 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         None
         """
     @overload
-    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: 
+    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: 
         """
         Performs the symmetrical transformation of a Geometry with respect to the point P which is the center of the symmetry and assigns the result to this geometric object.
 
         Performs the symmetrical transformation of a Geometry with respect to an axis placement which is the axis of the symmetry.
         """
     @overload
-    def Mirror(self,P : OCP.gp.gp_Pnt2d) -> None: ...
+    def Mirror(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @overload
-    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: 
+    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: 
         """
         None
 
         None
         """
     @overload
-    def Mirrored(self,A : OCP.gp.gp_Ax2d) -> OCP.Geom2d.Geom2d_Geometry: ...
+    def Mirrored(self,P : OCP.gp.gp_Pnt2d) -> OCP.Geom2d.Geom2d_Geometry: ...
     def NbIntervals(self) -> int: 
         """
         If necessary, breaks the curve in intervals of continuity <C1>. And returns the number of intervals.
@@ -982,9 +982,9 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
     @overload
     def Perform(self,Pnt : OCP.Geom2d.Geom2d_Point,Cu : OCP.Geom2d.Geom2d_Curve,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
     @overload
-    def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: ...
-    @overload
     def Perform(self,Cu : OCP.Geom2d.Geom2d_Curve,Pnt : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float,oncurve : bool=True) -> None: ...
+    @overload
+    def Perform(self,Pnt1 : OCP.Geom2d.Geom2d_Point,Pnt2 : OCP.Geom2d.Geom2d_Point,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,Sense : float,Tolerance : float=0.0,oncurve : bool=True) -> None: ...
     def Period(self) -> float: 
         """
         Returns the period of this curve. raises if the curve is not periodic
@@ -1018,14 +1018,14 @@ class Bisector_BisecAna(Bisector_Curve, OCP.Geom2d.Geom2d_Curve, OCP.Geom2d.Geom
         None
         """
     @overload
-    def SetTrim(self,Cu : OCP.Geom2d.Geom2d_Curve) -> None: 
+    def SetTrim(self,uf : float,ul : float) -> None: 
         """
         Trim <me> by a domain defined by the curve <Cu>. This domain is the set of the points which are nearest from <Cu> than the extremitis of <Cu>.
 
         Trim <me> by a domain defined by uf and ul
         """
     @overload
-    def SetTrim(self,uf : float,ul : float) -> None: ...
+    def SetTrim(self,Cu : OCP.Geom2d.Geom2d_Curve) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1123,9 +1123,9 @@ class Bisector_FunctionInter(OCP.math.math_FunctionWithDerivative, OCP.math.math
         Returns the values of the functions and the derivatives for the variable <X>.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Curve,Bis1 : Bisector_Curve,Bis2 : Bisector_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Bisector_Inter(OCP.IntRes2d.IntRes2d_Intersection):
     """
@@ -1190,14 +1190,14 @@ class Bisector_PointOnBis():
     None
     """
     @overload
-    def Distance(self) -> float: 
+    def Distance(self,Distance : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Distance(self,Distance : float) -> None: ...
+    def Distance(self) -> float: ...
     def Dump(self) -> None: 
         """
         None
@@ -1212,23 +1212,23 @@ class Bisector_PointOnBis():
     @overload
     def IsInfinite(self,Infinite : bool) -> None: ...
     @overload
-    def ParamOnBis(self,Param : float) -> None: 
+    def ParamOnBis(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def ParamOnBis(self) -> float: ...
+    def ParamOnBis(self,Param : float) -> None: ...
     @overload
-    def ParamOnC1(self,Param : float) -> None: 
+    def ParamOnC1(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def ParamOnC1(self) -> float: ...
+    def ParamOnC1(self,Param : float) -> None: ...
     @overload
     def ParamOnC2(self) -> float: 
         """

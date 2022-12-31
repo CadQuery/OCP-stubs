@@ -4,20 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.Law
-import OCP.IntSurf
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.ChFiDS
 import OCP.math
 import OCP.BRepAdaptor
-import OCP.gp
-import OCP.TopAbs
 import OCP.Geom
-import OCP.BRepBlend
-import OCP.TopOpeBRepBuild
+import OCP.Law
+import OCP.Adaptor3d
+import OCP.ChFiDS
 import OCP.TopoDS
+import OCP.BRepBlend
+import OCP.TopAbs
+import OCP.gp
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.TopOpeBRepBuild
+import OCP.IntSurf
 __all__  = [
 "ChFi3d",
 "ChFi3d_Builder",
@@ -46,13 +46,19 @@ class ChFi3d():
         Defines the type of concavity in the edge of connection of two faces
         """
     @staticmethod
+    @overload
     def IsTangentFaces_s(theEdge : OCP.TopoDS.TopoDS_Edge,theFace1 : OCP.TopoDS.TopoDS_Face,theFace2 : OCP.TopoDS.TopoDS_Face,Order : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_G1) -> bool: 
         """
         Returns true if theEdge between theFace1 and theFace2 is tangent
+
+        None
         """
     @staticmethod
     @overload
-    def NextSide_s(Or1 : OCP.TopAbs.TopAbs_Orientation,Or2 : OCP.TopAbs.TopAbs_Orientation,OrSave1 : OCP.TopAbs.TopAbs_Orientation,OrSave2 : OCP.TopAbs.TopAbs_Orientation,ChoixSauv : int) -> int: 
+    def IsTangentFaces_s(theEdge : OCP.TopoDS.TopoDS_Edge,theFace1 : OCP.TopoDS.TopoDS_Face,theFace2 : OCP.TopoDS.TopoDS_Face,G1Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_G1) -> bool: ...
+    @staticmethod
+    @overload
+    def NextSide_s(Or : OCP.TopAbs.TopAbs_Orientation,OrSave : OCP.TopAbs.TopAbs_Orientation,OrFace : OCP.TopAbs.TopAbs_Orientation) -> None: 
         """
         Same as ConcaveSide, but the orientations are logically deduced from the result of the call of ConcaveSide on the first pair of faces of the fillet or chamnfer.
 
@@ -60,7 +66,7 @@ class ChFi3d():
         """
     @staticmethod
     @overload
-    def NextSide_s(Or : OCP.TopAbs.TopAbs_Orientation,OrSave : OCP.TopAbs.TopAbs_Orientation,OrFace : OCP.TopAbs.TopAbs_Orientation) -> None: ...
+    def NextSide_s(Or1 : OCP.TopAbs.TopAbs_Orientation,Or2 : OCP.TopAbs.TopAbs_Orientation,OrSave1 : OCP.TopAbs.TopAbs_Orientation,OrSave2 : OCP.TopAbs.TopAbs_Orientation,ChoixSauv : int) -> int: ...
     @staticmethod
     def SameSide_s(Or : OCP.TopAbs.TopAbs_Orientation,OrSave1 : OCP.TopAbs.TopAbs_Orientation,OrSave2 : OCP.TopAbs.TopAbs_Orientation,OrFace1 : OCP.TopAbs.TopAbs_Orientation,OrFace2 : OCP.TopAbs.TopAbs_Orientation) -> bool: 
         """
@@ -207,7 +213,7 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         returns the abscissa of the vertex V on the contour of index IC.
         """
     @overload
-    def Add(self,Dis1 : float,Dis2 : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
+    def Add(self,Dis : float,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         initializes a contour with the edge <E> as first (the next are found by propagation ). The two distances (parameters of the chamfer) must be set after. if the edge <E> has more than 2 adjacent faces
 
@@ -216,9 +222,9 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         initializes a new contour with the edge <E> as first (the next are found by propagation ), and the distance <Dis1> and <Dis2> if the edge <E> has more than 2 adjacent faces
         """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Add(self,Dis1 : float,Dis2 : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
-    def Add(self,Dis : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def AddDA(self,Dis : float,Angle : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         initializes a new contour with the edge <E> as first (the next are found by propagation ), and the distance <Dis1> and <Angle> if the edge <E> has more than 2 adjacent faces
@@ -329,7 +335,7 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         None
         """
     @overload
-    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,MaxStep : float,Fleche : float,TolGuide : float,First : float,Last : float,Inside : bool,Appro : bool,Forward : bool,RecOnS1 : bool,RecOnS2 : bool,Soldep : OCP.math.math_Vector,Intf : int,Intl : int) -> bool: 
+    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: 
         """
         Methode, implemented in inheritants, calculates the elements of construction of the surface (fillet or chamfer).
 
@@ -344,7 +350,7 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
     @overload
     def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP1 : bool,RecRst1 : bool,RecP2 : bool,RecRst2 : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, bool, float, float]: ...
     @overload
-    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,MaxStep : float,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
+    def PerformSurf(self,Data : OCP.ChFiDS.ChFiDS_SequenceOfSurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,MaxStep : float,Fleche : float,TolGuide : float,First : float,Last : float,Inside : bool,Appro : bool,Forward : bool,RecOnS1 : bool,RecOnS2 : bool,Soldep : OCP.math.math_Vector,Intf : int,Intl : int) -> bool: ...
     def PerformTwoCornerbyInter(self,Index : int) -> bool: 
         """
         None
@@ -407,9 +413,9 @@ class ChFi3d_ChBuilder(ChFi3d_Builder):
         None
         """
     @overload
-    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
-    @overload
     def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or1 : OCP.TopAbs.TopAbs_Orientation,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref2 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref2 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP1 : bool,RecRst1 : bool,RecP2 : bool,RecRst2 : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, bool, float, float]: ...
+    @overload
+    def SimulSurf(self,Data : OCP.ChFiDS.ChFiDS_SurfData,Guide : OCP.ChFiDS.ChFiDS_ElSpine,Spine : OCP.ChFiDS.ChFiDS_Spine,Choix : int,S1 : OCP.BRepAdaptor.BRepAdaptor_Surface,I1 : OCP.Adaptor3d.Adaptor3d_TopolTool,PC1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,Sref1 : OCP.BRepAdaptor.BRepAdaptor_Surface,PCref1 : OCP.BRepAdaptor.BRepAdaptor_Curve2d,S2 : OCP.BRepAdaptor.BRepAdaptor_Surface,I2 : OCP.Adaptor3d.Adaptor3d_TopolTool,Or2 : OCP.TopAbs.TopAbs_Orientation,Fleche : float,TolGuide : float,Inside : bool,Appro : bool,Forward : bool,RecP : bool,RecS : bool,RecRst : bool,Soldep : OCP.math.math_Vector) -> Tuple[bool, float, float]: ...
     def Simulate(self,IC : int) -> None: 
         """
         None
@@ -511,14 +517,14 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         returns True if a partial result has been calculated
         """
     @overload
-    def IsConstant(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> bool: 
+    def IsConstant(self,IC : int) -> bool: 
         """
         Returns true the contour is flagged as edge constant.
 
         Returns true E is flagged as edge constant.
         """
     @overload
-    def IsConstant(self,IC : int) -> bool: ...
+    def IsConstant(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> bool: ...
     def IsDone(self) -> bool: 
         """
         returns True if the computation is success
@@ -556,14 +562,14 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         None
         """
     @overload
-    def Radius(self,IC : int) -> float: 
+    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: 
         """
         Returns the vector if the contour is flagged as edge constant.
 
         Returns the vector if E is flagged as edge constant.
         """
     @overload
-    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
+    def Radius(self,IC : int) -> float: ...
     def RelativeAbscissa(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
         """
         returns the relative abscissa([0.,1.]) of the vertex V on the contour of index IC.
@@ -601,7 +607,7 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         None
         """
     @overload
-    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: 
+    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Set the radius of the contour of index IC.
 
@@ -612,11 +618,11 @@ class ChFi3d_FilBuilder(ChFi3d_Builder):
         Set a vertex on the point of parametre U in the edge IinC of the contour of index IC
         """
     @overload
-    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
     def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
     @overload
     def SetRadius(self,UandR : OCP.gp.gp_XY,IC : int,IinC : int) -> None: ...
+    @overload
+    def SetRadius(self,C : OCP.Law.Law_Function,IC : int,IinC : int) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         if (Isdone()) makes the result. if (!Isdone())

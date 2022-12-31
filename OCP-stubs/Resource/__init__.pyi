@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import io
-import OCP.NCollection
 import OCP.TCollection
+import OCP.NCollection
 import OCP.Standard
 __all__  = [
 "Resource_DataMapOfAsciiStringAsciiString",
@@ -135,11 +135,11 @@ class Resource_DataMapOfAsciiStringAsciiString(OCP.NCollection.NCollection_BaseM
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self,theOther : Resource_DataMapOfAsciiStringAsciiString) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_BaseMap):
@@ -171,14 +171,14 @@ class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_Ba
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : Resource_DataMapOfAsciiStringExtendedString) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -231,9 +231,9 @@ class Resource_DataMapOfAsciiStringExtendedString(OCP.NCollection.NCollection_Ba
     @overload
     def __init__(self,theOther : Resource_DataMapOfAsciiStringExtendedString) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Resource_FormatType():
@@ -399,6 +399,10 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         """
     @overload
     def Find(self,aResource : str) -> bool: ...
+    def GetMap(self,theRefMap : bool=True) -> Resource_DataMapOfAsciiStringAsciiString: 
+        """
+        Returns internal Ref or User map with parameters
+        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -417,23 +421,23 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         Gets the value of an integer resource according to its instance and its type.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Real(self,aResourceName : str) -> float: 
         """
         Gets the value of a real resource according to its instance and its type.
@@ -465,6 +469,8 @@ class Resource_Manager(OCP.Standard.Standard_Transient):
         """
         Gets the value of a CString resource according to its instance and its type.
         """
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theName : OCP.TCollection.TCollection_AsciiString,theDefaultsDirectory : OCP.TCollection.TCollection_AsciiString,theUserDefaultsDirectory : OCP.TCollection.TCollection_AsciiString,theIsVerbose : bool=False) -> None: ...
     @overload

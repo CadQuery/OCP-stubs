@@ -4,25 +4,26 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.NCollection
-import io
-import OCP.Geom2d
-import OCP.Standard
-import OCP.ShapeExtend
-import OCP.TopoDS
+import OCP.Geom
 import OCP.Adaptor3d
+import OCP.TopLoc
+import OCP.TopoDS
+import OCP.GeomAdaptor
+import OCP.Geom2d
+import OCP.IntRes2d
+import OCP.Standard
+import OCP.TColStd
+import OCP.ShapeExtend
+import OCP.NCollection
+import OCP.gp
 import OCP.TColgp
 import OCP.Bnd
-import OCP.TopLoc
-import OCP.gp
-import OCP.Geom
-import OCP.GeomAdaptor
-import OCP.IntRes2d
-import OCP.TColStd
+import OCP.TopTools
+import io
 __all__  = [
 "ShapeAnalysis",
 "ShapeAnalysis_BoxBndTree",
+"ShapeAnalysis_CanonicalRecognition",
 "ShapeAnalysis_CheckSmallFace",
 "ShapeAnalysis_Curve",
 "ShapeAnalysis_DataMapOfShapeListOfReal",
@@ -78,9 +79,9 @@ class ShapeAnalysis():
         Returns True if <F> has outer bound.
         """
     @staticmethod
-    def OuterWire_s(face : OCP.TopoDS.TopoDS_Face) -> OCP.TopoDS.TopoDS_Wire: 
+    def OuterWire_s(theFace : OCP.TopoDS.TopoDS_Face) -> OCP.TopoDS.TopoDS_Wire: 
         """
-        Returns the outer wire on the face <Face>. This is replacement of the method BRepTools::OuterWire until it works badly. Returns the first wire oriented as outer according to FClass2d_Classifier. If none, last wire is returned.
+        Returns positively oriented wire in the face. If there is no such wire - returns the last wire of the face.
         """
     @staticmethod
     def TotCross2D_s(sewd : OCP.ShapeExtend.ShapeExtend_WireData,aFace : OCP.TopoDS.TopoDS_Face) -> float: 
@@ -110,7 +111,64 @@ class ShapeAnalysis_BoxBndTree():
         None
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    pass
+class ShapeAnalysis_CanonicalRecognition():
+    """
+    This class provides operators for analysis surfaces and curves of shapes in order to find out more simple geometry entities, which could replace existing complex (for exampe, BSpline) geometry objects with given tolerance.
+    """
+    def ClearStatus(self) -> None: 
+        """
+        Returns status to be equal 0.
+        """
+    def GetGap(self) -> float: 
+        """
+        Returns deviation between input geometry entity and analytical entity
+        """
+    def GetShape(self) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        Returns input shape
+        """
+    def GetStatus(self) -> int: 
+        """
+        Returns status of operation. Current meaning of possible values of status: -1 - algorithm is not initalazed by shape 0 - no errors 1 - error during any operation (usually - because of wrong input data) Any operation (calling any methods like IsPlane(...), ...) can be performed when current staue is equal 0. If after any operation status != 0, it is necessary to set it 0 by method ClearStatus() before calling other operation.
+        """
+    def IsCircle(self,theTol : float,theCirc : OCP.gp.gp_Circ) -> bool: 
+        """
+        Returns true if the underlined curve can be represent by circle with tolerance theTol and sets in theCirc the result circle.
+        """
+    def IsCone(self,theTol : float,theCone : OCP.gp.gp_Cone) -> bool: 
+        """
+        Returns true if the underlined surface can be represent by conical one with tolerance theTol and sets in theCone the result conical surface.
+        """
+    def IsCylinder(self,theTol : float,theCyl : OCP.gp.gp_Cylinder) -> bool: 
+        """
+        Returns true if the underlined surface can be represent by cylindrical one with tolerance theTol and sets in theCyl the result cylinrical surface.
+        """
+    def IsEllipse(self,theTol : float,theElips : OCP.gp.gp_Elips) -> bool: 
+        """
+        Returns true if the underlined curve can be represent by ellipse with tolerance theTol and sets in theCirc the result ellipse.
+        """
+    def IsLine(self,theTol : float,theLin : OCP.gp.gp_Lin) -> bool: 
+        """
+        Returns true if the underlined curve can be represent by line with tolerance theTol and sets in theLin the result line.
+        """
+    def IsPlane(self,theTol : float,thePln : OCP.gp.gp_Pln) -> bool: 
+        """
+        Returns true if the underlined surface can be represent by plane with tolerance theTol and sets in thePln the result plane.
+        """
+    def IsSphere(self,theTol : float,theSphere : OCP.gp.gp_Sphere) -> bool: 
+        """
+        Returns true if the underlined surface can be represent by spherical one with tolerance theTol and sets in theSphere the result spherical surface.
+        """
+    def SetShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
+        """
+        Sets shape
+        """
+    @overload
+    def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -254,7 +312,7 @@ class ShapeAnalysis_Curve():
         """
     @staticmethod
     @overload
-    def IsPeriodic_s(curve : OCP.Geom.Geom_Curve) -> bool: 
+    def IsPeriodic_s(curve : OCP.Geom2d.Geom2d_Curve) -> bool: 
         """
         This method was implemented as fix for changes in trimmed curve behaviour. For the moment trimmed curve returns false anyway. So it is necessary to adapt all Data exchange tools for this behaviour. Current implementation takes into account that curve may be offset.
 
@@ -262,10 +320,10 @@ class ShapeAnalysis_Curve():
         """
     @staticmethod
     @overload
-    def IsPeriodic_s(curve : OCP.Geom2d.Geom2d_Curve) -> bool: ...
+    def IsPeriodic_s(curve : OCP.Geom.Geom_Curve) -> bool: ...
     @staticmethod
     @overload
-    def IsPlanar_s(curve : OCP.Geom.Geom_Curve,Normal : OCP.gp.gp_XYZ,preci : float=0.0) -> bool: 
+    def IsPlanar_s(pnts : OCP.TColgp.TColgp_Array1OfPnt,Normal : OCP.gp.gp_XYZ,preci : float=0.0) -> bool: 
         """
         Checks if points are planar with given preci. If Normal has not zero modulus, checks with given normal
 
@@ -273,18 +331,18 @@ class ShapeAnalysis_Curve():
         """
     @staticmethod
     @overload
-    def IsPlanar_s(pnts : OCP.TColgp.TColgp_Array1OfPnt,Normal : OCP.gp.gp_XYZ,preci : float=0.0) -> bool: ...
+    def IsPlanar_s(curve : OCP.Geom.Geom_Curve,Normal : OCP.gp.gp_XYZ,preci : float=0.0) -> bool: ...
     @overload
-    def NextProject(self,paramPrev : float,C3D : OCP.Geom.Geom_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,cf : float,cl : float,AdjustToEnds : bool=True) -> float: 
+    def NextProject(self,paramPrev : float,C3D : OCP.Adaptor3d.Adaptor3d_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float) -> float: 
         """
         Projects a Point on a Curve using Newton method. <paramPrev> is taken as the first approximation of solution. If Newton algorithm fails the method Project() is used. If AdjustToEnds is True, point will be adjusted to the end of the curve if distance is less than <preci>
 
         Projects a Point on a Curve using Newton method. <paramPrev> is taken as the first approximation of solution. If Newton algorithm fails the method Project() is used.
         """
     @overload
-    def NextProject(self,paramPrev : float,C3D : OCP.Adaptor3d.Adaptor3d_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float) -> float: ...
+    def NextProject(self,paramPrev : float,C3D : OCP.Geom.Geom_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,cf : float,cl : float,AdjustToEnds : bool=True) -> float: ...
     @overload
-    def Project(self,C3D : OCP.Geom.Geom_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,cf : float,cl : float,AdjustToEnds : bool=True) -> float: 
+    def Project(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,AdjustToEnds : bool=True) -> float: 
         """
         Projects a Point on a Curve. Computes the projected point and its parameter on the curve. <preci> is used as 3d precision (hence, 0 will produce reject unless exact confusion). The number of iterations is limited. If AdjustToEnds is True, point will be adjusted to the end of the curve if distance is less than <preci>
 
@@ -293,9 +351,9 @@ class ShapeAnalysis_Curve():
         Projects a Point on a Curve, but parameters are limited between <cf> and <cl>. The range [cf, cl] is extended with help of Adaptor3d on the basis of 3d precision <preci>. If AdjustToEnds is True, point will be adjusted to the end of the curve if distance is less than <preci>
         """
     @overload
-    def Project(self,C3D : OCP.Geom.Geom_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,AdjustToEnds : bool=True) -> float: ...
+    def Project(self,C3D : OCP.Geom.Geom_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,cf : float,cl : float,AdjustToEnds : bool=True) -> float: ...
     @overload
-    def Project(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,AdjustToEnds : bool=True) -> float: ...
+    def Project(self,C3D : OCP.Geom.Geom_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float,AdjustToEnds : bool=True) -> float: ...
     def ProjectAct(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,P3D : OCP.gp.gp_Pnt,preci : float,proj : OCP.gp.gp_Pnt,param : float) -> float: 
         """
         None
@@ -435,36 +493,36 @@ class ShapeAnalysis_Edge():
         Checks possibility for pcurve thePC to have range [theFirst, theLast] (edge range) having respect to real first, last parameters of thePC
         """
     @overload
-    def CheckSameParameter(self,theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face,theMaxdev : float,theNbControl : int=23) -> bool: 
+    def CheckSameParameter(self,edge : OCP.TopoDS.TopoDS_Edge,maxdev : float,NbControl : int=23) -> bool: 
         """
         Checks the edge to be SameParameter. Calculates the maximal deviation between 3d curve and each pcurve of the edge on <NbControl> equidistant points (the same algorithm as in BRepCheck; default value is 23 as in BRepCheck). This deviation is returned in <maxdev> parameter. If deviation is greater than tolerance of the edge (i.e. incorrect flag) returns False, else returns True.
 
         Checks the edge to be SameParameter. Calculates the maximal deviation between 3d curve and each pcurve of the edge on <NbControl> equidistant points (the same algorithm as in BRepCheck; default value is 23 as in BRepCheck). This deviation is returned in <maxdev> parameter. If deviation is greater than tolerance of the edge (i.e. incorrect flag) returns False, else returns True.
         """
     @overload
-    def CheckSameParameter(self,edge : OCP.TopoDS.TopoDS_Edge,maxdev : float,NbControl : int=23) -> bool: ...
+    def CheckSameParameter(self,theEdge : OCP.TopoDS.TopoDS_Edge,theFace : OCP.TopoDS.TopoDS_Face,theMaxdev : float,theNbControl : int=23) -> bool: ...
     @overload
-    def CheckVertexTolerance(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,toler1 : float,toler2 : float) -> bool: 
+    def CheckVertexTolerance(self,edge : OCP.TopoDS.TopoDS_Edge,toler1 : float,toler2 : float) -> bool: 
         """
         None
 
         Checks if it is necessary to increase tolerances of the edge vertices to comprise the ends of 3d curve and pcurve on the given face (first method) or all pcurves stored in an edge (second one) toler1 returns necessary tolerance for first vertex, toler2 returns necessary tolerance for last vertex.
         """
     @overload
-    def CheckVertexTolerance(self,edge : OCP.TopoDS.TopoDS_Edge,toler1 : float,toler2 : float) -> bool: ...
+    def CheckVertexTolerance(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,toler1 : float,toler2 : float) -> bool: ...
     def CheckVerticesWithCurve3d(self,edge : OCP.TopoDS.TopoDS_Edge,preci : float=-1.0,vtx : int=0) -> bool: 
         """
         Checks the start and/or end vertex of the edge for matching with 3d curve with the given precision. <vtx> = 1 : start vertex only <vtx> = 2 : end vertex only <vtx> = 0 : both (default) If preci < 0 the vertices are considered with their own tolerances, else with the given <preci>.
         """
     @overload
-    def CheckVerticesWithPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,preci : float=-1.0,vtx : int=0) -> bool: 
+    def CheckVerticesWithPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,preci : float=-1.0,vtx : int=0) -> bool: 
         """
         None
 
         Checks the start and/or end vertex of the edge for matching with pcurve with the given precision. <vtx> = 1 : start vertex <vtx> = 2 : end vertex <vtx> = 0 : both If preci < 0 the vertices are considered with their own tolerances, else with the given <preci>.
         """
     @overload
-    def CheckVerticesWithPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,preci : float=-1.0,vtx : int=0) -> bool: ...
+    def CheckVerticesWithPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,preci : float=-1.0,vtx : int=0) -> bool: ...
     def Curve3d(self,edge : OCP.TopoDS.TopoDS_Edge,C3d : OCP.Geom.Geom_Curve,cf : float,cl : float,orient : bool=True) -> bool: 
         """
         Returns the 3d curve and bounding parameteres for the edge Returns False if no 3d curve. If <orient> is True (default), takes orientation into account: if the edge is reversed, cf and cl are toggled
@@ -474,53 +532,53 @@ class ShapeAnalysis_Edge():
         Returns start vertex of the edge (taking edge orientation into account).
         """
     @overload
-    def GetEndTangent2d(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,atEnd : bool,pos : OCP.gp.gp_Pnt2d,tang : OCP.gp.gp_Vec2d,dparam : float=0.0) -> bool: 
+    def GetEndTangent2d(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,atEnd : bool,pos : OCP.gp.gp_Pnt2d,tang : OCP.gp.gp_Vec2d,dparam : float=0.0) -> bool: 
         """
         None
 
         Returns tangent of the edge pcurve at its start (if atEnd is False) or end (if True), regarding the orientation of edge. If edge is REVERSED, tangent is reversed before return. Returns True if pcurve is available and tangent is computed and is not null, else False.
         """
     @overload
-    def GetEndTangent2d(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,atEnd : bool,pos : OCP.gp.gp_Pnt2d,tang : OCP.gp.gp_Vec2d,dparam : float=0.0) -> bool: ...
+    def GetEndTangent2d(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,atEnd : bool,pos : OCP.gp.gp_Pnt2d,tang : OCP.gp.gp_Vec2d,dparam : float=0.0) -> bool: ...
     def HasCurve3d(self,edge : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Tells if the edge has a 3d curve
         """
     @overload
-    def HasPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def HasPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         Tells if the Edge has a pcurve on the face.
 
         Tells if the edge has a pcurve on the surface (with location).
         """
     @overload
-    def HasPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    def HasPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> bool: ...
     def IsClosed3d(self,edge : OCP.TopoDS.TopoDS_Edge) -> bool: 
         """
         Gives True if the edge has a 3d curve, this curve is closed, and the edge has the same vertex at start and end
         """
     @overload
-    def IsSeam(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> bool: 
+    def IsSeam(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: 
         """
         None
 
         Returns True if the edge has two pcurves on one surface
         """
     @overload
-    def IsSeam(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face) -> bool: ...
+    def IsSeam(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> bool: ...
     def LastVertex(self,edge : OCP.TopoDS.TopoDS_Edge) -> OCP.TopoDS.TopoDS_Vertex: 
         """
         Returns end vertex of the edge (taking edge orientation into account).
         """
     @overload
-    def PCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,C2d : OCP.Geom2d.Geom2d_Curve,cf : float,cl : float,orient : bool=True) -> bool: 
+    def PCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,C2d : OCP.Geom2d.Geom2d_Curve,cf : float,cl : float,orient : bool=True) -> bool: 
         """
         None
 
         Returns the pcurve and bounding parameteres for the edge lying on the surface. Returns False if the edge has no pcurve on this surface. If <orient> is True (default), takes orientation into account: if the edge is reversed, cf and cl are toggled
         """
     @overload
-    def PCurve(self,edge : OCP.TopoDS.TopoDS_Edge,face : OCP.TopoDS.TopoDS_Face,C2d : OCP.Geom2d.Geom2d_Curve,cf : float,cl : float,orient : bool=True) -> bool: ...
+    def PCurve(self,edge : OCP.TopoDS.TopoDS_Edge,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location,C2d : OCP.Geom2d.Geom2d_Curve,cf : float,cl : float,orient : bool=True) -> bool: ...
     def Status(self,status : OCP.ShapeExtend.ShapeExtend_Status) -> bool: 
         """
         Returns the status (in the form of True/False) of last Check
@@ -572,23 +630,23 @@ class ShapeAnalysis_FreeBoundData(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbNotches(self) -> int: 
         """
         Returns number of notches on the contour
@@ -694,7 +752,7 @@ class ShapeAnalysis_FreeBounds():
         """
     @staticmethod
     @overload
-    def ConnectWiresToWires_s(iwires : OCP.TopTools.TopTools_HSequenceOfShape,toler : float,shared : bool,owires : OCP.TopTools.TopTools_HSequenceOfShape,vertices : OCP.TopTools.TopTools_DataMapOfShapeShape) -> None: 
+    def ConnectWiresToWires_s(iwires : OCP.TopTools.TopTools_HSequenceOfShape,toler : float,shared : bool,owires : OCP.TopTools.TopTools_HSequenceOfShape) -> None: 
         """
         None
 
@@ -702,7 +760,7 @@ class ShapeAnalysis_FreeBounds():
         """
     @staticmethod
     @overload
-    def ConnectWiresToWires_s(iwires : OCP.TopTools.TopTools_HSequenceOfShape,toler : float,shared : bool,owires : OCP.TopTools.TopTools_HSequenceOfShape) -> None: ...
+    def ConnectWiresToWires_s(iwires : OCP.TopTools.TopTools_HSequenceOfShape,toler : float,shared : bool,owires : OCP.TopTools.TopTools_HSequenceOfShape,vertices : OCP.TopTools.TopTools_DataMapOfShapeShape) -> None: ...
     @staticmethod
     def DispatchWires_s(wires : OCP.TopTools.TopTools_HSequenceOfShape,closed : OCP.TopoDS.TopoDS_Compound,open : OCP.TopoDS.TopoDS_Compound) -> None: 
         """
@@ -726,11 +784,11 @@ class ShapeAnalysis_FreeBounds():
         Extracts closed sub-wires out of <wires> and adds them to <closed>, open wires remained after extraction are put into <open>. If <shared> is True extraction is performed only when edges share the same vertex. If <shared> is False connection is performed only when ends of the edges are at distance less than <toler>.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,shape : OCP.TopoDS.TopoDS_Shape,splitclosed : bool=False,splitopen : bool=True,checkinternaledges : bool=False) -> None: ...
     @overload
     def __init__(self,shape : OCP.TopoDS.TopoDS_Shape,toler : float,splitclosed : bool=False,splitopen : bool=True) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ShapeAnalysis_FreeBoundsProperties():
     """
@@ -774,14 +832,14 @@ class ShapeAnalysis_FreeBoundsProperties():
         None
         """
     @overload
-    def Init(self,shape : OCP.TopoDS.TopoDS_Shape,splitclosed : bool=False,splitopen : bool=False) -> None: 
+    def Init(self,shape : OCP.TopoDS.TopoDS_Shape,tolerance : float,splitclosed : bool=False,splitopen : bool=False) -> None: 
         """
         Initializes the object with given parameters. <shape> should be a compound of faces.
 
         Initializes the object with given parameters. <shape> should be a compound of shells.
         """
     @overload
-    def Init(self,shape : OCP.TopoDS.TopoDS_Shape,tolerance : float,splitclosed : bool=False,splitopen : bool=False) -> None: ...
+    def Init(self,shape : OCP.TopoDS.TopoDS_Shape,splitclosed : bool=False,splitopen : bool=False) -> None: ...
     def IsLoaded(self) -> bool: 
         """
         Returns True if shape is loaded
@@ -903,23 +961,23 @@ class ShapeAnalysis_SequenceOfFreeBounds(OCP.NCollection.NCollection_BaseSequenc
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -937,23 +995,23 @@ class ShapeAnalysis_SequenceOfFreeBounds(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : ShapeAnalysis_FreeBoundData) -> None: 
+    def Prepend(self,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
+    def Prepend(self,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -979,9 +1037,9 @@ class ShapeAnalysis_SequenceOfFreeBounds(OCP.NCollection.NCollection_BaseSequenc
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -997,14 +1055,14 @@ class ShapeAnalysis_HSequenceOfFreeBounds(ShapeAnalysis_SequenceOfFreeBounds, OC
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : ShapeAnalysis_FreeBoundData) -> None: 
+    def Append(self,theSequence : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theSequence : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
+    def Append(self,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
     def Assign(self,theOther : ShapeAnalysis_SequenceOfFreeBounds) -> ShapeAnalysis_SequenceOfFreeBounds: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1058,45 +1116,45 @@ class ShapeAnalysis_HSequenceOfFreeBounds(ShapeAnalysis_SequenceOfFreeBounds, OC
         Increments the reference counter of this object
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> ShapeAnalysis_FreeBoundData: 
         """
         Last item access
@@ -1110,23 +1168,23 @@ class ShapeAnalysis_HSequenceOfFreeBounds(ShapeAnalysis_SequenceOfFreeBounds, OC
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : ShapeAnalysis_FreeBoundData) -> None: 
+    def Prepend(self,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : ShapeAnalysis_SequenceOfFreeBounds) -> None: ...
+    def Prepend(self,theItem : ShapeAnalysis_FreeBoundData) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1563,41 +1621,41 @@ class ShapeAnalysis_Surface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,other : ShapeAnalysis_Surface) -> None: 
+    def Init(self,S : OCP.Geom.Geom_Surface) -> None: 
         """
         Loads existing surface
 
         Reads all the data from another Surface, without recomputing
         """
     @overload
-    def Init(self,S : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,other : ShapeAnalysis_Surface) -> None: ...
     @overload
-    def IsDegenerated(self,p2d1 : OCP.gp.gp_Pnt2d,p2d2 : OCP.gp.gp_Pnt2d,tol : float,ratio : float) -> bool: 
+    def IsDegenerated(self,P3d : OCP.gp.gp_Pnt,preci : float) -> bool: 
         """
         Returns True if there is at least one surface boundary which is considered as degenerated with <preci> and distance between P3d and corresponding singular point is less than <preci>
 
         Returns True if straight pcurve going from point p2d1 to p2d2 is degenerate, i.e. lies in the singularity of the surface. NOTE: it uses another method of detecting singularity than used by ComputeSingularities() et al.! For that, maximums of distances between points p2d1, p2d2 and 0.5*(p2d1+p2d2) and between corresponding 3d points are computed. The pcurve (p2d1, p2d2) is considered as degenerate if: - max distance in 3d is less than <tol> - max distance in 2d is at least <ratio> times greater than the Resolution computed from max distance in 3d (max3d < tol && max2d > ratio * Resolution(max3d)) NOTE: <ratio> should be >1 (e.g. 10)
         """
     @overload
-    def IsDegenerated(self,P3d : OCP.gp.gp_Pnt,preci : float) -> bool: ...
+    def IsDegenerated(self,p2d1 : OCP.gp.gp_Pnt2d,p2d2 : OCP.gp.gp_Pnt2d,tol : float,ratio : float) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self,preci : float=-1.0) -> bool: 
         """
         Tells if the Surface is spatially closed in U with given precision. If <preci> < 0 then Precision::Confusion is used. If Geom_Surface says that the surface is U-closed, this method also says this. Otherwise additional analysis is performed, comparing given precision with the following distances: - periodic B-Splines are closed, - polinomial B-Spline with boundary multiplicities degree+1 and Bezier - maximum distance between poles, - rational B-Spline or one with boundary multiplicities not degree+1 - maximum distance computed at knots and their middles, - surface of extrusion - distance between ends of basis curve, - other (RectangularTrimmed and Offset) - maximum distance computed at 100 equi-distanted points.
@@ -1672,7 +1730,7 @@ class ShapeAnalysis_Surface(OCP.Standard.Standard_Transient):
         Returns a V-Iso. Null if not possible or failed Remark : bound isos are buffered
         """
     @overload
-    def Value(self,u : float,v : float) -> OCP.gp.gp_Pnt: 
+    def Value(self,p2d : OCP.gp.gp_Pnt2d) -> OCP.gp.gp_Pnt: 
         """
         Returns a 3D point specified by parameters in surface parametrical space
 
@@ -1683,7 +1741,7 @@ class ShapeAnalysis_Surface(OCP.Standard.Standard_Transient):
         Returns a 3d point specified by a point in surface parametrical space
         """
     @overload
-    def Value(self,p2d : OCP.gp.gp_Pnt2d) -> OCP.gp.gp_Pnt: ...
+    def Value(self,u : float,v : float) -> OCP.gp.gp_Pnt: ...
     def ValueOfUV(self,P3D : OCP.gp.gp_Pnt,preci : float) -> OCP.gp.gp_Pnt2d: 
         """
         Computes the parameters in the surface parametrical space of 3D point. The result is parameters of the point projected onto the surface. This method enhances functionality provided by the standard tool GeomAPI_ProjectPointOnSurface by treatment of cases when the projected point is near to the surface boundaries and when this standard tool fails.
@@ -1729,36 +1787,36 @@ class ShapeAnalysis_TransferParameters(OCP.Standard.Standard_Transient):
         Initialize a tool with edge and face
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameRange(self) -> bool: 
         """
         Returns True if 3d curve of edge and pcurve are SameRange (in default implementation, if myScale == 1 and myShift == 0)
         """
     @overload
-    def Perform(self,Param : float,To2d : bool) -> float: 
+    def Perform(self,Params : OCP.TColStd.TColStd_HSequenceOfReal,To2d : bool) -> OCP.TColStd.TColStd_HSequenceOfReal: 
         """
         Transfers parameters given by sequence Params from 3d curve to pcurve (if To2d is True) or back (if To2d is False)
 
         Transfers parameter given by sequence Params from 3d curve to pcurve (if To2d is True) or back (if To2d is False)
         """
     @overload
-    def Perform(self,Params : OCP.TColStd.TColStd_HSequenceOfReal,To2d : bool) -> OCP.TColStd.TColStd_HSequenceOfReal: ...
+    def Perform(self,Param : float,To2d : bool) -> float: ...
     def SetMaxTolerance(self,maxtol : float) -> None: 
         """
         Sets maximal tolerance to use linear recomputation of parameters.
@@ -1772,9 +1830,9 @@ class ShapeAnalysis_TransferParameters(OCP.Standard.Standard_Transient):
         Recomputes range of curves from NewEdge. If Is2d equals True parameters are recomputed by curve2d else by curve3d.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1792,7 +1850,7 @@ class ShapeAnalysis_TransferParametersProj(ShapeAnalysis_TransferParameters, OCP
     """
     @staticmethod
     @overload
-    def CopyNMVertex_s(theVert : OCP.TopoDS.TopoDS_Vertex,toedge : OCP.TopoDS.TopoDS_Edge,fromedge : OCP.TopoDS.TopoDS_Edge) -> OCP.TopoDS.TopoDS_Vertex: 
+    def CopyNMVertex_s(theVert : OCP.TopoDS.TopoDS_Vertex,toFace : OCP.TopoDS.TopoDS_Face,fromFace : OCP.TopoDS.TopoDS_Face) -> OCP.TopoDS.TopoDS_Vertex: 
         """
         Make a copy of non-manifold vertex theVert (i.e. create new TVertex and replace PointRepresentations for this vertex from fromedge to toedge. Other representations were copied)
 
@@ -1800,7 +1858,7 @@ class ShapeAnalysis_TransferParametersProj(ShapeAnalysis_TransferParameters, OCP
         """
     @staticmethod
     @overload
-    def CopyNMVertex_s(theVert : OCP.TopoDS.TopoDS_Vertex,toFace : OCP.TopoDS.TopoDS_Face,fromFace : OCP.TopoDS.TopoDS_Face) -> OCP.TopoDS.TopoDS_Vertex: ...
+    def CopyNMVertex_s(theVert : OCP.TopoDS.TopoDS_Vertex,toedge : OCP.TopoDS.TopoDS_Edge,fromedge : OCP.TopoDS.TopoDS_Edge) -> OCP.TopoDS.TopoDS_Vertex: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -1826,36 +1884,36 @@ class ShapeAnalysis_TransferParametersProj(ShapeAnalysis_TransferParameters, OCP
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameRange(self) -> bool: 
         """
         Returns False;
         """
     @overload
-    def Perform(self,Param : float,To2d : bool) -> float: 
+    def Perform(self,Papams : OCP.TColStd.TColStd_HSequenceOfReal,To2d : bool) -> OCP.TColStd.TColStd_HSequenceOfReal: 
         """
         Transfers parameters given by sequence Params from 3d curve to pcurve (if To2d is True) or back (if To2d is False)
 
         Transfers parameter given by Param from 3d curve to pcurve (if To2d is True) or back (if To2d is False)
         """
     @overload
-    def Perform(self,Papams : OCP.TColStd.TColStd_HSequenceOfReal,To2d : bool) -> OCP.TColStd.TColStd_HSequenceOfReal: ...
+    def Perform(self,Param : float,To2d : bool) -> float: ...
     def SetMaxTolerance(self,maxtol : float) -> None: 
         """
         Sets maximal tolerance to use linear recomputation of parameters.
@@ -1869,9 +1927,9 @@ class ShapeAnalysis_TransferParametersProj(ShapeAnalysis_TransferParameters, OCP
         Recomputes range of curves from NewEdge. If Is2d equals True parameters are recomputed by curve2d else by curve3d.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1904,14 +1962,14 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Checks if wire is closed, performs CheckConnected, CheckDegenerated and CheckLacking for the first and the last edges Returns: True if at least one check returned True Status: FAIL1 or DONE1: see CheckConnected FAIL2 or DONE2: see CheckDegenerated
         """
     @overload
-    def CheckConnected(self,num : int,prec : float=0.0) -> bool: 
+    def CheckConnected(self,prec : float=0.0) -> bool: 
         """
         Calls to CheckConnected for each edge Returns: True if at least one pair of disconnected edges (not sharing the same vertex) was detected
 
         Checks connected edges (num-th and preceding). Tests with starting preci from <SBWD> or with <prec> if it is greater. Considers Vertices. Returns: False if edges are connected by the common vertex, else True Status : OK : Vertices (end of num-1 th edge and start on num-th one) are already the same DONE1 : Absolutely confused (gp::Resolution) DONE2 : Confused at starting <preci> from <SBWD> DONE3 : Confused at <prec> but not <preci> FAIL1 : Not confused FAIL2 : Not confused but confused with <preci> if reverse num-th edge
         """
     @overload
-    def CheckConnected(self,prec : float=0.0) -> bool: ...
+    def CheckConnected(self,num : int,prec : float=0.0) -> bool: ...
     def CheckCurveGap(self,num : int=0) -> bool: 
         """
         Checks gap between points on 3D curve and points on surface generated by pcurve of the num-th edge. The distance can be queried by MinDistance3d.
@@ -1921,7 +1979,7 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def CheckDegenerated(self,num : int) -> bool: 
+    def CheckDegenerated(self) -> bool: 
         """
         Calls to CheckDegenerated for each edge Returns: True if at least one incorrect degenerated edge was detected
 
@@ -1930,7 +1988,7 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Checks for degenerated edge between two adjacent ones. Remark : Calls previous function Status : See the function above for details
         """
     @overload
-    def CheckDegenerated(self) -> bool: ...
+    def CheckDegenerated(self,num : int) -> bool: ...
     @overload
     def CheckDegenerated(self,num : int,dgnr1 : OCP.gp.gp_Pnt2d,dgnr2 : OCP.gp.gp_Pnt2d) -> bool: ...
     def CheckEdgeCurves(self) -> bool: 
@@ -1954,7 +2012,7 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def CheckIntersectingEdges(self,num : int,points2d : OCP.IntRes2d.IntRes2d_SequenceOfIntersectionPoint,points3d : OCP.TColgp.TColgp_SequenceOfPnt,errors : OCP.TColStd.TColStd_SequenceOfReal) -> bool: 
+    def CheckIntersectingEdges(self,num : int) -> bool: 
         """
         Checks two adjacent edges for intersecting. Intersection is reported only if intersection point is not enclosed by the common end vertex of the edges. Returns: True if intersection is found. If returns True it also fills the sequences of intersection points, corresponding 3d points, and errors for them (half-distances between intersection points in 3d calculated from one and from another edge) Status: FAIL1 : No pcurve FAIL2 : No vertices DONE1 : Self-intersection found
 
@@ -1965,13 +2023,13 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Checks i-th and j-th edges for intersecting. Remark : Calls previous method. Status : See the function above for details
         """
     @overload
-    def CheckIntersectingEdges(self,num1 : int,num2 : int,points2d : OCP.IntRes2d.IntRes2d_SequenceOfIntersectionPoint,points3d : OCP.TColgp.TColgp_SequenceOfPnt,errors : OCP.TColStd.TColStd_SequenceOfReal) -> bool: ...
+    def CheckIntersectingEdges(self,num : int,points2d : OCP.IntRes2d.IntRes2d_SequenceOfIntersectionPoint,points3d : OCP.TColgp.TColgp_SequenceOfPnt,errors : OCP.TColStd.TColStd_SequenceOfReal) -> bool: ...
     @overload
-    def CheckIntersectingEdges(self,num : int) -> bool: ...
+    def CheckIntersectingEdges(self,num1 : int,num2 : int,points2d : OCP.IntRes2d.IntRes2d_SequenceOfIntersectionPoint,points3d : OCP.TColgp.TColgp_SequenceOfPnt,errors : OCP.TColStd.TColStd_SequenceOfReal) -> bool: ...
     @overload
     def CheckIntersectingEdges(self,num1 : int,num2 : int) -> bool: ...
     @overload
-    def CheckLacking(self) -> bool: 
+    def CheckLacking(self,num : int,Tolerance : float=0.0) -> bool: 
         """
         Calls to CheckLacking for each edge Returns: True if at least one lacking edge was detected
 
@@ -1980,9 +2038,9 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Checks if there is a gap in 2D between edges and not comprised by vertex tolerance The value of SBWD.thepreci is used. Returns: False if no edge should be inserted Status: OK : No edge is lacking (3d and 2d connection) DONE1 : The vertex tolerance should be increased only (2d gap is small) DONE2 : Edge can be inserted (3d and 2d gaps are large enough)
         """
     @overload
-    def CheckLacking(self,num : int,Tolerance : float=0.0) -> bool: ...
-    @overload
     def CheckLacking(self,num : int,Tolerance : float,p2d1 : OCP.gp.gp_Pnt2d,p2d2 : OCP.gp.gp_Pnt2d) -> bool: ...
+    @overload
+    def CheckLacking(self) -> bool: ...
     def CheckLoop(self,aMapLoopVertices : OCP.TopTools.TopTools_IndexedMapOfShape,aMapVertexEdges : OCP.TopTools.TopTools_DataMapOfShapeListOfShape,aMapSmallEdges : OCP.TopTools.TopTools_MapOfShape,aMapSeemEdges : OCP.TopTools.TopTools_MapOfShape) -> bool: 
         """
         Checks existence of loop on wire and return vertices which are loop vertices (vertices belonging to a few pairs of edges)
@@ -1992,11 +2050,11 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Detects a notch
         """
     @overload
-    def CheckOrder(self,sawo : ShapeAnalysis_WireOrder,isClosed : bool=True,mode3d : bool=True) -> bool: 
+    def CheckOrder(self,sawo : ShapeAnalysis_WireOrder,isClosed : bool=True,theMode3D : bool=True,theModeBoth : bool=False) -> bool: 
         """
         Calls CheckOrder and returns False if wire is already ordered (tail-to-head), True otherwise Flag <isClosed> defines if the wire is closed or not Flag <mode3d> defines which mode is used (3d or 2d)
 
-        Analyzes the order of the edges in the wire, uses class WireOrder for that purpose. Flag <isClosed> defines if the wire is closed or not Flag <mode3d> defines which mode is used (3d or 2d) Returns False if wire is already ordered (tail-to-head), True otherwise. Use returned WireOrder object for deeper analysis. Status: OK : the same edges orientation, the same edges sequence DONE1: the same edges orientation, not the same edges sequence DONE2: as DONE1 and gaps more than myPrecision DONE3: not the same edges orientation (some need to be reversed) DONE4: as DONE3 and gaps more than myPrecision FAIL : algorithm failed (could not detect order)
+        Analyzes the order of the edges in the wire, uses class WireOrder for that purpose. Flag <isClosed> defines if the wire is closed or not Flag <theMode3D> defines 3D or 2d mode. Flag <theModeBoth> defines miscible mode and the flag <theMode3D> is ignored. Returns False if wire is already ordered (tail-to-head), True otherwise. Use returned WireOrder object for deeper analysis. Status: OK : the same edges orientation, the same edges sequence DONE1: the same edges orientation, not the same edges sequence DONE2: as DONE1 and gaps more than myPrecision DONE3: not the same edges orientation (some need to be reversed) DONE4: as DONE3 and gaps more than myPrecision FAIL : algorithm failed (could not detect order)
         """
     @overload
     def CheckOrder(self,isClosed : bool=True,mode3d : bool=True) -> bool: ...
@@ -2005,14 +2063,14 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Checks if wire defines an outer bound on the face Uses ShapeAnalysis::IsOuterBound for analysis If <APIMake> is True uses BRepAPI_MakeWire to build the wire, if False (to be used only when edges share common vertices) uses BRep_Builder to build the wire
         """
     @overload
-    def CheckSeam(self,num : int,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,cf : float,cl : float) -> bool: 
+    def CheckSeam(self,num : int) -> bool: 
         """
         Checks if a seam pcurves are correct oriented Returns: False (status OK) if given edge is not a seam or if it is OK C1 - current pcurve for FORWARD edge, C2 - current pcurve for REVERSED edge (if returns True they should be swapped for the seam), cf, cl - first and last parameters on curves Status: OK : Pcurves are correct or edge is not seam DONE : Seam pcurves should be swapped
 
         Checks if a seam pcurves are correct oriented See previous functions for details
         """
     @overload
-    def CheckSeam(self,num : int) -> bool: ...
+    def CheckSeam(self,num : int,C1 : OCP.Geom2d.Geom2d_Curve,C2 : OCP.Geom2d.Geom2d_Curve,cf : float,cl : float) -> bool: ...
     @overload
     def CheckSelfIntersectingEdge(self,num : int) -> bool: 
         """
@@ -2036,14 +2094,14 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
     @overload
     def CheckShapeConnect(self,shape : OCP.TopoDS.TopoDS_Shape,prec : float=0.0) -> bool: ...
     @overload
-    def CheckSmall(self,precsmall : float=0.0) -> bool: 
+    def CheckSmall(self,num : int,precsmall : float=0.0) -> bool: 
         """
         Calls to CheckSmall for each edge Returns: True if at least one small edge was detected
 
         Checks if an edge has a length not greater than myPreci or precsmall (if it is smaller) Returns: False if its length is greater than precision Status: OK : edge is not small or degenerated DONE1: edge is small, vertices are the same DONE2: edge is small, vertices are not the same FAIL : no 3d curve and pcurve
         """
     @overload
-    def CheckSmall(self,num : int,precsmall : float=0.0) -> bool: ...
+    def CheckSmall(self,precsmall : float=0.0) -> bool: ...
     def CheckSmallArea(self,theWire : OCP.TopoDS.TopoDS_Wire) -> bool: 
         """
         Checks if wire has parametric area less than precision.
@@ -2092,23 +2150,23 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
     @overload
     def Init(self,wire : OCP.TopoDS.TopoDS_Wire,face : OCP.TopoDS.TopoDS_Face,precision : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLoaded(self) -> bool: 
         """
         Returns True if wire is loaded and has number of edges >0
@@ -2128,14 +2186,14 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         Querying the status of the LAST performed 'Advanced' checking procedure
         """
     @overload
-    def Load(self,wire : OCP.TopoDS.TopoDS_Wire) -> None: 
+    def Load(self,sbwd : OCP.ShapeExtend.ShapeExtend_WireData) -> None: 
         """
         Loads the object with standard TopoDS_Wire
 
         Loads the object with WireData object
         """
     @overload
-    def Load(self,sbwd : OCP.ShapeExtend.ShapeExtend_WireData) -> None: ...
+    def Load(self,wire : OCP.TopoDS.TopoDS_Wire) -> None: ...
     def MaxDistance2d(self) -> float: 
         """
         Returns the last maximal distance in 2D-UV computed by CheckContinuity2d
@@ -2185,14 +2243,14 @@ class ShapeAnalysis_Wire(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetSurface(self,surface : OCP.Geom.Geom_Surface) -> None: 
+    def SetSurface(self,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> None: 
         """
         Loads the surface the wire lies on
 
         Loads the surface the wire lies on
         """
     @overload
-    def SetSurface(self,surface : OCP.Geom.Geom_Surface,location : OCP.TopLoc.TopLoc_Location) -> None: ...
+    def SetSurface(self,surface : OCP.Geom.Geom_Surface) -> None: ...
     def StatusClosed(self,Status : OCP.ShapeExtend.ShapeExtend_Status) -> bool: 
         """
         None
@@ -2303,14 +2361,18 @@ class ShapeAnalysis_WireOrder():
     This class is intended to control and, if possible, redefine the order of a list of edges which define a wire Edges are not given directly, but as their bounds (start,end)
     """
     @overload
-    def Add(self,start3d : OCP.gp.gp_XYZ,end3d : OCP.gp.gp_XYZ) -> None: 
+    def Add(self,theStart3d : OCP.gp.gp_XYZ,theEnd3d : OCP.gp.gp_XYZ) -> None: 
         """
-        Adds a couple of points 3D (start,end)
+        Adds a couple of points 3D (start, end)
 
-        Adds a couple of points 2D (start,end)
+        Adds a couple of points 2D (start, end)
+
+        Adds a couple of points 3D and 2D (start, end)
         """
     @overload
-    def Add(self,start2d : OCP.gp.gp_XY,end2d : OCP.gp.gp_XY) -> None: ...
+    def Add(self,theStart2d : OCP.gp.gp_XY,theEnd2d : OCP.gp.gp_XY) -> None: ...
+    @overload
+    def Add(self,theStart3d : OCP.gp.gp_XYZ,theEnd3d : OCP.gp.gp_XYZ,theStart2d : OCP.gp.gp_XY,theEnd2d : OCP.gp.gp_XY) -> None: ...
     def Chain(self,num : int) -> Tuple[int, int]: 
         """
         Returns, for the chain n0 num, starting and ending numbers of edges. In the list of ordered edges (see Ordered for originals)
@@ -2343,13 +2405,13 @@ class ShapeAnalysis_WireOrder():
         """
         Returns the count of added couples of points (one per edges)
         """
-    def Ordered(self,n : int) -> int: 
+    def Ordered(self,theIdx : int) -> int: 
         """
         Returns the number of original edge which correspond to the newly ordered number <n> Warning : the returned value is NEGATIVE if edge should be reversed
         """
     def Perform(self,closed : bool=True) -> None: 
         """
-        Computes the better order If <closed> is True (D) considers also closure Optimised if the couples were already in order The criterium is : two couples in order if distance between end-prec and start-cur is less then starting tolerance <tol> Else, the smallest distance is reached Gap corresponds to a smallest distance greater than <tol>
+        Computes the better order Optimised if the couples were already in order The criterium is : two couples in order if distance between end-prec and start-cur is less then starting tolerance <tol> Else, the smallest distance is reached Warning: Parameter <closed> not used
         """
     def SetChains(self,gap : float) -> None: 
         """
@@ -2357,32 +2419,32 @@ class ShapeAnalysis_WireOrder():
         """
     def SetCouples(self,gap : float) -> None: 
         """
-        Determines the couples of edges for which end and start fit inside a given gap. Queried by NbCouples and Couple
+        Determines the couples of edges for which end and start fit inside a given gap. Queried by NbCouples and Couple Warning: function isn't implemented
         """
-    def SetMode(self,mode3d : bool,tol : float) -> None: 
+    def SetMode(self,theMode3D : bool,theTolerance : float,theModeBoth : bool=False) -> None: 
         """
-        Sets new values. Clears the connexion list If <mode3d> changes, also clears the edge list (else, doesn't)
+        Sets new values. Clears the edge list if the mode (<theMode3D> or <theModeBoth> ) changes. Clears the connexion list. Warning: Parameter <theTolerance> is not used in algorithm.
         """
     def Status(self) -> int: 
         """
-        Returns the status of the order (0 if not done) : 0 : all edges are direct and in sequence 1 : all edges are direct but some are not in sequence 2 : in addition, unresolved gaps remain -1 : some edges are reversed, but no gap remain -2 : some edges are reversed and some gaps remain -10 : COULD NOT BE RESOLVED, Failure on Reorder gap : regarding starting <tol>
+        Returns the status of the order (0 if not done) : 0 : all edges are direct and in sequence 1 : all edges are direct but some are not in sequence -1 : some edges are reversed, but no gap remain 3 : edges in sequence are just shifted in forward or reverse manner
         """
     def Tolerance(self) -> float: 
         """
         Returns the working tolerance
         """
-    def XY(self,num : int,start2d : OCP.gp.gp_XY,end2d : OCP.gp.gp_XY) -> None: 
+    def XY(self,theIdx : int,theStart2D : OCP.gp.gp_XY,theEnd2D : OCP.gp.gp_XY) -> None: 
         """
         Returns the values of the couple <num>, as 2D values
         """
-    def XYZ(self,num : int,start3d : OCP.gp.gp_XYZ,end3d : OCP.gp.gp_XYZ) -> None: 
+    def XYZ(self,theIdx : int,theStart3D : OCP.gp.gp_XYZ,theEnd3D : OCP.gp.gp_XYZ) -> None: 
         """
         Returns the values of the couple <num>, as 3D values
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theMode3D : bool,theTolerance : float,theModeBoth : bool=False) -> None: ...
     @overload
-    def __init__(self,mode3d : bool,tol : float) -> None: ...
+    def __init__(self) -> None: ...
     @property
     def KeepLoopsMode(self) -> bool:
         """
@@ -2409,14 +2471,14 @@ class ShapeAnalysis_WireVertex():
         Returns the recorded status for a vertex With its recorded position and parameters on both edges These values are relevant regarding the status: Status Meaning Position Preceding Following 0 Same no no no 1 SameCoord no no no 2 Close no no no 3 End yes no yes 4 Start yes yes no 5 Inters yes yes yes -1 Disjoined no no no
         """
     @overload
-    def Init(self,swbd : OCP.ShapeExtend.ShapeExtend_WireData,preci : float) -> None: 
+    def Init(self,wire : OCP.TopoDS.TopoDS_Wire,preci : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,wire : OCP.TopoDS.TopoDS_Wire,preci : float) -> None: ...
+    def Init(self,swbd : OCP.ShapeExtend.ShapeExtend_WireData,preci : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns True if analysis was performed, else returns False

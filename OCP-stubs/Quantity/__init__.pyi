@@ -4,14 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
-import OCP.gp
 import OCP.Graphic3d
-import OCP.Standard
 import OCP.TCollection
+import OCP.gp
+import OCP.Standard
+import io
 __all__  = [
 "Quantity_Array1OfColor",
-"Quantity_Array2OfColor",
 "Quantity_Color",
 "Quantity_ColorHasher",
 "Quantity_ColorRGBA",
@@ -22,56 +21,7 @@ __all__  = [
 "Quantity_NameOfColor",
 "Quantity_Period",
 "Quantity_PeriodDefinitionError",
-"Quantity_PhysicalQuantity",
 "Quantity_TypeOfColor",
-"Quantity_ABSORBEDDOSE",
-"Quantity_ACCELERATION",
-"Quantity_ACOUSTICINTENSITY",
-"Quantity_ACTIVITY",
-"Quantity_ADMITTANCE",
-"Quantity_AMOUNTOFSUBSTANCE",
-"Quantity_ANGULARVELOCITY",
-"Quantity_AREA",
-"Quantity_CAPACITANCE",
-"Quantity_COEFFICIENTOFEXPANSION",
-"Quantity_CONCENTRATION",
-"Quantity_CONDUCTIVITY",
-"Quantity_CONSUMPTION",
-"Quantity_DENSITY",
-"Quantity_DOSEEQUIVALENT",
-"Quantity_ELECTRICCAPACITANCE",
-"Quantity_ELECTRICCHARGE",
-"Quantity_ELECTRICCURRENT",
-"Quantity_ELECTRICFIELDSTRENGTH",
-"Quantity_ELECTRICPOTENTIAL",
-"Quantity_ENERGY",
-"Quantity_ENTHALPY",
-"Quantity_ENTROPY",
-"Quantity_FORCE",
-"Quantity_FREQUENCY",
-"Quantity_ILLUMINANCE",
-"Quantity_IMPEDANCE",
-"Quantity_INDUCTANCE",
-"Quantity_KINEMATICVISCOSITY",
-"Quantity_KINETICMOMENT",
-"Quantity_LENGTH",
-"Quantity_LUMINANCE",
-"Quantity_LUMINOUSEFFICACITY",
-"Quantity_LUMINOUSEXPOSITION",
-"Quantity_LUMINOUSFLUX",
-"Quantity_LUMINOUSINTENSITY",
-"Quantity_MAGNETICFIELDSTRENGTH",
-"Quantity_MAGNETICFLUX",
-"Quantity_MAGNETICFLUXDENSITY",
-"Quantity_MASS",
-"Quantity_MASSFLOW",
-"Quantity_MOLARCONCENTRATION",
-"Quantity_MOLARITY",
-"Quantity_MOLARMASS",
-"Quantity_MOLARVOLUME",
-"Quantity_MOMENTOFAFORCE",
-"Quantity_MOMENTOFINERTIA",
-"Quantity_MOMENTUM",
 "Quantity_NOC_ALICEBLUE",
 "Quantity_NOC_ANTIQUEWHITE",
 "Quantity_NOC_ANTIQUEWHITE1",
@@ -593,31 +543,11 @@ __all__  = [
 "Quantity_NOC_YELLOW3",
 "Quantity_NOC_YELLOW4",
 "Quantity_NOC_YELLOWGREEN",
-"Quantity_PLANEANGLE",
-"Quantity_POWER",
-"Quantity_PRESSURE",
-"Quantity_RELUCTANCE",
-"Quantity_RESISTANCE",
-"Quantity_RESISTIVITY",
-"Quantity_SOLIDANGLE",
-"Quantity_SOUNDINTENSITY",
-"Quantity_SPECIFICHEATCAPACITY",
-"Quantity_SPEED",
-"Quantity_SURFACETENSION",
-"Quantity_TEMPERATURE",
-"Quantity_THERMALCONDUCTIVITY",
 "Quantity_TOC_CIELab",
 "Quantity_TOC_CIELch",
 "Quantity_TOC_HLS",
 "Quantity_TOC_RGB",
-"Quantity_TOC_sRGB",
-"Quantity_TORQUE",
-"Quantity_VELOCITY",
-"Quantity_VISCOSITY",
-"Quantity_VOLUME",
-"Quantity_VOLUMEFLOW",
-"Quantity_WEIGHT",
-"Quantity_WORK"
+"Quantity_TOC_sRGB"
 ]
 class Quantity_Array1OfColor():
     """
@@ -696,93 +626,14 @@ class Quantity_Array1OfColor():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theBegin : Quantity_Color,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
-    def __iter__(self) -> Iterator: ...
-    pass
-class Quantity_Array2OfColor():
-    """
-    Purpose: The class Array2 represents bi-dimensional arrays of fixed size known at run time. The ranges of indices are user defined.
-    """
-    def Assign(self,theOther : Quantity_Array2OfColor) -> Quantity_Array2OfColor: 
-        """
-        Assignment
-        """
-    def ChangeValue(self,theRow : int,theCol : int) -> Quantity_Color: 
-        """
-        Variable value access
-        """
-    def ColLength(self) -> int: 
-        """
-        Returns length of the column, i.e. number of rows
-        """
-    def Init(self,theValue : Quantity_Color) -> None: 
-        """
-        Initialise the values
-        """
-    def IsDeletable(self) -> bool: 
-        """
-        myDeletable flag
-        """
-    def Length(self) -> int: ...
-    def LowerCol(self) -> int: 
-        """
-        LowerCol
-        """
-    def LowerRow(self) -> int: 
-        """
-        LowerRow
-        """
-    def Move(self,theOther : Quantity_Array2OfColor) -> Quantity_Array2OfColor: 
-        """
-        Move assignment. This array will borrow all the data from theOther. The moved object will be left uninitialized and should not be used anymore.
-        """
-    def NbColumns(self) -> int: 
-        """
-        Returns number of columns
-        """
-    def NbRows(self) -> int: 
-        """
-        Returns number of rows
-        """
-    def Resize(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int,theToCopyData : bool) -> None: 
-        """
-        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
-        """
-    def RowLength(self) -> int: 
-        """
-        Returns length of the row, i.e. number of columns
-        """
-    def SetValue(self,theRow : int,theCol : int,theItem : Quantity_Color) -> None: 
-        """
-        SetValue
-        """
-    def Size(self) -> int: ...
-    def UpperCol(self) -> int: 
-        """
-        UpperCol
-        """
-    def UpperRow(self) -> int: 
-        """
-        UpperRow
-        """
-    def Value(self,theRow : int,theCol : int) -> Quantity_Color: 
-        """
-        Constant value access
-        """
     @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : Quantity_Color,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : Quantity_Array2OfColor) -> None: ...
+    def __iter__(self) -> Iterator: ...
     pass
 class Quantity_Color():
     """
@@ -817,7 +668,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def ColorFromName_s(theName : str,theColor : Quantity_NameOfColor) -> bool: 
+    def ColorFromName_s(theColorNameString : str,theColor : Quantity_Color) -> bool: 
         """
         Finds color from predefined names. For example, the name of the color which corresponds to "BLACK" is Quantity_NOC_BLACK. Returns FALSE if name is unknown.
 
@@ -825,7 +676,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def ColorFromName_s(theColorNameString : str,theColor : Quantity_Color) -> bool: ...
+    def ColorFromName_s(theName : str,theColor : Quantity_NameOfColor) -> bool: ...
     @staticmethod
     def ColorToHex_s(theColor : Quantity_Color,theToPrefixHash : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -868,7 +719,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def Convert_LinearRGB_To_sRGB_approx22_s(theRGB : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: 
+    def Convert_LinearRGB_To_sRGB_approx22_s(theLinearValue : float) -> float: 
         """
         Convert linear RGB component into sRGB using approximated uniform gamma coefficient 2.2.
 
@@ -876,7 +727,7 @@ class Quantity_Color():
         """
     @staticmethod
     @overload
-    def Convert_LinearRGB_To_sRGB_approx22_s(theLinearValue : float) -> float: ...
+    def Convert_LinearRGB_To_sRGB_approx22_s(theRGB : OCP.gp.gp_Vec3f) -> OCP.gp.gp_Vec3f: ...
     @staticmethod
     def Convert_LinearRGB_To_sRGB_s(theLinearValue : float) -> float: 
         """
@@ -989,14 +840,14 @@ class Quantity_Color():
         Set the value used to compare two colors for equality.
         """
     @overload
-    def SetValues(self,theName : Quantity_NameOfColor) -> None: 
+    def SetValues(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: 
         """
         Updates the color from specified named color.
 
         Updates a color according to the mode specified by theType. Throws exception if values are out of range.
         """
     @overload
-    def SetValues(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: ...
+    def SetValues(self,theName : Quantity_NameOfColor) -> None: ...
     def SquareDistance(self,theColor : Quantity_Color) -> float: 
         """
         Returns the square of distance between two colors.
@@ -1011,13 +862,13 @@ class Quantity_Color():
         Returns in theC1, theC2 and theC3 the components of this color according to the color system definition theType.
         """
     @overload
-    def __init__(self,theRgb : OCP.gp.gp_Vec3f) -> None: ...
-    @overload
     def __init__(self,theC1 : float,theC2 : float,theC3 : float,theType : Quantity_TypeOfColor) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theName : Quantity_NameOfColor) -> None: ...
+    @overload
+    def __init__(self,theRgb : OCP.gp.gp_Vec3f) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Quantity_ColorHasher():
     """
@@ -1105,15 +956,15 @@ class Quantity_ColorRGBA():
         Assign new values to the color.
         """
     @overload
-    def __init__(self,theRgb : Quantity_Color) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theRed : float,theGreen : float,theBlue : float,theAlpha : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theRgba : OCP.Graphic3d.Graphic3d_Vec4) -> None: ...
     @overload
     def __init__(self,theRgb : Quantity_Color,theAlpha : float) -> None: ...
     @overload
-    def __init__(self,theRgba : OCP.Graphic3d.Graphic3d_Vec4) -> None: ...
+    def __init__(self,theRgb : Quantity_Color) -> None: ...
     pass
 class Quantity_ColorRGBAHasher():
     """
@@ -1299,23 +1150,23 @@ class Quantity_HArray1OfColor(Quantity_Array1OfColor, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Quantity_Color: 
         """
         Returns last element
@@ -1357,9 +1208,9 @@ class Quantity_HArray1OfColor(Quantity_Array1OfColor, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Quantity_Color) -> None: ...
-    @overload
     def __init__(self,theOther : Quantity_Array1OfColor) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : Quantity_Color) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -2999,14 +2850,14 @@ class Quantity_Period():
     @overload
     def IsValid_s(dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> bool: ...
     @overload
-    def SetValues(self,ss : int,mics : int=0) -> None: 
+    def SetValues(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: 
         """
         Assigns to this period the time interval defined - with dd days, hh hours, mn minutes, ss seconds, mis (defaulted to 0) milliseconds and mics (defaulted to 0) microseconds; or
 
         Assigns to this period the time interval defined - with Ss seconds and Mics (defaulted to 0) microseconds. Exceptions Quantity_PeriodDefinitionError: - if the number of seconds expressed either by: - dd days, hh hours, mn minutes and ss seconds, or - Ss is less than 0. - if the number of microseconds expressed either by: - mis milliseconds and mics microseconds, or - Mics is less than 0.
         """
     @overload
-    def SetValues(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
+    def SetValues(self,ss : int,mics : int=0) -> None: ...
     def Subtract(self,anOther : Quantity_Period) -> Quantity_Period: 
         """
         Subtracts one Period from another and returns the difference.
@@ -3025,9 +2876,9 @@ class Quantity_Period():
         None
         """
     @overload
-    def __init__(self,ss : int,mics : int=0) -> None: ...
-    @overload
     def __init__(self,dd : int,hh : int,mn : int,ss : int,mis : int=0,mics : int=0) -> None: ...
+    @overload
+    def __init__(self,ss : int,mics : int=0) -> None: ...
     def __sub__(self,anOther : Quantity_Period) -> Quantity_Period: 
         """
         None
@@ -3043,238 +2894,6 @@ class Quantity_PeriodDefinitionError(Exception, BaseException):
     __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Quantity_PeriodDefinitionError' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
-    pass
-class Quantity_PhysicalQuantity():
-    """
-    List of all physical quantities(Afnor)
-
-    Members:
-
-      Quantity_MASS
-
-      Quantity_PLANEANGLE
-
-      Quantity_SOLIDANGLE
-
-      Quantity_LENGTH
-
-      Quantity_AREA
-
-      Quantity_VOLUME
-
-      Quantity_SPEED
-
-      Quantity_VELOCITY
-
-      Quantity_ACCELERATION
-
-      Quantity_ANGULARVELOCITY
-
-      Quantity_FREQUENCY
-
-      Quantity_TEMPERATURE
-
-      Quantity_AMOUNTOFSUBSTANCE
-
-      Quantity_DENSITY
-
-      Quantity_MASSFLOW
-
-      Quantity_VOLUMEFLOW
-
-      Quantity_CONSUMPTION
-
-      Quantity_MOMENTUM
-
-      Quantity_KINETICMOMENT
-
-      Quantity_MOMENTOFINERTIA
-
-      Quantity_FORCE
-
-      Quantity_MOMENTOFAFORCE
-
-      Quantity_TORQUE
-
-      Quantity_WEIGHT
-
-      Quantity_PRESSURE
-
-      Quantity_VISCOSITY
-
-      Quantity_KINEMATICVISCOSITY
-
-      Quantity_ENERGY
-
-      Quantity_WORK
-
-      Quantity_POWER
-
-      Quantity_SURFACETENSION
-
-      Quantity_COEFFICIENTOFEXPANSION
-
-      Quantity_THERMALCONDUCTIVITY
-
-      Quantity_SPECIFICHEATCAPACITY
-
-      Quantity_ENTROPY
-
-      Quantity_ENTHALPY
-
-      Quantity_LUMINOUSINTENSITY
-
-      Quantity_LUMINOUSFLUX
-
-      Quantity_LUMINANCE
-
-      Quantity_ILLUMINANCE
-
-      Quantity_LUMINOUSEXPOSITION
-
-      Quantity_LUMINOUSEFFICACITY
-
-      Quantity_ELECTRICCHARGE
-
-      Quantity_ELECTRICCURRENT
-
-      Quantity_ELECTRICFIELDSTRENGTH
-
-      Quantity_ELECTRICPOTENTIAL
-
-      Quantity_ELECTRICCAPACITANCE
-
-      Quantity_MAGNETICFLUX
-
-      Quantity_MAGNETICFLUXDENSITY
-
-      Quantity_MAGNETICFIELDSTRENGTH
-
-      Quantity_RELUCTANCE
-
-      Quantity_RESISTANCE
-
-      Quantity_INDUCTANCE
-
-      Quantity_CAPACITANCE
-
-      Quantity_IMPEDANCE
-
-      Quantity_ADMITTANCE
-
-      Quantity_RESISTIVITY
-
-      Quantity_CONDUCTIVITY
-
-      Quantity_MOLARMASS
-
-      Quantity_MOLARVOLUME
-
-      Quantity_CONCENTRATION
-
-      Quantity_MOLARCONCENTRATION
-
-      Quantity_MOLARITY
-
-      Quantity_SOUNDINTENSITY
-
-      Quantity_ACOUSTICINTENSITY
-
-      Quantity_ACTIVITY
-
-      Quantity_ABSORBEDDOSE
-
-      Quantity_DOSEEQUIVALENT
-    """
-    def __eq__(self,other : object) -> bool: ...
-    def __getstate__(self) -> int: ...
-    def __hash__(self) -> int: ...
-    def __index__(self) -> int: ...
-    def __init__(self,value : int) -> None: ...
-    def __int__(self) -> int: ...
-    def __ne__(self,other : object) -> bool: ...
-    def __repr__(self) -> str: ...
-    def __setstate__(self,state : int) -> None: ...
-    @property
-    def name(self) -> None:
-        """
-        :type: None
-        """
-    @property
-    def value(self) -> int:
-        """
-        :type: int
-        """
-    Quantity_ABSORBEDDOSE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ABSORBEDDOSE: 66>
-    Quantity_ACCELERATION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ACCELERATION: 8>
-    Quantity_ACOUSTICINTENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ACOUSTICINTENSITY: 64>
-    Quantity_ACTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ACTIVITY: 65>
-    Quantity_ADMITTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ADMITTANCE: 55>
-    Quantity_AMOUNTOFSUBSTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_AMOUNTOFSUBSTANCE: 12>
-    Quantity_ANGULARVELOCITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ANGULARVELOCITY: 9>
-    Quantity_AREA: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_AREA: 4>
-    Quantity_CAPACITANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CAPACITANCE: 53>
-    Quantity_COEFFICIENTOFEXPANSION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_COEFFICIENTOFEXPANSION: 31>
-    Quantity_CONCENTRATION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CONCENTRATION: 60>
-    Quantity_CONDUCTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CONDUCTIVITY: 57>
-    Quantity_CONSUMPTION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CONSUMPTION: 16>
-    Quantity_DENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_DENSITY: 13>
-    Quantity_DOSEEQUIVALENT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_DOSEEQUIVALENT: 67>
-    Quantity_ELECTRICCAPACITANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICCAPACITANCE: 46>
-    Quantity_ELECTRICCHARGE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICCHARGE: 42>
-    Quantity_ELECTRICCURRENT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICCURRENT: 43>
-    Quantity_ELECTRICFIELDSTRENGTH: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICFIELDSTRENGTH: 44>
-    Quantity_ELECTRICPOTENTIAL: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICPOTENTIAL: 45>
-    Quantity_ENERGY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ENERGY: 27>
-    Quantity_ENTHALPY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ENTHALPY: 35>
-    Quantity_ENTROPY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ENTROPY: 34>
-    Quantity_FORCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_FORCE: 20>
-    Quantity_FREQUENCY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_FREQUENCY: 10>
-    Quantity_ILLUMINANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ILLUMINANCE: 39>
-    Quantity_IMPEDANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_IMPEDANCE: 54>
-    Quantity_INDUCTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_INDUCTANCE: 52>
-    Quantity_KINEMATICVISCOSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_KINEMATICVISCOSITY: 26>
-    Quantity_KINETICMOMENT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_KINETICMOMENT: 18>
-    Quantity_LENGTH: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LENGTH: 3>
-    Quantity_LUMINANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINANCE: 38>
-    Quantity_LUMINOUSEFFICACITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSEFFICACITY: 41>
-    Quantity_LUMINOUSEXPOSITION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSEXPOSITION: 40>
-    Quantity_LUMINOUSFLUX: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSFLUX: 37>
-    Quantity_LUMINOUSINTENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSINTENSITY: 36>
-    Quantity_MAGNETICFIELDSTRENGTH: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MAGNETICFIELDSTRENGTH: 49>
-    Quantity_MAGNETICFLUX: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MAGNETICFLUX: 47>
-    Quantity_MAGNETICFLUXDENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MAGNETICFLUXDENSITY: 48>
-    Quantity_MASS: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MASS: 0>
-    Quantity_MASSFLOW: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MASSFLOW: 14>
-    Quantity_MOLARCONCENTRATION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARCONCENTRATION: 61>
-    Quantity_MOLARITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARITY: 62>
-    Quantity_MOLARMASS: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARMASS: 58>
-    Quantity_MOLARVOLUME: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARVOLUME: 59>
-    Quantity_MOMENTOFAFORCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOMENTOFAFORCE: 21>
-    Quantity_MOMENTOFINERTIA: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOMENTOFINERTIA: 19>
-    Quantity_MOMENTUM: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOMENTUM: 17>
-    Quantity_PLANEANGLE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_PLANEANGLE: 1>
-    Quantity_POWER: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_POWER: 29>
-    Quantity_PRESSURE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_PRESSURE: 24>
-    Quantity_RELUCTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_RELUCTANCE: 50>
-    Quantity_RESISTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_RESISTANCE: 51>
-    Quantity_RESISTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_RESISTIVITY: 56>
-    Quantity_SOLIDANGLE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SOLIDANGLE: 2>
-    Quantity_SOUNDINTENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SOUNDINTENSITY: 63>
-    Quantity_SPECIFICHEATCAPACITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SPECIFICHEATCAPACITY: 33>
-    Quantity_SPEED: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SPEED: 6>
-    Quantity_SURFACETENSION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SURFACETENSION: 30>
-    Quantity_TEMPERATURE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_TEMPERATURE: 11>
-    Quantity_THERMALCONDUCTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_THERMALCONDUCTIVITY: 32>
-    Quantity_TORQUE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_TORQUE: 22>
-    Quantity_VELOCITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VELOCITY: 7>
-    Quantity_VISCOSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VISCOSITY: 25>
-    Quantity_VOLUME: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VOLUME: 5>
-    Quantity_VOLUMEFLOW: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VOLUMEFLOW: 15>
-    Quantity_WEIGHT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_WEIGHT: 23>
-    Quantity_WORK: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_WORK: 28>
-    __entries: dict # value = {'Quantity_MASS': (<Quantity_PhysicalQuantity.Quantity_MASS: 0>, None), 'Quantity_PLANEANGLE': (<Quantity_PhysicalQuantity.Quantity_PLANEANGLE: 1>, None), 'Quantity_SOLIDANGLE': (<Quantity_PhysicalQuantity.Quantity_SOLIDANGLE: 2>, None), 'Quantity_LENGTH': (<Quantity_PhysicalQuantity.Quantity_LENGTH: 3>, None), 'Quantity_AREA': (<Quantity_PhysicalQuantity.Quantity_AREA: 4>, None), 'Quantity_VOLUME': (<Quantity_PhysicalQuantity.Quantity_VOLUME: 5>, None), 'Quantity_SPEED': (<Quantity_PhysicalQuantity.Quantity_SPEED: 6>, None), 'Quantity_VELOCITY': (<Quantity_PhysicalQuantity.Quantity_VELOCITY: 7>, None), 'Quantity_ACCELERATION': (<Quantity_PhysicalQuantity.Quantity_ACCELERATION: 8>, None), 'Quantity_ANGULARVELOCITY': (<Quantity_PhysicalQuantity.Quantity_ANGULARVELOCITY: 9>, None), 'Quantity_FREQUENCY': (<Quantity_PhysicalQuantity.Quantity_FREQUENCY: 10>, None), 'Quantity_TEMPERATURE': (<Quantity_PhysicalQuantity.Quantity_TEMPERATURE: 11>, None), 'Quantity_AMOUNTOFSUBSTANCE': (<Quantity_PhysicalQuantity.Quantity_AMOUNTOFSUBSTANCE: 12>, None), 'Quantity_DENSITY': (<Quantity_PhysicalQuantity.Quantity_DENSITY: 13>, None), 'Quantity_MASSFLOW': (<Quantity_PhysicalQuantity.Quantity_MASSFLOW: 14>, None), 'Quantity_VOLUMEFLOW': (<Quantity_PhysicalQuantity.Quantity_VOLUMEFLOW: 15>, None), 'Quantity_CONSUMPTION': (<Quantity_PhysicalQuantity.Quantity_CONSUMPTION: 16>, None), 'Quantity_MOMENTUM': (<Quantity_PhysicalQuantity.Quantity_MOMENTUM: 17>, None), 'Quantity_KINETICMOMENT': (<Quantity_PhysicalQuantity.Quantity_KINETICMOMENT: 18>, None), 'Quantity_MOMENTOFINERTIA': (<Quantity_PhysicalQuantity.Quantity_MOMENTOFINERTIA: 19>, None), 'Quantity_FORCE': (<Quantity_PhysicalQuantity.Quantity_FORCE: 20>, None), 'Quantity_MOMENTOFAFORCE': (<Quantity_PhysicalQuantity.Quantity_MOMENTOFAFORCE: 21>, None), 'Quantity_TORQUE': (<Quantity_PhysicalQuantity.Quantity_TORQUE: 22>, None), 'Quantity_WEIGHT': (<Quantity_PhysicalQuantity.Quantity_WEIGHT: 23>, None), 'Quantity_PRESSURE': (<Quantity_PhysicalQuantity.Quantity_PRESSURE: 24>, None), 'Quantity_VISCOSITY': (<Quantity_PhysicalQuantity.Quantity_VISCOSITY: 25>, None), 'Quantity_KINEMATICVISCOSITY': (<Quantity_PhysicalQuantity.Quantity_KINEMATICVISCOSITY: 26>, None), 'Quantity_ENERGY': (<Quantity_PhysicalQuantity.Quantity_ENERGY: 27>, None), 'Quantity_WORK': (<Quantity_PhysicalQuantity.Quantity_WORK: 28>, None), 'Quantity_POWER': (<Quantity_PhysicalQuantity.Quantity_POWER: 29>, None), 'Quantity_SURFACETENSION': (<Quantity_PhysicalQuantity.Quantity_SURFACETENSION: 30>, None), 'Quantity_COEFFICIENTOFEXPANSION': (<Quantity_PhysicalQuantity.Quantity_COEFFICIENTOFEXPANSION: 31>, None), 'Quantity_THERMALCONDUCTIVITY': (<Quantity_PhysicalQuantity.Quantity_THERMALCONDUCTIVITY: 32>, None), 'Quantity_SPECIFICHEATCAPACITY': (<Quantity_PhysicalQuantity.Quantity_SPECIFICHEATCAPACITY: 33>, None), 'Quantity_ENTROPY': (<Quantity_PhysicalQuantity.Quantity_ENTROPY: 34>, None), 'Quantity_ENTHALPY': (<Quantity_PhysicalQuantity.Quantity_ENTHALPY: 35>, None), 'Quantity_LUMINOUSINTENSITY': (<Quantity_PhysicalQuantity.Quantity_LUMINOUSINTENSITY: 36>, None), 'Quantity_LUMINOUSFLUX': (<Quantity_PhysicalQuantity.Quantity_LUMINOUSFLUX: 37>, None), 'Quantity_LUMINANCE': (<Quantity_PhysicalQuantity.Quantity_LUMINANCE: 38>, None), 'Quantity_ILLUMINANCE': (<Quantity_PhysicalQuantity.Quantity_ILLUMINANCE: 39>, None), 'Quantity_LUMINOUSEXPOSITION': (<Quantity_PhysicalQuantity.Quantity_LUMINOUSEXPOSITION: 40>, None), 'Quantity_LUMINOUSEFFICACITY': (<Quantity_PhysicalQuantity.Quantity_LUMINOUSEFFICACITY: 41>, None), 'Quantity_ELECTRICCHARGE': (<Quantity_PhysicalQuantity.Quantity_ELECTRICCHARGE: 42>, None), 'Quantity_ELECTRICCURRENT': (<Quantity_PhysicalQuantity.Quantity_ELECTRICCURRENT: 43>, None), 'Quantity_ELECTRICFIELDSTRENGTH': (<Quantity_PhysicalQuantity.Quantity_ELECTRICFIELDSTRENGTH: 44>, None), 'Quantity_ELECTRICPOTENTIAL': (<Quantity_PhysicalQuantity.Quantity_ELECTRICPOTENTIAL: 45>, None), 'Quantity_ELECTRICCAPACITANCE': (<Quantity_PhysicalQuantity.Quantity_ELECTRICCAPACITANCE: 46>, None), 'Quantity_MAGNETICFLUX': (<Quantity_PhysicalQuantity.Quantity_MAGNETICFLUX: 47>, None), 'Quantity_MAGNETICFLUXDENSITY': (<Quantity_PhysicalQuantity.Quantity_MAGNETICFLUXDENSITY: 48>, None), 'Quantity_MAGNETICFIELDSTRENGTH': (<Quantity_PhysicalQuantity.Quantity_MAGNETICFIELDSTRENGTH: 49>, None), 'Quantity_RELUCTANCE': (<Quantity_PhysicalQuantity.Quantity_RELUCTANCE: 50>, None), 'Quantity_RESISTANCE': (<Quantity_PhysicalQuantity.Quantity_RESISTANCE: 51>, None), 'Quantity_INDUCTANCE': (<Quantity_PhysicalQuantity.Quantity_INDUCTANCE: 52>, None), 'Quantity_CAPACITANCE': (<Quantity_PhysicalQuantity.Quantity_CAPACITANCE: 53>, None), 'Quantity_IMPEDANCE': (<Quantity_PhysicalQuantity.Quantity_IMPEDANCE: 54>, None), 'Quantity_ADMITTANCE': (<Quantity_PhysicalQuantity.Quantity_ADMITTANCE: 55>, None), 'Quantity_RESISTIVITY': (<Quantity_PhysicalQuantity.Quantity_RESISTIVITY: 56>, None), 'Quantity_CONDUCTIVITY': (<Quantity_PhysicalQuantity.Quantity_CONDUCTIVITY: 57>, None), 'Quantity_MOLARMASS': (<Quantity_PhysicalQuantity.Quantity_MOLARMASS: 58>, None), 'Quantity_MOLARVOLUME': (<Quantity_PhysicalQuantity.Quantity_MOLARVOLUME: 59>, None), 'Quantity_CONCENTRATION': (<Quantity_PhysicalQuantity.Quantity_CONCENTRATION: 60>, None), 'Quantity_MOLARCONCENTRATION': (<Quantity_PhysicalQuantity.Quantity_MOLARCONCENTRATION: 61>, None), 'Quantity_MOLARITY': (<Quantity_PhysicalQuantity.Quantity_MOLARITY: 62>, None), 'Quantity_SOUNDINTENSITY': (<Quantity_PhysicalQuantity.Quantity_SOUNDINTENSITY: 63>, None), 'Quantity_ACOUSTICINTENSITY': (<Quantity_PhysicalQuantity.Quantity_ACOUSTICINTENSITY: 64>, None), 'Quantity_ACTIVITY': (<Quantity_PhysicalQuantity.Quantity_ACTIVITY: 65>, None), 'Quantity_ABSORBEDDOSE': (<Quantity_PhysicalQuantity.Quantity_ABSORBEDDOSE: 66>, None), 'Quantity_DOSEEQUIVALENT': (<Quantity_PhysicalQuantity.Quantity_DOSEEQUIVALENT: 67>, None)}
-    __members__: dict # value = {'Quantity_MASS': <Quantity_PhysicalQuantity.Quantity_MASS: 0>, 'Quantity_PLANEANGLE': <Quantity_PhysicalQuantity.Quantity_PLANEANGLE: 1>, 'Quantity_SOLIDANGLE': <Quantity_PhysicalQuantity.Quantity_SOLIDANGLE: 2>, 'Quantity_LENGTH': <Quantity_PhysicalQuantity.Quantity_LENGTH: 3>, 'Quantity_AREA': <Quantity_PhysicalQuantity.Quantity_AREA: 4>, 'Quantity_VOLUME': <Quantity_PhysicalQuantity.Quantity_VOLUME: 5>, 'Quantity_SPEED': <Quantity_PhysicalQuantity.Quantity_SPEED: 6>, 'Quantity_VELOCITY': <Quantity_PhysicalQuantity.Quantity_VELOCITY: 7>, 'Quantity_ACCELERATION': <Quantity_PhysicalQuantity.Quantity_ACCELERATION: 8>, 'Quantity_ANGULARVELOCITY': <Quantity_PhysicalQuantity.Quantity_ANGULARVELOCITY: 9>, 'Quantity_FREQUENCY': <Quantity_PhysicalQuantity.Quantity_FREQUENCY: 10>, 'Quantity_TEMPERATURE': <Quantity_PhysicalQuantity.Quantity_TEMPERATURE: 11>, 'Quantity_AMOUNTOFSUBSTANCE': <Quantity_PhysicalQuantity.Quantity_AMOUNTOFSUBSTANCE: 12>, 'Quantity_DENSITY': <Quantity_PhysicalQuantity.Quantity_DENSITY: 13>, 'Quantity_MASSFLOW': <Quantity_PhysicalQuantity.Quantity_MASSFLOW: 14>, 'Quantity_VOLUMEFLOW': <Quantity_PhysicalQuantity.Quantity_VOLUMEFLOW: 15>, 'Quantity_CONSUMPTION': <Quantity_PhysicalQuantity.Quantity_CONSUMPTION: 16>, 'Quantity_MOMENTUM': <Quantity_PhysicalQuantity.Quantity_MOMENTUM: 17>, 'Quantity_KINETICMOMENT': <Quantity_PhysicalQuantity.Quantity_KINETICMOMENT: 18>, 'Quantity_MOMENTOFINERTIA': <Quantity_PhysicalQuantity.Quantity_MOMENTOFINERTIA: 19>, 'Quantity_FORCE': <Quantity_PhysicalQuantity.Quantity_FORCE: 20>, 'Quantity_MOMENTOFAFORCE': <Quantity_PhysicalQuantity.Quantity_MOMENTOFAFORCE: 21>, 'Quantity_TORQUE': <Quantity_PhysicalQuantity.Quantity_TORQUE: 22>, 'Quantity_WEIGHT': <Quantity_PhysicalQuantity.Quantity_WEIGHT: 23>, 'Quantity_PRESSURE': <Quantity_PhysicalQuantity.Quantity_PRESSURE: 24>, 'Quantity_VISCOSITY': <Quantity_PhysicalQuantity.Quantity_VISCOSITY: 25>, 'Quantity_KINEMATICVISCOSITY': <Quantity_PhysicalQuantity.Quantity_KINEMATICVISCOSITY: 26>, 'Quantity_ENERGY': <Quantity_PhysicalQuantity.Quantity_ENERGY: 27>, 'Quantity_WORK': <Quantity_PhysicalQuantity.Quantity_WORK: 28>, 'Quantity_POWER': <Quantity_PhysicalQuantity.Quantity_POWER: 29>, 'Quantity_SURFACETENSION': <Quantity_PhysicalQuantity.Quantity_SURFACETENSION: 30>, 'Quantity_COEFFICIENTOFEXPANSION': <Quantity_PhysicalQuantity.Quantity_COEFFICIENTOFEXPANSION: 31>, 'Quantity_THERMALCONDUCTIVITY': <Quantity_PhysicalQuantity.Quantity_THERMALCONDUCTIVITY: 32>, 'Quantity_SPECIFICHEATCAPACITY': <Quantity_PhysicalQuantity.Quantity_SPECIFICHEATCAPACITY: 33>, 'Quantity_ENTROPY': <Quantity_PhysicalQuantity.Quantity_ENTROPY: 34>, 'Quantity_ENTHALPY': <Quantity_PhysicalQuantity.Quantity_ENTHALPY: 35>, 'Quantity_LUMINOUSINTENSITY': <Quantity_PhysicalQuantity.Quantity_LUMINOUSINTENSITY: 36>, 'Quantity_LUMINOUSFLUX': <Quantity_PhysicalQuantity.Quantity_LUMINOUSFLUX: 37>, 'Quantity_LUMINANCE': <Quantity_PhysicalQuantity.Quantity_LUMINANCE: 38>, 'Quantity_ILLUMINANCE': <Quantity_PhysicalQuantity.Quantity_ILLUMINANCE: 39>, 'Quantity_LUMINOUSEXPOSITION': <Quantity_PhysicalQuantity.Quantity_LUMINOUSEXPOSITION: 40>, 'Quantity_LUMINOUSEFFICACITY': <Quantity_PhysicalQuantity.Quantity_LUMINOUSEFFICACITY: 41>, 'Quantity_ELECTRICCHARGE': <Quantity_PhysicalQuantity.Quantity_ELECTRICCHARGE: 42>, 'Quantity_ELECTRICCURRENT': <Quantity_PhysicalQuantity.Quantity_ELECTRICCURRENT: 43>, 'Quantity_ELECTRICFIELDSTRENGTH': <Quantity_PhysicalQuantity.Quantity_ELECTRICFIELDSTRENGTH: 44>, 'Quantity_ELECTRICPOTENTIAL': <Quantity_PhysicalQuantity.Quantity_ELECTRICPOTENTIAL: 45>, 'Quantity_ELECTRICCAPACITANCE': <Quantity_PhysicalQuantity.Quantity_ELECTRICCAPACITANCE: 46>, 'Quantity_MAGNETICFLUX': <Quantity_PhysicalQuantity.Quantity_MAGNETICFLUX: 47>, 'Quantity_MAGNETICFLUXDENSITY': <Quantity_PhysicalQuantity.Quantity_MAGNETICFLUXDENSITY: 48>, 'Quantity_MAGNETICFIELDSTRENGTH': <Quantity_PhysicalQuantity.Quantity_MAGNETICFIELDSTRENGTH: 49>, 'Quantity_RELUCTANCE': <Quantity_PhysicalQuantity.Quantity_RELUCTANCE: 50>, 'Quantity_RESISTANCE': <Quantity_PhysicalQuantity.Quantity_RESISTANCE: 51>, 'Quantity_INDUCTANCE': <Quantity_PhysicalQuantity.Quantity_INDUCTANCE: 52>, 'Quantity_CAPACITANCE': <Quantity_PhysicalQuantity.Quantity_CAPACITANCE: 53>, 'Quantity_IMPEDANCE': <Quantity_PhysicalQuantity.Quantity_IMPEDANCE: 54>, 'Quantity_ADMITTANCE': <Quantity_PhysicalQuantity.Quantity_ADMITTANCE: 55>, 'Quantity_RESISTIVITY': <Quantity_PhysicalQuantity.Quantity_RESISTIVITY: 56>, 'Quantity_CONDUCTIVITY': <Quantity_PhysicalQuantity.Quantity_CONDUCTIVITY: 57>, 'Quantity_MOLARMASS': <Quantity_PhysicalQuantity.Quantity_MOLARMASS: 58>, 'Quantity_MOLARVOLUME': <Quantity_PhysicalQuantity.Quantity_MOLARVOLUME: 59>, 'Quantity_CONCENTRATION': <Quantity_PhysicalQuantity.Quantity_CONCENTRATION: 60>, 'Quantity_MOLARCONCENTRATION': <Quantity_PhysicalQuantity.Quantity_MOLARCONCENTRATION: 61>, 'Quantity_MOLARITY': <Quantity_PhysicalQuantity.Quantity_MOLARITY: 62>, 'Quantity_SOUNDINTENSITY': <Quantity_PhysicalQuantity.Quantity_SOUNDINTENSITY: 63>, 'Quantity_ACOUSTICINTENSITY': <Quantity_PhysicalQuantity.Quantity_ACOUSTICINTENSITY: 64>, 'Quantity_ACTIVITY': <Quantity_PhysicalQuantity.Quantity_ACTIVITY: 65>, 'Quantity_ABSORBEDDOSE': <Quantity_PhysicalQuantity.Quantity_ABSORBEDDOSE: 66>, 'Quantity_DOSEEQUIVALENT': <Quantity_PhysicalQuantity.Quantity_DOSEEQUIVALENT: 67>}
     pass
 class Quantity_TypeOfColor():
     """
@@ -3319,54 +2938,6 @@ class Quantity_TypeOfColor():
     __entries: dict # value = {'Quantity_TOC_RGB': (<Quantity_TypeOfColor.Quantity_TOC_RGB: 0>, None), 'Quantity_TOC_sRGB': (<Quantity_TypeOfColor.Quantity_TOC_sRGB: 1>, None), 'Quantity_TOC_HLS': (<Quantity_TypeOfColor.Quantity_TOC_HLS: 2>, None), 'Quantity_TOC_CIELab': (<Quantity_TypeOfColor.Quantity_TOC_CIELab: 3>, None), 'Quantity_TOC_CIELch': (<Quantity_TypeOfColor.Quantity_TOC_CIELch: 4>, None)}
     __members__: dict # value = {'Quantity_TOC_RGB': <Quantity_TypeOfColor.Quantity_TOC_RGB: 0>, 'Quantity_TOC_sRGB': <Quantity_TypeOfColor.Quantity_TOC_sRGB: 1>, 'Quantity_TOC_HLS': <Quantity_TypeOfColor.Quantity_TOC_HLS: 2>, 'Quantity_TOC_CIELab': <Quantity_TypeOfColor.Quantity_TOC_CIELab: 3>, 'Quantity_TOC_CIELch': <Quantity_TypeOfColor.Quantity_TOC_CIELch: 4>}
     pass
-Quantity_ABSORBEDDOSE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ABSORBEDDOSE: 66>
-Quantity_ACCELERATION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ACCELERATION: 8>
-Quantity_ACOUSTICINTENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ACOUSTICINTENSITY: 64>
-Quantity_ACTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ACTIVITY: 65>
-Quantity_ADMITTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ADMITTANCE: 55>
-Quantity_AMOUNTOFSUBSTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_AMOUNTOFSUBSTANCE: 12>
-Quantity_ANGULARVELOCITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ANGULARVELOCITY: 9>
-Quantity_AREA: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_AREA: 4>
-Quantity_CAPACITANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CAPACITANCE: 53>
-Quantity_COEFFICIENTOFEXPANSION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_COEFFICIENTOFEXPANSION: 31>
-Quantity_CONCENTRATION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CONCENTRATION: 60>
-Quantity_CONDUCTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CONDUCTIVITY: 57>
-Quantity_CONSUMPTION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_CONSUMPTION: 16>
-Quantity_DENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_DENSITY: 13>
-Quantity_DOSEEQUIVALENT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_DOSEEQUIVALENT: 67>
-Quantity_ELECTRICCAPACITANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICCAPACITANCE: 46>
-Quantity_ELECTRICCHARGE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICCHARGE: 42>
-Quantity_ELECTRICCURRENT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICCURRENT: 43>
-Quantity_ELECTRICFIELDSTRENGTH: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICFIELDSTRENGTH: 44>
-Quantity_ELECTRICPOTENTIAL: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ELECTRICPOTENTIAL: 45>
-Quantity_ENERGY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ENERGY: 27>
-Quantity_ENTHALPY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ENTHALPY: 35>
-Quantity_ENTROPY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ENTROPY: 34>
-Quantity_FORCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_FORCE: 20>
-Quantity_FREQUENCY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_FREQUENCY: 10>
-Quantity_ILLUMINANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_ILLUMINANCE: 39>
-Quantity_IMPEDANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_IMPEDANCE: 54>
-Quantity_INDUCTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_INDUCTANCE: 52>
-Quantity_KINEMATICVISCOSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_KINEMATICVISCOSITY: 26>
-Quantity_KINETICMOMENT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_KINETICMOMENT: 18>
-Quantity_LENGTH: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LENGTH: 3>
-Quantity_LUMINANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINANCE: 38>
-Quantity_LUMINOUSEFFICACITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSEFFICACITY: 41>
-Quantity_LUMINOUSEXPOSITION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSEXPOSITION: 40>
-Quantity_LUMINOUSFLUX: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSFLUX: 37>
-Quantity_LUMINOUSINTENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_LUMINOUSINTENSITY: 36>
-Quantity_MAGNETICFIELDSTRENGTH: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MAGNETICFIELDSTRENGTH: 49>
-Quantity_MAGNETICFLUX: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MAGNETICFLUX: 47>
-Quantity_MAGNETICFLUXDENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MAGNETICFLUXDENSITY: 48>
-Quantity_MASS: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MASS: 0>
-Quantity_MASSFLOW: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MASSFLOW: 14>
-Quantity_MOLARCONCENTRATION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARCONCENTRATION: 61>
-Quantity_MOLARITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARITY: 62>
-Quantity_MOLARMASS: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARMASS: 58>
-Quantity_MOLARVOLUME: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOLARVOLUME: 59>
-Quantity_MOMENTOFAFORCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOMENTOFAFORCE: 21>
-Quantity_MOMENTOFINERTIA: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOMENTOFINERTIA: 19>
-Quantity_MOMENTUM: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_MOMENTUM: 17>
 Quantity_NOC_ALICEBLUE: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_NameOfColor.Quantity_NOC_ALICEBLUE: 3>
 Quantity_NOC_ANTIQUEWHITE: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_NameOfColor.Quantity_NOC_ANTIQUEWHITE: 4>
 Quantity_NOC_ANTIQUEWHITE1: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_NameOfColor.Quantity_NOC_ANTIQUEWHITE1: 5>
@@ -3888,28 +3459,8 @@ Quantity_NOC_YELLOW2: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_Name
 Quantity_NOC_YELLOW3: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_NameOfColor.Quantity_NOC_YELLOW3: 505>
 Quantity_NOC_YELLOW4: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_NameOfColor.Quantity_NOC_YELLOW4: 506>
 Quantity_NOC_YELLOWGREEN: OCP.Quantity.Quantity_NameOfColor # value = <Quantity_NameOfColor.Quantity_NOC_YELLOWGREEN: 507>
-Quantity_PLANEANGLE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_PLANEANGLE: 1>
-Quantity_POWER: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_POWER: 29>
-Quantity_PRESSURE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_PRESSURE: 24>
-Quantity_RELUCTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_RELUCTANCE: 50>
-Quantity_RESISTANCE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_RESISTANCE: 51>
-Quantity_RESISTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_RESISTIVITY: 56>
-Quantity_SOLIDANGLE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SOLIDANGLE: 2>
-Quantity_SOUNDINTENSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SOUNDINTENSITY: 63>
-Quantity_SPECIFICHEATCAPACITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SPECIFICHEATCAPACITY: 33>
-Quantity_SPEED: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SPEED: 6>
-Quantity_SURFACETENSION: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_SURFACETENSION: 30>
-Quantity_TEMPERATURE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_TEMPERATURE: 11>
-Quantity_THERMALCONDUCTIVITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_THERMALCONDUCTIVITY: 32>
 Quantity_TOC_CIELab: OCP.Quantity.Quantity_TypeOfColor # value = <Quantity_TypeOfColor.Quantity_TOC_CIELab: 3>
 Quantity_TOC_CIELch: OCP.Quantity.Quantity_TypeOfColor # value = <Quantity_TypeOfColor.Quantity_TOC_CIELch: 4>
 Quantity_TOC_HLS: OCP.Quantity.Quantity_TypeOfColor # value = <Quantity_TypeOfColor.Quantity_TOC_HLS: 2>
 Quantity_TOC_RGB: OCP.Quantity.Quantity_TypeOfColor # value = <Quantity_TypeOfColor.Quantity_TOC_RGB: 0>
 Quantity_TOC_sRGB: OCP.Quantity.Quantity_TypeOfColor # value = <Quantity_TypeOfColor.Quantity_TOC_sRGB: 1>
-Quantity_TORQUE: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_TORQUE: 22>
-Quantity_VELOCITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VELOCITY: 7>
-Quantity_VISCOSITY: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VISCOSITY: 25>
-Quantity_VOLUME: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VOLUME: 5>
-Quantity_VOLUMEFLOW: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_VOLUMEFLOW: 15>
-Quantity_WEIGHT: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_WEIGHT: 23>
-Quantity_WORK: OCP.Quantity.Quantity_PhysicalQuantity # value = <Quantity_PhysicalQuantity.Quantity_WORK: 28>

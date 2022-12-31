@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
 import OCP.math
-import OCP.Adaptor2d
+import OCP.Adaptor3d
 import OCP.gp
+import OCP.Adaptor2d
 __all__  = [
 "CPnts_AbscissaPoint",
 "CPnts_MyGaussFunction",
@@ -23,7 +23,7 @@ class CPnts_AbscissaPoint():
         Computes the point at the distance <Abscissa> of the curve; performs more appropriate tolerance management; to use this method in right way it is necessary to call empty constructor. then call method Init with Tolerance = Resolution, then call AdvPermorm. U0 is the parameter of the point from which the distance is measured and Ui is the starting value for the iterative process (should be close to the final solution).
         """
     @overload
-    def Init(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol : float) -> None: 
+    def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Tol : float) -> None: 
         """
         Initializes the resolution function with <C>.
 
@@ -41,20 +41,20 @@ class CPnts_AbscissaPoint():
 
         Initializes the resolution function with <C> between U1 and U2.
         """
+    @overload
+    def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    @overload
+    def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float) -> None: ...
     @overload
     def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> None: ...
     @overload
     def Init(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
-    def Init(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,Tol : float) -> None: ...
-    @overload
     def Init(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float) -> None: ...
     @overload
-    def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Tol : float) -> None: ...
+    def Init(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol : float) -> None: ...
     @overload
-    def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float) -> None: ...
-    @overload
-    def Init(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    def Init(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,Tol : float) -> None: ...
     def IsDone(self) -> bool: 
         """
         True if the computation was successful, False otherwise.
@@ -63,7 +63,7 @@ class CPnts_AbscissaPoint():
         """
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> float: 
+    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float) -> float: 
         """
         Computes the length of the Curve <C>.
 
@@ -83,10 +83,10 @@ class CPnts_AbscissaPoint():
         """
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float) -> float: ...
+    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> float: ...
     @staticmethod
     @overload
-    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Tol : float) -> float: ...
+    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol : float) -> float: ...
     @staticmethod
     @overload
     def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float) -> float: ...
@@ -95,13 +95,13 @@ class CPnts_AbscissaPoint():
     def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,U1 : float,U2 : float,Tol : float) -> float: ...
     @staticmethod
     @overload
+    def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve,U1 : float,U2 : float,Tol : float) -> float: ...
+    @staticmethod
+    @overload
     def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: ...
     @staticmethod
     @overload
     def Length_s(C : OCP.Adaptor3d.Adaptor3d_Curve) -> float: ...
-    @staticmethod
-    @overload
-    def Length_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Tol : float) -> float: ...
     def Parameter(self) -> float: 
         """
         Returns the parameter of the solution.
@@ -124,15 +124,15 @@ class CPnts_AbscissaPoint():
         Enforce the solution, used by GCPnts.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float,Ui : float,Resolution : float) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U0 : float,Ui : float,Resolution : float) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float,Resolution : float) -> None: ...
     @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Abscissa : float,U0 : float,Ui : float,Resolution : float) -> None: ...
+    @overload
     def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Abscissa : float,U0 : float,Resolution : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class CPnts_MyGaussFunction(OCP.math.math_Function):
     """
@@ -161,14 +161,14 @@ class CPnts_MyRootFunction(OCP.math.math_FunctionWithDerivative, OCP.math.math_F
         returns the state of the function corresponding to the latest call of any methods associated with the function. This function is called by each of the algorithms described later which defined the function Integer Algorithm::StateNumber(). The algorithm has the responsibility to call this function when it has found a solution (i.e. a root or a minimum) and has to maintain the association between the solution found and this StateNumber. Byu default, this method returns 0 (which means for the algorithm: no state has been saved). It is the responsibility of the programmer to decide if he needs to save the current state of the function and to return an Integer that allows retrieval of the state.
         """
     @overload
-    def Init(self,X0 : float,L : float) -> None: 
+    def Init(self,X0 : float,L : float,Tol : float) -> None: 
         """
         We want to solve Integral(X0,X,F(X,D)) = L
 
         We want to solve Integral(X0,X,F(X,D)) = L with given tolerance
         """
     @overload
-    def Init(self,X0 : float,L : float,Tol : float) -> None: ...
+    def Init(self,X0 : float,L : float) -> None: ...
     def Value(self,X : float,F : float) -> bool: 
         """
         This is Integral(X0,X,F(X,D)) - L
@@ -195,11 +195,11 @@ class CPnts_UniformDeflection():
         Initialize the algorithms with <C>, <Deflection>, <UStep>, <U1>, <U2> and <WithControl>
         """
     @overload
-    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,Resolution : float,WithControl : bool) -> None: ...
-    @overload
     def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,Resolution : float,WithControl : bool) -> None: ...
     @overload
     def Initialize(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,Resolution : float,WithControl : bool) -> None: ...
+    @overload
+    def Initialize(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,Resolution : float,WithControl : bool) -> None: ...
     def IsAllDone(self) -> bool: 
         """
         To know if all the calculus were done successfully (ie all the points have been computed). The calculus can fail if the Curve is not C1 in the considered domain. Returns True if the calculus was successful.
@@ -229,13 +229,13 @@ class CPnts_UniformDeflection():
         return the computed parameter
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,U1 : float,U2 : float,Resolution : float,WithControl : bool) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,Resolution : float,WithControl : bool) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,Resolution : float,WithControl : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,U1 : float,U2 : float,Resolution : float,WithControl : bool) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,Deflection : float,U1 : float,U2 : float,Resolution : float,WithControl : bool) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Deflection : float,Resolution : float,WithControl : bool) -> None: ...
     pass

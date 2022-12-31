@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import OCP.Adaptor3d
+import OCP.gp
 __all__  = [
 "LProp3d_CLProps",
 "LProp3d_CurveTool",
@@ -61,11 +61,11 @@ class LProp3d_CLProps():
         Returns the Point.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,U : float,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,N : int,Resolution : float) -> None: ...
     pass
 class LProp3d_CurveTool():
     """
@@ -197,11 +197,11 @@ class LProp3d_SLProps():
         Returns the point.
         """
     @overload
+    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,N : int,Resolution : float) -> None: ...
+    @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
-    @overload
-    def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,N : int,Resolution : float) -> None: ...
     pass
 class LProp3d_SurfaceTool():
     """

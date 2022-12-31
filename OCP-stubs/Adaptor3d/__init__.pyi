@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor2d
-import OCP.GeomAbs
 import OCP.math
-import OCP.gp
 import OCP.Geom
-import OCP.Standard
 import OCP.TopAbs
+import OCP.gp
+import OCP.GeomAbs
+import OCP.Standard
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "Adaptor3d_Curve",
 "Adaptor3d_CurveOnSurface",
@@ -111,23 +111,23 @@ class Adaptor3d_Curve(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -305,23 +305,23 @@ class Adaptor3d_CurveOnSurface(Adaptor3d_Curve, OCP.Standard.Standard_Transient)
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -497,6 +497,11 @@ class Adaptor3d_HSurfaceTool():
         None
         """
     @staticmethod
+    def IsSurfG1_s(theSurf : Adaptor3d_Surface,theAlongU : bool,theAngTol : float=1e-12) -> bool: 
+        """
+        None
+        """
+    @staticmethod
     def IsUClosed_s(theSurf : Adaptor3d_Surface) -> bool: 
         """
         None
@@ -528,7 +533,7 @@ class Adaptor3d_HSurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesU_s(S : Adaptor3d_Surface) -> int: 
+    def NbSamplesU_s(S : Adaptor3d_Surface,u1 : float,u2 : float) -> int: 
         """
         None
 
@@ -536,10 +541,10 @@ class Adaptor3d_HSurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesU_s(S : Adaptor3d_Surface,u1 : float,u2 : float) -> int: ...
+    def NbSamplesU_s(S : Adaptor3d_Surface) -> int: ...
     @staticmethod
     @overload
-    def NbSamplesV_s(arg0 : Adaptor3d_Surface,v1 : float,v2 : float) -> int: 
+    def NbSamplesV_s(S : Adaptor3d_Surface) -> int: 
         """
         None
 
@@ -547,7 +552,7 @@ class Adaptor3d_HSurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesV_s(S : Adaptor3d_Surface) -> int: ...
+    def NbSamplesV_s(arg0 : Adaptor3d_Surface,v1 : float,v2 : float) -> int: ...
     @staticmethod
     def NbUIntervals_s(theSurf : Adaptor3d_Surface,theSh : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
@@ -647,23 +652,23 @@ class Adaptor3d_HVertex(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSame(self,Other : Adaptor3d_HVertex) -> bool: 
         """
         None
@@ -814,23 +819,23 @@ class Adaptor3d_IsoCurve(Adaptor3d_Curve, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -852,7 +857,7 @@ class Adaptor3d_IsoCurve(Adaptor3d_Curve, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float) -> None: 
+    def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float,WFirst : float,WLast : float) -> None: 
         """
         Changes the surface. The iso is reset to NoneIso.
 
@@ -863,7 +868,7 @@ class Adaptor3d_IsoCurve(Adaptor3d_Curve, OCP.Standard.Standard_Transient):
     @overload
     def Load(self,S : Adaptor3d_Surface) -> None: ...
     @overload
-    def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float,WFirst : float,WLast : float) -> None: ...
+    def Load(self,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float) -> None: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -919,9 +924,9 @@ class Adaptor3d_IsoCurve(Adaptor3d_Curve, OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,S : Adaptor3d_Surface) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : Adaptor3d_Surface,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float,WFirst : float,WLast : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,S : Adaptor3d_Surface,Iso : OCP.GeomAbs.GeomAbs_IsoType,Param : float) -> None: ...
     @staticmethod
@@ -1024,23 +1029,23 @@ class Adaptor3d_Surface(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsUClosed(self) -> bool: 
         """
         None
@@ -1171,7 +1176,7 @@ class Adaptor3d_Surface(OCP.Standard.Standard_Transient):
         """
     def Value(self,U : float,V : float) -> OCP.gp.gp_Pnt: 
         """
-        Computes the point of parameters U,V on the surface.
+        Computes the point of parameters U,V on the surface. Tip: use GeomLib::NormEstim() to calculate surface normal at specified (U, V) point.
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -1221,6 +1226,11 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         """
         None
         """
+    @staticmethod
+    def GetConeApexParam_s(theC : OCP.gp.gp_Cone) -> Tuple[float, float]: 
+        """
+        Computes the cone's apex parameters.
+        """
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -1246,7 +1256,7 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Initialize(self) -> None: 
+    def Initialize(self,S : Adaptor3d_Surface) -> None: 
         """
         None
 
@@ -1254,28 +1264,28 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
 
         None
         """
-    @overload
-    def Initialize(self,S : Adaptor3d_Surface) -> None: ...
     @overload
     def Initialize(self,Curve : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def Initialize(self) -> None: ...
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsThePointOn(self,P : OCP.gp.gp_Pnt2d,Tol : float,ReacdreOnPeriodic : bool=True) -> bool: 
         """
         None
@@ -1338,14 +1348,14 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Tol3d(self,V : Adaptor3d_HVertex) -> float: 
+    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         returns 3d tolerance of the arc C
 
         returns 3d tolerance of the vertex V
         """
     @overload
-    def Tol3d(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: ...
+    def Tol3d(self,V : Adaptor3d_HVertex) -> float: ...
     def UParameters(self,theArray : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         return the set of U parameters on the surface obtained by the method SamplePnts
@@ -1363,9 +1373,9 @@ class Adaptor3d_TopolTool(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Surface : Adaptor3d_Surface) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """

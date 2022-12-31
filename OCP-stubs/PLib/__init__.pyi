@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.math
 import OCP.TColgp
+import OCP.GeomAbs
 import OCP.Standard
 import OCP.TColStd
 __all__  = [
@@ -27,7 +27,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -39,15 +39,15 @@ class PLib():
 
         None
         """
-    @staticmethod
-    @overload
-    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def CoefficientsPoles_s(dim : int,Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def CoefficientsPoles_s(Coefs : OCP.TColStd.TColStd_Array1OfReal,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array1OfPnt,WCoefs : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,WPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def CoefficientsPoles_s(Coefs : OCP.TColgp.TColgp_Array2OfPnt,WCoefs : OCP.TColStd.TColStd_Array2OfReal,Poles : OCP.TColgp.TColgp_Array2OfPnt,WPoles : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
@@ -89,7 +89,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Get from FP the coordinates of the poles.
 
@@ -99,15 +99,15 @@ class PLib():
 
         Get from FP the coordinates of the poles.
         """
+    @staticmethod
+    @overload
+    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @staticmethod
     @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
-    @staticmethod
-    @overload
-    def GetPoles_s(FP : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def HermiteCoefficients_s(FirstParameter : float,LastParameter : float,FirstOrder : int,LastOrder : int,MatrixCoefs : OCP.math.math_Matrix) -> bool: 
         """
@@ -155,7 +155,7 @@ class PLib():
         """
     @staticmethod
     @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         Copy in FP the coordinates of the poles.
 
@@ -165,9 +165,6 @@ class PLib():
 
         Copy in FP the coordinates of the poles.
         """
-    @staticmethod
-    @overload
-    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
@@ -176,7 +173,10 @@ class PLib():
     def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def SetPoles_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,FP : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
         None
 
@@ -188,13 +188,13 @@ class PLib():
         """
     @staticmethod
     @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt2d,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def Trimming_s(U1 : float,U2 : float,dim : int,Coeffs : OCP.TColStd.TColStd_Array1OfReal,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def Trimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array1OfPnt,WCoeffs : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def UTrimming_s(U1 : float,U2 : float,Coeffs : OCP.TColgp.TColgp_Array2OfPnt,WCoeffs : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
@@ -248,23 +248,23 @@ class PLib_Base(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ReduceDegree(self,Dimension : int,MaxDegree : int,Tol : float) -> Tuple[float, int, float]: 
         """
         Compute NewDegree <= MaxDegree so that MaxError is lower than Tol. MaxError can be greater than Tol if it is not possible to find a NewDegree <= MaxDegree. In this case NewDegree = MaxDegree
@@ -394,23 +394,23 @@ class PLib_HermitJacobi(PLib_Base, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxError(self,Dimension : int,HermJacCoeff : float,NewDegree : int) -> float: 
         """
         This method computes the maximum error on the polynomial W(t) Q(t) obtained by missing the coefficients of JacCoeff from NewDegree +1 to Degree
@@ -496,23 +496,23 @@ class PLib_JacobiPolynomial(PLib_Base, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxError(self,Dimension : int,JacCoeff : float,NewDegree : int) -> float: 
         """
         This method computes the maximum error on the polynomial W(t) Q(t) obtained by missing the coefficients of JacCoeff from NewDegree +1 to Degree

@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepRepr
-import OCP.StepBasic
 import OCP.StepElement
-import OCP.Transfer
-import OCP.STEPConstruct
-import OCP.StepShape
-import OCP.Interface
+import OCP.StepBasic
 import OCP.StepData
+import OCP.STEPConstruct
 import OCP.StepFEA
+import OCP.Interface
 import OCP.XSControl
+import OCP.Transfer
+import OCP.StepRepr
+import OCP.StepShape
 __all__  = [
 "StepAP209_Construct"
 ]
@@ -53,9 +53,9 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         None
         """
     @overload
-    def FeaModel(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepFEA.StepFEA_FeaModel: ...
-    @overload
     def FeaModel(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepFEA.StepFEA_FeaModel: ...
+    @overload
+    def FeaModel(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepFEA.StepFEA_FeaModel: ...
     @overload
     def FeaModel(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepFEA.StepFEA_FeaModel: ...
     def FinderProcess(self) -> OCP.Transfer.Transfer_FinderProcess: 
@@ -117,11 +117,11 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         None
         """
     @overload
+    def IdealShape(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
+    @overload
     def IdealShape(self,PDS : OCP.StepRepr.StepRepr_ProductDefinitionShape) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     @overload
     def IdealShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
-    @overload
-    def IdealShape(self,PD : OCP.StepBasic.StepBasic_ProductDefinition) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     def Init(self,WS : OCP.XSControl.XSControl_WorkSession) -> bool: 
         """
         Initializes tool; returns True if succeeded
@@ -141,14 +141,14 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         Returns current model (Null if not loaded)
         """
     @overload
-    def NominShape(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepShape.StepShape_ShapeRepresentation: 
+    def NominShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: 
         """
         None
 
         None
         """
     @overload
-    def NominShape(self,Prod : OCP.StepBasic.StepBasic_Product) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
+    def NominShape(self,PDF : OCP.StepBasic.StepBasic_ProductDefinitionFormation) -> OCP.StepShape.StepShape_ShapeRepresentation: ...
     def ReplaceCcDesingToApplied(self) -> bool: 
         """
         Put into model entities Applied... for AP209 instead of entities CcDesing... from AP203.
@@ -166,7 +166,7 @@ class StepAP209_Construct(OCP.STEPConstruct.STEPConstruct_Tool):
         Returns currently loaded WorkSession
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

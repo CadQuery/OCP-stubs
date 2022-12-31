@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
 import OCP.gp
+import io
 __all__  = [
 "GccEnt",
 "GccEnt_Array1OfPosition",
@@ -25,7 +25,7 @@ class GccEnt():
     """
     @staticmethod
     @overload
-    def Enclosed_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: 
+    def Enclosed_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
         """
         Constructs a qualified line, so that the solution computed by a construction algorithm using the qualified circle or line is enclosed by the circle or line.
 
@@ -33,7 +33,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Enclosed_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
+    def Enclosed_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: ...
     @staticmethod
     def Enclosing_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
         """
@@ -41,7 +41,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Outside_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: 
+    def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: 
         """
         Constructs a qualified line, so that the solution computed by a construction algorithm using the qualified circle or line and the circle or line are external to one another.
 
@@ -49,7 +49,7 @@ class GccEnt():
         """
     @staticmethod
     @overload
-    def Outside_s(Obj : OCP.gp.gp_Circ2d) -> GccEnt_QualifiedCirc: ...
+    def Outside_s(Obj : OCP.gp.gp_Lin2d) -> GccEnt_QualifiedLin: ...
     @staticmethod
     @overload
     def PositionFromString_s(thePositionString : str) -> GccEnt_Position: 
@@ -165,9 +165,9 @@ class GccEnt_Array1OfPosition():
     @overload
     def __init__(self,theOther : GccEnt_Array1OfPosition) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class GccEnt_BadQualifier(Exception, BaseException):

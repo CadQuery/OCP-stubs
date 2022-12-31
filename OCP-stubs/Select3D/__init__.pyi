@@ -4,20 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Poly
-import OCP.NCollection
-import OCP.TColgp
-import OCP.Bnd
-import io
-import OCP.SelectMgr
-import OCP.TopLoc
 import OCP.Graphic3d
-import OCP.Standard
-import OCP.gp
+import OCP.SelectMgr
 import OCP.Geom
+import OCP.TopLoc
 import OCP.SelectBasics
-import OCP.TColStd
+import OCP.NCollection
+import OCP.gp
+import OCP.Poly
+import OCP.TColgp
 import OCP.BVH
+import OCP.Bnd
+import OCP.Standard
+import OCP.TColStd
+import io
 __all__  = [
 "Select3D_BVHBuilder3d",
 "Select3D_BVHIndexBuffer",
@@ -26,14 +26,14 @@ __all__  = [
 "Select3D_Pnt",
 "Select3D_PointData",
 "Select3D_SensitiveBox",
+"Select3D_SensitiveCircle",
 "Select3D_SensitiveSet",
-"Select3D_SensitivePoly",
 "Select3D_SensitiveCylinder",
 "Select3D_InteriorSensitivePointSet",
 "Select3D_SensitiveFace",
 "Select3D_SensitiveGroup",
 "Select3D_SensitivePoint",
-"Select3D_SensitiveCircle",
+"Select3D_SensitivePoly",
 "Select3D_SensitivePrimitiveArray",
 "Select3D_SensitiveSegment",
 "Select3D_SensitiveCurve",
@@ -75,23 +75,23 @@ class Select3D_BVHBuilder3d(OCP.BVH.BVH_BuilderTransient, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsParallel(self) -> bool: 
         """
         Returns parallel flag.
@@ -229,27 +229,27 @@ class Select3D_BVHIndexBuffer(OCP.Graphic3d.Graphic3d_Buffer, OCP.NCollection.NC
         Returns true if buffer is not allocated
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInterleaved(self) -> bool: 
         """
         Flag indicating that attributes in the buffer are interleaved; TRUE by default. Requires sub-classing for creating a non-interleaved buffer (advanced usage).
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Return TRUE if data can be invalidated; FALSE by default. Requires sub-classing for creating a mutable buffer (advanced usage).
@@ -267,14 +267,14 @@ class Select3D_BVHIndexBuffer(OCP.Graphic3d.Graphic3d_Buffer, OCP.NCollection.NC
         Assign new buffer allocator with de-allocation of buffer.
         """
     @overload
-    def SetIndex(self,theIndex : int,theValue : int,thePatchSize : int) -> None: 
+    def SetIndex(self,theIndex : int,theValue : int) -> None: 
         """
         Change index at specified position
 
         Change index at specified position
         """
     @overload
-    def SetIndex(self,theIndex : int,theValue : int) -> None: ...
+    def SetIndex(self,theIndex : int,theValue : int,thePatchSize : int) -> None: ...
     def Size(self) -> int: 
         """
         Return buffer length in bytes.
@@ -344,14 +344,14 @@ class Select3D_EntitySequence(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Select3D_EntitySequence) -> None: 
+    def Append(self,theItem : Select3D_SensitiveEntity) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Select3D_SensitiveEntity) -> None: ...
+    def Append(self,theSeq : Select3D_EntitySequence) -> None: ...
     def Assign(self,theOther : Select3D_EntitySequence) -> Select3D_EntitySequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -415,14 +415,14 @@ class Select3D_EntitySequence(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Select3D_EntitySequence) -> None: 
+    def Prepend(self,theItem : Select3D_SensitiveEntity) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Select3D_SensitiveEntity) -> None: ...
+    def Prepend(self,theSeq : Select3D_EntitySequence) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -459,9 +459,9 @@ class Select3D_EntitySequence(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Select3D_EntitySequence) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Select3D_EntitySequence) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -526,23 +526,23 @@ class Select3D_SensitiveEntity(OCP.Standard.Standard_Transient):
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether sensitive overlaps current selecting volume. Stores minimum depth, distance to center of geometry and closest point detected into thePickResult
@@ -712,23 +712,23 @@ class Select3D_SensitiveBox(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether the box overlaps current selecting volume
@@ -770,9 +770,146 @@ class Select3D_SensitiveBox(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         Return transformation persistence.
         """
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theBox : OCP.Bnd.Bnd_Box) -> None: ...
-    @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theXMin : float,theYMin : float,theZMin : float,theXMax : float,theYMax : float,theZMax : float) -> None: ...
+    @overload
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theBox : OCP.Bnd.Bnd_Box) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class Select3D_SensitiveCircle(Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
+    """
+    A framework to define sensitive 3D circles.A framework to define sensitive 3D circles.
+    """
+    def BVH(self) -> None: 
+        """
+        Builds BVH tree for a sensitive if needed
+        """
+    def BoundingBox(self) -> Any: 
+        """
+        Returns bounding box of the circle. If location transformation is set, it will be applied
+        """
+    def CenterOfGeometry(self) -> OCP.gp.gp_Pnt: 
+        """
+        Returns center of the circle with transformation applied
+        """
+    def Circle(self) -> OCP.gp.gp_Circ: 
+        """
+        Returns circle
+        """
+    def Clear(self) -> None: 
+        """
+        Clears up all resources and memory
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetConnected(self) -> Select3D_SensitiveEntity: 
+        """
+        Returns a copy of this sensitive circle
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasInitLocation(self) -> bool: 
+        """
+        Returns true if the shape corresponding to the entity has init location
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def InvInitLocation(self) -> OCP.gp.gp_GTrsf: 
+        """
+        Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
+        """
+        Checks whether the circle overlaps current selecting volume
+        """
+    def NbSubElements(self) -> int: 
+        """
+        Returns the amount of points
+        """
+    def OwnerId(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
+        """
+        Returns pointer to owner of the entity
+        """
+    def Radius(self) -> float: 
+        """
+        Returns circle radius
+        """
+    def SensitivityFactor(self) -> int: 
+        """
+        allows a better sensitivity for a specific entity in selection algorithms useful for small sized entities.
+        """
+    def Set(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner) -> None: 
+        """
+        Sets owner of the entity
+        """
+    def SetSensitivityFactor(self,theNewSens : int) -> None: 
+        """
+        Allows to manage sensitivity of a particular sensitive entity
+        """
+    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
+        """
+        Set transformation persistence.
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def ToBuildBVH(self) -> bool: 
+        """
+        Always returns Standard_False
+        """
+    def TransformPersistence(self) -> OCP.Graphic3d.Graphic3d_TransformPers: 
+        """
+        Return transformation persistence.
+        """
+    def Transformation(self) -> OCP.gp.gp_Trsf: 
+        """
+        The transformation for gp::XOY() with center in gp::Origin(), it specifies the position and orientation of the circle.
+        """
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -858,23 +995,23 @@ class Select3D_SensitiveSet(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MarkDirty(self) -> None: 
         """
         Marks BVH tree of the set as outdated. It will be rebuild at the next call of BVH()
@@ -948,187 +1085,6 @@ class Select3D_SensitiveSet(Select3D_SensitiveEntity, OCP.Standard.Standard_Tran
         None
         """
     pass
-class Select3D_SensitivePoly(Select3D_SensitiveSet, Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
-    """
-    Sensitive Entity to make a face selectable. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions from its member Select3D_PointData myPolyg.Sensitive Entity to make a face selectable. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions from its member Select3D_PointData myPolyg.
-    """
-    def ArrayBounds(self) -> Tuple[int, int]: 
-        """
-        Return array bounds.
-        """
-    def BVH(self) -> None: 
-        """
-        Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
-        """
-    def BoundingBox(self) -> Any: 
-        """
-        Returns bounding box of a polygon. If location transformation is set, it will be applied
-        """
-    def Box(self,theIdx : int) -> Any: 
-        """
-        Returns bounding box of segment with index theIdx
-        """
-    def Center(self,theIdx : int,theAxis : int) -> float: 
-        """
-        Returns geometry center of sensitive entity index theIdx in the vector along the given axis theAxis
-        """
-    def CenterOfGeometry(self) -> OCP.gp.gp_Pnt: 
-        """
-        Returns center of the point set. If location transformation is set, it will be applied
-        """
-    def Clear(self) -> None: 
-        """
-        Destroys cross-reference to avoid memory leak
-        """
-    def DecrementRefCounter(self) -> int: 
-        """
-        Decrements the reference counter of this object; returns the decremented value
-        """
-    @staticmethod
-    def DefaultBVHBuilder_s() -> Select3D_BVHBuilder3d: 
-        """
-        Return global instance to default BVH builder.
-        """
-    def Delete(self) -> None: 
-        """
-        Memory deallocator for transient classes
-        """
-    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
-        """
-        Dumps the content of me into the stream
-        """
-    def DynamicType(self) -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    def GetConnected(self) -> Select3D_SensitiveEntity: 
-        """
-        Originally this method intended to return sensitive entity with new location aLocation, but currently sensitive entities do not hold a location, instead HasLocation() and Location() methods call corresponding entity owner's methods. Thus all entities returned by GetConnected() share the same location propagated from corresponding selectable object. You must redefine this function for any type of sensitive entity which can accept another connected sensitive entity.
-        """
-    def GetLeafNodeSize(self) -> int: 
-        """
-        Returns a number of nodes in 1 BVH leaf
-        """
-    def GetPoint3d(self,thePntIdx : int) -> OCP.gp.gp_Pnt: 
-        """
-        Return point.
-        """
-    def GetRefCount(self) -> int: 
-        """
-        Get the reference counter of this object
-        """
-    def HasInitLocation(self) -> bool: 
-        """
-        Returns true if the shape corresponding to the entity has init location
-        """
-    def IncrementRefCounter(self) -> None: 
-        """
-        Increments the reference counter of this object
-        """
-    def InvInitLocation(self) -> OCP.gp.gp_GTrsf: 
-        """
-        Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
-        """
-    @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
-        """
-        Returns a true value if this is an instance of Type.
-
-        Returns a true value if this is an instance of TypeName.
-        """
-    @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    @overload
-    def IsKind(self,theTypeName : str) -> bool: 
-        """
-        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-
-        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
-        """
-    @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    def MarkDirty(self) -> None: 
-        """
-        Marks BVH tree of the set as outdated. It will be rebuild at the next call of BVH()
-        """
-    def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
-        """
-        Checks whether one or more entities of the set overlap current selecting volume. Implements the traverse of BVH tree built for the set
-        """
-    def NbSubElements(self) -> int: 
-        """
-        Returns the amount of segments in poly
-        """
-    def OwnerId(self) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
-        """
-        Returns pointer to owner of the entity
-        """
-    def Points3D(self,theHArrayOfPnt : OCP.TColgp.TColgp_HArray1OfPnt) -> Any: 
-        """
-        Returns the 3D points of the array used at construction time.
-        """
-    def SensitivityFactor(self) -> int: 
-        """
-        allows a better sensitivity for a specific entity in selection algorithms useful for small sized entities.
-        """
-    def Set(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner) -> None: 
-        """
-        Sets owner of the entity
-        """
-    def SetBuilder(self,theBuilder : Select3D_BVHBuilder3d) -> None: 
-        """
-        Sets the method (builder) used to construct BVH.
-        """
-    @staticmethod
-    def SetDefaultBVHBuilder_s(theBuilder : Select3D_BVHBuilder3d) -> None: 
-        """
-        Assign new BVH builder to be used by default for new sensitive sets (assigning is NOT thread-safe!).
-        """
-    def SetSensitivityFactor(self,theNewSens : int) -> None: 
-        """
-        Allows to manage sensitivity of a particular sensitive entity
-        """
-    def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
-        """
-        Set transformation persistence.
-        """
-    def Size(self) -> int: 
-        """
-        Returns the amount of segments of the poly
-        """
-    def Swap(self,theIdx1 : int,theIdx2 : int) -> None: 
-        """
-        Swaps items with indexes theIdx1 and theIdx2 in the vector
-        """
-    def This(self) -> OCP.Standard.Standard_Transient: 
-        """
-        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
-        """
-    def ToBuildBVH(self) -> bool: 
-        """
-        Returns TRUE if BVH tree is in invalidated state
-        """
-    def TransformPersistence(self) -> OCP.Graphic3d.Graphic3d_TransformPers: 
-        """
-        Return transformation persistence.
-        """
-    @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theIsBVHEnabled : bool,theNbPnts : int=6) -> None: ...
-    @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt,theIsBVHEnabled : bool) -> None: ...
-    @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt,theIsBVHEnabled : bool) -> None: ...
-    @staticmethod
-    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
-        """
-        None
-        """
-    @staticmethod
-    def get_type_name_s() -> str: 
-        """
-        None
-        """
-    pass
 class Select3D_SensitiveCylinder(Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
     """
     A framework to define selection by a sensitive cylinder or cone.
@@ -1136,6 +1092,10 @@ class Select3D_SensitiveCylinder(Select3D_SensitiveEntity, OCP.Standard.Standard
     def BVH(self) -> None: 
         """
         Builds BVH tree for a sensitive if needed
+        """
+    def BottomRadius(self) -> float: 
+        """
+        Returns cylinder bottom radius
         """
     def BoundingBox(self) -> Any: 
         """
@@ -1177,6 +1137,10 @@ class Select3D_SensitiveCylinder(Select3D_SensitiveEntity, OCP.Standard.Standard
         """
         Returns true if the shape corresponding to the entity has init location
         """
+    def Height(self) -> float: 
+        """
+        Returns cylinder height
+        """
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -1185,24 +1149,28 @@ class Select3D_SensitiveCylinder(Select3D_SensitiveEntity, OCP.Standard.Standard
         """
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
+    def IsHollow(self) -> bool: 
+        """
+        Returns true if the cylinder is empty inside
+        """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether the cylinder overlaps current selecting volume
@@ -1239,11 +1207,19 @@ class Select3D_SensitiveCylinder(Select3D_SensitiveEntity, OCP.Standard.Standard
         """
         Always returns Standard_False
         """
+    def TopRadius(self) -> float: 
+        """
+        Returns cylinder top radius
+        """
     def TransformPersistence(self) -> OCP.Graphic3d.Graphic3d_TransformPers: 
         """
         Return transformation persistence.
         """
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def Transformation(self) -> OCP.gp.gp_Trsf: 
+        """
+        Returns cylinder transformation
+        """
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theBottomRad : float,theTopRad : float,theHeight : float,theTrsf : OCP.gp.gp_Trsf,theIsHollow : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1333,23 +1309,23 @@ class Select3D_InteriorSensitivePointSet(Select3D_SensitiveSet, Select3D_Sensiti
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MarkDirty(self) -> None: 
         """
         Marks BVH tree of the set as outdated. It will be rebuild at the next call of BVH()
@@ -1484,23 +1460,23 @@ class Select3D_SensitiveFace(Select3D_SensitiveEntity, OCP.Standard.Standard_Tra
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether the face overlaps current selecting volume
@@ -1647,23 +1623,23 @@ class Select3D_SensitiveGroup(Select3D_SensitiveSet, Select3D_SensitiveEntity, O
         Returns true if the sensitive entity aSensitive is in the list used at the time of construction, or added using the function Add.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LastDetectedEntity(self) -> Select3D_SensitiveEntity: 
         """
         Return last detected entity.
@@ -1758,9 +1734,9 @@ class Select3D_SensitiveGroup(Select3D_SensitiveSet, Select3D_SensitiveEntity, O
         Return transformation persistence.
         """
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theEntities : Select3D_EntitySequence,theIsMustMatchAll : bool=True) -> None: ...
-    @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theIsMustMatchAll : bool=True) -> None: ...
+    @overload
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theEntities : Select3D_EntitySequence,theIsMustMatchAll : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1829,23 +1805,23 @@ class Select3D_SensitivePoint(Select3D_SensitiveEntity, OCP.Standard.Standard_Tr
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether the point overlaps current selecting volume
@@ -1902,9 +1878,9 @@ class Select3D_SensitivePoint(Select3D_SensitiveEntity, OCP.Standard.Standard_Tr
         None
         """
     pass
-class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
+class Select3D_SensitivePoly(Select3D_SensitiveSet, Select3D_SensitiveEntity, OCP.Standard.Standard_Transient):
     """
-    A framework to define sensitive 3D arcs and circles. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions. For more details see Select3D_SensitivePoly.A framework to define sensitive 3D arcs and circles. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions. For more details see Select3D_SensitivePoly.
+    Sensitive Entity to make a face selectable. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions from its member Select3D_PointData myPolyg.Sensitive Entity to make a face selectable. In some cases this class can raise Standard_ConstructionError and Standard_OutOfRange exceptions from its member Select3D_PointData myPolyg.
     """
     def ArrayBounds(self) -> Tuple[int, int]: 
         """
@@ -1912,7 +1888,7 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         """
     def BVH(self) -> None: 
         """
-        Builds BVH tree for a circle's edge segments if needed
+        Builds BVH tree for sensitive set. Must be called manually to build BVH tree for any sensitive set in case if its content was initialized not in a constructor, but element by element
         """
     def BoundingBox(self) -> Any: 
         """
@@ -1928,7 +1904,7 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         """
     def CenterOfGeometry(self) -> OCP.gp.gp_Pnt: 
         """
-        Returns center of the circle. If location transformation is set, it will be applied
+        Returns center of the point set. If location transformation is set, it will be applied
         """
     def Clear(self) -> None: 
         """
@@ -1957,7 +1933,7 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         """
     def GetConnected(self) -> Select3D_SensitiveEntity: 
         """
-        None
+        Originally this method intended to return sensitive entity with new location aLocation, but currently sensitive entities do not hold a location, instead HasLocation() and Location() methods call corresponding entity owner's methods. Thus all entities returned by GetConnected() share the same location propagated from corresponding selectable object. You must redefine this function for any type of sensitive entity which can accept another connected sensitive entity.
         """
     def GetLeafNodeSize(self) -> int: 
         """
@@ -1984,30 +1960,30 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MarkDirty(self) -> None: 
         """
         Marks BVH tree of the set as outdated. It will be rebuild at the next call of BVH()
         """
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
-        Checks whether the circle overlaps current selecting volume
+        Checks whether the poly overlaps current selecting volume
         """
     def NbSubElements(self) -> int: 
         """
@@ -2067,11 +2043,11 @@ class Select3D_SensitiveCircle(Select3D_SensitivePoly, Select3D_SensitiveSet, Se
         Return transformation persistence.
         """
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePnts3d : OCP.TColgp.TColgp_Array1OfPnt,theIsFilled : bool=False) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theIsBVHEnabled : bool,theNbPnts : int=6) -> None: ...
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePnts3d : OCP.TColgp.TColgp_HArray1OfPnt,theIsFilled : bool=False) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt,theIsBVHEnabled : bool) -> None: ...
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCircle : OCP.gp.gp_Circ,theIsFilled : bool=False,theNbPnts : int=12) -> None: ...
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt,theIsBVHEnabled : bool) -> None: ...
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCircle : OCP.gp.gp_Circ,theU1 : float,theU2 : float,theIsFilled : bool=False,theNbPnts : int=12) -> None: ...
     @staticmethod
@@ -2155,7 +2131,7 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
         Increments the reference counter of this object
         """
     @overload
-    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
+    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
         """
         Initialize the sensitive object from point set. The sub-set of points can be specified by arguments theIndexLower and theIndexUpper (these are for iterating theIndices, not to restrict the actual index values!).
 
@@ -2164,9 +2140,9 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
         Initialize the sensitive object from point set.
         """
     @overload
-    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
-    @overload
     def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
+    @overload
+    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
     @overload
     def InitTriangulation(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
         """
@@ -2181,23 +2157,23 @@ class Select3D_SensitivePrimitiveArray(Select3D_SensitiveSet, Select3D_Sensitive
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LastDetectedEdgeNode1(self) -> int: 
         """
         Return the first node of last topmost detected edge or -1 if undefined (axis picking).
@@ -2421,23 +2397,23 @@ class Select3D_SensitiveSegment(Select3D_SensitiveEntity, OCP.Standard.Standard_
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether the segment overlaps current selecting volume
@@ -2589,30 +2565,30 @@ class Select3D_SensitiveCurve(Select3D_SensitivePoly, Select3D_SensitiveSet, Sel
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MarkDirty(self) -> None: 
         """
         Marks BVH tree of the set as outdated. It will be rebuild at the next call of BVH()
         """
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
-        Checks whether one or more entities of the set overlap current selecting volume. Implements the traverse of BVH tree built for the set
+        Checks whether the poly overlaps current selecting volume
         """
     def NbSubElements(self) -> int: 
         """
@@ -2674,9 +2650,9 @@ class Select3D_SensitiveCurve(Select3D_SensitivePoly, Select3D_SensitiveSet, Sel
     @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
-    @overload
     def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,theCurve : OCP.Geom.Geom_Curve,theNbPnts : int=17) -> None: ...
+    @overload
+    def __init__(self,theOwnerId : OCP.SelectMgr.SelectMgr_EntityOwner,thePoints : OCP.TColgp.TColgp_HArray1OfPnt) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2745,23 +2721,23 @@ class Select3D_SensitiveSphere(Select3D_SensitiveEntity, OCP.Standard.Standard_T
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LastDetectedPoint(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the position of detected point on the sphere.
@@ -2887,23 +2863,23 @@ class Select3D_SensitiveTriangle(Select3D_SensitiveEntity, OCP.Standard.Standard
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,theMgr : OCP.SelectBasics.SelectBasics_SelectingVolumeManager,thePickResult : OCP.SelectBasics.SelectBasics_PickResult) -> bool: 
         """
         Checks whether the triangle overlaps current selecting volume
@@ -3038,23 +3014,23 @@ class Select3D_SensitiveTriangulation(Select3D_SensitiveSet, Select3D_SensitiveE
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def LastDetectedTriangle(self,theTriangle : OCP.Poly.Poly_Triangle) -> bool: 
         """
@@ -3234,23 +3210,23 @@ class Select3D_SensitiveWire(Select3D_SensitiveSet, Select3D_SensitiveEntity, OC
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MarkDirty(self) -> None: 
         """
         Marks BVH tree of the set as outdated. It will be rebuild at the next call of BVH()

@@ -53,7 +53,7 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PApproximation_s(T : float) -> float: 
+    def PApproximation_s() -> float: 
         """
         Returns a precision value in parametric space, which may be used by approximation algorithms. The purpose of this function is to provide an acceptable level of precision in parametric space, for an approximation process to define the adjustment limits. The parametric tolerance of approximation is designed to give a mean value in relation with the dimension of the curve or the surface. It considers that a variation of parameter equal to 1. along a curve (or an isoparametric curve of a surface) generates a segment whose length is equal to 100. (default value), or T. The parametric tolerance of intersection is equal to : - Precision::Approximation() / 100., or Precision::Approximation() / T.
 
@@ -61,7 +61,7 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PApproximation_s() -> float: ...
+    def PApproximation_s(T : float) -> float: ...
     @staticmethod
     @overload
     def PConfusion_s(T : float) -> float: 
@@ -75,7 +75,7 @@ class Precision():
     def PConfusion_s() -> float: ...
     @staticmethod
     @overload
-    def PIntersection_s() -> float: 
+    def PIntersection_s(T : float) -> float: 
         """
         Returns a precision value in parametric space, which may be used by intersection algorithms, to decide that a solution is reached. The purpose of this function is to provide an acceptable level of precision in parametric space, for an intersection process to define the adjustment limits. The parametric tolerance of intersection is designed to give a mean value in relation with the dimension of the curve or the surface. It considers that a variation of parameter equal to 1. along a curve (or an isoparametric curve of a surface) generates a segment whose length is equal to 100. (default value), or T. The parametric tolerance of intersection is equal to : - Precision::Intersection() / 100., or Precision::Intersection() / T.
 
@@ -83,7 +83,7 @@ class Precision():
         """
     @staticmethod
     @overload
-    def PIntersection_s(T : float) -> float: ...
+    def PIntersection_s() -> float: ...
     @staticmethod
     @overload
     def Parametric_s(P : float,T : float) -> float: 

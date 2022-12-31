@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.math
-import OCP.NCollection
 import OCP.PLib
+import OCP.NCollection
+import OCP.GeomAbs
 import OCP.Standard
 import OCP.TColStd
 __all__  = [
@@ -146,13 +146,13 @@ class FEmTool_AssemblyTable():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self,theBegin : OCP.TColStd.TColStd_HArray1OfInteger,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : FEmTool_AssemblyTable) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.TColStd.TColStd_HArray1OfInteger,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theRowLower : int,theRowUpper : int,theColLower : int,theColUpper : int) -> None: ...
     pass
 class FEmTool_Curve(OCP.Standard.Standard_Transient):
     """
@@ -211,23 +211,23 @@ class FEmTool_Curve(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Knots(self) -> OCP.TColStd.TColStd_Array1OfReal: 
         """
         None
@@ -305,32 +305,32 @@ class FEmTool_ElementaryCriterion(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -423,23 +423,23 @@ class FEmTool_HAssemblyTable(FEmTool_AssemblyTable, OCP.Standard.Standard_Transi
         myDeletable flag
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Length(self) -> int: ...
     def LowerCol(self) -> int: 
         """
@@ -491,9 +491,9 @@ class FEmTool_HAssemblyTable(FEmTool_AssemblyTable, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
-    @overload
     def __init__(self,theOther : FEmTool_AssemblyTable) -> None: ...
+    @overload
+    def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int,theValue : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
     @overload
     def __init__(self,theRowLow : int,theRowUpp : int,theColLow : int,theColUpp : int) -> None: ...
     @staticmethod
@@ -544,32 +544,32 @@ class FEmTool_LinearFlexion(FEmTool_ElementaryCriterion, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -627,32 +627,32 @@ class FEmTool_LinearJerk(FEmTool_ElementaryCriterion, OCP.Standard.Standard_Tran
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -710,32 +710,32 @@ class FEmTool_LinearTension(FEmTool_ElementaryCriterion, OCP.Standard.Standard_T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+    def Set(self,FirstKnot : float,LastKnot : float) -> None: 
         """
         Set the coefficient of the Element (the Curve)
 
         Set the definition interval of the Element
         """
     @overload
-    def Set(self,FirstKnot : float,LastKnot : float) -> None: ...
+    def Set(self,Coeff : OCP.TColStd.TColStd_HArray2OfReal) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -765,7 +765,7 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> None: 
+    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: 
         """
         Append one item at the end
 
@@ -774,9 +774,9 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : FEmTool_ListOfVectors) -> None: ...
+    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> None: ...
     @overload
-    def Append(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: ...
+    def Append(self,theOther : FEmTool_ListOfVectors) -> None: ...
     def Assign(self,theOther : FEmTool_ListOfVectors) -> FEmTool_ListOfVectors: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -805,14 +805,14 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theOther : FEmTool_ListOfVectors,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def InsertBefore(self,theOther : FEmTool_ListOfVectors,theIter : Any) -> None: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theOther : FEmTool_ListOfVectors,theIter : Any) -> None: ...
+    def InsertBefore(self,theItem : OCP.TColStd.TColStd_HArray1OfReal,theIter : Any) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -824,14 +824,14 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: 
+    def Prepend(self,theOther : FEmTool_ListOfVectors) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : FEmTool_ListOfVectors) -> None: ...
+    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> OCP.TColStd.TColStd_HArray1OfReal: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -851,9 +851,9 @@ class FEmTool_ListOfVectors(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theOther : FEmTool_ListOfVectors) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class FEmTool_SparseMatrix(OCP.Standard.Standard_Transient):
@@ -897,23 +897,23 @@ class FEmTool_SparseMatrix(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Multiplied(self,X : OCP.math.math_Vector,MX : OCP.math.math_Vector) -> None: 
         """
         returns the product of a SparseMatrix by a vector. An exception is raised if the dimensions are different
@@ -927,14 +927,14 @@ class FEmTool_SparseMatrix(OCP.Standard.Standard_Transient):
         returns the row range of a matrix.
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: 
+    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: 
         """
         Direct Solve of AX = B
 
         Iterative solve of AX = B
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: ...
+    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -996,14 +996,14 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : FEmTool_SeqOfLinConstr) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : FEmTool_ListOfVectors) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : FEmTool_ListOfVectors) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : FEmTool_SeqOfLinConstr) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : FEmTool_ListOfVectors) -> None: 
         """
@@ -1039,14 +1039,14 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def Prepend(self,theItem : FEmTool_ListOfVectors) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1072,11 +1072,11 @@ class FEmTool_SeqOfLinConstr(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : FEmTool_SeqOfLinConstr) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : FEmTool_SeqOfLinConstr) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1129,23 +1129,23 @@ class FEmTool_ProfileMatrix(FEmTool_SparseMatrix, OCP.Standard.Standard_Transien
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Multiplied(self,X : OCP.math.math_Vector,MX : OCP.math.math_Vector) -> None: 
         """
         returns the product of a SparseMatrix by a vector. An exception is raised if the dimensions are different
@@ -1167,14 +1167,14 @@ class FEmTool_ProfileMatrix(FEmTool_SparseMatrix, OCP.Standard.Standard_Transien
         returns the row range of a matrix.
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: 
+    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: 
         """
         Direct Solve of AX = B
 
         Iterative solve of AX = B
         """
     @overload
-    def Solve(self,B : OCP.math.math_Vector,Init : OCP.math.math_Vector,X : OCP.math.math_Vector,Residual : OCP.math.math_Vector,Tolerance : float=1e-08,NbIterations : int=50) -> None: ...
+    def Solve(self,B : OCP.math.math_Vector,X : OCP.math.math_Vector) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

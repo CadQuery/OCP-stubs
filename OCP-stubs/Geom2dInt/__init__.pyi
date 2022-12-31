@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor2d
-import OCP.GeomAbs
 import OCP.math
-import OCP.Extrema
-import OCP.gp
-import OCP.IntCurve
-import OCP.TColStd
-import OCP.IntRes2d
-import OCP.Bnd
 import OCP.Intf
+import OCP.gp
+import OCP.IntRes2d
+import OCP.IntCurve
+import OCP.Bnd
+import OCP.GeomAbs
+import OCP.TColStd
+import OCP.Adaptor2d
+import OCP.Extrema
 __all__  = [
 "Geom2dInt_ExactIntersectionPointOfTheIntPCurvePCurveOfGInter",
 "Geom2dInt_GInter",
@@ -94,7 +94,7 @@ class Geom2dInt_GInter(OCP.IntRes2d.IntRes2d_Intersection):
         This function returns the number of intersection segments between the two curves. The exception NotDone is raised if IsDone returns FALSE.
         """
     @overload
-    def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: 
+    def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
         """
         Intersection between 2 curves.
 
@@ -108,16 +108,16 @@ class Geom2dInt_GInter(OCP.IntRes2d.IntRes2d_Intersection):
 
         Intersection between 2 curves.
         """
-    @overload
-    def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
     @overload
     def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     def Point(self,N : int) -> OCP.IntRes2d.IntRes2d_IntersectionPoint: 
         """
         This function returns the intersection point of range N; The exception NotDone is raised if IsDone returns FALSE. The exception OutOfRange is raised if (N <= 0) or (N > NbPoints).
@@ -144,19 +144,19 @@ class Geom2dInt_GInter(OCP.IntRes2d.IntRes2d_Intersection):
     @overload
     def SetReversedParameters(self,flag : bool) -> None: ...
     @overload
+    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
     def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,D : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,D1 : OCP.IntRes2d.IntRes2d_Domain,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor2d.Adaptor2d_Curve2d,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2 : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     pass
 class Geom2dInt_Geom2dCurveTool():
     """
@@ -204,7 +204,7 @@ class Geom2dInt_Geom2dCurveTool():
         """
     @staticmethod
     @overload
-    def EpsX_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Eps_XYZ : float) -> float: 
+    def EpsX_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
         None
 
@@ -212,7 +212,7 @@ class Geom2dInt_Geom2dCurveTool():
         """
     @staticmethod
     @overload
-    def EpsX_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: ...
+    def EpsX_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Eps_XYZ : float) -> float: ...
     @staticmethod
     def FirstParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> float: 
         """
@@ -305,7 +305,7 @@ class Geom2dInt_IntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
         This function returns the number of intersection segments between the two curves. The exception NotDone is raised if IsDone returns FALSE.
         """
     @overload
-    def Perform(self,Prb : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
+    def Perform(self,H : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
         """
         Intersection between a line and a parametric curve.
 
@@ -318,13 +318,13 @@ class Geom2dInt_IntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
         Intersection between the main branch of an hyperbola and a parametric curve.
         """
     @overload
+    def Perform(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
     def Perform(self,E : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
+    def Perform(self,Prb : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
     def Perform(self,L : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,H : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
-    def Perform(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     def Point(self,N : int) -> OCP.IntRes2d.IntRes2d_IntersectionPoint: 
         """
         This function returns the intersection point of range N; The exception NotDone is raised if IsDone returns FALSE. The exception OutOfRange is raised if (N <= 0) or (N > NbPoints).
@@ -347,15 +347,15 @@ class Geom2dInt_IntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
     @overload
     def SetReversedParameters(self,flag : bool) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def __init__(self,E : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def __init__(self,Prb : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,H : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def __init__(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     pass
@@ -434,9 +434,9 @@ class Geom2dInt_PCLocFOfTheLocateExtPCOfTheProjPCurOfGInter(OCP.math.math_Functi
         Calculation of F(U) and F'(U).
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
     pass
 class Geom2dInt_TheCurveLocatorOfTheProjPCurOfGInter():
     """
@@ -444,7 +444,7 @@ class Geom2dInt_TheCurveLocatorOfTheProjPCurOfGInter():
     """
     @staticmethod
     @overload
-    def Locate_s(P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Papp : OCP.Extrema.Extrema_POnCurv2d) -> None: 
+    def Locate_s(P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,Papp : OCP.Extrema.Extrema_POnCurv2d) -> None: 
         """
         Among a set of points {C(ui),i=1,NbU}, locate the point P=C(uj) such that: distance(P,C) = Min{distance(P,C(ui))}
 
@@ -452,7 +452,7 @@ class Geom2dInt_TheCurveLocatorOfTheProjPCurOfGInter():
         """
     @staticmethod
     @overload
-    def Locate_s(P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Umin : float,Usup : float,Papp : OCP.Extrema.Extrema_POnCurv2d) -> None: ...
+    def Locate_s(P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,NbU : int,Papp : OCP.Extrema.Extrema_POnCurv2d) -> None: ...
     def __init__(self) -> None: ...
     pass
 class Geom2dInt_TheDistBetweenPCurvesOfTheIntPCurvePCurveOfGInter(OCP.math.math_FunctionSetWithDerivatives, OCP.math.math_FunctionSet):
@@ -514,7 +514,7 @@ class Geom2dInt_TheIntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
         This function returns the number of intersection segments between the two curves. The exception NotDone is raised if IsDone returns FALSE.
         """
     @overload
-    def Perform(self,L : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
+    def Perform(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
         """
         Intersection between a line and a parametric curve.
 
@@ -527,9 +527,9 @@ class Geom2dInt_TheIntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
         Intersection between the main branch of an hyperbola and a parametric curve.
         """
     @overload
-    def Perform(self,Prb : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,L : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def Perform(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,Prb : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def Perform(self,H : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
@@ -556,17 +556,17 @@ class Geom2dInt_TheIntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
     @overload
     def SetReversedParameters(self,flag : bool) -> None: ...
     @overload
-    def __init__(self,E : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Prb : OCP.gp.gp_Parab2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
+    def __init__(self,H : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
     def __init__(self,L : OCP.gp.gp_Lin2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     @overload
-    def __init__(self,H : OCP.gp.gp_Hypr2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def __init__(self,E : OCP.gp.gp_Elips2d,D1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,D2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     pass
 class Geom2dInt_TheIntPCurvePCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
     """
@@ -601,14 +601,14 @@ class Geom2dInt_TheIntPCurvePCurveOfGInter(OCP.IntRes2d.IntRes2d_Intersection):
         This function returns the number of intersection segments between the two curves. The exception NotDone is raised if IsDone returns FALSE.
         """
     @overload
-    def Perform(self,Curve1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain1 : OCP.IntRes2d.IntRes2d_Domain,Curve2 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
+    def Perform(self,Curve1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain1 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,Curve1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain1 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    def Perform(self,Curve1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain1 : OCP.IntRes2d.IntRes2d_Domain,Curve2 : OCP.Adaptor2d.Adaptor2d_Curve2d,Domain2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
     def Point(self,N : int) -> OCP.IntRes2d.IntRes2d_IntersectionPoint: 
         """
         This function returns the intersection point of range N; The exception NotDone is raised if IsDone returns FALSE. The exception OutOfRange is raised if (N <= 0) or (N > NbPoints).
@@ -702,9 +702,9 @@ class Geom2dInt_TheIntersectorOfTheIntConicCurveOfGInter(OCP.IntRes2d.IntRes2d_I
     @overload
     def SetReversedParameters(self,flag : bool) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,ITool : OCP.IntCurve.IntCurve_IConicTool,Dom1 : OCP.IntRes2d.IntRes2d_Domain,PCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,Dom2 : OCP.IntRes2d.IntRes2d_Domain,TolConf : float,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Geom2dInt_TheLocateExtPCOfTheProjPCurOfGInter():
     """
@@ -735,11 +735,11 @@ class Geom2dInt_TheLocateExtPCOfTheProjPCurOfGInter():
         Returns the value of the extremum square distance.
         """
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,Umin : float,Usup : float,TolU : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,TolU : float) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt2d,C : OCP.Adaptor2d.Adaptor2d_Curve2d,U0 : float,Umin : float,Usup : float,TolU : float) -> None: ...
     pass
 class Geom2dInt_ThePolygon2dOfTheIntPCurvePCurveOfGInter(OCP.Intf.Intf_Polygon2d):
     """
@@ -764,14 +764,14 @@ class Geom2dInt_ThePolygon2dOfTheIntPCurvePCurveOfGInter(OCP.Intf.Intf_Polygon2d
         None
         """
     @overload
-    def Closed(self,clos : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         None
 
         Returns True if the polyline is closed.
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,clos : bool) -> None: ...
     def ComputeWithBox(self,Curve : OCP.Adaptor2d.Adaptor2d_Curve2d,OtherBox : OCP.Bnd.Bnd_Box2d) -> None: 
         """
         The current polygon is modified if most of the points of the polygon are outside the box <OtherBox>. In this situation, bounds are computed to build a polygon inside or near the OtherBox.
@@ -812,7 +812,7 @@ class Geom2dInt_TheProjPCurOfGInter():
     """
     @staticmethod
     @overload
-    def FindParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Pnt : OCP.gp.gp_Pnt2d,LowParameter : float,HighParameter : float,Tol : float) -> float: 
+    def FindParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Pnt : OCP.gp.gp_Pnt2d,Tol : float) -> float: 
         """
         Returns the parameter V of the point on the parametric curve corresponding to the Point Pnt. The Correspondence between Pnt and the point P(V) on the parametric curve must be coherent with the way of determination of the signed distance between a point and the implicit curve. Tol is the tolerance on the distance between a point and the parametrised curve. In that case, no bounds are given. The research of the right parameter has to be made on the natural parametric domain of the curve.
 
@@ -820,6 +820,6 @@ class Geom2dInt_TheProjPCurOfGInter():
         """
     @staticmethod
     @overload
-    def FindParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Pnt : OCP.gp.gp_Pnt2d,Tol : float) -> float: ...
+    def FindParameter_s(C : OCP.Adaptor2d.Adaptor2d_Curve2d,Pnt : OCP.gp.gp_Pnt2d,LowParameter : float,HighParameter : float,Tol : float) -> float: ...
     def __init__(self) -> None: ...
     pass

@@ -4,23 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.NCollection
-import OCP.Poly
-import OCP.BRepTools
-import io
-import OCP.Geom2d
-import OCP.Standard
-import OCP.TopoDS
-import OCP.BRepAlgo
+import OCP.Geom
 import OCP.ChFiDS
 import OCP.TopLoc
-import OCP.gp
-import OCP.Geom
-import OCP.TopAbs
-import OCP.Message
+import OCP.TopoDS
 import OCP.TCollection
+import OCP.BRepTools
+import OCP.Geom2d
+import OCP.BRepAlgo
+import OCP.Standard
+import OCP.NCollection
+import OCP.Poly
+import OCP.Message
+import OCP.TopAbs
+import OCP.gp
+import OCP.GeomAbs
+import OCP.TopTools
+import io
 __all__  = [
 "BRepOffset",
 "BRepOffsetSimple_Status",
@@ -132,14 +132,14 @@ class BRepOffset_Analyse():
     Analyses the shape to find the parts of edges connecting the convex, concave or tangent faces.
     """
     @overload
-    def AddFaces(self,theFace : OCP.TopoDS.TopoDS_Face,theCo : OCP.TopoDS.TopoDS_Compound,theMap : OCP.TopTools.TopTools_MapOfShape,theType : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: 
+    def AddFaces(self,theFace : OCP.TopoDS.TopoDS_Face,theCo : OCP.TopoDS.TopoDS_Compound,theMap : OCP.TopTools.TopTools_MapOfShape,theType1 : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theType2 : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: 
         """
         Add in <CO> the faces of the shell containing <Face> where all the connex edges are of type <Side>.
 
         Add in <CO> the faces of the shell containing <Face> where all the connex edges are of type <Side1> or <Side2>.
         """
     @overload
-    def AddFaces(self,theFace : OCP.TopoDS.TopoDS_Face,theCo : OCP.TopoDS.TopoDS_Compound,theMap : OCP.TopTools.TopTools_MapOfShape,theType1 : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theType2 : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: ...
+    def AddFaces(self,theFace : OCP.TopoDS.TopoDS_Face,theCo : OCP.TopoDS.TopoDS_Compound,theMap : OCP.TopTools.TopTools_MapOfShape,theType : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: ...
     def Ancestors(self,theS : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_ListOfShape: 
         """
         Returns ancestors for the shape
@@ -157,14 +157,14 @@ class BRepOffset_Analyse():
         Returns the replacement of the edge in the face. If no replacement exists, returns the edge
         """
     @overload
-    def Edges(self,theF : OCP.TopoDS.TopoDS_Face,theType : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theL : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def Edges(self,theV : OCP.TopoDS.TopoDS_Vertex,theType : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theL : OCP.TopTools.TopTools_ListOfShape) -> None: 
         """
         Stores in <L> all the edges of Type <T> on the vertex <V>.
 
         Stores in <L> all the edges of Type <T> on the face <F>.
         """
     @overload
-    def Edges(self,theV : OCP.TopoDS.TopoDS_Vertex,theType : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theL : OCP.TopTools.TopTools_ListOfShape) -> None: ...
+    def Edges(self,theF : OCP.TopoDS.TopoDS_Face,theType : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theL : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     @overload
     def Explode(self,theL : OCP.TopTools.TopTools_ListOfShape,theType1 : OCP.ChFiDS.ChFiDS_TypeOfConcavity,theType2 : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: 
         """
@@ -248,14 +248,14 @@ class BRepOffset_DataMapOfShapeListOfInterval(OCP.NCollection.NCollection_BaseMa
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : BRepOffset_DataMapOfShapeListOfInterval) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -306,11 +306,11 @@ class BRepOffset_DataMapOfShapeListOfInterval(OCP.NCollection.NCollection_BaseMa
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : BRepOffset_DataMapOfShapeListOfInterval) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepOffset_DataMapOfShapeMapOfShape(OCP.NCollection.NCollection_BaseMap):
@@ -359,14 +359,14 @@ class BRepOffset_DataMapOfShapeMapOfShape(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopTools.TopTools_MapOfShape) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_MapOfShape: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> OCP.TopTools.TopTools_MapOfShape: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : OCP.TopTools.TopTools_MapOfShape) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -402,9 +402,9 @@ class BRepOffset_DataMapOfShapeMapOfShape(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : BRepOffset_DataMapOfShapeMapOfShape) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepOffset_DataMapOfShapeMapOfShape) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepOffset_DataMapOfShapeOffset(OCP.NCollection.NCollection_BaseMap):
@@ -453,14 +453,14 @@ class BRepOffset_DataMapOfShapeOffset(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepOffset_Offset: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepOffset_Offset) -> bool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepOffset_Offset) -> bool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepOffset_Offset: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -494,11 +494,11 @@ class BRepOffset_DataMapOfShapeOffset(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
+    def __init__(self,theOther : BRepOffset_DataMapOfShapeOffset) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : BRepOffset_DataMapOfShapeOffset) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepOffset_Error():
@@ -564,6 +564,21 @@ class BRepOffset_Inter2d():
     Computes the intersections between edges on a face stores result is SD as AsDes from BRepOffset.
     """
     @staticmethod
+    def Compute_s(AsDes : OCP.BRepAlgo.BRepAlgo_AsDes,F : OCP.TopoDS.TopoDS_Face,NewEdges : OCP.TopTools.TopTools_IndexedMapOfShape,Tol : float,theEdgeIntEdges : OCP.TopTools.TopTools_DataMapOfShapeListOfShape,theDMVV : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theRange : OCP.Message.Message_ProgressRange) -> None: 
+        """
+        Computes the intersections between the edges stored is AsDes as descendants of <F> . Intersections is computed between two edges if one of them is bound in NewEdges. When all faces of the shape are treated the intersection vertices have to be fused using the FuseVertices method. theDMVV contains the vertices that should be fused
+        """
+    @staticmethod
+    def ConnexIntByIntInVert_s(FI : OCP.TopoDS.TopoDS_Face,OFI : BRepOffset_Offset,MES : OCP.TopTools.TopTools_DataMapOfShapeShape,Build : OCP.TopTools.TopTools_DataMapOfShapeShape,AsDes : OCP.BRepAlgo.BRepAlgo_AsDes,AsDes2d : OCP.BRepAlgo.BRepAlgo_AsDes,Tol : float,Analyse : BRepOffset_Analyse,theDMVV : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theRange : OCP.Message.Message_ProgressRange) -> None: 
+        """
+        Computes the intersection between the offset edges generated from vertices and stored into AsDes as descendants of the <FI>. All intersection vertices will be stored in AsDes2d. When all faces of the shape are treated the intersection vertices have to be fused using the FuseVertices method. theDMVV contains the vertices that should be fused.
+        """
+    @staticmethod
+    def ConnexIntByInt_s(FI : OCP.TopoDS.TopoDS_Face,OFI : BRepOffset_Offset,MES : OCP.TopTools.TopTools_DataMapOfShapeShape,Build : OCP.TopTools.TopTools_DataMapOfShapeShape,theAsDes : OCP.BRepAlgo.BRepAlgo_AsDes,AsDes2d : OCP.BRepAlgo.BRepAlgo_AsDes,Offset : float,Tol : float,Analyse : BRepOffset_Analyse,FacesWithVerts : OCP.TopTools.TopTools_IndexedMapOfShape,theImageVV : OCP.BRepAlgo.BRepAlgo_Image,theEdgeIntEdges : OCP.TopTools.TopTools_DataMapOfShapeListOfShape,theDMVV : OCP.TopTools.TopTools_IndexedDataMapOfShapeListOfShape,theRange : OCP.Message.Message_ProgressRange) -> bool: 
+        """
+        Computes the intersection between the offset edges of the <FI>. All intersection vertices will be stored in AsDes2d. When all faces of the shape are treated the intersection vertices have to be fused using the FuseVertices method. theDMVV contains the vertices that should be fused.
+        """
+    @staticmethod
     def ExtentEdge_s(E : OCP.TopoDS.TopoDS_Edge,NE : OCP.TopoDS.TopoDS_Edge,theOffset : float) -> bool: 
         """
         extents the edge
@@ -591,9 +606,17 @@ class BRepOffset_Inter3d():
         """
         Computes connections of the offset faces that have to be connected by arcs.
         """
+    def ConnexIntByInt(self,SI : OCP.TopoDS.TopoDS_Shape,MapSF : BRepOffset_DataMapOfShapeOffset,A : BRepOffset_Analyse,MES : OCP.TopTools.TopTools_DataMapOfShapeShape,Build : OCP.TopTools.TopTools_DataMapOfShapeShape,Failed : OCP.TopTools.TopTools_ListOfShape,theRange : OCP.Message.Message_ProgressRange,bIsPlanar : bool=False) -> None: 
+        """
+        Computes intersection of the offset faces that have to be connected by sharp edges, i.e. it computes intersection between extended offset faces.
+        """
     def ContextIntByArc(self,ContextFaces : OCP.TopTools.TopTools_IndexedMapOfShape,ExtentContext : bool,Analyse : BRepOffset_Analyse,InitOffsetFace : OCP.BRepAlgo.BRepAlgo_Image,InitOffsetEdge : OCP.BRepAlgo.BRepAlgo_Image,theRange : OCP.Message.Message_ProgressRange) -> None: 
         """
         Computes connections of the not offset faces that have to be connected by arcs
+        """
+    def ContextIntByInt(self,ContextFaces : OCP.TopTools.TopTools_IndexedMapOfShape,ExtentContext : bool,MapSF : BRepOffset_DataMapOfShapeOffset,A : BRepOffset_Analyse,MES : OCP.TopTools.TopTools_DataMapOfShapeShape,Build : OCP.TopTools.TopTools_DataMapOfShapeShape,Failed : OCP.TopTools.TopTools_ListOfShape,theRange : OCP.Message.Message_ProgressRange,bIsPlanar : bool=False) -> None: 
+        """
+        Computes intersection with not offset faces .
         """
     def FaceInter(self,F1 : OCP.TopoDS.TopoDS_Face,F2 : OCP.TopoDS.TopoDS_Face,InitOffsetFace : OCP.BRepAlgo.BRepAlgo_Image) -> None: 
         """
@@ -622,7 +645,7 @@ class BRepOffset_Interval():
     None
     """
     @overload
-    def First(self) -> float: 
+    def First(self,U : float) -> None: 
         """
         None
 
@@ -633,9 +656,9 @@ class BRepOffset_Interval():
         None
         """
     @overload
-    def First(self,U : float) -> None: ...
+    def First(self) -> float: ...
     @overload
-    def Last(self) -> float: 
+    def Last(self,U : float) -> None: 
         """
         None
 
@@ -646,7 +669,7 @@ class BRepOffset_Interval():
         None
         """
     @overload
-    def Last(self,U : float) -> None: ...
+    def Last(self) -> float: ...
     @overload
     def Type(self,T : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: 
         """
@@ -661,9 +684,9 @@ class BRepOffset_Interval():
     @overload
     def Type(self) -> OCP.ChFiDS.ChFiDS_TypeOfConcavity: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,U1 : float,U2 : float,Type : OCP.ChFiDS.ChFiDS_TypeOfConcavity) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepOffset_ListOfInterval(OCP.NCollection.NCollection_BaseList):
     """
@@ -683,9 +706,9 @@ class BRepOffset_ListOfInterval(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : BRepOffset_ListOfInterval) -> None: ...
-    @overload
     def Append(self,theItem : BRepOffset_Interval) -> BRepOffset_Interval: ...
+    @overload
+    def Append(self,theOther : BRepOffset_ListOfInterval) -> None: ...
     def Assign(self,theOther : BRepOffset_ListOfInterval) -> BRepOffset_ListOfInterval: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -758,11 +781,11 @@ class BRepOffset_ListOfInterval(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : BRepOffset_ListOfInterval) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : BRepOffset_ListOfInterval) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class BRepOffset_MakeLoops():
@@ -933,9 +956,9 @@ class BRepOffset_MakeSimpleOffset():
         Sets tolerance (used for handling singularities).
         """
     @overload
-    def __init__(self,theInputShape : OCP.TopoDS.TopoDS_Shape,theOffsetValue : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theInputShape : OCP.TopoDS.TopoDS_Shape,theOffsetValue : float) -> None: ...
     pass
 class BRepOffset_Mode():
     """
@@ -987,7 +1010,7 @@ class BRepOffset_Offset():
         None
         """
     @overload
-    def Init(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: 
+    def Init(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,FirstEdge : OCP.TopoDS.TopoDS_Edge,LastEdge : OCP.TopoDS.TopoDS_Edge,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: 
         """
         None
 
@@ -1002,15 +1025,15 @@ class BRepOffset_Offset():
         Only used in Rolling Ball. Pipe on Free Boundary
         """
     @overload
-    def Init(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,FirstEdge : OCP.TopoDS.TopoDS_Edge,LastEdge : OCP.TopoDS.TopoDS_Edge,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def Init(self,Face : OCP.TopoDS.TopoDS_Face,Offset : float,Created : OCP.TopTools.TopTools_DataMapOfShapeShape,OffsetOutside : bool=True,JoinType : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc) -> None: ...
+    @overload
+    def Init(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     @overload
     def Init(self,Face : OCP.TopoDS.TopoDS_Face,Offset : float,OffsetOutside : bool=True,JoinType : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc) -> None: ...
     @overload
-    def Init(self,Edge : OCP.TopoDS.TopoDS_Edge,Offset : float) -> None: ...
-    @overload
     def Init(self,Vertex : OCP.TopoDS.TopoDS_Vertex,LEdge : OCP.TopTools.TopTools_ListOfShape,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     @overload
-    def Init(self,Face : OCP.TopoDS.TopoDS_Face,Offset : float,Created : OCP.TopTools.TopTools_DataMapOfShapeShape,OffsetOutside : bool=True,JoinType : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc) -> None: ...
+    def Init(self,Edge : OCP.TopoDS.TopoDS_Edge,Offset : float) -> None: ...
     def InitialShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
@@ -1022,17 +1045,17 @@ class BRepOffset_Offset():
         None
         """
     @overload
+    def __init__(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,FirstEdge : OCP.TopoDS.TopoDS_Edge,LastEdge : OCP.TopoDS.TopoDS_Edge,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    @overload
+    def __init__(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Face : OCP.TopoDS.TopoDS_Face,Offset : float,Created : OCP.TopTools.TopTools_DataMapOfShapeShape,OffsetOutside : bool=True,JoinType : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc) -> None: ...
     @overload
-    def __init__(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
-    @overload
-    def __init__(self,Path : OCP.TopoDS.TopoDS_Edge,Edge1 : OCP.TopoDS.TopoDS_Edge,Edge2 : OCP.TopoDS.TopoDS_Edge,Offset : float,FirstEdge : OCP.TopoDS.TopoDS_Edge,LastEdge : OCP.TopoDS.TopoDS_Edge,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
+    def __init__(self,Vertex : OCP.TopoDS.TopoDS_Vertex,LEdge : OCP.TopTools.TopTools_ListOfShape,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     @overload
     def __init__(self,Face : OCP.TopoDS.TopoDS_Face,Offset : float,OffsetOutside : bool=True,JoinType : OCP.GeomAbs.GeomAbs_JoinType=GeomAbs_JoinType.GeomAbs_Arc) -> None: ...
-    @overload
-    def __init__(self,Vertex : OCP.TopoDS.TopoDS_Vertex,LEdge : OCP.TopTools.TopTools_ListOfShape,Offset : float,Polynomial : bool=False,Tol : float=0.0001,Conti : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C1) -> None: ...
     pass
 class BRepOffset_SimpleOffset(OCP.BRepTools.BRepTools_Modification, OCP.Standard.Standard_Transient):
     """
@@ -1063,23 +1086,23 @@ class BRepOffset_SimpleOffset(OCP.BRepTools.BRepTools_Modification, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Returns Standard_True if the edge <E> has been modified. In this case, <C> is the new geometric support of the edge, <L> the new location, <Tol> the new tolerance. Otherwise, returns Standard_False, and <C>, <L>, <Tol> are not significant.

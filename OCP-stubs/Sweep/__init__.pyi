@@ -53,9 +53,9 @@ class Sweep_NumShape():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Index : int,Type : OCP.TopAbs.TopAbs_ShapeEnum,Closed : bool=False,BegInf : bool=False,EndInf : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Sweep_NumShapeIterator():
     """

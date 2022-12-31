@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
-import OCP.gp
 import OCP.TColStd
+import OCP.gp
+import io
 __all__  = [
 "PSO_Particle",
 "math",
@@ -213,13 +213,13 @@ class math_Array1OfValueAndWeight():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : math_ValueAndWeight,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : math_Array1OfValueAndWeight) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : math_ValueAndWeight,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : math_Array1OfValueAndWeight) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class math_BFGS():
@@ -309,14 +309,14 @@ class math_BissecNewton():
         Tests is the root has been successfully found.
         """
     @overload
-    def IsSolutionReached(self,theFunction : math_FunctionWithDerivative) -> bool: 
+    def IsSolutionReached(self,arg1 : math_FunctionWithDerivative) -> bool: 
         """
         This method is called at the end of each iteration to check if the solution has been found. It can be redefined in a sub-class to implement a specific test to stop the iterations.
 
         This method is called at the end of each iteration to check if the solution has been found. It can be redefined in a sub-class to implement a specific test to stop the iterations.
         """
     @overload
-    def IsSolutionReached(self,arg1 : math_FunctionWithDerivative) -> bool: ...
+    def IsSolutionReached(self,theFunction : math_FunctionWithDerivative) -> bool: ...
     def Perform(self,F : math_FunctionWithDerivative,Bound1 : float,Bound2 : float,NbIterations : int=100) -> None: 
         """
         A combination of Newton-Raphson and bissection methods is done to find the root of the function F between the bounds Bound1 and Bound2 on the function F. The tolerance required on the root is given by TolX. The solution is found when: abs(Xi - Xi-1) <= TolX and F(Xi) * F(Xi-1) <= 0 The maximum number of iterations allowed is given by NbIterations.
@@ -380,13 +380,13 @@ class math_BracketMinimum():
         Returns the bracketed triplet of abscissae. Exceptions StdFail_NotDone if the algorithm fails (and IsDone returns false).
         """
     @overload
-    def __init__(self,F : math_Function,A : float,B : float,FA : float) -> None: ...
-    @overload
     def __init__(self,A : float,B : float) -> None: ...
     @overload
-    def __init__(self,F : math_Function,A : float,B : float,FA : float,FB : float) -> None: ...
+    def __init__(self,F : math_Function,A : float,B : float,FA : float) -> None: ...
     @overload
     def __init__(self,F : math_Function,A : float,B : float) -> None: ...
+    @overload
+    def __init__(self,F : math_Function,A : float,B : float,FA : float,FB : float) -> None: ...
     pass
 class math_BracketedRoot():
     """
@@ -468,9 +468,9 @@ class math_BrentMinimum():
         Brent minimization is performed on function F from a given bracketing triplet of abscissas Ax, Bx, Cx (such that Bx is between Ax and Cx, F(Bx) is less than both F(Bx) and F(Cx)) The solution is found when: abs(Xi - Xi-1) <= TolX * abs(Xi) + ZEPS;
         """
     @overload
-    def __init__(self,TolX : float,Fbx : float,NbIterations : int=100,ZEPS : float=1e-12) -> None: ...
-    @overload
     def __init__(self,TolX : float,NbIterations : int=100,ZEPS : float=1e-12) -> None: ...
+    @overload
+    def __init__(self,TolX : float,Fbx : float,NbIterations : int=100,ZEPS : float=1e-12) -> None: ...
     pass
 class math_BullardGenerator():
     """
@@ -599,11 +599,11 @@ class math_DirectPolynomialRoots():
     @overload
     def __init__(self,A : float,B : float,C : float,D : float,E : float) -> None: ...
     @overload
-    def __init__(self,A : float,B : float) -> None: ...
+    def __init__(self,A : float,B : float,C : float,D : float) -> None: ...
     @overload
     def __init__(self,A : float,B : float,C : float) -> None: ...
     @overload
-    def __init__(self,A : float,B : float,C : float,D : float) -> None: ...
+    def __init__(self,A : float,B : float) -> None: ...
     pass
 class math_DoubleTab():
     """
@@ -638,11 +638,11 @@ class math_DoubleTab():
         None
         """
     @overload
-    def __init__(self,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int) -> None: ...
+    def __init__(self,Other : math_DoubleTab) -> None: ...
     @overload
     def __init__(self,Tab : capsule,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int) -> None: ...
     @overload
-    def __init__(self,Other : math_DoubleTab) -> None: ...
+    def __init__(self,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int) -> None: ...
     pass
 class math_EigenValuesSearcher():
     """
@@ -694,16 +694,16 @@ class math_FRPR():
         Returns true if the computations are successful, otherwise returns false.
         """
     @overload
-    def IsSolutionReached(self,theFunction : math_MultipleVarFunctionWithGradient) -> bool: 
+    def IsSolutionReached(self,arg1 : math_MultipleVarFunctionWithGradient) -> bool: 
         """
         The solution F = Fi is found when: 2.0 * abs(Fi - Fi-1) <= Tolerance * (abs(Fi) + abs(Fi-1)) + ZEPS. The maximum number of iterations allowed is given by NbIterations.
 
         The solution F = Fi is found when: 2.0 * abs(Fi - Fi-1) <= Tolerance * (abs(Fi) + abs(Fi-1)) + ZEPS. The maximum number of iterations allowed is given by NbIterations.
         """
     @overload
-    def IsSolutionReached(self,arg1 : math_MultipleVarFunctionWithGradient) -> bool: ...
+    def IsSolutionReached(self,theFunction : math_MultipleVarFunctionWithGradient) -> bool: ...
     @overload
-    def Location(self) -> math_Vector: 
+    def Location(self,Loc : math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -714,7 +714,7 @@ class math_FRPR():
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : math_Vector) -> None: ...
+    def Location(self) -> math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -929,10 +929,6 @@ class math_FunctionSetRoot():
         """
         outputs the matrix value of the derivative at the root in Der. Exception NotDone is raised if the root was not found. Exception DimensionError is raised if the column range of <Der> is not equal to the range of the startingPoint.
 
-        outputs the matrix value of the derivative at the root in Der. Exception NotDone is raised if the root was not found. Exception DimensionError is raised if the column range of <Der> is not equal to the range of the startingPoint.
-
-        Returns the matrix value of the derivative at the root. Exception NotDone is raised if the root was not found.
-
         Returns the matrix value of the derivative at the root. Exception NotDone is raised if the root was not found.
         """
     @overload
@@ -947,53 +943,38 @@ class math_FunctionSetRoot():
         outputs the vector value of the error done on the functions at the root in Err. Exception NotDone is raised if the root was not found. Exception DimensionError is raised if the range of Err is not equal to the range of the StartingPoint.
 
         returns the vector value of the error done on the functions at the root. Exception NotDone is raised if the root was not found.
-
-        returns the vector value of the error done on the functions at the root. Exception NotDone is raised if the root was not found.
         """
     @overload
     def FunctionSetErrors(self,Err : math_Vector) -> None: ...
     def IsDivergent(self) -> bool: 
         """
         None
-
-        None
         """
     def IsDone(self) -> bool: 
         """
         Returns true if the computations are successful, otherwise returns false.
-
-        Returns true if the computations are successful, otherwise returns false.
         """
-    @overload
     def IsSolutionReached(self,arg1 : math_FunctionSetWithDerivatives) -> bool: 
         """
         This routine is called at the end of each iteration to check if the solution was found. It can be redefined in a sub-class to implement a specific test to stop the iterations. In this case, the solution is found when: abs(Xi - Xi-1) <= Tolerance for all unknowns.
-
-        This routine is called at the end of each iteration to check if the solution was found. It can be redefined in a sub-class to implement a specific test to stop the iterations. In this case, the solution is found when: abs(Xi - Xi-1) <= Tolerance for all unknowns.
         """
-    @overload
-    def IsSolutionReached(self,F : math_FunctionSetWithDerivatives) -> bool: ...
     def NbIterations(self) -> int: 
         """
         Returns the number of iterations really done during the computation of the root. Exception NotDone is raised if the root was not found.
-
-        Returns the number of iterations really done during the computation of the root. Exception NotDone is raised if the root was not found.
         """
     @overload
-    def Perform(self,theFunction : math_FunctionSetWithDerivatives,theStartingPoint : math_Vector,theInfBound : math_Vector,theSupBound : math_Vector,theStopOnDivergent : bool=False) -> None: 
+    def Perform(self,theFunction : math_FunctionSetWithDerivatives,theStartingPoint : math_Vector,theStopOnDivergent : bool=False) -> None: 
         """
         Improves the root of function from the initial guess point. The infinum and supremum may be given to constrain the solution. In this case, the solution is found when: abs(Xi - Xi-1)(j) <= Tolerance(j) for all unknowns.
 
         Improves the root of function from the initial guess point. The infinum and supremum may be given to constrain the solution. In this case, the solution is found when: abs(Xi - Xi-1) <= Tolerance for all unknowns.
         """
     @overload
-    def Perform(self,theFunction : math_FunctionSetWithDerivatives,theStartingPoint : math_Vector,theStopOnDivergent : bool=False) -> None: ...
+    def Perform(self,theFunction : math_FunctionSetWithDerivatives,theStartingPoint : math_Vector,theInfBound : math_Vector,theSupBound : math_Vector,theStopOnDivergent : bool=False) -> None: ...
     @overload
     def Root(self) -> math_Vector: 
         """
         Outputs the root vector in Root. Exception NotDone is raised if the root was not found. Exception DimensionError is raised if the range of Root is not equal to the range of the StartingPoint.
-
-        Returns the value of the root of function F. Exception NotDone is raised if the root was not found.
 
         Returns the value of the root of function F. Exception NotDone is raised if the root was not found.
         """
@@ -1006,13 +987,11 @@ class math_FunctionSetRoot():
     def StateNumber(self) -> int: 
         """
         returns the stateNumber (as returned by F.GetStateNumber()) associated to the root found.
-
-        returns the stateNumber (as returned by F.GetStateNumber()) associated to the root found.
         """
     @overload
-    def __init__(self,F : math_FunctionSetWithDerivatives,NbIterations : int=100) -> None: ...
-    @overload
     def __init__(self,F : math_FunctionSetWithDerivatives,Tolerance : math_Vector,NbIterations : int=100) -> None: ...
+    @overload
+    def __init__(self,F : math_FunctionSetWithDerivatives,NbIterations : int=100) -> None: ...
     pass
 class math_FunctionSetWithDerivatives(math_FunctionSet):
     """
@@ -1085,14 +1064,14 @@ class math_Gauss():
         Returns true if the computations are successful, otherwise returns false
         """
     @overload
-    def Solve(self,B : math_Vector) -> None: 
+    def Solve(self,B : math_Vector,X : math_Vector) -> None: 
         """
         Given the input Vector B this routine returns the solution X of the set of linear equations A . X = B. Exception NotDone is raised if the decomposition of A was not done successfully. Exception DimensionError is raised if the range of B is not equal to the number of rows of A.
 
         Given the input Vector B this routine solves the set of linear equations A . X = B. B is replaced by the vector solution X. Exception NotDone is raised if the decomposition of A was not done successfully. Exception DimensionError is raised if the range of B is not equal to the number of rows of A.
         """
     @overload
-    def Solve(self,B : math_Vector,X : math_Vector) -> None: ...
+    def Solve(self,B : math_Vector) -> None: ...
     def __init__(self,A : math_Matrix,MinPivot : float=1e-20,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     pass
 class math_GaussLeastSquare():
@@ -1180,11 +1159,11 @@ class math_GaussSingleIntegration():
         returns the value of the integral.
         """
     @overload
-    def __init__(self,F : math_Function,Lower : float,Upper : float,Order : int,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,F : math_Function,Lower : float,Upper : float,Order : int) -> None: ...
+    @overload
+    def __init__(self,F : math_Function,Lower : float,Upper : float,Order : int,Tol : float) -> None: ...
     pass
 class math_GlobOptMin():
     """
@@ -1267,20 +1246,20 @@ class math_Householder():
         Returns true if the computations are successful, otherwise returns false.
         """
     @overload
-    def Value(self,sol : math_Vector,Index : int=1) -> None: 
+    def Value(self,sol : math_Vector,Index : int) -> None: 
         """
         Given the integer Index, this routine returns the corresponding least square solution sol. Exception NotDone is raised if the resolution has not be done. Exception OutOfRange is raised if Index <=0 or Index is more than the number of columns of B.
 
         Given the integer Index, this routine returns the corresponding least square solution sol. Exception NotDone is raised if the resolution has not be done. Exception OutOfRange is raised if Index <=0 or Index is more than the number of columns of B.
         """
     @overload
-    def Value(self,sol : math_Vector,Index : int) -> None: ...
+    def Value(self,sol : math_Vector,Index : int=1) -> None: ...
     @overload
-    def __init__(self,A : math_Matrix,B : math_Matrix,lowerArow : int,upperArow : int,lowerAcol : int,upperAcol : int,EPS : float=1e-20) -> None: ...
+    def __init__(self,A : math_Matrix,B : math_Vector,EPS : float=1e-20) -> None: ...
     @overload
     def __init__(self,A : math_Matrix,B : math_Matrix,EPS : float=1e-20) -> None: ...
     @overload
-    def __init__(self,A : math_Matrix,B : math_Vector,EPS : float=1e-20) -> None: ...
+    def __init__(self,A : math_Matrix,B : math_Matrix,lowerArow : int,upperArow : int,lowerAcol : int,upperAcol : int,EPS : float=1e-20) -> None: ...
     pass
 class math_IntegerVector():
     """
@@ -1336,14 +1315,14 @@ class math_IntegerVector():
         returns the value of the Index of the minimum element of an IntegerVector.
         """
     @overload
-    def Multiplied(self,theRight : math_IntegerVector) -> int: 
+    def Multiplied(self,theRight : int) -> math_IntegerVector: 
         """
         returns the product of an IntegerVector by an integer value.
 
         returns the inner product of 2 IntegerVectors. An exception is raised if the lengths are not equal.
         """
     @overload
-    def Multiplied(self,theRight : int) -> math_IntegerVector: ...
+    def Multiplied(self,theRight : math_IntegerVector) -> int: ...
     @overload
     def Multiply(self,theRight : int) -> None: 
         """
@@ -1411,26 +1390,26 @@ class math_IntegerVector():
         None
         """
     @overload
-    def __init__(self,theTab : int,theFirst : int,theLast : int) -> None: ...
-    @overload
-    def __init__(self,theFirst : int,theLast : int,theInitialValue : int) -> None: ...
+    def __init__(self,theOther : math_IntegerVector) -> None: ...
     @overload
     def __init__(self,theFirst : int,theLast : int) -> None: ...
     @overload
-    def __init__(self,theOther : math_IntegerVector) -> None: ...
+    def __init__(self,theTab : int,theFirst : int,theLast : int) -> None: ...
+    @overload
+    def __init__(self,theFirst : int,theLast : int,theInitialValue : int) -> None: ...
     def __isub__(self,theRight : math_IntegerVector) -> None: 
         """
         None
         """
     @overload
-    def __mul__(self,theRight : math_IntegerVector) -> int: 
+    def __mul__(self,theRight : int) -> math_IntegerVector: 
         """
         None
 
         None
         """
     @overload
-    def __mul__(self,theRight : int) -> math_IntegerVector: ...
+    def __mul__(self,theRight : math_IntegerVector) -> int: ...
     @overload
     def __rmul__(self,theRight : int) -> math_IntegerVector: 
         """
@@ -1441,14 +1420,14 @@ class math_IntegerVector():
     @overload
     def __rmul__(self,theRight : math_IntegerVector) -> int: ...
     @overload
-    def __sub__(self) -> math_IntegerVector: 
+    def __sub__(self,theRight : math_IntegerVector) -> math_IntegerVector: 
         """
         None
 
         None
         """
     @overload
-    def __sub__(self,theRight : math_IntegerVector) -> math_IntegerVector: ...
+    def __sub__(self) -> math_IntegerVector: ...
     pass
 class math_Jacobi():
     """
@@ -1530,14 +1509,14 @@ class math_KronrodSingleIntegration():
         Returns the number of Kronrod points for which the result is computed.
         """
     @overload
-    def Perform(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int) -> None: 
+    def Perform(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int,theTolerance : float,theMaxNbIter : int) -> None: 
         """
         Computation of the integral. Takes the function, the lower and upper bound values, the initial number of Kronrod points, the relative tolerance value and the maximal number of iterations as parameters. theNbPnts should be odd and greater then or equal to 3.
 
         Computation of the integral. Takes the function, the lower and upper bound values, the initial number of Kronrod points, the relative tolerance value and the maximal number of iterations as parameters. theNbPnts should be odd and greater then or equal to 3. Note that theTolerance is relative, i.e. the criterion of solution reaching is: Abs(Kronrod - Gauss)/Abs(Kronrod) < theTolerance. theTolerance should be positive.
         """
     @overload
-    def Perform(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int,theTolerance : float,theMaxNbIter : int) -> None: ...
+    def Perform(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int) -> None: ...
     def Value(self) -> float: 
         """
         Returns the value of the integral.
@@ -1545,11 +1524,11 @@ class math_KronrodSingleIntegration():
         Returns the value of the integral.
         """
     @overload
+    def __init__(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int,theTolerance : float,theMaxNbIter : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int) -> None: ...
-    @overload
-    def __init__(self,theFunction : math_Function,theLower : float,theUpper : float,theNbPnts : int,theTolerance : float,theMaxNbIter : int) -> None: ...
     pass
 class math_Matrix():
     """
@@ -1632,11 +1611,11 @@ class math_Matrix():
         Returns the product of a matrix by a vector. An exception is raised if the dimensions are different.
         """
     @overload
-    def Multiplied(self,Right : math_Vector) -> math_Vector: ...
-    @overload
     def Multiplied(self,Right : math_Matrix) -> math_Matrix: ...
     @overload
-    def Multiply(self,Right : math_Matrix) -> None: 
+    def Multiplied(self,Right : math_Vector) -> math_Vector: ...
+    @overload
+    def Multiply(self,Right : float) -> None: 
         """
         Sets this matrix to the product of the matrix Left, and the matrix Right. Example math_Matrix A (1, 3, 1, 3); math_Matrix B (1, 3, 1, 3); // A = ... , B = ... math_Matrix C (1, 3, 1, 3); C.Multiply(A, B); Exceptions Standard_DimensionError if matrices are of incompatible dimensions, i.e. if: - the number of columns of matrix Left, or the number of rows of matrix TLeft is not equal to the number of rows of matrix Right, or - the number of rows of matrix Left, or the number of columns of matrix TLeft is not equal to the number of rows of this matrix, or - the number of columns of matrix Right is not equal to the number of columns of this matrix.
 
@@ -1647,11 +1626,11 @@ class math_Matrix():
         Returns the product of 2 matrices. An exception is raised if the dimensions are different.
         """
     @overload
+    def Multiply(self,Left : math_Matrix,Right : math_Matrix) -> None: ...
+    @overload
     def Multiply(self,Left : math_Vector,Right : math_Vector) -> None: ...
     @overload
-    def Multiply(self,Right : float) -> None: ...
-    @overload
-    def Multiply(self,Left : math_Matrix,Right : math_Matrix) -> None: ...
+    def Multiply(self,Right : math_Matrix) -> None: ...
     def Opposite(self) -> math_Matrix: 
         """
         Returns the opposite of a matrix. An exception is raised if the dimensions are different.
@@ -1683,14 +1662,14 @@ class math_Matrix():
         Sets the row of index Row of a matrix to the vector <V>. An exception is raised if the dimensions are different. An exception is raises if <Row> is inferior to the lower row of the matrix or <Row> is superior to the upper row.
         """
     @overload
-    def Subtract(self,Left : math_Matrix,Right : math_Matrix) -> None: 
+    def Subtract(self,Right : math_Matrix) -> None: 
         """
         Subtracts the matrix <Right> from <me>. An exception is raised if the dimensions are different. Warning In order to avoid time-consuming copying of matrices, it is preferable to use operator -= or the function Subtract whenever possible.
 
         Sets a matrix to the Subtraction of the matrix <Right> from the matrix <Left>. An exception is raised if the dimensions are different.
         """
     @overload
-    def Subtract(self,Right : math_Matrix) -> None: ...
+    def Subtract(self,Left : math_Matrix,Right : math_Matrix) -> None: ...
     def Subtracted(self,Right : math_Matrix) -> math_Matrix: 
         """
         Returns the result of the subtraction of <Right> from <me>. An exception is raised if the dimensions are different.
@@ -1746,22 +1725,22 @@ class math_Matrix():
         None
         """
     @overload
-    def __imul__(self,Right : math_Matrix) -> None: 
+    def __imul__(self,Right : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def __imul__(self,Right : float) -> None: ...
-    @overload
-    def __init__(self,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int,InitialValue : float) -> None: ...
+    def __imul__(self,Right : math_Matrix) -> None: ...
     @overload
     def __init__(self,Other : math_Matrix) -> None: ...
     @overload
+    def __init__(self,Tab : capsule,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int) -> None: ...
+    @overload
     def __init__(self,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int) -> None: ...
     @overload
-    def __init__(self,Tab : capsule,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int) -> None: ...
+    def __init__(self,LowerRow : int,UpperRow : int,LowerCol : int,UpperCol : int,InitialValue : float) -> None: ...
     def __isub__(self,Right : math_Matrix) -> None: 
         """
         None
@@ -1771,7 +1750,7 @@ class math_Matrix():
         None
         """
     @overload
-    def __mul__(self,Right : math_Vector) -> math_Vector: 
+    def __mul__(self,Right : float) -> math_Matrix: 
         """
         None
 
@@ -1780,11 +1759,11 @@ class math_Matrix():
         None
         """
     @overload
-    def __mul__(self,Right : float) -> math_Matrix: ...
+    def __mul__(self,Right : math_Vector) -> math_Vector: ...
     @overload
     def __mul__(self,Right : math_Matrix) -> math_Matrix: ...
     @overload
-    def __rmul__(self,Right : math_Vector) -> math_Vector: 
+    def __rmul__(self,Right : float) -> math_Matrix: 
         """
         None
 
@@ -1793,7 +1772,7 @@ class math_Matrix():
         None
         """
     @overload
-    def __rmul__(self,Right : float) -> math_Matrix: ...
+    def __rmul__(self,Right : math_Vector) -> math_Vector: ...
     @overload
     def __rmul__(self,Right : math_Matrix) -> math_Matrix: ...
     @overload
@@ -1925,18 +1904,18 @@ class math_NewtonFunctionRoot():
         returns the value of the function at the root. Exception NotDone is raised if the root was not found.
         """
     @overload
-    def __init__(self,F : math_FunctionWithDerivative,Guess : float,EpsX : float,EpsF : float,A : float,B : float,NbIterations : int=100) -> None: ...
+    def __init__(self,F : math_FunctionWithDerivative,Guess : float,EpsX : float,EpsF : float,NbIterations : int=100) -> None: ...
     @overload
     def __init__(self,A : float,B : float,EpsX : float,EpsF : float,NbIterations : int=100) -> None: ...
     @overload
-    def __init__(self,F : math_FunctionWithDerivative,Guess : float,EpsX : float,EpsF : float,NbIterations : int=100) -> None: ...
+    def __init__(self,F : math_FunctionWithDerivative,Guess : float,EpsX : float,EpsF : float,A : float,B : float,NbIterations : int=100) -> None: ...
     pass
 class math_NewtonFunctionSetRoot():
     """
     This class computes the root of a set of N functions of N variables, knowing an initial guess at the solution and using the Newton Raphson algorithm. Knowledge of all the partial derivatives (Jacobian) is required.
     """
     @overload
-    def Derivative(self) -> math_Matrix: 
+    def Derivative(self,Der : math_Matrix) -> None: 
         """
         Outputs the matrix value of the derivative at the root in Der. Exception NotDone is raised if the root was not found. Exception DimensionError is raised if the range of Der is not equal to the range of the StartingPoint.
 
@@ -1947,7 +1926,7 @@ class math_NewtonFunctionSetRoot():
         Returns the matrix value of the derivative at the root. Exception NotDone is raised if the root was not found.
         """
     @overload
-    def Derivative(self,Der : math_Matrix) -> None: ...
+    def Derivative(self) -> math_Matrix: ...
     def Dump(self,o : io.BytesIO) -> None: 
         """
         Prints information on the current state of the object. Is used to redefine the operator <<.
@@ -1996,7 +1975,7 @@ class math_NewtonFunctionSetRoot():
     @overload
     def Perform(self,theFunction : math_FunctionSetWithDerivatives,theStartingPoint : math_Vector) -> None: ...
     @overload
-    def Root(self,Root : math_Vector) -> None: 
+    def Root(self) -> math_Vector: 
         """
         outputs the root vector in Root. Exception NotDone is raised if the root was not found. Exception DimensionError is raised if the range of Root is not equal to the range of the StartingPoint.
 
@@ -2007,7 +1986,7 @@ class math_NewtonFunctionSetRoot():
         Returns the value of the root of function F. Exceptions StdFail_NotDone if the algorithm fails (and IsDone returns false).
         """
     @overload
-    def Root(self) -> math_Vector: ...
+    def Root(self,Root : math_Vector) -> None: ...
     def SetTolerance(self,XTol : math_Vector) -> None: 
         """
         Initializes the tolerance values for the unknowns.
@@ -2032,7 +2011,7 @@ class math_NewtonMinimum():
         Returns the Status of computation. The exception NotDone is raised if an error has occurred.
         """
     @overload
-    def Gradient(self) -> math_Vector: 
+    def Gradient(self,Grad : math_Vector) -> None: 
         """
         outputs the gradient vector at the minimum in Grad. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Grad is not equal to the range of the StartingPoint.
 
@@ -2043,7 +2022,7 @@ class math_NewtonMinimum():
         returns the gradient vector at the minimum. Exception NotDone is raised if an error has occurred. The minimum was not found.
         """
     @overload
-    def Gradient(self,Grad : math_Vector) -> None: ...
+    def Gradient(self) -> math_Vector: ...
     def IsConverged(self) -> bool: 
         """
         This method is called at the end of each iteration to check the convergence: || Xi+1 - Xi || < Tolerance or || F(Xi+1) - F(Xi)|| < Tolerance * || F(Xi) || It can be redefined in a sub-class to implement a specific test.
@@ -2324,9 +2303,9 @@ class math_TrigonometricFunctionRoots():
     @overload
     def __init__(self,C : float,D : float,E : float,InfBound : float,SupBound : float) -> None: ...
     @overload
-    def __init__(self,D : float,E : float,InfBound : float,SupBound : float) -> None: ...
-    @overload
     def __init__(self,A : float,B : float,C : float,D : float,E : float,InfBound : float,SupBound : float) -> None: ...
+    @overload
+    def __init__(self,D : float,E : float,InfBound : float,SupBound : float) -> None: ...
     pass
 class math_Uzawa():
     """
@@ -2460,7 +2439,7 @@ class math_Vector():
         Returns the value of the "Index" of the minimum element of a vector.
         """
     @overload
-    def Multiplied(self,theRight : math_Vector) -> float: 
+    def Multiplied(self,theRight : float) -> math_Vector: 
         """
         returns the product of a vector and a real value.
 
@@ -2469,11 +2448,11 @@ class math_Vector():
         returns the product of a vector by a matrix.
         """
     @overload
-    def Multiplied(self,theRight : float) -> math_Vector: ...
+    def Multiplied(self,theRight : math_Vector) -> float: ...
     @overload
     def Multiplied(self,theRight : math_Matrix) -> math_Vector: ...
     @overload
-    def Multiply(self,theLeft : float,theRight : math_Vector) -> None: 
+    def Multiply(self,theLeft : math_Vector,theRight : math_Matrix) -> None: 
         """
         returns the product of a vector and a real value.
 
@@ -2484,11 +2463,11 @@ class math_Vector():
         returns the multiplication of a real by a vector. "me" = "theLeft" * "theRight"
         """
     @overload
-    def Multiply(self,theLeft : math_Vector,theRight : math_Matrix) -> None: ...
-    @overload
     def Multiply(self,theLeft : math_Matrix,theRight : math_Vector) -> None: ...
     @overload
     def Multiply(self,theRight : float) -> None: ...
+    @overload
+    def Multiply(self,theLeft : float,theRight : math_Vector) -> None: ...
     def Norm(self) -> float: 
         """
         Returns the value or the square of the norm of this vector.
@@ -2535,14 +2514,14 @@ class math_Vector():
         returns the product of a vector and a real value.
         """
     @overload
-    def TMultiply(self,theLeft : math_Vector,theTRight : math_Matrix) -> None: 
+    def TMultiply(self,theTLeft : math_Matrix,theRight : math_Vector) -> None: 
         """
         sets a vector to the product of the transpose of the matrix "theTLeft" by the vector "theRight".
 
         sets a vector to the product of the vector "theLeft" by the transpose of the matrix "theTRight".
         """
     @overload
-    def TMultiply(self,theTLeft : math_Matrix,theRight : math_Vector) -> None: ...
+    def TMultiply(self,theLeft : math_Vector,theTRight : math_Matrix) -> None: ...
     def Upper(self) -> int: 
         """
         Returns the value of the theUpper index of a vector.
@@ -2564,17 +2543,17 @@ class math_Vector():
         None
         """
     @overload
-    def __init__(self,Other : OCP.gp.gp_XY) -> None: ...
-    @overload
-    def __init__(self,theTab : float,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : math_Vector) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theInitialValue : float) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,Other : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theTab : float,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theInitialValue : float) -> None: ...
+    @overload
+    def __init__(self,Other : OCP.gp.gp_XY) -> None: ...
     def __isub__(self,theRight : math_Vector) -> None: 
         """
         None
@@ -2597,7 +2576,7 @@ class math_Vector():
     @overload
     def __mul__(self,theRight : math_Vector) -> float: ...
     @overload
-    def __rmul__(self,theRight : math_Vector) -> float: 
+    def __rmul__(self,theRight : math_Matrix) -> math_Vector: 
         """
         None
 
@@ -2608,7 +2587,7 @@ class math_Vector():
     @overload
     def __rmul__(self,theRight : float) -> math_Vector: ...
     @overload
-    def __rmul__(self,theRight : math_Matrix) -> math_Vector: ...
+    def __rmul__(self,theRight : math_Vector) -> float: ...
     @overload
     def __sub__(self,theRight : math_Vector) -> math_Vector: 
         """
@@ -2636,14 +2615,14 @@ def Jacobi(a : math_Matrix,d : math_Vector,v : math_Matrix,nrot : int) -> int:
     None
     """
 @overload
-def LU_Decompose(a : math_Matrix,indx : math_IntegerVector,d : float,TINY : float=1e-20,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int:
+def LU_Decompose(a : math_Matrix,indx : math_IntegerVector,d : float,vv : math_Vector,TINY : float=1e-30,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int:
     """
     None
 
     None
     """
 @overload
-def LU_Decompose(a : math_Matrix,indx : math_IntegerVector,d : float,vv : math_Vector,TINY : float=1e-30,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int:
+def LU_Decompose(a : math_Matrix,indx : math_IntegerVector,d : float,TINY : float=1e-20,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> int:
     pass
 def LU_Invert(a : math_Matrix) -> int:
     """

@@ -4,29 +4,29 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.NCollection
-import OCP.HLRAlgo
-import OCP.BRepAdaptor
-import OCP.Geom2d
-import OCP.Standard
-import OCP.IntCurveSurface
-import OCP.TopoDS
 import OCP.HLRTopoBRep
-import OCP.Intf
-import OCP.Adaptor3d
-import OCP.IntSurf
-import OCP.BRepTopAdaptor
-import OCP.TColgp
-import OCP.math
-import OCP.Bnd
-import OCP.Extrema
-import OCP.gp
-import OCP.TopAbs
+import OCP.BRepAdaptor
 import OCP.Geom
+import OCP.IntCurveSurface
+import OCP.Adaptor3d
+import OCP.Intf
+import OCP.TopoDS
+import OCP.Geom2d
 import OCP.IntRes2d
+import OCP.BRepTopAdaptor
+import OCP.Standard
 import OCP.TColStd
+import OCP.HLRAlgo
+import OCP.Extrema
+import OCP.IntSurf
+import OCP.math
+import OCP.NCollection
+import OCP.TopAbs
+import OCP.gp
+import OCP.TColgp
+import OCP.Bnd
+import OCP.GeomAbs
+import OCP.TopTools
 __all__  = [
 "HLRBRep",
 "HLRBRep_InternalAlgo",
@@ -123,14 +123,14 @@ class HLRBRep_InternalAlgo(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Debug(self,deb : bool) -> None: 
+    def Debug(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Debug(self) -> bool: ...
+    def Debug(self,deb : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -157,18 +157,18 @@ class HLRBRep_InternalAlgo(OCP.Standard.Standard_Transient):
         hide the Shape <S1> by the shape <S2>.
         """
     @overload
-    def Hide(self) -> None: ...
-    @overload
     def Hide(self,I : int) -> None: ...
     @overload
-    def HideAll(self) -> None: 
+    def Hide(self) -> None: ...
+    @overload
+    def HideAll(self,I : int) -> None: 
         """
         set to hide all the edges.
 
         set to hide all the edges of the Shape <S>.
         """
     @overload
-    def HideAll(self,I : int) -> None: ...
+    def HideAll(self) -> None: ...
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -182,32 +182,32 @@ class HLRBRep_InternalAlgo(OCP.Standard.Standard_Transient):
         init the status of the selected edges depending of the back faces of a closed shell.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,SData : OCP.Standard.Standard_Transient,nbIso : int=0) -> None: 
+    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,nbIso : int=0) -> None: 
         """
         add the shape <S>.
 
         add the shape <S>.
         """
     @overload
-    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,nbIso : int=0) -> None: ...
+    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,SData : OCP.Standard.Standard_Transient,nbIso : int=0) -> None: ...
     def NbShapes(self) -> int: 
         """
         None
@@ -230,14 +230,14 @@ class HLRBRep_InternalAlgo(OCP.Standard.Standard_Transient):
         remove the Shape of Index <I>.
         """
     @overload
-    def Select(self) -> None: 
+    def Select(self,I : int) -> None: 
         """
         select all the DataStructure.
 
         select only the Shape of index <I>.
         """
     @overload
-    def Select(self,I : int) -> None: ...
+    def Select(self) -> None: ...
     def SelectEdge(self,I : int) -> None: 
         """
         select only the edges of the Shape <S>.
@@ -259,14 +259,14 @@ class HLRBRep_InternalAlgo(OCP.Standard.Standard_Transient):
         Change the Shape Data of the Shape of index <I>.
         """
     @overload
-    def ShowAll(self) -> None: 
+    def ShowAll(self,I : int) -> None: 
         """
         set to visible all the edges.
 
         set to visible all the edges of the Shape <S>.
         """
     @overload
-    def ShowAll(self,I : int) -> None: ...
+    def ShowAll(self) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -320,14 +320,14 @@ class HLRBRep_AreaLimit(OCP.Standard.Standard_Transient):
     @overload
     def EdgeAfter(self) -> OCP.TopAbs.TopAbs_State: ...
     @overload
-    def EdgeBefore(self,St : OCP.TopAbs.TopAbs_State) -> None: 
+    def EdgeBefore(self) -> OCP.TopAbs.TopAbs_State: 
         """
         None
 
         None
         """
     @overload
-    def EdgeBefore(self) -> OCP.TopAbs.TopAbs_State: ...
+    def EdgeBefore(self,St : OCP.TopAbs.TopAbs_State) -> None: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -341,27 +341,27 @@ class HLRBRep_AreaLimit(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInterference(self) -> bool: 
         """
         None
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def Next(self,N : HLRBRep_AreaLimit) -> None: 
         """
@@ -381,14 +381,14 @@ class HLRBRep_AreaLimit(OCP.Standard.Standard_Transient):
     @overload
     def Previous(self,P : HLRBRep_AreaLimit) -> None: ...
     @overload
-    def StateAfter(self) -> OCP.TopAbs.TopAbs_State: 
+    def StateAfter(self,St : OCP.TopAbs.TopAbs_State) -> None: 
         """
         None
 
         None
         """
     @overload
-    def StateAfter(self,St : OCP.TopAbs.TopAbs_State) -> None: ...
+    def StateAfter(self) -> OCP.TopAbs.TopAbs_State: ...
     @overload
     def StateBefore(self,St : OCP.TopAbs.TopAbs_State) -> None: 
         """
@@ -495,11 +495,11 @@ class HLRBRep_Array1OfEData():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : HLRBRep_Array1OfEData) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : HLRBRep_EdgeData,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -581,13 +581,13 @@ class HLRBRep_Array1OfFData():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : HLRBRep_FaceData,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
+    def __init__(self,theBegin : HLRBRep_FaceData,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : HLRBRep_Array1OfFData) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class HLRBRep_BCurveTool():
@@ -878,7 +878,7 @@ class HLRBRep_BSurfaceTool():
     def NbSamplesU_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,u1 : float,u2 : float) -> int: ...
     @staticmethod
     @overload
-    def NbSamplesV_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,v1 : float,v2 : float) -> int: 
+    def NbSamplesV_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface) -> int: 
         """
         None
 
@@ -886,7 +886,7 @@ class HLRBRep_BSurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesV_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface) -> int: ...
+    def NbSamplesV_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,v1 : float,v2 : float) -> int: ...
     @staticmethod
     def NbUIntervals_s(S : OCP.BRepAdaptor.BRepAdaptor_Surface,Sh : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
@@ -1004,70 +1004,6 @@ class HLRBRep_BiPnt2D():
     Contains the colors of a shape.
     """
     @overload
-    def IntLine(self,B : bool) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def IntLine(self) -> bool: ...
-    @overload
-    def OutLine(self,B : bool) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def OutLine(self) -> bool: ...
-    def P1(self) -> OCP.gp.gp_Pnt2d: 
-        """
-        None
-        """
-    def P2(self) -> OCP.gp.gp_Pnt2d: 
-        """
-        None
-        """
-    @overload
-    def Rg1Line(self) -> bool: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Rg1Line(self,B : bool) -> None: ...
-    @overload
-    def RgNLine(self,B : bool) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def RgNLine(self) -> bool: ...
-    @overload
-    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
-        """
-        None
-
-        None
-        """
-    @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,x1 : float,y1 : float,x2 : float,y2 : float,S : OCP.TopoDS.TopoDS_Shape,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
-    @overload
-    def __init__(self,thePoint1 : OCP.gp.gp_XY,thePoint2 : OCP.gp.gp_XY,S : OCP.TopoDS.TopoDS_Shape,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
-    pass
-class HLRBRep_BiPoint():
-    """
-    Contains the colors of a shape.
-    """
-    @overload
     def IntLine(self) -> bool: 
         """
         None
@@ -1085,6 +1021,70 @@ class HLRBRep_BiPoint():
         """
     @overload
     def OutLine(self,B : bool) -> None: ...
+    def P1(self) -> OCP.gp.gp_Pnt2d: 
+        """
+        None
+        """
+    def P2(self) -> OCP.gp.gp_Pnt2d: 
+        """
+        None
+        """
+    @overload
+    def Rg1Line(self,B : bool) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Rg1Line(self) -> bool: ...
+    @overload
+    def RgNLine(self,B : bool) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def RgNLine(self) -> bool: ...
+    @overload
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePoint1 : OCP.gp.gp_XY,thePoint2 : OCP.gp.gp_XY,S : OCP.TopoDS.TopoDS_Shape,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
+    @overload
+    def __init__(self,x1 : float,y1 : float,x2 : float,y2 : float,S : OCP.TopoDS.TopoDS_Shape,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
+    pass
+class HLRBRep_BiPoint():
+    """
+    Contains the colors of a shape.
+    """
+    @overload
+    def IntLine(self,B : bool) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def IntLine(self) -> bool: ...
+    @overload
+    def OutLine(self,B : bool) -> None: 
+        """
+        None
+
+        None
+        """
+    @overload
+    def OutLine(self) -> bool: ...
     def P1(self) -> OCP.gp.gp_Pnt: 
         """
         None
@@ -1103,23 +1103,23 @@ class HLRBRep_BiPoint():
     @overload
     def Rg1Line(self) -> bool: ...
     @overload
-    def RgNLine(self) -> bool: 
+    def RgNLine(self,B : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def RgNLine(self,B : bool) -> None: ...
+    def RgNLine(self) -> bool: ...
     @overload
-    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
         None
         """
     @overload
-    def Shape(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Shape(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
     def __init__(self,x1 : float,y1 : float,z1 : float,x2 : float,y2 : float,z2 : float,S : OCP.TopoDS.TopoDS_Shape,reg1 : bool,regn : bool,outl : bool,intl : bool) -> None: ...
     @overload
@@ -1245,7 +1245,7 @@ class HLRBRep_Curve():
         None
         """
     @overload
-    def Curve(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Curve(self) -> OCP.BRepAdaptor.BRepAdaptor_Curve: 
         """
         Sets the 3D curve to be projected.
 
@@ -1254,7 +1254,7 @@ class HLRBRep_Curve():
         Returns the 3D curve.
         """
     @overload
-    def Curve(self) -> OCP.BRepAdaptor.BRepAdaptor_Curve: ...
+    def Curve(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def D0(self,U : float,P : OCP.gp.gp_Pnt) -> None: 
         """
@@ -1403,14 +1403,14 @@ class HLRBRep_Curve():
         None
         """
     @overload
-    def Poles(self,aCurve : OCP.Geom.Geom_BSplineCurve,TP : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
+    def Poles(self,TP : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Poles(self,TP : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Poles(self,aCurve : OCP.Geom.Geom_BSplineCurve,TP : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def PolesAndWeights(self,TP : OCP.TColgp.TColgp_Array1OfPnt2d,TW : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -1658,14 +1658,14 @@ class HLRBRep_Data(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def EdgeOfTheHidingFace(self,arg1 : int,ED : HLRBRep_EdgeData) -> bool: 
+    def EdgeOfTheHidingFace(self,E : int,ED : HLRBRep_EdgeData) -> bool: 
         """
         Returns the true if the Edge <ED> belongs to the Hiding Face.
 
         Returns the true if the Edge <ED> belongs to the Hiding Face.
         """
     @overload
-    def EdgeOfTheHidingFace(self,E : int,ED : HLRBRep_EdgeData) -> bool: ...
+    def EdgeOfTheHidingFace(self,arg1 : int,ED : HLRBRep_EdgeData) -> bool: ...
     def EdgeState(self,p1 : float,p2 : float,stbef : OCP.TopAbs.TopAbs_State,staf : OCP.TopAbs.TopAbs_State) -> None: 
         """
         Returns the local 3D state of the intersection between the current edge and the current face at the <p1> and <p2> parameters.
@@ -1723,23 +1723,23 @@ class HLRBRep_Data(OCP.Standard.Standard_Transient):
         Returns true if the current face is bad.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LocalFEGeometry2D(self,FE : int,Param : float,Tg : OCP.gp.gp_Dir2d,Nm : OCP.gp.gp_Dir2d) -> Tuple[float]: 
         """
         Returns the local description of the projection of the current FEdge at parameter <Param>.
@@ -1809,7 +1809,7 @@ class HLRBRep_Data(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Tolerance(self) -> float: 
+    def Tolerance(self,tol : float) -> None: 
         """
         Set the tolerance for the rejections during the exploration
 
@@ -1820,7 +1820,7 @@ class HLRBRep_Data(OCP.Standard.Standard_Transient):
         returns the tolerance for the rejections during the exploration
         """
     @overload
-    def Tolerance(self,tol : float) -> None: ...
+    def Tolerance(self) -> float: ...
     def Update(self,P : OCP.HLRAlgo.HLRAlgo_Projector) -> None: 
         """
         end of building of the Data and updating all the information linked to the projection.
@@ -1960,7 +1960,7 @@ class HLRBRep_EdgeData():
     @overload
     def CutAtEnd(self) -> bool: ...
     @overload
-    def CutAtSta(self) -> bool: 
+    def CutAtSta(self,B : bool) -> None: 
         """
         None
 
@@ -1971,7 +1971,7 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def CutAtSta(self,B : bool) -> None: ...
+    def CutAtSta(self) -> bool: ...
     def Geometry(self) -> HLRBRep_Curve: 
         """
         None
@@ -1979,7 +1979,7 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def HideCount(self,I : int) -> None: 
+    def HideCount(self) -> int: 
         """
         None
 
@@ -1990,7 +1990,7 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def HideCount(self) -> int: ...
+    def HideCount(self,I : int) -> None: ...
     def MinMax(self) -> Any: 
         """
         None
@@ -2035,7 +2035,7 @@ class HLRBRep_EdgeData():
     @overload
     def Rg1Line(self,B : bool) -> None: ...
     @overload
-    def RgNLine(self,B : bool) -> None: 
+    def RgNLine(self) -> bool: 
         """
         None
 
@@ -2046,9 +2046,9 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def RgNLine(self) -> bool: ...
+    def RgNLine(self,B : bool) -> None: ...
     @overload
-    def Selected(self) -> bool: 
+    def Selected(self,B : bool) -> None: 
         """
         None
 
@@ -2059,7 +2059,7 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def Selected(self,B : bool) -> None: ...
+    def Selected(self) -> bool: ...
     def Set(self,Reg1 : bool,RegN : bool,EG : OCP.TopoDS.TopoDS_Edge,V1 : int,V2 : int,Out1 : bool,Out2 : bool,Cut1 : bool,Cut2 : bool,Start : float,TolStart : float,End : float,TolEnd : float) -> None: 
         """
         None
@@ -2107,7 +2107,7 @@ class HLRBRep_EdgeData():
     @overload
     def Used(self,B : bool) -> None: ...
     @overload
-    def VEnd(self) -> int: 
+    def VEnd(self,I : int) -> None: 
         """
         None
 
@@ -2118,7 +2118,7 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def VEnd(self,I : int) -> None: ...
+    def VEnd(self) -> int: ...
     @overload
     def VSta(self,I : int) -> None: 
         """
@@ -2133,7 +2133,7 @@ class HLRBRep_EdgeData():
     @overload
     def VSta(self) -> int: ...
     @overload
-    def VerAtEnd(self,B : bool) -> None: 
+    def VerAtEnd(self) -> bool: 
         """
         None
 
@@ -2144,7 +2144,7 @@ class HLRBRep_EdgeData():
         None
         """
     @overload
-    def VerAtEnd(self) -> bool: ...
+    def VerAtEnd(self,B : bool) -> None: ...
     @overload
     def VerAtSta(self) -> bool: 
         """
@@ -2292,14 +2292,14 @@ class HLRBRep_ExactIntersectionPointOfTheIntPCurvePCurveOfCInter():
         None
         """
     @overload
-    def Perform(self,Poly1 : HLRBRep_ThePolygon2dOfTheIntPCurvePCurveOfCInter,Poly2 : HLRBRep_ThePolygon2dOfTheIntPCurvePCurveOfCInter) -> Tuple[int, int, float, float]: 
+    def Perform(self,Uo : float,Vo : float,UInf : float,VInf : float,USup : float,VSup : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,Uo : float,Vo : float,UInf : float,VInf : float,USup : float,VSup : float) -> None: ...
+    def Perform(self,Poly1 : HLRBRep_ThePolygon2dOfTheIntPCurvePCurveOfCInter,Poly2 : HLRBRep_ThePolygon2dOfTheIntPCurvePCurveOfCInter) -> Tuple[int, int, float, float]: ...
     def Roots(self) -> Tuple[float, float]: 
         """
         None
@@ -2336,7 +2336,7 @@ class HLRBRep_FaceData():
     @overload
     def Closed(self) -> bool: ...
     @overload
-    def Cone(self) -> bool: 
+    def Cone(self,B : bool) -> None: 
         """
         None
 
@@ -2347,9 +2347,9 @@ class HLRBRep_FaceData():
         None
         """
     @overload
-    def Cone(self,B : bool) -> None: ...
+    def Cone(self) -> bool: ...
     @overload
-    def Cut(self,B : bool) -> None: 
+    def Cut(self) -> bool: 
         """
         None
 
@@ -2360,7 +2360,7 @@ class HLRBRep_FaceData():
         None
         """
     @overload
-    def Cut(self) -> bool: ...
+    def Cut(self,B : bool) -> None: ...
     @overload
     def Cylinder(self,B : bool) -> None: 
         """
@@ -2394,7 +2394,7 @@ class HLRBRep_FaceData():
     @overload
     def Hiding(self,B : bool) -> None: ...
     @overload
-    def Orientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: 
+    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: 
         """
         None
 
@@ -2405,7 +2405,7 @@ class HLRBRep_FaceData():
         None
         """
     @overload
-    def Orientation(self) -> OCP.TopAbs.TopAbs_Orientation: ...
+    def Orientation(self,O : OCP.TopAbs.TopAbs_Orientation) -> None: ...
     @overload
     def Plane(self,B : bool) -> None: 
         """
@@ -2420,7 +2420,7 @@ class HLRBRep_FaceData():
     @overload
     def Plane(self) -> bool: ...
     @overload
-    def Selected(self) -> bool: 
+    def Selected(self,B : bool) -> None: 
         """
         None
 
@@ -2431,7 +2431,7 @@ class HLRBRep_FaceData():
         None
         """
     @overload
-    def Selected(self,B : bool) -> None: ...
+    def Selected(self) -> bool: ...
     def Set(self,FG : OCP.TopoDS.TopoDS_Face,Or : OCP.TopAbs.TopAbs_Orientation,Cl : bool,NW : int) -> None: 
         """
         <Or> is the orientation of the face. <Cl> is true if the face belongs to a closed volume. <NW> is the number of wires ( or block of edges ) of the face.
@@ -2458,7 +2458,7 @@ class HLRBRep_FaceData():
     @overload
     def Side(self,B : bool) -> None: ...
     @overload
-    def Simple(self) -> bool: 
+    def Simple(self,B : bool) -> None: 
         """
         None
 
@@ -2469,9 +2469,9 @@ class HLRBRep_FaceData():
         None
         """
     @overload
-    def Simple(self,B : bool) -> None: ...
+    def Simple(self) -> bool: ...
     @overload
-    def Size(self,S : float) -> None: 
+    def Size(self) -> float: 
         """
         None
 
@@ -2482,7 +2482,7 @@ class HLRBRep_FaceData():
         None
         """
     @overload
-    def Size(self) -> float: ...
+    def Size(self,S : float) -> None: ...
     @overload
     def Sphere(self,B : bool) -> None: 
         """
@@ -2621,7 +2621,7 @@ class HLRBRep_HLRToShape():
     A framework for filtering the computation results of an HLRBRep_Algo algorithm by extraction. From the results calculated by the algorithm on a shape, a filter returns the type of edge you want to identify. You can choose any of the following types of output: - visible sharp edges - hidden sharp edges - visible smooth edges - hidden smooth edges - visible sewn edges - hidden sewn edges - visible outline edges - hidden outline edges. - visible isoparameters and - hidden isoparameters. Sharp edges present a C0 continuity (non G1). Smooth edges present a G1 continuity (non G2). Sewn edges present a C2 continuity. The result is composed of 2D edges in the projection plane of the view which the algorithm has worked with. These 2D edges are not included in the data structure of the visualized shape. In order to obtain a complete image, you must combine the shapes given by each of the chosen filters. The construction of the shape does not call a new computation of the algorithm, but only reads its internal results. The methods of this shape are almost identic to those of the HLRBrep_PolyHLRToShape class.
     """
     @overload
-    def CompoundOfEdges(self,S : OCP.TopoDS.TopoDS_Shape,type : HLRBRep_TypeOfResultingEdge,visible : bool,In3d : bool) -> OCP.TopoDS.TopoDS_Shape: 
+    def CompoundOfEdges(self,type : HLRBRep_TypeOfResultingEdge,visible : bool,In3d : bool) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns compound of resulting edges of required type and visibility, taking into account the kind of space (2d or 3d)
 
@@ -2632,7 +2632,7 @@ class HLRBRep_HLRToShape():
         For specified shape returns compound of resulting edges of required type and visibility, taking into account the kind of space (2d or 3d)
         """
     @overload
-    def CompoundOfEdges(self,type : HLRBRep_TypeOfResultingEdge,visible : bool,In3d : bool) -> OCP.TopoDS.TopoDS_Shape: ...
+    def CompoundOfEdges(self,S : OCP.TopoDS.TopoDS_Shape,type : HLRBRep_TypeOfResultingEdge,visible : bool,In3d : bool) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def HCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -2647,7 +2647,7 @@ class HLRBRep_HLRToShape():
     @overload
     def HCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def IsoLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def IsoLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2658,9 +2658,9 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def IsoLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def IsoLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def IsoLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def IsoLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2671,9 +2671,9 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def IsoLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def IsoLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def OutLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def OutLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2684,9 +2684,9 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def OutLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def OutLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def OutLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def OutLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2697,7 +2697,7 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def OutLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def OutLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     def OutLineVCompound3d(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
@@ -2705,7 +2705,7 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def Rg1LineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def Rg1LineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2716,7 +2716,7 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def Rg1LineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def Rg1LineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def Rg1LineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -2731,7 +2731,7 @@ class HLRBRep_HLRToShape():
     @overload
     def Rg1LineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def RgNLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def RgNLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2742,7 +2742,7 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def RgNLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def RgNLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def RgNLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -2757,7 +2757,7 @@ class HLRBRep_HLRToShape():
     @overload
     def RgNLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def VCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def VCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -2768,7 +2768,7 @@ class HLRBRep_HLRToShape():
         None
         """
     @overload
-    def VCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def VCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     def __init__(self,A : HLRBRep_Algo) -> None: ...
     pass
 class HLRBRep_Hider():
@@ -2888,14 +2888,14 @@ class HLRBRep_Algo(HLRBRep_InternalAlgo, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def Debug(self,deb : bool) -> None: 
+    def Debug(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Debug(self) -> bool: ...
+    def Debug(self,deb : bool) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -2922,18 +2922,18 @@ class HLRBRep_Algo(HLRBRep_InternalAlgo, OCP.Standard.Standard_Transient):
         hide the Shape <S1> by the shape <S2>.
         """
     @overload
-    def Hide(self) -> None: ...
-    @overload
     def Hide(self,I : int) -> None: ...
     @overload
-    def HideAll(self) -> None: 
+    def Hide(self) -> None: ...
+    @overload
+    def HideAll(self,I : int) -> None: 
         """
         set to hide all the edges.
 
         set to hide all the edges of the Shape <S>.
         """
     @overload
-    def HideAll(self,I : int) -> None: ...
+    def HideAll(self) -> None: ...
     def IncrementRefCounter(self) -> None: 
         """
         Increments the reference counter of this object
@@ -2947,32 +2947,32 @@ class HLRBRep_Algo(HLRBRep_InternalAlgo, OCP.Standard.Standard_Transient):
         init the status of the selected edges depending of the back faces of a closed shell.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
-    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,SData : OCP.Standard.Standard_Transient,nbIso : int=0) -> None: 
+    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,nbIso : int=0) -> None: 
         """
         add the shape <S>.
 
         add the shape <S>.
         """
     @overload
-    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,nbIso : int=0) -> None: ...
+    def Load(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,SData : OCP.Standard.Standard_Transient,nbIso : int=0) -> None: ...
     def NbShapes(self) -> int: 
         """
         None
@@ -2999,14 +2999,14 @@ class HLRBRep_Algo(HLRBRep_InternalAlgo, OCP.Standard.Standard_Transient):
         remove the Shape of Index <I>.
         """
     @overload
-    def Select(self) -> None: 
+    def Select(self,I : int) -> None: 
         """
         select all the DataStructure.
 
         select only the Shape of index <I>.
         """
     @overload
-    def Select(self,I : int) -> None: ...
+    def Select(self) -> None: ...
     def SelectEdge(self,I : int) -> None: 
         """
         select only the edges of the Shape <S>.
@@ -3028,14 +3028,14 @@ class HLRBRep_Algo(HLRBRep_InternalAlgo, OCP.Standard.Standard_Transient):
         Change the Shape Data of the Shape of index <I>.
         """
     @overload
-    def ShowAll(self) -> None: 
+    def ShowAll(self,I : int) -> None: 
         """
         set to visible all the edges.
 
         set to visible all the edges of the Shape <S>.
         """
     @overload
-    def ShowAll(self,I : int) -> None: ...
+    def ShowAll(self) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3045,9 +3045,9 @@ class HLRBRep_Algo(HLRBRep_InternalAlgo, OCP.Standard.Standard_Transient):
         update the DataStructure.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,A : HLRBRep_Algo) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3088,7 +3088,7 @@ class HLRBRep_Intersector():
         None
         """
     @overload
-    def Perform(self,nA : int,A1 : capsule,da1 : float,db1 : float,nB : int,A2 : capsule,da2 : float,db2 : float,NoBound : bool) -> None: 
+    def Perform(self,L : OCP.gp.gp_Lin,P : float) -> None: 
         """
         Performs the auto intersection of an edge. The edge domain is cut at start with da1*(b-a) and at end with db1*(b-a).
 
@@ -3097,9 +3097,9 @@ class HLRBRep_Intersector():
         None
         """
     @overload
-    def Perform(self,L : OCP.gp.gp_Lin,P : float) -> None: ...
-    @overload
     def Perform(self,A1 : capsule,da1 : float,db1 : float) -> None: ...
+    @overload
+    def Perform(self,nA : int,A1 : capsule,da1 : float,db1 : float,nB : int,A2 : capsule,da2 : float,db2 : float,NoBound : bool) -> None: ...
     def Point(self,N : int) -> OCP.IntRes2d.IntRes2d_IntersectionPoint: 
         """
         None
@@ -3304,7 +3304,7 @@ class HLRBRep_ListOfBPnt2D(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : HLRBRep_ListOfBPnt2D) -> None: 
+    def Append(self,theItem : HLRBRep_BiPnt2D,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -3313,9 +3313,9 @@ class HLRBRep_ListOfBPnt2D(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : HLRBRep_BiPnt2D) -> HLRBRep_BiPnt2D: ...
+    def Append(self,theOther : HLRBRep_ListOfBPnt2D) -> None: ...
     @overload
-    def Append(self,theItem : HLRBRep_BiPnt2D,theIter : Any) -> None: ...
+    def Append(self,theItem : HLRBRep_BiPnt2D) -> HLRBRep_BiPnt2D: ...
     def Assign(self,theOther : HLRBRep_ListOfBPnt2D) -> HLRBRep_ListOfBPnt2D: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3363,14 +3363,14 @@ class HLRBRep_ListOfBPnt2D(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : HLRBRep_ListOfBPnt2D) -> None: 
+    def Prepend(self,theItem : HLRBRep_BiPnt2D) -> HLRBRep_BiPnt2D: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : HLRBRep_BiPnt2D) -> HLRBRep_BiPnt2D: ...
+    def Prepend(self,theOther : HLRBRep_ListOfBPnt2D) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -3388,11 +3388,11 @@ class HLRBRep_ListOfBPnt2D(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theOther : HLRBRep_ListOfBPnt2D) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : HLRBRep_ListOfBPnt2D) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class HLRBRep_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
@@ -3404,7 +3404,7 @@ class HLRBRep_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : HLRBRep_BiPoint,theIter : Any) -> None: 
+    def Append(self,theOther : HLRBRep_ListOfBPoint) -> None: 
         """
         Append one item at the end
 
@@ -3415,7 +3415,7 @@ class HLRBRep_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : HLRBRep_BiPoint) -> HLRBRep_BiPoint: ...
     @overload
-    def Append(self,theOther : HLRBRep_ListOfBPoint) -> None: ...
+    def Append(self,theItem : HLRBRep_BiPoint,theIter : Any) -> None: ...
     def Assign(self,theOther : HLRBRep_ListOfBPoint) -> HLRBRep_ListOfBPoint: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -3435,23 +3435,23 @@ class HLRBRep_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : HLRBRep_ListOfBPoint,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : HLRBRep_BiPoint,theIter : Any) -> HLRBRep_BiPoint: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : HLRBRep_BiPoint,theIter : Any) -> HLRBRep_BiPoint: ...
+    def InsertAfter(self,theOther : HLRBRep_ListOfBPoint,theIter : Any) -> None: ...
     @overload
-    def InsertBefore(self,theOther : HLRBRep_ListOfBPoint,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : HLRBRep_BiPoint,theIter : Any) -> HLRBRep_BiPoint: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : HLRBRep_BiPoint,theIter : Any) -> HLRBRep_BiPoint: ...
+    def InsertBefore(self,theOther : HLRBRep_ListOfBPoint,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -3488,11 +3488,11 @@ class HLRBRep_ListOfBPoint(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : HLRBRep_ListOfBPoint) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : HLRBRep_ListOfBPoint) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class HLRBRep_MyImpParToolOfTheIntersectorOfTheIntConicCurveOfCInter(OCP.math.math_FunctionWithDerivative, OCP.math.math_Function):
@@ -3620,23 +3620,23 @@ class HLRBRep_PolyAlgo(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Load(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Loads the shape S into this framework. Warning S must have already been triangulated.
@@ -3691,33 +3691,33 @@ class HLRBRep_PolyAlgo(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def TolAngular(self,theTol : float) -> None: 
+    def TolAngular(self) -> float: 
         """
         None
 
         None
         """
     @overload
-    def TolAngular(self) -> float: ...
+    def TolAngular(self,theTol : float) -> None: ...
     @overload
-    def TolCoef(self) -> float: 
+    def TolCoef(self,theTol : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def TolCoef(self,theTol : float) -> None: ...
+    def TolCoef(self) -> float: ...
     def Update(self) -> None: 
         """
         Launches calculation of outlines of the shape visualized by this framework. Used after setting the point of view and defining the shape or shapes to be visualized.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,A : HLRBRep_PolyAlgo) -> None: ...
     @overload
     def __init__(self,S : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -3753,7 +3753,7 @@ class HLRBRep_PolyHLRToShape():
         None
         """
     @overload
-    def OutLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
+    def OutLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -3764,9 +3764,9 @@ class HLRBRep_PolyHLRToShape():
         Sets the extraction filter for hidden outlines. Hidden outlines occur, for instance, in tori. In this case, the inner outlines of the torus seen on its side are hidden.
         """
     @overload
-    def OutLineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
+    def OutLineHCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
-    def OutLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
+    def OutLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         None
 
@@ -3777,7 +3777,7 @@ class HLRBRep_PolyHLRToShape():
         Sets the extraction filter for visible outlines.
         """
     @overload
-    def OutLineVCompound(self) -> OCP.TopoDS.TopoDS_Shape: ...
+    def OutLineVCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: ...
     @overload
     def Rg1LineHCompound(self,S : OCP.TopoDS.TopoDS_Shape) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -3986,14 +3986,14 @@ class HLRBRep_SeqOfShapeBounds(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : HLRBRep_SeqOfShapeBounds) -> None: 
+    def Append(self,theItem : HLRBRep_ShapeBounds) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : HLRBRep_ShapeBounds) -> None: ...
+    def Append(self,theSeq : HLRBRep_SeqOfShapeBounds) -> None: ...
     def Assign(self,theOther : HLRBRep_SeqOfShapeBounds) -> HLRBRep_SeqOfShapeBounds: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -4023,14 +4023,14 @@ class HLRBRep_SeqOfShapeBounds(OCP.NCollection.NCollection_BaseSequence):
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : HLRBRep_ShapeBounds) -> None: 
+    def InsertAfter(self,theIndex : int,theSeq : HLRBRep_SeqOfShapeBounds) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : HLRBRep_SeqOfShapeBounds) -> None: ...
+    def InsertAfter(self,theIndex : int,theItem : HLRBRep_ShapeBounds) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : HLRBRep_SeqOfShapeBounds) -> None: 
         """
@@ -4099,11 +4099,11 @@ class HLRBRep_SeqOfShapeBounds(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theOther : HLRBRep_SeqOfShapeBounds) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -4150,7 +4150,7 @@ class HLRBRep_ShapeBounds():
     @overload
     def Shape(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner) -> None: ...
     @overload
-    def ShapeData(self,SD : OCP.Standard.Standard_Transient) -> None: 
+    def ShapeData(self) -> OCP.Standard.Standard_Transient: 
         """
         None
 
@@ -4161,7 +4161,7 @@ class HLRBRep_ShapeBounds():
         None
         """
     @overload
-    def ShapeData(self) -> OCP.Standard.Standard_Transient: ...
+    def ShapeData(self,SD : OCP.Standard.Standard_Transient) -> None: ...
     def Sizes(self) -> Tuple[int, int, int]: 
         """
         None
@@ -4175,11 +4175,11 @@ class HLRBRep_ShapeBounds():
         None
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,SData : OCP.Standard.Standard_Transient,nbIso : int,V1 : int,V2 : int,E1 : int,E2 : int,F1 : int,F2 : int) -> None: ...
     @overload
     def __init__(self,S : OCP.HLRTopoBRep.HLRTopoBRep_OutLiner,nbIso : int,V1 : int,V2 : int,E1 : int,E2 : int,F1 : int,F2 : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class HLRBRep_ShapeToHLR():
     """
@@ -4542,7 +4542,7 @@ class HLRBRep_SurfaceTool():
     def NbSamplesU_s(S : capsule) -> int: ...
     @staticmethod
     @overload
-    def NbSamplesV_s(S : capsule,v1 : float,v2 : float) -> int: 
+    def NbSamplesV_s(S : capsule) -> int: 
         """
         None
 
@@ -4550,7 +4550,7 @@ class HLRBRep_SurfaceTool():
         """
     @staticmethod
     @overload
-    def NbSamplesV_s(S : capsule) -> int: ...
+    def NbSamplesV_s(S : capsule,v1 : float,v2 : float) -> int: ...
     @staticmethod
     def NbUIntervals_s(S : capsule,Sh : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
@@ -4874,14 +4874,14 @@ class HLRBRep_TheInterferenceOfInterCSurf(OCP.Intf.Intf_Interference):
         Gives the tolerance used for the calculation.
         """
     @overload
-    def Insert(self,pdeb : OCP.Intf.Intf_SectionPoint,pfin : OCP.Intf.Intf_SectionPoint) -> None: 
+    def Insert(self,TheZone : OCP.Intf.Intf_TangentZone) -> bool: 
         """
         Inserts a new zone of tangence in the current list of tangent zones of the interference and returns True when done.
 
         Insert a new segment of intersection in the current list of polylines of intersection of the interference.
         """
     @overload
-    def Insert(self,TheZone : OCP.Intf.Intf_TangentZone) -> bool: ...
+    def Insert(self,pdeb : OCP.Intf.Intf_SectionPoint,pfin : OCP.Intf.Intf_SectionPoint) -> None: ...
     @overload
     def Interference(self,thePolyg : HLRBRep_ThePolygonOfInterCSurf,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: 
         """
@@ -4916,7 +4916,7 @@ class HLRBRep_TheInterferenceOfInterCSurf(OCP.Intf.Intf_Interference):
         Gives the number of zones of tangence in the interference.
         """
     @overload
-    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: 
+    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: 
         """
         Computes an interference between the Polygon and the Polyhedron.
 
@@ -4933,11 +4933,11 @@ class HLRBRep_TheInterferenceOfInterCSurf(OCP.Intf.Intf_Interference):
     @overload
     def Perform(self,theLin : OCP.gp.gp_Lin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     @overload
+    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    @overload
     def Perform(self,thePolyg : HLRBRep_ThePolygonOfInterCSurf,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
     @overload
     def Perform(self,thePolyg : HLRBRep_ThePolygonOfInterCSurf,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
-    @overload
-    def Perform(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
     @overload
     def Perform(self,theLin : OCP.gp.gp_Lin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
     def PntValue(self,Index : int) -> OCP.Intf.Intf_SectionPoint: 
@@ -4955,17 +4955,17 @@ class HLRBRep_TheInterferenceOfInterCSurf(OCP.Intf.Intf_Interference):
     @overload
     def __init__(self,thePolyg : HLRBRep_ThePolygonOfInterCSurf,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     @overload
-    def __init__(self,theLin : OCP.gp.gp_Lin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLin : OCP.gp.gp_Lin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
     @overload
-    def __init__(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
+    def __init__(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
     @overload
     def __init__(self,thePolyg : HLRBRep_ThePolygonOfInterCSurf,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
     @overload
-    def __init__(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    def __init__(self,theLins : OCP.Intf.Intf_Array1OfLin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf) -> None: ...
+    @overload
+    def __init__(self,theLin : OCP.gp.gp_Lin,thePolyh : HLRBRep_ThePolyhedronOfInterCSurf,theBoundSB : OCP.Bnd.Bnd_BoundSortBox) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class HLRBRep_TheIntersectorOfTheIntConicCurveOfCInter(OCP.IntRes2d.IntRes2d_Intersection):
     """
@@ -5067,14 +5067,14 @@ class HLRBRep_ThePolygon2dOfTheIntPCurvePCurveOfCInter(OCP.Intf.Intf_Polygon2d):
         None
         """
     @overload
-    def Closed(self) -> bool: 
+    def Closed(self,clos : bool) -> None: 
         """
         None
 
         Returns True if the polyline is closed.
         """
     @overload
-    def Closed(self,clos : bool) -> None: ...
+    def Closed(self) -> bool: ...
     def DeflectionOverEstimation(self) -> float: 
         """
         None
@@ -5121,14 +5121,14 @@ class HLRBRep_ThePolygonOfInterCSurf():
         Give the bounding box of the polygon.
         """
     @overload
-    def Closed(self,flag : bool) -> None: 
+    def Closed(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Closed(self) -> bool: ...
+    def Closed(self,flag : bool) -> None: ...
     def DeflectionOverEstimation(self) -> float: 
         """
         None
@@ -5158,9 +5158,9 @@ class HLRBRep_ThePolygonOfInterCSurf():
         Returns the parameter (On the curve) of the last point of the Polygon
         """
     @overload
-    def __init__(self,Curve : OCP.gp.gp_Lin,U1 : float,U2 : float,NbPnt : int) -> None: ...
-    @overload
     def __init__(self,Curve : OCP.gp.gp_Lin,NbPnt : int) -> None: ...
+    @overload
+    def __init__(self,Curve : OCP.gp.gp_Lin,U1 : float,U2 : float,NbPnt : int) -> None: ...
     @overload
     def __init__(self,Curve : OCP.gp.gp_Lin,Upars : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
@@ -5278,11 +5278,11 @@ class HLRBRep_ThePolyhedronOfInterCSurf():
         Give the point of index i in the MaTriangle.
         """
     @overload
-    def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: ...
+    def Point(self,Index : int) -> OCP.gp.gp_Pnt: ...
     @overload
     def Point(self,Index : int,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def Point(self,Index : int) -> OCP.gp.gp_Pnt: ...
+    def Point(self,thePnt : OCP.gp.gp_Pnt,lig : int,col : int,U : float,V : float) -> None: ...
     def Size(self) -> Tuple[int, int]: 
         """
         get the size of the discretization.

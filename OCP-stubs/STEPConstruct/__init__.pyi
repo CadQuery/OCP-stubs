@@ -4,23 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepRepr
-import OCP.StepAP203
-import OCP.StepVisual
-import OCP.Standard
-import OCP.StepData
-import OCP.TopoDS
-import OCP.StepBasic
-import OCP.Quantity
-import OCP.Transfer
 import OCP.TopLoc
-import OCP.gp
-import OCP.StepShape
-import OCP.Interface
-import OCP.XSControl
-import OCP.StepGeom
+import OCP.TopoDS
 import OCP.TCollection
+import OCP.StepBasic
+import OCP.Interface
+import OCP.Standard
+import OCP.Transfer
+import OCP.StepRepr
 import OCP.TColStd
+import OCP.StepData
+import OCP.StepAP203
+import OCP.StepGeom
+import OCP.gp
+import OCP.XSControl
+import OCP.Quantity
+import OCP.StepVisual
+import OCP.StepShape
 __all__  = [
 "STEPConstruct",
 "STEPConstruct_AP203Context",
@@ -130,7 +130,7 @@ class STEPConstruct_AP203Context():
         None
         """
     @overload
-    def Init(self,SDRTool : STEPConstruct_Part) -> None: 
+    def Init(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation) -> None: 
         """
         Takes SDR (part) which brings all standard data around part (common for AP203 and AP214) and creates all the additional entities required for AP203
 
@@ -139,7 +139,7 @@ class STEPConstruct_AP203Context():
         Takes NAUO which describes assembly link to component and creates the security_classification entity associated to it as required by the AP203
         """
     @overload
-    def Init(self,sdr : OCP.StepShape.StepShape_ShapeDefinitionRepresentation) -> None: ...
+    def Init(self,SDRTool : STEPConstruct_Part) -> None: ...
     @overload
     def Init(self,nauo : OCP.StepRepr.StepRepr_NextAssemblyUsageOccurrence) -> None: ...
     def InitApprovalRequisites(self) -> None: 
@@ -348,9 +348,9 @@ class STEPConstruct_ContextTool():
         Initialize ApplicationProtocolDefinition by the first entity of that type found in the model
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aStepModel : OCP.StepData.StepData_StepModel) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class STEPConstruct_Tool():
     """
@@ -390,9 +390,9 @@ class STEPConstruct_Tool():
         Returns currently loaded WorkSession
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class STEPConstruct_Part():
     """
@@ -593,7 +593,7 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
     Provides a mechanism for reading and writing shape styles (such as color) to and from the STEP file This tool maintains a list of styles, either taking them from STEP model (reading), or filling it by calls to AddStyle or directly (writing). Some methods deal with general structures of styles and presentations in STEP, but there are methods which deal with particular implementation of colors (as described in RP)
     """
     @overload
-    def AddStyle(self,style : OCP.StepVisual.StepVisual_StyledItem) -> None: 
+    def AddStyle(self,Shape : OCP.TopoDS.TopoDS_Shape,PSA : OCP.StepVisual.StepVisual_PresentationStyleAssignment,Override : OCP.StepVisual.StepVisual_StyledItem) -> OCP.StepVisual.StepVisual_StyledItem: 
         """
         Adds a style to a sequence
 
@@ -602,7 +602,7 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
         Create a style linking giving PSA to the Shape, and add it to the sequence of stored styles. If Override is not Null, then the resulting style will be of the subtype OverridingStyledItem. The Sape is used to find corresponding STEP entity by call to STEPConstruct::FindEntity(), then previous method is called.
         """
     @overload
-    def AddStyle(self,Shape : OCP.TopoDS.TopoDS_Shape,PSA : OCP.StepVisual.StepVisual_PresentationStyleAssignment,Override : OCP.StepVisual.StepVisual_StyledItem) -> OCP.StepVisual.StepVisual_StyledItem: ...
+    def AddStyle(self,style : OCP.StepVisual.StepVisual_StyledItem) -> None: ...
     @overload
     def AddStyle(self,item : OCP.StepRepr.StepRepr_RepresentationItem,PSA : OCP.StepVisual.StepVisual_PresentationStyleAssignment,Override : OCP.StepVisual.StepVisual_StyledItem) -> OCP.StepVisual.StepVisual_StyledItem: ...
     def ClearStyles(self) -> None: 
@@ -623,10 +623,16 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
         Decodes STEP color and fills the Quantity_Color. Returns True if OK or False if color is not recognized
         """
     @staticmethod
+    @overload
     def EncodeColor_s(Col : OCP.Quantity.Quantity_Color) -> OCP.StepVisual.StepVisual_Colour: 
         """
         Create STEP color entity by given Quantity_Color The analysis is performed for whether the color corresponds to one of standard colors predefined in STEP. In that case, PredefinedColour entity is created instead of RGBColour
+
+        Create STEP color entity by given Quantity_Color The analysis is performed for whether the color corresponds to one of standard colors predefined in STEP. In that case, PredefinedColour entity is created instead of RGBColour
         """
+    @staticmethod
+    @overload
+    def EncodeColor_s(Col : OCP.Quantity.Quantity_Color,DPDCs : Any,ColRGBs : Any) -> OCP.StepVisual.StepVisual_Colour: ...
     def FindContext(self,Shape : OCP.TopoDS.TopoDS_Shape) -> OCP.StepRepr.StepRepr_RepresentationContext: 
         """
         Searches the STEP model for the RepresentationContext in which given shape is defined. This context (if found) can be used then in call to CreateMDGPR()
@@ -697,9 +703,9 @@ class STEPConstruct_Styles(STEPConstruct_Tool):
         Returns currently loaded WorkSession
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
     pass
 class STEPConstruct_ExternRefs(STEPConstruct_Tool):
     """
@@ -805,14 +811,14 @@ class STEPConstruct_UnitContext():
         Returns the areaFactor
         """
     @overload
-    def ComputeFactors(self,aUnit : OCP.StepBasic.StepBasic_NamedUnit) -> int: 
+    def ComputeFactors(self,aContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> int: 
         """
         Computes the length, plane angle and solid angle conversion factor . Returns a status, 0 if OK
 
         None
         """
     @overload
-    def ComputeFactors(self,aContext : OCP.StepRepr.StepRepr_GlobalUnitAssignedContext) -> int: ...
+    def ComputeFactors(self,aUnit : OCP.StepBasic.StepBasic_NamedUnit) -> int: ...
     def ComputeTolerance(self,aContext : OCP.StepRepr.StepRepr_GlobalUncertaintyAssignedContext) -> int: 
         """
         Computes the uncertainty value (for length)
@@ -980,7 +986,7 @@ class STEPConstruct_ValidationProps(STEPConstruct_Tool):
         Returns currently loaded WorkSession
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession) -> None: ...
     pass

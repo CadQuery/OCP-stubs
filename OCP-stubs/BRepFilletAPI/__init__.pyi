@@ -5,16 +5,16 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Law
-import OCP.TopTools
+import OCP.Geom
+import OCP.ChFiDS
+import OCP.TopoDS
+import OCP.BRepBuilderAPI
+import OCP.TColgp
 import OCP.ChFi2d
 import OCP.GeomAbs
-import OCP.ChFiDS
-import OCP.TColgp
+import OCP.TopTools
 import OCP.ChFi3d
-import OCP.Geom
-import OCP.BRepBuilderAPI
 import OCP.TopOpeBRepBuild
-import OCP.TopoDS
 __all__  = [
 "BRepFilletAPI_LocalOperation",
 "BRepFilletAPI_MakeChamfer",
@@ -135,7 +135,7 @@ class BRepFilletAPI_MakeChamfer(BRepFilletAPI_LocalOperation, OCP.BRepBuilderAPI
         Returns the curvilinear abscissa of the vertex V on the contour of index IC in the internal data structure of this algorithm. Warning Returns -1. if: - IC is outside the bounds of the table of contours, or - V is not on the contour of index IC.
         """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: 
+    def Add(self,Dis1 : float,Dis2 : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Adds edge E to the table of edges used by this algorithm to build chamfers, where the parameters of the chamfer must be set after the
 
@@ -144,9 +144,9 @@ class BRepFilletAPI_MakeChamfer(BRepFilletAPI_LocalOperation, OCP.BRepBuilderAPI
         Adds edge E to the table of edges used by this algorithm to build chamfers, where the parameters of the chamfer are given by the two distances Dis1 and Dis2; the face F identifies the side where Dis1 is measured. The Add function results in a contour being built by propagation from the edge E (i.e. the contour contains at least this edge). This contour is composed of edges of the shape which are tangential to one another and which delimit two series of tangential faces, with one series of faces being located on either side of the contour. Warning Nothing is done if edge E or the face F does not belong to the initial shape.
         """
     @overload
-    def Add(self,Dis1 : float,Dis2 : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: ...
-    @overload
     def Add(self,Dis : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    @overload
+    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def AddDA(self,Dis : float,Angle : float,E : OCP.TopoDS.TopoDS_Edge,F : OCP.TopoDS.TopoDS_Face) -> None: 
         """
         Adds a fillet contour in the builder (builds a contour of tangent edges to <E> and sets the distance <Dis1> and angle <Angle> ( parameters of the chamfer ) ).
@@ -311,13 +311,13 @@ class BRepFilletAPI_MakeFillet(BRepFilletAPI_LocalOperation, OCP.BRepBuilderAPI.
         Adds a fillet description in the builder - builds a contour of tangent edges, - sets the radius evolution law interpolating the values given in the array UandR :
         """
     @overload
-    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Add(self,UandR : OCP.TColgp.TColgp_Array1OfPnt2d,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def Add(self,Radius : float,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
     def Add(self,L : OCP.Law.Law_Function,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     @overload
-    def Add(self,UandR : OCP.TColgp.TColgp_Array1OfPnt2d,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
+    def Add(self,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
     def BadShape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         if (HasResult()) returns the partial result
@@ -448,14 +448,14 @@ class BRepFilletAPI_MakeFillet(BRepFilletAPI_LocalOperation, OCP.BRepBuilderAPI.
         Return the faces created for surface <I>.
         """
     @overload
-    def Radius(self,IC : int) -> float: 
+    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: 
         """
         Returns the radius of the fillet along the contour of index IC in the internal data structure of this algorithm Warning - Use this function only if the radius is constant. - -1. is returned if IC is outside the bounds of the table of contours or if E does not belong to the contour of index IC.
 
         Returns the radius of the fillet along the edge E of the contour of index IC in the internal data structure of this algorithm. Warning - Use this function only if the radius is constant. - -1 is returned if IC is outside the bounds of the table of contours or if E does not belong to the contour of index IC.
         """
     @overload
-    def Radius(self,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> float: ...
+    def Radius(self,IC : int) -> float: ...
     def RelativeAbscissa(self,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> float: 
         """
         Returns the relative curvilinear abscissa (i.e. between 0 and 1) of the vertex V on the contour of index IC in the internal data structure of this algorithm. Warning Returns -1. if: - IC is outside the bounds of the table of contours, or - V is not on the contour of index IC.
@@ -493,7 +493,7 @@ class BRepFilletAPI_MakeFillet(BRepFilletAPI_LocalOperation, OCP.BRepBuilderAPI.
         None
         """
     @overload
-    def SetRadius(self,L : OCP.Law.Law_Function,IC : int,IinC : int) -> None: 
+    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: 
         """
         Sets the parameters of the fillet along the contour of index IC generated using the Add function in the internal data structure of this algorithm, where Radius is the radius of the fillet.
 
@@ -508,15 +508,15 @@ class BRepFilletAPI_MakeFillet(BRepFilletAPI_LocalOperation, OCP.BRepBuilderAPI.
         None
         """
     @overload
-    def SetRadius(self,R1 : float,R2 : float,IC : int,IinC : int) -> None: ...
-    @overload
-    def SetRadius(self,Radius : float,IC : int,E : OCP.TopoDS.TopoDS_Edge) -> None: ...
-    @overload
-    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    def SetRadius(self,L : OCP.Law.Law_Function,IC : int,IinC : int) -> None: ...
     @overload
     def SetRadius(self,Radius : float,IC : int,IinC : int) -> None: ...
     @overload
     def SetRadius(self,UandR : OCP.TColgp.TColgp_Array1OfPnt2d,IC : int,IinC : int) -> None: ...
+    @overload
+    def SetRadius(self,Radius : float,IC : int,V : OCP.TopoDS.TopoDS_Vertex) -> None: ...
+    @overload
+    def SetRadius(self,R1 : float,R2 : float,IC : int,IinC : int) -> None: ...
     def Shape(self) -> OCP.TopoDS.TopoDS_Shape: 
         """
         Returns a shape built by the shape construction algorithm. Raises exception StdFail_NotDone if the shape was not built.
@@ -536,14 +536,14 @@ class BRepFilletAPI_MakeFillet2d(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OC
     Describes functions to build fillets and chamfers on the vertices of a planar face. Fillets and Chamfers on the Vertices of a Planar Face A MakeFillet2d object provides a framework for: - initializing the construction algorithm with a given face, - acquiring the data characterizing the fillets and chamfers, - building the fillets and chamfers, and constructing the resulting shape, and - consulting the result. Warning Only segments of straight lines and arcs of circles are treated. BSplines are not processed.
     """
     @overload
-    def AddChamfer(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,D1 : float,D2 : float) -> OCP.TopoDS.TopoDS_Edge: 
+    def AddChamfer(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,D : float,Ang : float) -> OCP.TopoDS.TopoDS_Edge: 
         """
         Adds a chamfer on the face modified by this algorithm between the two adjacent edges E1 and E2, where the extremities of the chamfer are on E1 and E2 at distances D1 and D2 respectively In cases where the edges are not rectilinear, distances are measured using the curvilinear abscissa of the edges and the angle is measured with respect to the tangent at the corresponding point. The angle Ang is given in radians. This function returns the chamfer and builds the resulting face.
 
         Adds a chamfer on the face modified by this algorithm between the two edges connected by the vertex V, where E is one of the two edges. The chamfer makes an angle Ang with E and one of its extremities is on E at distance D from V. In cases where the edges are not rectilinear, distances are measured using the curvilinear abscissa of the edges and the angle is measured with respect to the tangent at the corresponding point. The angle Ang is given in radians. This function returns the chamfer and builds the resulting face. Warning The status of the construction, as given by the Status function, can be one of the following: - ChFi2d_IsDone if the chamfer is built, - ChFi2d_ParametersError if D1, D2, D or Ang is less than or equal to zero, - ChFi2d_ConnexionError if: - the edge E, E1 or E2 does not belong to the initial face, or - the edges E1 and E2 are not adjacent, or - the vertex V is not one of the limit points of the edge E, - ChFi2d_ComputationError if the parameters of the chamfer are too large to build a chamfer between the two adjacent edges, - ChFi2d_NotAuthorized if: - the edge E1, E2 or one of the two edges connected to V is a fillet or chamfer, or - a curve other than a straight line or an arc of a circle is used as E, E1 or E2. Do not use the returned chamfer if the status of the construction is not ChFi2d_IsDone.
         """
     @overload
-    def AddChamfer(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,D : float,Ang : float) -> OCP.TopoDS.TopoDS_Edge: ...
+    def AddChamfer(self,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,D1 : float,D2 : float) -> OCP.TopoDS.TopoDS_Edge: ...
     def AddFillet(self,V : OCP.TopoDS.TopoDS_Vertex,Radius : float) -> OCP.TopoDS.TopoDS_Edge: 
         """
         Adds a fillet of radius Radius between the two edges adjacent to the vertex V on the face modified by this algorithm. The two edges do not need to be rectilinear. This function returns the fillet and builds the resulting face. Warning The status of the construction, as given by the Status function, can be one of the following: - ChFi2d_IsDone if the fillet is built, - ChFi2d_ConnexionError if V does not belong to the initial face, - ChFi2d_ComputationError if Radius is too large to build a fillet between the two adjacent edges, - ChFi2d_NotAuthorized - if one of the two edges connected to V is a fillet or chamfer, or - if a curve other than a straight line or an arc of a circle is used as E, E1 or E2. Do not use the returned fillet if the status of the construction is not ChFi2d_IsDone. Exceptions Standard_NegativeValue if Radius is less than or equal to zero.
@@ -616,14 +616,14 @@ class BRepFilletAPI_MakeFillet2d(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OC
         Returns the list of shapes modified from the shape <S>.
         """
     @overload
-    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E : OCP.TopoDS.TopoDS_Edge,D : float,Ang : float) -> OCP.TopoDS.TopoDS_Edge: 
+    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,D1 : float,D2 : float) -> OCP.TopoDS.TopoDS_Edge: 
         """
         Modifies the chamfer Chamfer on the face modified by this algorithm, where: E1 and E2 are the two adjacent edges on which Chamfer is already built; the extremities of the new chamfer are on E1 and E2 at distances D1 and D2 respectively.
 
         Modifies the chamfer Chamfer on the face modified by this algorithm, where: E is one of the two adjacent edges on which Chamfer is already built; the new chamfer makes an angle Ang with E and one of its extremities is on E at distance D from the vertex on which the chamfer is built. In cases where the edges are not rectilinear, the distances are measured using the curvilinear abscissa of the edges and the angle is measured with respect to the tangent at the corresponding point. The angle Ang is given in radians. This function returns the new chamfer and modifies the existing face. Warning The status of the construction, as given by the Status function, can be one of the following: - ChFi2d_IsDone if the chamfer is built, - ChFi2d_ParametersError if D1, D2, D or Ang is less than or equal to zero, - ChFi2d_ConnexionError if: - the edge E, E1, E2 or Chamfer does not belong to the existing face, or - the edges E1 and E2 are not adjacent, - ChFi2d_ComputationError if the parameters of the chamfer are too large to build a chamfer between the two adjacent edges, - ChFi2d_NotAuthorized if E1 or E2 is a fillet or chamfer. Do not use the returned chamfer if the status of the construction is not ChFi2d_IsDone.
         """
     @overload
-    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E1 : OCP.TopoDS.TopoDS_Edge,E2 : OCP.TopoDS.TopoDS_Edge,D1 : float,D2 : float) -> OCP.TopoDS.TopoDS_Edge: ...
+    def ModifyChamfer(self,Chamfer : OCP.TopoDS.TopoDS_Edge,E : OCP.TopoDS.TopoDS_Edge,D : float,Ang : float) -> OCP.TopoDS.TopoDS_Edge: ...
     def ModifyFillet(self,Fillet : OCP.TopoDS.TopoDS_Edge,Radius : float) -> OCP.TopoDS.TopoDS_Edge: 
         """
         Assigns the radius Radius to the fillet Fillet already built on the face modified by this algorithm. This function returns the new fillet and modifies the existing face. Warning The status of the construction, as given by the Status function, can be one of the following: - ChFi2d_IsDone if the new fillet is built, - ChFi2d_ConnexionError if Fillet does not belong to the existing face, - ChFi2d_ComputationError if Radius is too large to build a fillet between the two adjacent edges. Do not use the returned fillet if the status of the construction is not ChFi2d_IsDone. Exceptions Standard_NegativeValue if Radius is less than or equal to zero.
@@ -667,7 +667,7 @@ class BRepFilletAPI_MakeFillet2d(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OC
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass

@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TColgp
-import io
 import OCP.PLib
+import OCP.TColgp
+import OCP.GeomAbs
+import io
 import OCP.TColStd
 __all__  = [
 "AdvApprox_ApproxAFunction",
@@ -128,9 +128,9 @@ class AdvApprox_ApproxAFunction():
     @overload
     def Poles2d(self,Index : int,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
-    def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,First : float,Last : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDeg : int,MaxSeg : int,Func : AdvApprox_EvaluatorFunction) -> None: ...
-    @overload
     def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,First : float,Last : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDeg : int,MaxSeg : int,Func : AdvApprox_EvaluatorFunction,CutTool : AdvApprox_Cutting) -> None: ...
+    @overload
+    def __init__(self,Num1DSS : int,Num2DSS : int,Num3DSS : int,OneDTol : OCP.TColStd.TColStd_HArray1OfReal,TwoDTol : OCP.TColStd.TColStd_HArray1OfReal,ThreeDTol : OCP.TColStd.TColStd_HArray1OfReal,First : float,Last : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxDeg : int,MaxSeg : int,Func : AdvApprox_EvaluatorFunction) -> None: ...
     pass
 class AdvApprox_Cutting():
     """

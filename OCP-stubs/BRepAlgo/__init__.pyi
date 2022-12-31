@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.TopAbs
-import OCP.Standard
 import OCP.TopoDS
+import OCP.TopAbs
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.Standard
 __all__  = [
 "BRepAlgo",
 "BRepAlgo_AsDes",
@@ -31,6 +31,16 @@ class BRepAlgo():
     def ConcatenateWire_s(Wire : OCP.TopoDS.TopoDS_Wire,Option : OCP.GeomAbs.GeomAbs_Shape,AngularTolerance : float=0.0001) -> OCP.TopoDS.TopoDS_Wire: 
         """
         this method makes a wire whose edges are C1 from a Wire whose edges could be G1. It removes a vertex between G1 edges. Option can be G1 or C1.
+        """
+    @staticmethod
+    def ConvertFace_s(theFace : OCP.TopoDS.TopoDS_Face,theAngleTolerance : float) -> OCP.TopoDS.TopoDS_Face: 
+        """
+        Method of face conversion. The API corresponds to the method ConvertWire. This is a shortcut for calling ConvertWire() for each wire in theFace.
+        """
+    @staticmethod
+    def ConvertWire_s(theWire : OCP.TopoDS.TopoDS_Wire,theAngleTolerance : float,theFace : OCP.TopoDS.TopoDS_Face) -> OCP.TopoDS.TopoDS_Wire: 
+        """
+        Method of wire conversion, calls BRepAlgo_Approx internally.
         """
     @staticmethod
     def IsTopologicallyValid_s(S : OCP.TopoDS.TopoDS_Shape) -> bool: 
@@ -112,23 +122,23 @@ class BRepAlgo_AsDes(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Remove(self,theS : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Remove theS from me.
@@ -205,14 +215,14 @@ class BRepAlgo_Image():
     @overload
     def Add(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     @overload
-    def Bind(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopTools.TopTools_ListOfShape) -> None: 
+    def Bind(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Links <NewS> as image of <OldS>.
 
         Links <NewS> as image of <OldS>.
         """
     @overload
-    def Bind(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Bind(self,OldS : OCP.TopoDS.TopoDS_Shape,NewS : OCP.TopTools.TopTools_ListOfShape) -> None: ...
     def Clear(self) -> None: 
         """
         None

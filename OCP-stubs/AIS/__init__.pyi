@@ -4,32 +4,32 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Graphic3d
+import OCP.Geom
+import OCP.Aspect
+import OCP.TopLoc
+import OCP.TopoDS
+import OCP.Font
+import OCP.TCollection
+import OCP.SelectBasics
 import OCP.PrsMgr
-import OCP.GeomAbs
-import OCP.NCollection
-import OCP.Poly
+import OCP.Standard
+import OCP.TColStd
 import io
 import OCP.SelectMgr
-import OCP.Standard
-import OCP.V3d
-import OCP.TColStd
-import OCP.SelectBasics
-import OCP.TopoDS
 import OCP.Prs3d
-import OCP.WNT
+import OCP.V3d
 import OCP.Select3D
-import OCP.Font
-import OCP.Quantity
-import OCP.TColgp
-import OCP.TopLoc
-import OCP.Graphic3d
-import OCP.gp
-import OCP.Image
+import OCP.Poly
 import OCP.TopAbs
-import OCP.Aspect
-import OCP.Geom
-import OCP.TCollection
+import OCP.Image
+import OCP.NCollection
+import OCP.gp
+import OCP.TColgp
 import OCP.Bnd
+import OCP.GeomAbs
+import OCP.WNT
+import OCP.Quantity
 __all__  = [
 "AIS",
 "AIS_Animation",
@@ -42,13 +42,10 @@ __all__  = [
 "AIS_C0RegularityFilter",
 "AIS_CameraFrustum",
 "AIS_Circle",
-"AIS_ClearMode",
 "AIS_ColorScale",
 "AIS_ColoredDrawer",
 "AIS_Shape",
-"AIS_ConnectStatus",
 "AIS_ConnectedInteractive",
-"AIS_DataMapofIntegerListOfinteractive",
 "AIS_DisplayMode",
 "AIS_DragAction",
 "AIS_ExclusionFilter",
@@ -66,7 +63,6 @@ __all__  = [
 "AIS_ManipulatorObjectSequence",
 "AIS_ManipulatorOwner",
 "AIS_Manipulator_OptionsForAttach",
-"AIS_MapOfInteractive",
 "AIS_MediaPlayer",
 "AIS_MouseGesture",
 "AIS_MouseGestureMap",
@@ -86,7 +82,6 @@ __all__  = [
 "AIS_Selection",
 "AIS_SelectionModesConcurrency",
 "AIS_SelectionScheme",
-"AIS_SequenceOfInteractive",
 "AIS_ColoredShape",
 "AIS_TypeFilter",
 "AIS_StatusOfDetection",
@@ -114,15 +109,6 @@ __all__  = [
 "AIS_WalkRotation",
 "AIS_WalkTranslation",
 "AIS_XRTrackedDevice",
-"AIS_CM_All",
-"AIS_CM_Filters",
-"AIS_CM_Interactive",
-"AIS_CM_StandardModes",
-"AIS_CM_TemporaryShapePrs",
-"AIS_CS_Both",
-"AIS_CS_Connection",
-"AIS_CS_None",
-"AIS_CS_Transform",
 "AIS_DragAction_Abort",
 "AIS_DragAction_Start",
 "AIS_DragAction_Stop",
@@ -145,6 +131,7 @@ __all__  = [
 "AIS_MM_Scaling",
 "AIS_MM_Translation",
 "AIS_MM_TranslationPlane",
+"AIS_MouseGesture_Drag",
 "AIS_MouseGesture_NONE",
 "AIS_MouseGesture_Pan",
 "AIS_MouseGesture_RotateOrbit",
@@ -299,23 +286,23 @@ class AIS_Animation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsStopped(self) -> bool: 
         """
         Check if animation is to be performed in the animation timeline.
@@ -465,23 +452,23 @@ class AIS_AnimationCamera(AIS_Animation, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsStopped(self) -> bool: 
         """
         Check if animation is to be performed in the animation timeline.
@@ -639,23 +626,23 @@ class AIS_AnimationObject(AIS_Animation, OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsStopped(self) -> bool: 
         """
         Check if animation is to be performed in the animation timeline.
@@ -807,23 +794,23 @@ class AIS_AttributeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anObj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         Indicates that the selected Interactive Object passes the filter. The owner, anObj, can be either direct or user. A direct owner is the corresponding construction element, whereas a user is the compound shape of which the entity forms a part. If the Interactive Object returns Standard_True when detected by the Local Context selector through the mouse, the object is kept; if not, it is rejected.
@@ -851,9 +838,9 @@ class AIS_AttributeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,aCol : OCP.Quantity.Quantity_NameOfColor) -> None: ...
-    @overload
     def __init__(self,aWidth : float) -> None: ...
+    @overload
+    def __init__(self,aCol : OCP.Quantity.Quantity_NameOfColor) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1098,23 +1085,23 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -1156,14 +1143,14 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -1249,14 +1236,14 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -1278,14 +1265,14 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -1399,6 +1386,10 @@ class AIS_InteractiveObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -1451,23 +1442,23 @@ class AIS_BadEdgeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,EO : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         None
@@ -1522,23 +1513,23 @@ class AIS_C0RegularityFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standa
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,EO : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         None
@@ -1826,23 +1817,23 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -1884,14 +1875,14 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -1981,14 +1972,14 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -2010,14 +2001,14 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -2130,6 +2121,10 @@ class AIS_CameraFrustum(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
     def UpdateTransformations(self,aSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
+        """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
         """
     def Width(self) -> float: 
         """
@@ -2394,23 +2389,23 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -2456,14 +2451,14 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -2565,14 +2560,14 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Allows you to provide the parameter theU for the end point of an arc.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -2594,14 +2589,14 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -2715,6 +2710,10 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -2737,49 +2736,6 @@ class AIS_Circle(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject
         """
         None
         """
-    pass
-class AIS_ClearMode():
-    """
-    Declares which entities in an opened local context are to be cleared of mode settings. Temporary graphic presentations such as those for sub-shapes, for example, are only created for the selection process. By means of these enumerations, they can be cleared from local context.
-
-    Members:
-
-      AIS_CM_All
-
-      AIS_CM_Interactive
-
-      AIS_CM_Filters
-
-      AIS_CM_StandardModes
-
-      AIS_CM_TemporaryShapePrs
-    """
-    def __eq__(self,other : object) -> bool: ...
-    def __getstate__(self) -> int: ...
-    def __hash__(self) -> int: ...
-    def __index__(self) -> int: ...
-    def __init__(self,value : int) -> None: ...
-    def __int__(self) -> int: ...
-    def __ne__(self,other : object) -> bool: ...
-    def __repr__(self) -> str: ...
-    def __setstate__(self,state : int) -> None: ...
-    @property
-    def name(self) -> None:
-        """
-        :type: None
-        """
-    @property
-    def value(self) -> int:
-        """
-        :type: int
-        """
-    AIS_CM_All: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_All: 0>
-    AIS_CM_Filters: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_Filters: 2>
-    AIS_CM_Interactive: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_Interactive: 1>
-    AIS_CM_StandardModes: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_StandardModes: 3>
-    AIS_CM_TemporaryShapePrs: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_TemporaryShapePrs: 4>
-    __entries: dict # value = {'AIS_CM_All': (<AIS_ClearMode.AIS_CM_All: 0>, None), 'AIS_CM_Interactive': (<AIS_ClearMode.AIS_CM_Interactive: 1>, None), 'AIS_CM_Filters': (<AIS_ClearMode.AIS_CM_Filters: 2>, None), 'AIS_CM_StandardModes': (<AIS_ClearMode.AIS_CM_StandardModes: 3>, None), 'AIS_CM_TemporaryShapePrs': (<AIS_ClearMode.AIS_CM_TemporaryShapePrs: 4>, None)}
-    __members__: dict # value = {'AIS_CM_All': <AIS_ClearMode.AIS_CM_All: 0>, 'AIS_CM_Interactive': <AIS_ClearMode.AIS_CM_Interactive: 1>, 'AIS_CM_Filters': <AIS_ClearMode.AIS_CM_Filters: 2>, 'AIS_CM_StandardModes': <AIS_ClearMode.AIS_CM_StandardModes: 3>, 'AIS_CM_TemporaryShapePrs': <AIS_ClearMode.AIS_CM_TemporaryShapePrs: 4>}
     pass
 class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
@@ -3142,23 +3098,23 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLabelAtBorder(self) -> bool: 
         """
         Returns TRUE if the labels are placed at border of color intervals, TRUE by default. The automatically generated label will show value exactly on the current position: - value connecting two neighbor intervals (TRUE) - value in the middle of interval (FALSE)
@@ -3225,14 +3181,14 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -3370,14 +3326,14 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets the color scale labels. The length of the sequence should be equal to GetNumberOfIntervals() or to GetNumberOfIntervals() + 1 if IsLabelAtBorder() is true. If length of the sequence does not much the number of intervals, then these labels will be considered as "free" and will be located at the virtual intervals corresponding to the number of labels (with flag IsLabelAtBorder() having the same effect as in normal case).
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetLogarithmic(self,isLogarithmic : bool) -> None: 
         """
         Sets true if the color scale has logarithmic intervals.
@@ -3447,14 +3403,14 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets the color scale title position.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -3592,6 +3548,10 @@ class AIS_ColorScale(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -3623,7 +3583,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
     """
     def ArrowAspect(self) -> OCP.Prs3d.Prs3d_ArrowAspect: 
         """
-        Returns the attributes for display of arrows.
+        Returns own attributes for display of arrows, settings from linked Drawer or NULL if neither was set.
         """
     def BasicFillAreaAspect(self) -> OCP.Graphic3d.Graphic3d_AspectFillArea3d: 
         """
@@ -3643,7 +3603,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def DatumAspect(self) -> OCP.Prs3d.Prs3d_DatumAspect: 
         """
-        Returns settings for the appearance of datums. These settings can be edited. The default values for the three axes are: Color: Quantity_NOC_PEACHPUFF Type of line: Aspect_TOL_SOLID Width: 1.0
+        Returns own settings for the appearance of datums, settings from linked Drawer or NULL if neither was set.
         """
     def DecrementRefCounter(self) -> int: 
         """
@@ -3679,7 +3639,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def DimensionAspect(self) -> OCP.Prs3d.Prs3d_DimensionAspect: 
         """
-        Returns settings for the appearance of dimensions.
+        Returns own settings for the appearance of dimensions, settings from linked Drawer or NULL if neither was set.
         """
     def DisableDrawHiddenLine(self) -> None: 
         """
@@ -3711,7 +3671,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def FaceBoundaryAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns line aspect of face boundaries.
+        Returns own line aspect of face boundaries, settings from linked Drawer or NULL if neither was set.
         """
     def FaceBoundaryDraw(self) -> bool: 
         """
@@ -3723,7 +3683,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def FreeBoundaryAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns the values for presentation of free boundaries, in other words, boundaries which are not shared. The LineAspect for the free boundaries can be edited. The default values are: Color: Quantity_NOC_GREEN Type of line: Aspect_TOL_SOLID Width: 1.0 These attributes are used by the algorithm Prs3d_WFShape
+        Returns own settings for presentation of free boundaries, settings from linked Drawer or NULL if neither was set. In other words, this settings affect boundaries which are not shared. These attributes are used by the algorithm Prs3d_WFShape
         """
     def FreeBoundaryDraw(self) -> bool: 
         """
@@ -3923,7 +3883,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def HiddenLineAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns settings for hidden line aspects. These settings can be edited. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_DASH Width: 1.0
+        Returns own settings for hidden line aspects, settings from linked Drawer or NULL if neither was set.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -3938,23 +3898,23 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsoOnPlane(self) -> bool: 
         """
         Returns True if the drawing of isos on planes is enabled.
@@ -3969,20 +3929,20 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def LineAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns settings for line aspects. These settings can be edited. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_SOLID Width: 1.0 These attributes are used by the following algorithms: Prs3d_Curve Prs3d_Line Prs3d_HLRShape
+        Returns own settings for line aspects, settings from linked Drawer or NULL if neither was set. These attributes are used by the following algorithms: Prs3d_Curve Prs3d_Line Prs3d_HLRShape
         """
     @overload
-    def Link(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def Link(self) -> OCP.Prs3d.Prs3d_Drawer: 
         """
         Sets theDrawer as a link to which the current object references.
 
         Returns the drawer to which the current object references.
         """
     @overload
-    def Link(self) -> OCP.Prs3d.Prs3d_Drawer: ...
+    def Link(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: ...
     def MaximalChordialDeviation(self) -> float: 
         """
-        Returns the maximal chordal deviation. The default value is 0.1. Drawings of curves or patches are made with respect to an absolute maximal chordal deviation.
+        Returns the maximal chordal deviation. The default value is 0.0001. Drawings of curves or patches are made with respect to an absolute maximal chordal deviation.
         """
     def MaximalParameterValue(self) -> float: 
         """
@@ -3994,11 +3954,11 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def PlaneAspect(self) -> OCP.Prs3d.Prs3d_PlaneAspect: 
         """
-        Returns settings for the appearance of planes.
+        Returns own settings for the appearance of planes, settings from linked Drawer or NULL if neither was set.
         """
     def PointAspect(self) -> OCP.Prs3d.Prs3d_PointAspect: 
         """
-        Returns the point aspect setting. The default values are Color: Quantity_NOC_YELLOW Type of marker: Aspect_TOM_PLUS Scale: 1.0 These attributes are used by the algorithms Prs3d_Point.
+        Returns own point aspect setting, settings from linked Drawer or NULL if neither was set. These attributes are used by the algorithms Prs3d_Point.
         """
     def PreviousDeviationAngle(self) -> float: 
         """
@@ -4014,11 +3974,11 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def SectionAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        The LineAspect for the wire can be edited. The default values are: Color: Quantity_NOC_ORANGE Type of line: Aspect_TOL_SOLID Width: 1.0 These attributes are used by the algorithm Prs3d_WFShape.
+        Returns own LineAspect for section wire, settings from linked Drawer or NULL if neither was set. These attributes are used by the algorithm Prs3d_WFShape.
         """
     def SeenLineAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns settings for seen line aspects. These settings can be edited. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_SOLID Width: 1.0
+        Returns own settings for seen line aspects, settings of linked Drawer or NULL if neither was set.
         """
     def SetArrowAspect(self,theAspect : OCP.Prs3d.Prs3d_ArrowAspect) -> None: 
         """
@@ -4041,14 +4001,14 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         Sets the modality theAspect for the display of datums.
         """
     @overload
-    def SetDeviationAngle(self,theAngle : float) -> None: 
+    def SetDeviationAngle(self) -> None: 
         """
         Sets the deviation angle theAngle. Also sets the hasOwnDeviationAngle flag to Standard_True, and myPreviousDeviationAngle.
 
         Resets HasOwnDeviationAngle() flag, e.g. undoes previous SetDeviationAngle().
         """
     @overload
-    def SetDeviationAngle(self) -> None: ...
+    def SetDeviationAngle(self,theAngle : float) -> None: ...
     @overload
     def SetDeviationCoefficient(self) -> None: 
         """
@@ -4107,12 +4067,12 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         Enables or disables drawing of free boundaries for shading presentations. The method sets drawing flag owned by the drawer that will be used during visualization instead of the one set in link. theIsEnabled is a boolean flag indicating whether the free boundaries should be drawn or not.
         """
     @overload
-    def SetHLRAngle(self) -> None: 
+    def SetHLRAngle(self,theAngle : float) -> None: 
         """
         None
         """
     @overload
-    def SetHLRAngle(self,theAngle : float) -> None: ...
+    def SetHLRAngle(self) -> None: ...
     def SetHidden(self,theToHide : bool) -> None: 
         """
         None
@@ -4163,7 +4123,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def SetOwnLineAspects(self,theDefaults : OCP.Prs3d.Prs3d_Drawer=None) -> bool: 
         """
-        Sets own line aspects. Returns FALSE if own line aspect are already set.
+        Sets own line aspects, which are single U and single V gray75 solid isolines (::UIsoAspect(), ::VIsoAspect()), red wire (::WireAspect()), yellow line (::LineAspect()), yellow seen line (::SeenLineAspect()), dashed yellow hidden line (::HiddenLineAspect()), green free boundary (::FreeBoundaryAspect()), yellow unfree boundary (::UnFreeBoundaryAspect()). Returns FALSE if own line aspect are already set.
         """
     def SetOwnMaterial(self) -> None: 
         """
@@ -4257,25 +4217,29 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
         Sets presentation Zlayer.
         """
+    def SetupOwnDefaults(self) -> None: 
+        """
+        Setup all own aspects with default values.
+        """
     def SetupOwnFaceBoundaryAspect(self,theDefaults : OCP.Prs3d.Prs3d_Drawer=None) -> bool: 
         """
-        Sets own face boundary aspect. Returns FALSE if the drawer already has its own attribute for face boundary aspect.
+        Sets own face boundary aspect, which is a black solid line by default. Returns FALSE if the drawer already has its own attribute for face boundary aspect.
         """
     def SetupOwnPointAspect(self,theDefaults : OCP.Prs3d.Prs3d_Drawer=None) -> bool: 
         """
-        Sets own point aspect. Returns FALSE if the drawer already has its own attribute for point aspect.
+        Sets own point aspect, which is a yellow Aspect_TOM_PLUS marker by default. Returns FALSE if the drawer already has its own attribute for point aspect.
         """
     def SetupOwnShadingAspect(self,theDefaults : OCP.Prs3d.Prs3d_Drawer=None) -> bool: 
         """
-        Sets own shading aspect. Returns FALSE if the drawer already has its own attribute for shading aspect.
+        Sets own shading aspect, which is Graphic3d_NameOfMaterial_Brass material by default. Returns FALSE if the drawer already has its own attribute for shading aspect.
         """
     def ShadingAspect(self) -> OCP.Prs3d.Prs3d_ShadingAspect: 
         """
-        Returns settings for shading aspects. These settings can be edited. The default values are: - Color: Quantity_NOC_YELLOW - Material: Graphic3d_NameOfMaterial_Brass Shading aspect is obtained through decomposition of 3d faces into triangles, each side of each triangle being a chord of the corresponding curved edge in the face. Reflection of light in each projector perspective is then calculated for each of the resultant triangular planes.
+        Returns own settings for shading aspects, settings from linked Drawer or NULL if neither was set.
         """
     def TextAspect(self) -> OCP.Prs3d.Prs3d_TextAspect: 
         """
-        Returns settings for text aspect. These settings can be edited. The default value is: - Color: Quantity_NOC_YELLOW
+        Returns own settings for text aspect, settings from linked Drawer or NULL if neither was set.
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -4295,11 +4259,11 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def UIsoAspect(self) -> OCP.Prs3d.Prs3d_IsoAspect: 
         """
-        Defines the attributes which are used when drawing an U isoparametric curve of a face. Defines the number of U isoparametric curves to be drawn for a single face. The LineAspect for U isoparametric lines can be edited (methods SetColor, SetTypeOfLine, SetWidth, SetNumber) The default values are: COLOR : Quantity_NOC_GRAY75 TYPE OF LINE: Aspect_TOL_SOLID WIDTH : 0.5
+        Defines own attributes for drawing an U isoparametric curve of a face, settings from linked Drawer or NULL if neither was set.
         """
     def UnFreeBoundaryAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns settings for shared boundary line aspects. The LineAspect for the unfree boundaries can be edited. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_SOLID Width: 1. These attributes are used by the algorithm Prs3d_WFShape
+        Returns own settings for shared boundary line aspects, settings from linked Drawer or NULL if neither was set. These attributes are used by the algorithm Prs3d_WFShape
         """
     def UnFreeBoundaryDraw(self) -> bool: 
         """
@@ -4403,11 +4367,11 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def VIsoAspect(self) -> OCP.Prs3d.Prs3d_IsoAspect: 
         """
-        Defines the attributes which are used when drawing an V isoparametric curve of a face. Defines the number of V isoparametric curves to be drawn for a single face. The LineAspect for V isoparametric lines can be edited (methods SetColor, SetTypeOfLine, SetWidth, SetNumber) The default values are: COLOR : Quantity_NOC_GRAY82 TYPE OF LINE: Aspect_TOL_SOLID WIDTH : 0.5
+        Defines own attributes for drawing an V isoparametric curve of a face, settings from linked Drawer or NULL if neither was set.
         """
     def VectorAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns settings for the appearance of vectors. These settings can be edited. The default values are: Color: Quantity_NOC_SKYBLUE Type of line: Aspect_TOL_SOLID Width: 1.0
+        Returns own settings for the appearance of vectors, settings from linked Drawer or NULL if neither was set.
         """
     def VertexDrawMode(self) -> OCP.Prs3d.Prs3d_VertexDrawMode: 
         """
@@ -4415,7 +4379,7 @@ class AIS_ColoredDrawer(OCP.Prs3d.Prs3d_Drawer, OCP.Graphic3d.Graphic3d_Presenta
         """
     def WireAspect(self) -> OCP.Prs3d.Prs3d_LineAspect: 
         """
-        Returns wire aspect settings. The LineAspect for the free boundaries can be edited. The default values are: Color: Quantity_NOC_GREEN Type of line: Aspect_TOL_SOLID Width: 1.0 These attributes are used by the algorithm Prs3d_WFShape.
+        Returns own wire aspect settings, settings from linked Drawer or NULL if neither was set. These attributes are used by the algorithm Prs3d_WFShape.
         """
     def WireDraw(self) -> bool: 
         """
@@ -4670,23 +4634,23 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -4736,14 +4700,14 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -4847,14 +4811,14 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Allows you to provide settings for the material aName in the reconstructed compound shape.
@@ -4864,23 +4828,23 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Sets if the object has mutable nature (content or location will be changed regularly). This method should be called before object displaying to take effect.
         """
     @overload
-    def SetOwnDeviationAngle(self) -> bool: 
+    def SetOwnDeviationAngle(self,anAngle : float) -> None: 
         """
         Sets a local value for deviation angle for this specific shape.
 
         sets myOwnDeviationAngle field in Prs3d_Drawer & recomputes presentation
         """
     @overload
-    def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
+    def SetOwnDeviationAngle(self) -> bool: ...
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
+    def SetOwnDeviationCoefficient(self) -> bool: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: ...
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
     def SetOwner(self,theApplicativeEntity : OCP.Standard.Standard_Transient) -> None: 
         """
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
@@ -4910,14 +4874,14 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -5059,6 +5023,10 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         """
         gives back the angle initial value put by the User.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -5083,46 +5051,6 @@ class AIS_Shape(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         """
         None
         """
-    pass
-class AIS_ConnectStatus():
-    """
-    Gives the status of connection of an Interactive Object. This will be one of the following: - No connection - Connection - Transformation - Both connection and transformation This enumeration is used in AIS_ConnectedInteractive. Transform indicates that the Interactive Object reference geometry has changed location relative to the reference geometry.
-
-    Members:
-
-      AIS_CS_None
-
-      AIS_CS_Connection
-
-      AIS_CS_Transform
-
-      AIS_CS_Both
-    """
-    def __eq__(self,other : object) -> bool: ...
-    def __getstate__(self) -> int: ...
-    def __hash__(self) -> int: ...
-    def __index__(self) -> int: ...
-    def __init__(self,value : int) -> None: ...
-    def __int__(self) -> int: ...
-    def __ne__(self,other : object) -> bool: ...
-    def __repr__(self) -> str: ...
-    def __setstate__(self,state : int) -> None: ...
-    @property
-    def name(self) -> None:
-        """
-        :type: None
-        """
-    @property
-    def value(self) -> int:
-        """
-        :type: int
-        """
-    AIS_CS_Both: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_Both: 3>
-    AIS_CS_Connection: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_Connection: 1>
-    AIS_CS_None: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_None: 0>
-    AIS_CS_Transform: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_Transform: 2>
-    __entries: dict # value = {'AIS_CS_None': (<AIS_ConnectStatus.AIS_CS_None: 0>, None), 'AIS_CS_Connection': (<AIS_ConnectStatus.AIS_CS_Connection: 1>, None), 'AIS_CS_Transform': (<AIS_ConnectStatus.AIS_CS_Transform: 2>, None), 'AIS_CS_Both': (<AIS_ConnectStatus.AIS_CS_Both: 3>, None)}
-    __members__: dict # value = {'AIS_CS_None': <AIS_ConnectStatus.AIS_CS_None: 0>, 'AIS_CS_Connection': <AIS_ConnectStatus.AIS_CS_Connection: 1>, 'AIS_CS_Transform': <AIS_ConnectStatus.AIS_CS_Transform: 2>, 'AIS_CS_Both': <AIS_ConnectStatus.AIS_CS_Both: 3>}
     pass
 class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
@@ -5210,9 +5138,9 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Establishes the connection between the Connected Interactive Object, anotherIobj, and its reference. Locates instance in aLocation.
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
-    @overload
     def Connect(self,theAnotherObj : AIS_InteractiveObject) -> None: ...
+    @overload
+    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def ConnectedTo(self) -> AIS_InteractiveObject: 
         """
         Returns the connection with the reference Interactive Object.
@@ -5382,23 +5310,23 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -5440,14 +5368,14 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -5533,14 +5461,14 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -5562,14 +5490,14 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -5683,6 +5611,10 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -5702,100 +5634,6 @@ class AIS_ConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Se
         """
         None
         """
-    pass
-class AIS_DataMapofIntegerListOfinteractive(OCP.NCollection.NCollection_BaseMap):
-    """
-    Purpose: The DataMap is a Map to store keys with associated Items. See Map from NCollection for a discussion about the number of buckets.
-    """
-    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
-        """
-        Returns attached allocator
-        """
-    def Assign(self,theOther : AIS_DataMapofIntegerListOfinteractive) -> AIS_DataMapofIntegerListOfinteractive: 
-        """
-        Assignment. This method does not change the internal allocator.
-        """
-    def Bind(self,theKey : int,theItem : AIS_ListOfInteractive) -> bool: 
-        """
-        Bind binds Item to Key in map.
-        """
-    def Bound(self,theKey : int,theItem : AIS_ListOfInteractive) -> AIS_ListOfInteractive: 
-        """
-        Bound binds Item to Key in map. Returns modifiable Item
-        """
-    def ChangeFind(self,theKey : int) -> AIS_ListOfInteractive: 
-        """
-        ChangeFind returns mofifiable Item by Key. Raises if Key was not bound
-        """
-    def ChangeSeek(self,theKey : int) -> AIS_ListOfInteractive: 
-        """
-        ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
-        """
-    @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
-        """
-        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
-
-        Clear data and reset allocator
-        """
-    @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    def Exchange(self,theOther : AIS_DataMapofIntegerListOfinteractive) -> None: 
-        """
-        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
-        """
-    def Extent(self) -> int: 
-        """
-        Extent
-        """
-    @overload
-    def Find(self,theKey : int,theValue : AIS_ListOfInteractive) -> bool: 
-        """
-        Find returns the Item for Key. Raises if Key was not bound
-
-        Find Item for key with copying.
-        """
-    @overload
-    def Find(self,theKey : int) -> AIS_ListOfInteractive: ...
-    def IsBound(self,theKey : int) -> bool: 
-        """
-        IsBound
-        """
-    def IsEmpty(self) -> bool: 
-        """
-        IsEmpty
-        """
-    def NbBuckets(self) -> int: 
-        """
-        NbBuckets
-        """
-    def ReSize(self,N : int) -> None: 
-        """
-        ReSize
-        """
-    def Seek(self,theKey : int) -> AIS_ListOfInteractive: 
-        """
-        Seek returns pointer to Item by Key. Returns NULL is Key was not bound.
-        """
-    def Size(self) -> int: 
-        """
-        Size
-        """
-    def Statistics(self,S : io.BytesIO) -> None: 
-        """
-        Statistics
-        """
-    def UnBind(self,theKey : int) -> bool: 
-        """
-        UnBind removes Item Key pair from map
-        """
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
-    def __init__(self,theOther : AIS_DataMapofIntegerListOfinteractive) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> Iterator: ...
     pass
 class AIS_DisplayMode():
     """
@@ -5917,23 +5755,23 @@ class AIS_ExclusionFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anObj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         None
@@ -5970,9 +5808,9 @@ class AIS_ExclusionFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_
     @overload
     def __init__(self,ExclusionFlagOn : bool=True) -> None: ...
     @overload
-    def __init__(self,TypeToExclude : AIS_KindOfInteractive,SignatureInType : int,ExclusionFlagOn : bool=True) -> None: ...
-    @overload
     def __init__(self,TypeToExclude : AIS_KindOfInteractive,ExclusionFlagOn : bool=True) -> None: ...
+    @overload
+    def __init__(self,TypeToExclude : AIS_KindOfInteractive,SignatureInType : int,ExclusionFlagOn : bool=True) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -6029,23 +5867,23 @@ class AIS_GlobalStatus(OCP.Standard.Standard_Transient):
         Returns TRUE if object is highlighted
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSModeIn(self,theMode : int) -> bool: 
         """
         Return TRUE if selection mode was registered.
@@ -6100,7 +5938,7 @@ class AIS_GraphicTool():
     """
     @staticmethod
     @overload
-    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,aColor : OCP.Quantity.Quantity_Color) -> None: 
+    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer) -> OCP.Quantity.Quantity_NameOfColor: 
         """
         None
 
@@ -6108,7 +5946,7 @@ class AIS_GraphicTool():
         """
     @staticmethod
     @overload
-    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer) -> OCP.Quantity.Quantity_NameOfColor: ...
+    def GetInteriorColor_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,aColor : OCP.Quantity.Quantity_Color) -> None: ...
     @staticmethod
     def GetLineAtt_s(aDrawer : OCP.Prs3d.Prs3d_Drawer,TheTypeOfAttributes : AIS_TypeOfAttribute,aCol : OCP.Quantity.Quantity_NameOfColor,aTyp : OCP.Aspect.Aspect_TypeOfLine) -> Tuple[float]: 
         """
@@ -6147,14 +5985,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
     The Interactive Context allows you to manage graphic behavior and selection of Interactive Objects in one or more viewers. Class methods make this highly transparent. It is essential to remember that an Interactive Object which is already known by the Interactive Context must be modified using Context methods. You can only directly call the methods available for an Interactive Object if it has not been loaded into an Interactive Context.The Interactive Context allows you to manage graphic behavior and selection of Interactive Objects in one or more viewers. Class methods make this highly transparent. It is essential to remember that an Interactive Object which is already known by the Interactive Context must be modified using Context methods. You can only directly call the methods available for an Interactive Object if it has not been loaded into an Interactive Context.
     """
     @overload
-    def Activate(self,theObj : AIS_InteractiveObject,theMode : int=0,theIsForce : bool=False) -> None: 
+    def Activate(self,theMode : int,theIsForce : bool=False) -> None: 
         """
         Activates the selection mode aMode whose index is given, for the given interactive entity anIobj.
 
         Activates the given selection mode for the all displayed objects.
         """
     @overload
-    def Activate(self,theMode : int,theIsForce : bool=False) -> None: ...
+    def Activate(self,theObj : AIS_InteractiveObject,theMode : int=0,theIsForce : bool=False) -> None: ...
     def ActivatedModes(self,anIobj : AIS_InteractiveObject,theList : OCP.TColStd.TColStd_ListOfInteger) -> None: 
         """
         Returns the list of activated selection modes.
@@ -6168,14 +6006,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Allows to add or remove the object given to the list of current and highlight/unhighlight it correspondingly. Is valid for global context only; for local context use method AddOrRemoveSelected. Since this method makes sense only for neutral point selection of a whole object, if 0 selection of the object is empty this method simply does nothing.
         """
     @overload
-    def AddOrRemoveSelected(self,theObject : AIS_InteractiveObject,theToUpdateViewer : bool) -> None: 
+    def AddOrRemoveSelected(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theToUpdateViewer : bool) -> None: 
         """
         Allows to highlight or unhighlight the owner given depending on its selection status
 
         Allows to highlight or unhighlight the owner given depending on its selection status
         """
     @overload
-    def AddOrRemoveSelected(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theToUpdateViewer : bool) -> None: ...
+    def AddOrRemoveSelected(self,theObject : AIS_InteractiveObject,theToUpdateViewer : bool) -> None: ...
     @overload
     def AddSelect(self,theObject : AIS_InteractiveObject) -> AIS_StatusOfPick: 
         """
@@ -6197,10 +6035,15 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         """
         initializes the list of presentations to be displayed returns False if no local context is opened.
         """
+    @overload
     def BoundingBoxOfSelection(self) -> OCP.Bnd.Bnd_Box: 
         """
         Returns bounding box of selected objects.
+
+        None
         """
+    @overload
+    def BoundingBoxOfSelection(self,theView : OCP.V3d.V3d_View) -> OCP.Bnd.Bnd_Box: ...
     def ClearActiveSensitive(self,aView : OCP.V3d.V3d_View) -> None: 
         """
         Clear visualization of sensitives.
@@ -6245,9 +6088,9 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Deactivates all the activated selection mode at all displayed objects.
         """
     @overload
-    def Deactivate(self,theObj : AIS_InteractiveObject,theMode : int) -> None: ...
-    @overload
     def Deactivate(self) -> None: ...
+    @overload
+    def Deactivate(self,theObj : AIS_InteractiveObject,theMode : int) -> None: ...
     @overload
     def Deactivate(self,theObj : AIS_InteractiveObject) -> None: ...
     def DecrementRefCounter(self) -> int: 
@@ -6303,25 +6146,25 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Disconnects theObjToDisconnect from theAssembly and removes dependent selection structures
         """
     @overload
-    def Display(self,theIObj : AIS_InteractiveObject,theDispMode : int,theSelectionMode : int,theToUpdateViewer : bool,theDispStatus : OCP.PrsMgr.PrsMgr_DisplayStatus=PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None) -> None: 
+    def Display(self,theIObj : AIS_InteractiveObject,theToUpdateViewer : bool) -> None: 
         """
         Displays the object in this Context using default Display Mode. This will be the object's default display mode, if there is one. Otherwise, it will be the context mode. The Interactive Object's default selection mode is activated if GetAutoActivateSelection() is TRUE. In general, this is 0.
 
         Sets status, display mode and selection mode for specified Object If theSelectionMode equals -1, theIObj will not be activated: it will be displayed but will not be selectable.
         """
     @overload
-    def Display(self,theIObj : AIS_InteractiveObject,theToUpdateViewer : bool) -> None: ...
-    @overload
     def Display(self,theIObj : AIS_InteractiveObject,theDispMode : int,theSelectionMode : int,theToUpdateViewer : bool,theToAllowDecomposition : bool,theDispStatus : OCP.PrsMgr.PrsMgr_DisplayStatus=PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None) -> None: ...
     @overload
-    def DisplayActiveSensitive(self,aView : OCP.V3d.V3d_View) -> None: 
+    def Display(self,theIObj : AIS_InteractiveObject,theDispMode : int,theSelectionMode : int,theToUpdateViewer : bool,theDispStatus : OCP.PrsMgr.PrsMgr_DisplayStatus=PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None) -> None: ...
+    @overload
+    def DisplayActiveSensitive(self,anObject : AIS_InteractiveObject,aView : OCP.V3d.V3d_View) -> None: 
         """
         Visualization of sensitives - for debugging purposes!
 
         Visualization of sensitives - for debugging purposes!
         """
     @overload
-    def DisplayActiveSensitive(self,anObject : AIS_InteractiveObject,aView : OCP.V3d.V3d_View) -> None: ...
+    def DisplayActiveSensitive(self,aView : OCP.V3d.V3d_View) -> None: ...
     def DisplayAll(self,theToUpdateViewer : bool) -> None: 
         """
         Displays all hidden objects.
@@ -6330,7 +6173,7 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         """
         Returns the Display Mode setting to be used by default.
         """
-    def DisplayPriority(self,theIObj : AIS_InteractiveObject) -> int: 
+    def DisplayPriority(self,theIObj : AIS_InteractiveObject) -> OCP.Graphic3d.Graphic3d_DisplayPriority: 
         """
         Returns the display priority of the Object.
         """
@@ -6368,14 +6211,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def EndImmediateDraw(self,theView : OCP.V3d.V3d_View) -> bool: 
+    def EndImmediateDraw(self) -> bool: 
         """
         returns True if the immediate display has been done.
 
         Uses the First Active View of Main Viewer! returns True if the immediate display has been done.
         """
     @overload
-    def EndImmediateDraw(self) -> bool: ...
+    def EndImmediateDraw(self,theView : OCP.V3d.V3d_View) -> bool: ...
     def EntityOwners(self,theOwners : Any,theIObj : AIS_InteractiveObject,theMode : int=-1) -> Any: 
         """
         Returns a collection containing all entity owners created for the interactive object in specified selection mode (in all active modes if the Mode == -1)
@@ -6479,7 +6322,7 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Initializes hidden line aspect in the default drawing tool, or Drawer. The default values are: Color: Quantity_NOC_YELLOW Type of line: Aspect_TOL_DASH Width: 1.
         """
     @overload
-    def HighlightStyle(self,theObj : AIS_InteractiveObject,theStyle : OCP.Prs3d.Prs3d_Drawer) -> bool: 
+    def HighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight) -> OCP.Prs3d.Prs3d_Drawer: 
         """
         Returns default highlight style settings (could be overridden by PrsMgr_PresentableObject).
 
@@ -6490,11 +6333,11 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns current dynamic highlight style settings corresponding to Prs3d_TypeOfHighlight_Dynamic. This is just a short-cut to HighlightStyle(Prs3d_TypeOfHighlight_Dynamic).
         """
     @overload
-    def HighlightStyle(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theStyle : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
-    @overload
     def HighlightStyle(self) -> OCP.Prs3d.Prs3d_Drawer: ...
     @overload
-    def HighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight) -> OCP.Prs3d.Prs3d_Drawer: ...
+    def HighlightStyle(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner,theStyle : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
+    @overload
+    def HighlightStyle(self,theObj : AIS_InteractiveObject,theStyle : OCP.Prs3d.Prs3d_Drawer) -> bool: ...
     def Hilight(self,theObj : AIS_InteractiveObject,theIsToUpdateViewer : bool) -> None: 
         """
         Updates the display in the viewer to take dynamic detection into account. On dynamic detection by the mouse cursor, sensitive primitives are highlighted. The highlight color of entities detected by mouse movement is white by default.
@@ -6544,14 +6387,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns true if there is a non-null interactive object in Neutral Point. Objects selected when there is no open local context are called current objects; those selected in open local context, selected objects.
         """
     @overload
-    def IsDisplayed(self,anIobj : AIS_InteractiveObject) -> bool: 
+    def IsDisplayed(self,aniobj : AIS_InteractiveObject,aMode : int) -> bool: 
         """
         Returns true if Object is displayed in the interactive context.
 
         None
         """
     @overload
-    def IsDisplayed(self,aniobj : AIS_InteractiveObject,aMode : int) -> bool: ...
+    def IsDisplayed(self,anIobj : AIS_InteractiveObject) -> bool: ...
     @overload
     def IsHilighted(self,theOwner : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
@@ -6566,23 +6409,23 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def IsSelected(self,theObj : AIS_InteractiveObject) -> bool: 
         """
@@ -6597,16 +6440,16 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns the number of U and V isoparameters displayed.
         """
     @overload
-    def IsoOnPlane(self) -> bool: 
+    def IsoOnPlane(self,theToSwitchOn : bool) -> None: 
         """
         Returns True if drawing isoparameters on planes is enabled.
 
         Returns True if drawing isoparameters on planes is enabled. if <forUIsos> = False,
         """
     @overload
-    def IsoOnPlane(self,theToSwitchOn : bool) -> None: ...
+    def IsoOnPlane(self) -> bool: ...
     @overload
-    def IsoOnTriangulation(self,theToSwitchOn : bool) -> None: 
+    def IsoOnTriangulation(self,theIsEnabled : bool,theObject : AIS_InteractiveObject) -> None: 
         """
         Enables or disables on-triangulation build for isolines for a particular object. In case if on-triangulation builder is disabled, default on-plane builder will compute isolines for the object given.
 
@@ -6615,22 +6458,22 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns true if drawing isolines on triangulation algorithm is enabled.
         """
     @overload
-    def IsoOnTriangulation(self,theIsEnabled : bool,theObject : AIS_InteractiveObject) -> None: ...
-    @overload
     def IsoOnTriangulation(self) -> bool: ...
+    @overload
+    def IsoOnTriangulation(self,theToSwitchOn : bool) -> None: ...
     def LastActiveView(self) -> OCP.V3d.V3d_View: 
         """
         Returns last active View (argument of MoveTo()/Select() methods).
         """
     @overload
-    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int=-1) -> None: 
+    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int,arg3 : bool) -> None: 
         """
         Allows you to load the Interactive Object with a given selection mode, and/or with the desired decomposition option, whether the object is visualized or not. The loaded objects will be selectable but displayable in highlighting only when detected by the Selector.
 
         None
         """
     @overload
-    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int,arg3 : bool) -> None: ...
+    def Load(self,theObj : AIS_InteractiveObject,theSelectionMode : int=-1) -> None: ...
     def Location(self,theObject : AIS_InteractiveObject) -> OCP.TopLoc.TopLoc_Location: 
         """
         Returns the location of the Object.
@@ -6656,14 +6499,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Returns true if there is another object found by the scan of the list of selected objects.
         """
     @overload
-    def MoveTo(self,theAxis : OCP.gp.gp_Ax1,theView : OCP.V3d.V3d_View,theToRedrawOnUpdate : bool) -> AIS_StatusOfDetection: 
+    def MoveTo(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View,theToRedrawOnUpdate : bool) -> AIS_StatusOfDetection: 
         """
         Relays mouse position in pixels theXPix and theYPix to the interactive context selectors. This is done by the view theView passing this position to the main viewer and updating it. If theToRedrawOnUpdate is set to false, callee should call RedrawImmediate() to highlight detected object.
 
         Relays axis theAxis to the interactive context selectors. This is done by the view theView passing this axis to the main viewer and updating it. If theToRedrawOnUpdate is set to false, callee should call RedrawImmediate() to highlight detected object.
         """
     @overload
-    def MoveTo(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View,theToRedrawOnUpdate : bool) -> AIS_StatusOfDetection: ...
+    def MoveTo(self,theAxis : OCP.gp.gp_Ax1,theView : OCP.V3d.V3d_View,theToRedrawOnUpdate : bool) -> AIS_StatusOfDetection: ...
     def NbCurrents(self) -> int: 
         """
         None
@@ -6689,14 +6532,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Create iterator through all objects registered in context.
         """
     @overload
-    def ObjectsByDisplayStatus(self,theStatus : OCP.PrsMgr.PrsMgr_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: 
+    def ObjectsByDisplayStatus(self,WhichKind : AIS_KindOfInteractive,WhichSignature : int,theStatus : OCP.PrsMgr.PrsMgr_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: 
         """
         Returns the list theListOfIO of objects with indicated display status particular Type WhichKind and Signature WhichSignature. By Default, WhichSignature equals 1. This means that there is a check on type only.
 
         gives the list of objects with indicated display status Type and signature by Default, <WhichSignature> = -1 means control only on <WhichKind>.
         """
     @overload
-    def ObjectsByDisplayStatus(self,WhichKind : AIS_KindOfInteractive,WhichSignature : int,theStatus : OCP.PrsMgr.PrsMgr_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: ...
+    def ObjectsByDisplayStatus(self,theStatus : OCP.PrsMgr.PrsMgr_DisplayStatus,theListOfIO : AIS_ListOfInteractive) -> None: ...
     def ObjectsForView(self,theListOfIO : AIS_ListOfInteractive,theView : OCP.V3d.V3d_View,theIsVisibleInView : bool,theStatus : OCP.PrsMgr.PrsMgr_DisplayStatus=PrsMgr_DisplayStatus.PrsMgr_DisplayStatus_None) -> None: 
         """
         Query objects visible or hidden in specified view due to affinity mask.
@@ -6767,7 +6610,7 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Puts the Object back into its initial position.
         """
     @overload
-    def Select(self,theOwners : AIS_NArray1OfEntityOwner,theSelScheme : AIS_SelectionScheme) -> AIS_StatusOfPick: 
+    def Select(self,theToUpdateViewer : bool) -> AIS_StatusOfPick: 
         """
         Sets list of owner selected/deselected using specified selection scheme.
 
@@ -6778,11 +6621,11 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Stores and hilights the previous detected; Unhilights the previous picked.
         """
     @overload
-    def Select(self,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
-    @overload
-    def Select(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
+    def Select(self,theOwners : AIS_NArray1OfEntityOwner,theSelScheme : AIS_SelectionScheme) -> AIS_StatusOfPick: ...
     @overload
     def Select(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
+    @overload
+    def Select(self,theXPMin : int,theYPMin : int,theXPMax : int,theYPMax : int,theView : OCP.V3d.V3d_View,theToUpdateViewer : bool) -> AIS_StatusOfPick: ...
     def SelectDetected(self,theSelScheme : AIS_SelectionScheme=AIS_SelectionScheme.AIS_SelectionScheme_Replace) -> AIS_StatusOfPick: 
         """
         Select and hilights the previous detected via AIS_InteractiveContext::MoveTo() method; unhilights the previous picked. Viewer should be explicitly redrawn after selection.
@@ -6861,14 +6704,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
     @overload
     def SetDeviationAngle(self,theAngle : float) -> None: ...
     @overload
-    def SetDeviationCoefficient(self,theCoefficient : float) -> None: 
+    def SetDeviationCoefficient(self,theIObj : AIS_InteractiveObject,theCoefficient : float,theToUpdateViewer : bool) -> None: 
         """
         Sets the deviation coefficient theCoefficient. Drawings of curves or patches are made with respect to a maximal chordal deviation. A Deviation coefficient is used in the shading display mode. The shape is seen decomposed into triangles. These are used to calculate reflection of light from the surface of the object. The triangles are formed from chords of the curves in the shape. The deviation coefficient theCoefficient gives the highest value of the angle with which a chord can deviate from a tangent to a curve. If this limit is reached, a new triangle is begun. This deviation is absolute and is set through the method: SetMaximalChordialDeviation. The default value is 0.001. In drawing shapes, however, you are allowed to ask for a relative deviation. This deviation will be: SizeOfObject * DeviationCoefficient.
 
         Sets the deviation coefficient theCoefficient. Drawings of curves or patches are made with respect to a maximal chordal deviation. A Deviation coefficient is used in the shading display mode. The shape is seen decomposed into triangles. These are used to calculate reflection of light from the surface of the object. The triangles are formed from chords of the curves in the shape. The deviation coefficient theCoefficient gives the highest value of the angle with which a chord can deviate from a tangent to a curve. If this limit is reached, a new triangle is begun. This deviation is absolute and is set through the method: SetMaximalChordialDeviation. The default value is 0.001. In drawing shapes, however, you are allowed to ask for a relative deviation. This deviation will be: SizeOfObject * DeviationCoefficient.
         """
     @overload
-    def SetDeviationCoefficient(self,theIObj : AIS_InteractiveObject,theCoefficient : float,theToUpdateViewer : bool) -> None: ...
+    def SetDeviationCoefficient(self,theCoefficient : float) -> None: ...
     @overload
     def SetDisplayMode(self,theMode : int,theToUpdateViewer : bool) -> None: 
         """
@@ -6878,10 +6721,15 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         """
     @overload
     def SetDisplayMode(self,theIObj : AIS_InteractiveObject,theMode : int,theToUpdateViewer : bool) -> None: ...
+    @overload
     def SetDisplayPriority(self,theIObj : AIS_InteractiveObject,thePriority : int) -> None: 
         """
         Sets the display priority of the seen parts presentation of the Object.
+
+        None
         """
+    @overload
+    def SetDisplayPriority(self,theIObj : AIS_InteractiveObject,thePriority : OCP.Graphic3d.Graphic3d_DisplayPriority) -> None: ...
     def SetFilterType(self,theFilterType : OCP.SelectMgr.SelectMgr_FilterType) -> None: 
         """
         Sets the context selection filter type. SelectMgr_TypeFilter_OR selection filter is used by default.
@@ -6891,14 +6739,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Sets the hidden line aspect anAspect. Aspect defines display attributes for hidden lines in HLR projections.
         """
     @overload
-    def SetHighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: 
+    def SetHighlightStyle(self,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Setup highlight style settings. Tip: it is better modifying existing style returned by method HighlightStyle() instead of creating a new Prs3d_Drawer to avoid unexpected results due misconfiguration.
 
         Setup the style of dynamic highlighting corrsponding to Prs3d_TypeOfHighlight_Selected. This is just a short-cut to SetHighlightStyle(Prs3d_TypeOfHighlight_Dynamic,theStyle).
         """
     @overload
-    def SetHighlightStyle(self,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: ...
+    def SetHighlightStyle(self,theStyleType : OCP.Prs3d.Prs3d_TypeOfHighlight,theStyle : OCP.Prs3d.Prs3d_Drawer) -> None: ...
     def SetIsoNumber(self,NbIsos : int,WhichIsos : AIS_TypeOfIso=AIS_TypeOfIso.AIS_TOI_Both) -> None: 
         """
         Sets the number of U and V isoparameters displayed.
@@ -6924,14 +6772,14 @@ class AIS_InteractiveContext(OCP.Standard.Standard_Transient):
         Setup pixel tolerance for MoveTo() operation.
         """
     @overload
-    def SetPlaneSize(self,theSizeX : float,theSizeY : float,theToUpdateViewer : bool) -> None: 
+    def SetPlaneSize(self,theSize : float,theToUpdateViewer : bool) -> None: 
         """
         Sets the plane size defined by the length in the X direction XSize and that in the Y direction YSize.
 
         Sets the plane size aSize.
         """
     @overload
-    def SetPlaneSize(self,theSize : float,theToUpdateViewer : bool) -> None: ...
+    def SetPlaneSize(self,theSizeX : float,theSizeY : float,theToUpdateViewer : bool) -> None: ...
     def SetPolygonOffsets(self,theIObj : AIS_InteractiveObject,theMode : int,theFactor : float,theUnits : float,theToUpdateViewer : bool) -> None: 
         """
         Sets up polygon offsets for the given AIS_InteractiveObject. It simply calls AIS_InteractiveObject::SetPolygonOffsets().
@@ -7351,23 +7199,23 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -7413,14 +7261,14 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -7522,14 +7370,14 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -7551,14 +7399,14 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -7680,6 +7528,10 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -7689,13 +7541,13 @@ class AIS_Axis(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Line) -> None: ...
-    @overload
     def __init__(self,theAxis : OCP.gp.gp_Ax1,theLength : float=-1.0) -> None: ...
+    @overload
+    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,anAxisType : AIS_TypeOfAxis) -> None: ...
     @overload
     def __init__(self,anAxis : OCP.Geom.Geom_Axis1Placement) -> None: ...
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,anAxisType : AIS_TypeOfAxis) -> None: ...
+    def __init__(self,aComponent : OCP.Geom.Geom_Line) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -8011,23 +7863,23 @@ class AIS_LightSource(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -8097,14 +7949,14 @@ class AIS_LightSource(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -8210,14 +8062,14 @@ class AIS_LightSource(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Set the light.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMarkerImage(self,theImage : OCP.Graphic3d.Graphic3d_MarkerImage,theIsEnabled : bool) -> None: 
         """
         Sets custom icon to light source.
@@ -8267,14 +8119,14 @@ class AIS_LightSource(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Sets if mouse click should turn light on/off.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -8408,6 +8260,10 @@ class AIS_LightSource(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -8493,23 +8349,23 @@ class AIS_LightSourceOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameSelectable(self,theOther : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         Returns true if pointer to selectable object of this owner is equal to the given one
@@ -8531,14 +8387,14 @@ class AIS_LightSourceOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -8829,23 +8685,23 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -8895,14 +8751,14 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -8992,14 +8848,14 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         instantiates an infinite line.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -9025,14 +8881,14 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -9146,6 +9002,10 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -9155,9 +9015,9 @@ class AIS_Line(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, 
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,aLine : OCP.Geom.Geom_Line) -> None: ...
-    @overload
     def __init__(self,aStartPoint : OCP.Geom.Geom_Point,aEndPoint : OCP.Geom.Geom_Point) -> None: ...
+    @overload
+    def __init__(self,aLine : OCP.Geom.Geom_Line) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -9178,7 +9038,7 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : AIS_ListOfInteractive) -> None: 
+    def Append(self,theItem : AIS_InteractiveObject,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -9187,9 +9047,9 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
+    def Append(self,theOther : AIS_ListOfInteractive) -> None: ...
     @overload
-    def Append(self,theItem : AIS_InteractiveObject,theIter : Any) -> None: ...
+    def Append(self,theItem : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
     def Assign(self,theOther : AIS_ListOfInteractive) -> AIS_ListOfInteractive: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -9209,23 +9069,23 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: 
+    def InsertAfter(self,theOther : AIS_ListOfInteractive,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : AIS_ListOfInteractive,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: ...
     @overload
-    def InsertBefore(self,theOther : AIS_ListOfInteractive,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : AIS_InteractiveObject,theIter : Any) -> AIS_InteractiveObject: ...
+    def InsertBefore(self,theOther : AIS_ListOfInteractive,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -9237,14 +9097,14 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theOther : AIS_ListOfInteractive) -> None: 
+    def Prepend(self,theItem : AIS_InteractiveObject) -> AIS_InteractiveObject: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theItem : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
+    def Prepend(self,theOther : AIS_ListOfInteractive) -> None: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -9264,9 +9124,9 @@ class AIS_ListOfInteractive(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : AIS_ListOfInteractive) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : AIS_ListOfInteractive) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
@@ -9548,23 +9408,23 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModeActivationOnDetection(self) -> bool: 
         """
         Returns true if manual mode activation is enabled.
@@ -9631,14 +9491,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -9728,14 +9588,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -9753,14 +9613,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
         """
     @overload
-    def SetPart(self,theAxisIndex : int,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: 
+    def SetPart(self,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: 
         """
         Disable or enable visual parts for translation, rotation or scaling for some axis. By default all parts are enabled (will be displayed).
 
         Disable or enable visual parts for translation, rotation or scaling for ALL axes. By default all parts are enabled (will be displayed).
         """
     @overload
-    def SetPart(self,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: ...
+    def SetPart(self,theAxisIndex : int,theMode : AIS_ManipulatorMode,theIsEnabled : bool) -> None: ...
     def SetPolygonOffsets(self,aMode : int,aFactor : float=1.0,aUnits : float=0.0) -> None: 
         """
         Sets up polygon offsets for this object.
@@ -9778,14 +9638,14 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Sets size (length of side of the manipulator cubic bounding box.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformBehavior(self,theSettings : Any) -> None: 
         """
         Sets behavior settings for transformation action carried on the manipulator, whether it translates, rotates together with the transformed object or not.
@@ -9941,6 +9801,10 @@ class AIS_Manipulator(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -10013,15 +9877,15 @@ class AIS_ManipulatorMode():
     pass
 class AIS_ManipulatorObjectSequence(OCP.Standard.Standard_Transient):
     @overload
-    def Append(self,theSequence : AIS_SequenceOfInteractive) -> None: 
+    def Append(self,theItem : AIS_InteractiveObject) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : AIS_InteractiveObject) -> None: ...
-    def ChangeSequence(self) -> AIS_SequenceOfInteractive: 
+    def Append(self,theSequence : Any) -> None: ...
+    def ChangeSequence(self) -> Any: 
         """
         None
         """
@@ -10046,24 +9910,24 @@ class AIS_ManipulatorObjectSequence(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
-    def Sequence(self) -> AIS_SequenceOfInteractive: 
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Sequence(self) -> Any: 
         """
         None
         """
@@ -10072,9 +9936,9 @@ class AIS_ManipulatorObjectSequence(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Any) -> None: ...
     @overload
-    def __init__(self,theOther : AIS_SequenceOfInteractive) -> None: ...
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -10155,23 +10019,23 @@ class AIS_ManipulatorOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameSelectable(self,theOther : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         Returns true if pointer to selectable object of this owner is equal to the given one
@@ -10197,14 +10061,14 @@ class AIS_ManipulatorOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -10263,123 +10127,6 @@ class AIS_ManipulatorOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Sta
         """
     pass
 class AIS_Manipulator_OptionsForAttach():
-    pass
-class AIS_MapOfInteractive(OCP.NCollection.NCollection_BaseMap):
-    """
-    Purpose: Single hashed Map. This Map is used to store and retrieve keys in linear time.
-    """
-    def Add(self,K : AIS_InteractiveObject) -> bool: 
-        """
-        Add
-        """
-    def Added(self,K : AIS_InteractiveObject) -> AIS_InteractiveObject: 
-        """
-        Added: add a new key if not yet in the map, and return reference to either newly added or previously existing object
-        """
-    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
-        """
-        Returns attached allocator
-        """
-    def Assign(self,theOther : AIS_MapOfInteractive) -> AIS_MapOfInteractive: 
-        """
-        Assign. This method does not change the internal allocator.
-        """
-    @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
-        """
-        Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
-
-        Clear data and reset allocator
-        """
-    @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
-    @overload
-    def Contains(self,theOther : AIS_MapOfInteractive) -> bool: 
-        """
-        Contains
-
-        Returns true if this map contains ALL keys of another map.
-        """
-    @overload
-    def Contains(self,K : AIS_InteractiveObject) -> bool: ...
-    def Differ(self,theOther : AIS_MapOfInteractive) -> bool: 
-        """
-        Apply to this Map the symmetric difference (aka exclusive disjunction, boolean XOR) operation with another (given) Map. The result contains the values that are contained only in this or the operand map, but not in both. This algorithm is similar to method Difference(). Returns True if contents of this map is changed.
-        """
-    def Difference(self,theLeft : AIS_MapOfInteractive,theRight : AIS_MapOfInteractive) -> None: 
-        """
-        Sets this Map to be the result of symmetric difference (aka exclusive disjunction, boolean XOR) operation between two given Maps. The new Map contains the values that are contained only in the first or the second operand maps but not in both. All previous content of this Map is cleared. This map (result of the boolean operation) can also be used as one of operands.
-        """
-    def Exchange(self,theOther : AIS_MapOfInteractive) -> None: 
-        """
-        Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
-        """
-    def Extent(self) -> int: 
-        """
-        Extent
-        """
-    def HasIntersection(self,theMap : AIS_MapOfInteractive) -> bool: 
-        """
-        Returns true if this and theMap have common elements.
-        """
-    def Intersect(self,theOther : AIS_MapOfInteractive) -> bool: 
-        """
-        Apply to this Map the intersection operation (aka multiplication, common, boolean AND) with another (given) Map. The result contains only the values that are contained in both this and the given maps. This algorithm is similar to method Intersection(). Returns True if contents of this map is changed.
-        """
-    def Intersection(self,theLeft : AIS_MapOfInteractive,theRight : AIS_MapOfInteractive) -> None: 
-        """
-        Sets this Map to be the result of intersection (aka multiplication, common, boolean AND) operation between two given Maps. The new Map contains only the values that are contained in both map operands. All previous content of this Map is cleared. This same map (result of the boolean operation) can also be used as one of operands.
-        """
-    def IsEmpty(self) -> bool: 
-        """
-        IsEmpty
-        """
-    def IsEqual(self,theOther : AIS_MapOfInteractive) -> bool: 
-        """
-        Returns true if two maps contains exactly the same keys
-        """
-    def NbBuckets(self) -> int: 
-        """
-        NbBuckets
-        """
-    def ReSize(self,N : int) -> None: 
-        """
-        ReSize
-        """
-    def Remove(self,K : AIS_InteractiveObject) -> bool: 
-        """
-        Remove
-        """
-    def Size(self) -> int: 
-        """
-        Size
-        """
-    def Statistics(self,S : io.BytesIO) -> None: 
-        """
-        Statistics
-        """
-    def Subtract(self,theOther : AIS_MapOfInteractive) -> bool: 
-        """
-        Apply to this Map the subtraction (aka set-theoretic difference, relative complement, exclude, cut, boolean NOT) operation with another (given) Map. The result contains only the values that were previously contained in this map and not contained in this map. This algorithm is similar to method Subtract() with two operands. Returns True if contents of this map is changed.
-        """
-    def Subtraction(self,theLeft : AIS_MapOfInteractive,theRight : AIS_MapOfInteractive) -> None: 
-        """
-        Sets this Map to be the result of subtraction (aka set-theoretic difference, relative complement, exclude, cut, boolean NOT) operation between two given Maps. The new Map contains only the values that are contained in the first map operands and not contained in the second one. All previous content of this Map is cleared.
-        """
-    def Union(self,theLeft : AIS_MapOfInteractive,theRight : AIS_MapOfInteractive) -> None: 
-        """
-        Sets this Map to be the result of union (aka addition, fuse, merge, boolean OR) operation between two given Maps The new Map contains the values that are contained either in the first map or in the second map or in both. All previous content of this Map is cleared. This map (result of the boolean operation) can also be passed as one of operands.
-        """
-    def Unite(self,theOther : AIS_MapOfInteractive) -> bool: 
-        """
-        Apply to this Map the boolean operation union (aka addition, fuse, merge, boolean OR) with another (given) Map. The result contains the values that were previously contained in this map or contained in the given (operand) map. This algorithm is similar to method Union(). Returns True if contents of this map is changed.
-        """
-    @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theOther : AIS_MapOfInteractive) -> None: ...
-    @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     pass
 class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
@@ -10618,23 +10365,23 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -10692,14 +10439,14 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -10795,14 +10542,14 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -10824,14 +10571,14 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -10945,6 +10692,10 @@ class AIS_MediaPlayer(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableO
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -10986,6 +10737,8 @@ class AIS_MouseGesture():
       AIS_MouseGesture_RotateOrbit
 
       AIS_MouseGesture_RotateView
+
+      AIS_MouseGesture_Drag
     """
     def __eq__(self,other : object) -> bool: ...
     def __getstate__(self) -> int: ...
@@ -11006,6 +10759,7 @@ class AIS_MouseGesture():
         """
         :type: int
         """
+    AIS_MouseGesture_Drag: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_Drag: 8>
     AIS_MouseGesture_NONE: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_NONE: 0>
     AIS_MouseGesture_Pan: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_Pan: 5>
     AIS_MouseGesture_RotateOrbit: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_RotateOrbit: 6>
@@ -11014,8 +10768,8 @@ class AIS_MouseGesture():
     AIS_MouseGesture_SelectRectangle: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_SelectRectangle: 1>
     AIS_MouseGesture_Zoom: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_Zoom: 3>
     AIS_MouseGesture_ZoomWindow: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_ZoomWindow: 4>
-    __entries: dict # value = {'AIS_MouseGesture_NONE': (<AIS_MouseGesture.AIS_MouseGesture_NONE: 0>, None), 'AIS_MouseGesture_SelectRectangle': (<AIS_MouseGesture.AIS_MouseGesture_SelectRectangle: 1>, None), 'AIS_MouseGesture_SelectLasso': (<AIS_MouseGesture.AIS_MouseGesture_SelectLasso: 2>, None), 'AIS_MouseGesture_Zoom': (<AIS_MouseGesture.AIS_MouseGesture_Zoom: 3>, None), 'AIS_MouseGesture_ZoomWindow': (<AIS_MouseGesture.AIS_MouseGesture_ZoomWindow: 4>, None), 'AIS_MouseGesture_Pan': (<AIS_MouseGesture.AIS_MouseGesture_Pan: 5>, None), 'AIS_MouseGesture_RotateOrbit': (<AIS_MouseGesture.AIS_MouseGesture_RotateOrbit: 6>, None), 'AIS_MouseGesture_RotateView': (<AIS_MouseGesture.AIS_MouseGesture_RotateView: 7>, None)}
-    __members__: dict # value = {'AIS_MouseGesture_NONE': <AIS_MouseGesture.AIS_MouseGesture_NONE: 0>, 'AIS_MouseGesture_SelectRectangle': <AIS_MouseGesture.AIS_MouseGesture_SelectRectangle: 1>, 'AIS_MouseGesture_SelectLasso': <AIS_MouseGesture.AIS_MouseGesture_SelectLasso: 2>, 'AIS_MouseGesture_Zoom': <AIS_MouseGesture.AIS_MouseGesture_Zoom: 3>, 'AIS_MouseGesture_ZoomWindow': <AIS_MouseGesture.AIS_MouseGesture_ZoomWindow: 4>, 'AIS_MouseGesture_Pan': <AIS_MouseGesture.AIS_MouseGesture_Pan: 5>, 'AIS_MouseGesture_RotateOrbit': <AIS_MouseGesture.AIS_MouseGesture_RotateOrbit: 6>, 'AIS_MouseGesture_RotateView': <AIS_MouseGesture.AIS_MouseGesture_RotateView: 7>}
+    __entries: dict # value = {'AIS_MouseGesture_NONE': (<AIS_MouseGesture.AIS_MouseGesture_NONE: 0>, None), 'AIS_MouseGesture_SelectRectangle': (<AIS_MouseGesture.AIS_MouseGesture_SelectRectangle: 1>, None), 'AIS_MouseGesture_SelectLasso': (<AIS_MouseGesture.AIS_MouseGesture_SelectLasso: 2>, None), 'AIS_MouseGesture_Zoom': (<AIS_MouseGesture.AIS_MouseGesture_Zoom: 3>, None), 'AIS_MouseGesture_ZoomWindow': (<AIS_MouseGesture.AIS_MouseGesture_ZoomWindow: 4>, None), 'AIS_MouseGesture_Pan': (<AIS_MouseGesture.AIS_MouseGesture_Pan: 5>, None), 'AIS_MouseGesture_RotateOrbit': (<AIS_MouseGesture.AIS_MouseGesture_RotateOrbit: 6>, None), 'AIS_MouseGesture_RotateView': (<AIS_MouseGesture.AIS_MouseGesture_RotateView: 7>, None), 'AIS_MouseGesture_Drag': (<AIS_MouseGesture.AIS_MouseGesture_Drag: 8>, None)}
+    __members__: dict # value = {'AIS_MouseGesture_NONE': <AIS_MouseGesture.AIS_MouseGesture_NONE: 0>, 'AIS_MouseGesture_SelectRectangle': <AIS_MouseGesture.AIS_MouseGesture_SelectRectangle: 1>, 'AIS_MouseGesture_SelectLasso': <AIS_MouseGesture.AIS_MouseGesture_SelectLasso: 2>, 'AIS_MouseGesture_Zoom': <AIS_MouseGesture.AIS_MouseGesture_Zoom: 3>, 'AIS_MouseGesture_ZoomWindow': <AIS_MouseGesture.AIS_MouseGesture_ZoomWindow: 4>, 'AIS_MouseGesture_Pan': <AIS_MouseGesture.AIS_MouseGesture_Pan: 5>, 'AIS_MouseGesture_RotateOrbit': <AIS_MouseGesture.AIS_MouseGesture_RotateOrbit: 6>, 'AIS_MouseGesture_RotateView': <AIS_MouseGesture.AIS_MouseGesture_RotateView: 7>, 'AIS_MouseGesture_Drag': <AIS_MouseGesture.AIS_MouseGesture_Drag: 8>}
     pass
 class AIS_MouseGestureMap(OCP.NCollection.NCollection_BaseMap):
     """
@@ -11046,14 +10800,14 @@ class AIS_MouseGestureMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : AIS_MouseGestureMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -11104,11 +10858,11 @@ class AIS_MouseGestureMap(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : AIS_MouseGestureMap) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AIS_MouseSelectionSchemeMap(OCP.NCollection.NCollection_BaseMap):
@@ -11140,14 +10894,14 @@ class AIS_MouseSelectionSchemeMap(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : AIS_MouseSelectionSchemeMap) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -11198,9 +10952,9 @@ class AIS_MouseSelectionSchemeMap(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : AIS_MouseSelectionSchemeMap) -> None: ...
+    @overload
+    def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -11282,7 +11036,7 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Computes sensitive primitives for the given selection mode - key interface method of Selectable Object.
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.TopLoc.TopLoc_Datum3D,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> AIS_InteractiveObject: 
+    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf) -> AIS_InteractiveObject: 
         """
         Establishes the connection between the Connected Interactive Object, theInteractive, and its reference. Locates instance in theLocation and applies specified transformation persistence mode.
 
@@ -11293,11 +11047,11 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Establishes the connection between the Connected Interactive Object, theInteractive, and its reference. Locates instance in theLocation and applies specified transformation persistence mode.
         """
     @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
-    @overload
-    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf) -> AIS_InteractiveObject: ...
-    @overload
     def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.gp.gp_Trsf,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> AIS_InteractiveObject: ...
+    @overload
+    def Connect(self,theAnotherObj : AIS_InteractiveObject,theLocation : OCP.TopLoc.TopLoc_Datum3D,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> AIS_InteractiveObject: ...
+    @overload
+    def Connect(self,theAnotherObj : AIS_InteractiveObject) -> AIS_InteractiveObject: ...
     def CurrentFacingModel(self) -> OCP.Aspect.Aspect_TypeOfFacingModel: 
         """
         Returns the current facing model which is in effect.
@@ -11467,23 +11221,23 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -11525,14 +11279,14 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -11618,14 +11372,14 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -11647,14 +11401,14 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -11768,6 +11522,10 @@ class AIS_MultipleConnectedInteractive(AIS_InteractiveObject, OCP.SelectMgr.Sele
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -11865,13 +11623,13 @@ class AIS_NArray1OfEntityOwner():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : AIS_NArray1OfEntityOwner) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.SelectMgr.SelectMgr_EntityOwner,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : AIS_NArray1OfEntityOwner) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : OCP.SelectMgr.SelectMgr_EntityOwner,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
@@ -11883,7 +11641,7 @@ class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
+    def Append(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -11892,9 +11650,9 @@ class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner,theIter : Any) -> None: ...
-    @overload
     def Append(self,theOther : AIS_NListOfEntityOwner) -> None: ...
+    @overload
+    def Append(self,theItem : OCP.SelectMgr.SelectMgr_EntityOwner) -> OCP.SelectMgr.SelectMgr_EntityOwner: ...
     def Assign(self,theOther : AIS_NListOfEntityOwner) -> AIS_NListOfEntityOwner: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -11969,9 +11727,9 @@ class AIS_NListOfEntityOwner(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : AIS_NListOfEntityOwner) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AIS_NavigationMode():
@@ -12268,23 +12026,23 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -12334,14 +12092,14 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -12443,14 +12201,14 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -12480,23 +12238,23 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetSize(self,aValue : float) -> None: 
+    def SetSize(self,Xval : float,YVal : float) -> None: 
         """
         Same value for x and y directions
 
         Sets the size defined by the length along the X axis XVal and the length along the Y axis YVal.
         """
     @overload
-    def SetSize(self,Xval : float,YVal : float) -> None: ...
+    def SetSize(self,aValue : float) -> None: ...
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -12634,6 +12392,10 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -12645,11 +12407,11 @@ class AIS_Plane(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
     @overload
     def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCurrentMode : bool=False) -> None: ...
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,aPlaneType : AIS_TypeOfPlane,aCurrentMode : bool=False) -> None: ...
+    def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCenter : OCP.gp.gp_Pnt,aPmin : OCP.gp.gp_Pnt,aPmax : OCP.gp.gp_Pnt,aCurrentMode : bool=False) -> None: ...
     @overload
     def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCenter : OCP.gp.gp_Pnt,aCurrentMode : bool=False) -> None: ...
     @overload
-    def __init__(self,aComponent : OCP.Geom.Geom_Plane,aCenter : OCP.gp.gp_Pnt,aPmin : OCP.gp.gp_Pnt,aPmax : OCP.gp.gp_Pnt,aCurrentMode : bool=False) -> None: ...
+    def __init__(self,aComponent : OCP.Geom.Geom_Axis2Placement,aPlaneType : AIS_TypeOfPlane,aCurrentMode : bool=False) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -12902,23 +12664,23 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -12964,14 +12726,14 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -13065,14 +12827,14 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Sets the length of the X and Y axes.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -13094,14 +12856,14 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -13222,6 +12984,10 @@ class AIS_PlaneTrihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectab
     def UpdateTransformations(self,aSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
+        """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
         """
     def Width(self) -> float: 
         """
@@ -13492,23 +13258,23 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -13550,14 +13316,14 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -13647,14 +13413,14 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMarker(self,aType : OCP.Aspect.Aspect_TypeOfMarker) -> None: 
         """
         Allows you to provide settings for a marker. These include - type of marker, - marker color, - scale factor.
@@ -13680,14 +13446,14 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -13808,6 +13574,10 @@ class AIS_Point(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject,
     def Vertex(self) -> OCP.TopoDS.TopoDS_Vertex: 
         """
         Converts a point into a vertex.
+        """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
         """
     def Width(self) -> float: 
         """
@@ -14141,23 +13911,23 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -14199,14 +13969,14 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -14292,14 +14062,14 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,theMat : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Setup custom material. Affects presentation only when normals are defined.
@@ -14330,14 +14100,14 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -14451,6 +14221,10 @@ class AIS_PointCloud(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -14545,23 +14319,23 @@ class AIS_PointCloudOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameSelectable(self,theOther : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         Returns true if pointer to selectable object of this owner is equal to the given one
@@ -14587,14 +14361,14 @@ class AIS_PointCloudOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stan
         Return selected points. WARNING! Indexation starts with 0 (shifted by -1 comparing to Graphic3d_ArrayOfPoints::Vertice()).
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -14948,23 +14722,23 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -15026,14 +14800,14 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -15115,14 +14889,14 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets fill transparency.
         """
     @overload
-    def SetFilling(self,theIsFilling : bool) -> None: 
+    def SetFilling(self,theColor : OCP.Quantity.Quantity_Color,theTransparency : float) -> None: 
         """
         Enable or disable filling of rubber band.
 
         Enable filling of rubber band with defined parameters.
         """
     @overload
-    def SetFilling(self,theColor : OCP.Quantity.Quantity_Color,theTransparency : float) -> None: ...
+    def SetFilling(self,theIsFilling : bool) -> None: ...
     def SetHilightAttributes(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Initializes the hilight drawing tool theDrawer.
@@ -15152,14 +14926,14 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets width of line for rubber band presentation.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -15189,14 +14963,14 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Sets rectangle bounds.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -15310,6 +15084,10 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -15319,9 +15097,9 @@ class AIS_RubberBand(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableOb
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theLineColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theLineWidth : float=1.0,theIsPolygonClosed : bool=True) -> None: ...
-    @overload
     def __init__(self,theLineColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theFillColor : OCP.Quantity.Quantity_Color,theTransparency : float=1.0,theLineWidth : float=1.0,theIsPolygonClosed : bool=True) -> None: ...
+    @overload
+    def __init__(self,theLineColor : OCP.Quantity.Quantity_Color,theType : OCP.Aspect.Aspect_TypeOfLine,theLineWidth : float=1.0,theIsPolygonClosed : bool=True) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @staticmethod
@@ -15421,23 +15199,23 @@ class AIS_Selection(OCP.Standard.Standard_Transient):
         Return true if list of selected objects is empty.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSelected(self,theObject : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         checks if the object is in the selection.
@@ -15567,140 +15345,6 @@ class AIS_SelectionScheme():
     AIS_SelectionScheme_XOR: OCP.AIS.AIS_SelectionScheme # value = <AIS_SelectionScheme.AIS_SelectionScheme_XOR: 3>
     __entries: dict # value = {'AIS_SelectionScheme_UNKNOWN': (<AIS_SelectionScheme.AIS_SelectionScheme_UNKNOWN: -1>, None), 'AIS_SelectionScheme_Replace': (<AIS_SelectionScheme.AIS_SelectionScheme_Replace: 0>, None), 'AIS_SelectionScheme_Add': (<AIS_SelectionScheme.AIS_SelectionScheme_Add: 1>, None), 'AIS_SelectionScheme_Remove': (<AIS_SelectionScheme.AIS_SelectionScheme_Remove: 2>, None), 'AIS_SelectionScheme_XOR': (<AIS_SelectionScheme.AIS_SelectionScheme_XOR: 3>, None), 'AIS_SelectionScheme_Clear': (<AIS_SelectionScheme.AIS_SelectionScheme_Clear: 4>, None), 'AIS_SelectionScheme_ReplaceExtra': (<AIS_SelectionScheme.AIS_SelectionScheme_ReplaceExtra: 5>, None)}
     __members__: dict # value = {'AIS_SelectionScheme_UNKNOWN': <AIS_SelectionScheme.AIS_SelectionScheme_UNKNOWN: -1>, 'AIS_SelectionScheme_Replace': <AIS_SelectionScheme.AIS_SelectionScheme_Replace: 0>, 'AIS_SelectionScheme_Add': <AIS_SelectionScheme.AIS_SelectionScheme_Add: 1>, 'AIS_SelectionScheme_Remove': <AIS_SelectionScheme.AIS_SelectionScheme_Remove: 2>, 'AIS_SelectionScheme_XOR': <AIS_SelectionScheme.AIS_SelectionScheme_XOR: 3>, 'AIS_SelectionScheme_Clear': <AIS_SelectionScheme.AIS_SelectionScheme_Clear: 4>, 'AIS_SelectionScheme_ReplaceExtra': <AIS_SelectionScheme.AIS_SelectionScheme_ReplaceExtra: 5>}
-    pass
-class AIS_SequenceOfInteractive(OCP.NCollection.NCollection_BaseSequence):
-    """
-    Purpose: Definition of a sequence of elements indexed by an Integer in range of 1..n
-    """
-    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
-        """
-        Returns attached allocator
-        """
-    @overload
-    def Append(self,theItem : AIS_InteractiveObject) -> None: 
-        """
-        Append one item
-
-        Append another sequence (making it empty)
-        """
-    @overload
-    def Append(self,theSeq : AIS_SequenceOfInteractive) -> None: ...
-    def Assign(self,theOther : AIS_SequenceOfInteractive) -> AIS_SequenceOfInteractive: 
-        """
-        Replace this sequence by the items of theOther. This method does not change the internal allocator.
-        """
-    def ChangeFirst(self) -> AIS_InteractiveObject: 
-        """
-        First item access
-        """
-    def ChangeLast(self) -> AIS_InteractiveObject: 
-        """
-        Last item access
-        """
-    def ChangeValue(self,theIndex : int) -> AIS_InteractiveObject: 
-        """
-        Variable item access by theIndex
-        """
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: 
-        """
-        Clear the items out, take a new allocator if non null
-        """
-    def Exchange(self,I : int,J : int) -> None: 
-        """
-        Exchange two members
-        """
-    def First(self) -> AIS_InteractiveObject: 
-        """
-        First item access
-        """
-    @overload
-    def InsertAfter(self,theIndex : int,theItem : AIS_InteractiveObject) -> None: 
-        """
-        InsertAfter theIndex another sequence (making it empty)
-
-        InsertAfter theIndex theItem
-        """
-    @overload
-    def InsertAfter(self,theIndex : int,theSeq : AIS_SequenceOfInteractive) -> None: ...
-    @overload
-    def InsertBefore(self,theIndex : int,theItem : AIS_InteractiveObject) -> None: 
-        """
-        InsertBefore theIndex theItem
-
-        InsertBefore theIndex another sequence (making it empty)
-        """
-    @overload
-    def InsertBefore(self,theIndex : int,theSeq : AIS_SequenceOfInteractive) -> None: ...
-    def IsEmpty(self) -> bool: 
-        """
-        Empty query
-        """
-    def Last(self) -> AIS_InteractiveObject: 
-        """
-        Last item access
-        """
-    def Length(self) -> int: 
-        """
-        Number of items
-        """
-    def Lower(self) -> int: 
-        """
-        Method for consistency with other collections.
-        """
-    @overload
-    def Prepend(self,theItem : AIS_InteractiveObject) -> None: 
-        """
-        Prepend one item
-
-        Prepend another sequence (making it empty)
-        """
-    @overload
-    def Prepend(self,theSeq : AIS_SequenceOfInteractive) -> None: ...
-    @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
-        """
-        Remove one item
-
-        Remove range of items
-        """
-    @overload
-    def Remove(self,theIndex : int) -> None: ...
-    def Reverse(self) -> None: 
-        """
-        Reverse sequence
-        """
-    def SetValue(self,theIndex : int,theItem : AIS_InteractiveObject) -> None: 
-        """
-        Set item value by theIndex
-        """
-    def Size(self) -> int: 
-        """
-        Number of items
-        """
-    def Split(self,theIndex : int,theSeq : AIS_SequenceOfInteractive) -> None: 
-        """
-        Split in two sequences
-        """
-    def Upper(self) -> int: 
-        """
-        Method for consistency with other collections.
-        """
-    def Value(self,theIndex : int) -> AIS_InteractiveObject: 
-        """
-        Constant item access by theIndex
-        """
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : AIS_SequenceOfInteractive) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    def __iter__(self) -> Iterator: ...
-    @staticmethod
-    def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
-        """
-        Static deleter to be passed to BaseSequence
-        """
     pass
 class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObject, OCP.PrsMgr.PrsMgr_PresentableObject, OCP.Standard.Standard_Transient):
     """
@@ -15951,23 +15595,23 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -16017,14 +15661,14 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -16140,14 +15784,14 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,theAspect : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect.
@@ -16157,23 +15801,23 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Sets if the object has mutable nature (content or location will be changed regularly). This method should be called before object displaying to take effect.
         """
     @overload
-    def SetOwnDeviationAngle(self) -> bool: 
+    def SetOwnDeviationAngle(self,anAngle : float) -> None: 
         """
         Sets a local value for deviation angle for this specific shape.
 
         sets myOwnDeviationAngle field in Prs3d_Drawer & recomputes presentation
         """
     @overload
-    def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
+    def SetOwnDeviationAngle(self) -> bool: ...
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
+    def SetOwnDeviationCoefficient(self) -> bool: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: ...
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
     def SetOwner(self,theApplicativeEntity : OCP.Standard.Standard_Transient) -> None: 
         """
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
@@ -16203,14 +15847,14 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -16356,6 +16000,10 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         """
         gives back the angle initial value put by the User.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -16365,9 +16013,9 @@ class AIS_ColoredShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMgr
         Get ID of Z layer for main presentation.
         """
     @overload
-    def __init__(self,theShape : AIS_Shape) -> None: ...
-    @overload
     def __init__(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    @overload
+    def __init__(self,theShape : AIS_Shape) -> None: ...
     @staticmethod
     def computeHlrPresentation_s(theProjector : OCP.Graphic3d.Graphic3d_Camera,thePrs : OCP.Graphic3d.Graphic3d_Structure,theShape : OCP.TopoDS.TopoDS_Shape,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
@@ -16413,23 +16061,23 @@ class AIS_TypeFilter(OCP.SelectMgr.SelectMgr_Filter, OCP.Standard.Standard_Trans
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anobj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         Returns False if the transient is not an Interactive Object, or if the type of the Interactive Object is not the same as that stored in the filter.
@@ -16795,23 +16443,23 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -16861,14 +16509,14 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -16986,14 +16634,14 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,arg1 : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Material has no effect for text label.
@@ -17035,14 +16683,14 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Setup text formatter for presentation. It's empty by default.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -17175,6 +16823,10 @@ class AIS_TextLabel(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
     def UpdateTransformations(self,aSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
+        """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
         """
     def Width(self) -> float: 
         """
@@ -17437,23 +17089,23 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -17503,14 +17155,14 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -17614,14 +17266,14 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,theAspect : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect.
@@ -17631,23 +17283,23 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Sets if the object has mutable nature (content or location will be changed regularly). This method should be called before object displaying to take effect.
         """
     @overload
-    def SetOwnDeviationAngle(self) -> bool: 
+    def SetOwnDeviationAngle(self,anAngle : float) -> None: 
         """
         Sets a local value for deviation angle for this specific shape.
 
         sets myOwnDeviationAngle field in Prs3d_Drawer & recomputes presentation
         """
     @overload
-    def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
+    def SetOwnDeviationAngle(self) -> bool: ...
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
+    def SetOwnDeviationCoefficient(self) -> bool: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: ...
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
     def SetOwner(self,theApplicativeEntity : OCP.Standard.Standard_Transient) -> None: 
         """
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
@@ -17705,14 +17357,14 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -17918,6 +17570,10 @@ class AIS_TexturedShape(AIS_Shape, AIS_InteractiveObject, OCP.SelectMgr.SelectMg
     def VRepeat(self) -> float: 
         """
         Returns texture repeat V value
+        """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
         """
     def Width(self) -> float: 
         """
@@ -18189,23 +17845,23 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -18247,14 +17903,14 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -18344,14 +18000,14 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -18373,14 +18029,14 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
         Change the value of the flag "propagate visual state"
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -18497,6 +18153,10 @@ class AIS_Triangulation(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selectabl
     def UpdateTransformations(self,aSelection : OCP.SelectMgr.SelectMgr_Selection) -> None: 
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
+        """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
         """
     def Width(self) -> float: 
         """
@@ -18779,23 +18439,23 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -18841,14 +18501,14 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -18882,14 +18542,14 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Return the sequence of selections.
         """
     @overload
-    def SetArrowColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetArrowColor(self,thePart : OCP.Prs3d.Prs3d_DatumParts,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Sets color of arrow of trihedron axes.
 
         Sets color of arrow of trihedron axes.
         """
     @overload
-    def SetArrowColor(self,thePart : OCP.Prs3d.Prs3d_DatumParts,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetArrowColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetAspect(self,anAspect : OCP.Prs3d.Prs3d_BasicAspect) -> None: 
         """
         Sets the graphic basic aspect to the current presentation.
@@ -18971,14 +18631,14 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Sets text label for trihedron axis. Parameter thePart should be XAxis, YAxis or ZAxis
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -19012,23 +18672,23 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         Sets the size of trihedron object.
         """
     @overload
-    def SetTextColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetTextColor(self,thePart : OCP.Prs3d.Prs3d_DatumParts,theColor : OCP.Quantity.Quantity_Color) -> None: 
         """
         Sets color of label of trihedron axes.
 
         Sets color of label of trihedron axis.
         """
     @overload
-    def SetTextColor(self,thePart : OCP.Prs3d.Prs3d_DatumParts,theColor : OCP.Quantity.Quantity_Color) -> None: ...
+    def SetTextColor(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -19166,6 +18826,10 @@ class AIS_Trihedron(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObj
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -19255,23 +18919,23 @@ class AIS_TrihedronOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Returns true if the presentation manager thePM highlights selections corresponding to the selection mode aMode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameSelectable(self,theOther : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         Returns true if pointer to selectable object of this owner is equal to the given one
@@ -19293,14 +18957,14 @@ class AIS_TrihedronOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Stand
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -19427,23 +19091,23 @@ class AIS_SignatureFilter(AIS_TypeFilter, OCP.SelectMgr.SelectMgr_Filter, OCP.St
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOk(self,anobj : OCP.SelectMgr.SelectMgr_EntityOwner) -> bool: 
         """
         Returns False if the transient is not an AIS_InteractiveObject. Returns False if the signature of InteractiveObject is not the same as the stored one in the filter...
@@ -19808,6 +19472,10 @@ class AIS_ViewController(OCP.Aspect.Aspect_WindowInputListener):
     def OnSelectionChanged(self,theCtx : AIS_InteractiveContext,theView : OCP.V3d.V3d_View) -> None: 
         """
         Callback called by handleMoveTo() on Selection in 3D Viewer. This method is expected to be called from rendering thread.
+        """
+    def OnSubviewChanged(self,theCtx : AIS_InteractiveContext,theOldView : OCP.V3d.V3d_View,theNewView : OCP.V3d.V3d_View) -> None: 
+        """
+        Callback called by HandleViewEvents() on Selection of another (sub)view. This method is expected to be called from rendering thread.
         """
     def OrbitAcceleration(self) -> float: 
         """
@@ -20592,23 +20260,23 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -20654,14 +20322,14 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -20843,14 +20511,14 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,theMat : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material for the interactive object.
@@ -20888,14 +20556,14 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         Set color of text labels on box sides. Alias for:
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -21057,6 +20725,10 @@ class AIS_ViewCube(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_SelectableObje
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def ViewAnimation(self) -> AIS_AnimationCamera: 
         """
         Return view animation.
@@ -21146,23 +20818,23 @@ class AIS_ViewCubeOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standa
         Returns true if the presentation manager highlights selections corresponding to the selection mode.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSameSelectable(self,theOther : OCP.SelectMgr.SelectMgr_SelectableObject) -> bool: 
         """
         Returns true if pointer to selectable object of this owner is equal to the given one
@@ -21188,14 +20860,14 @@ class AIS_ViewCubeOwner(OCP.SelectMgr.SelectMgr_EntityOwner, OCP.Standard.Standa
         Returns a selectable object detected in the working context.
         """
     @overload
-    def Set(self,thePriority : int) -> None: 
+    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: 
         """
         Sets the selectable object.
 
         sets the selectable priority of the owner
         """
     @overload
-    def Set(self,theSelObj : OCP.SelectMgr.SelectMgr_SelectableObject) -> None: ...
+    def Set(self,thePriority : int) -> None: ...
     def SetComesFromDecomposition(self,theIsFromDecomposition : bool) -> None: 
         """
         Sets flag indicating this owner points to a part of object (TRUE) or to entire object (FALSE).
@@ -21323,7 +20995,7 @@ class AIS_ViewCubeSensitive(OCP.Select3D.Select3D_SensitivePrimitiveArray, OCP.S
         Increments the reference counter of this object
         """
     @overload
-    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
+    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
         """
         Initialize the sensitive object from point set. The sub-set of points can be specified by arguments theIndexLower and theIndexUpper (these are for iterating theIndices, not to restrict the actual index values!).
 
@@ -21334,7 +21006,7 @@ class AIS_ViewCubeSensitive(OCP.Select3D.Select3D_SensitivePrimitiveArray, OCP.S
     @overload
     def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
     @overload
-    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
+    def InitPoints(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: ...
     @overload
     def InitTriangulation(self,theVerts : OCP.Graphic3d.Graphic3d_Buffer,theIndices : OCP.Graphic3d.Graphic3d_IndexBuffer,theInitLoc : OCP.TopLoc.TopLoc_Location,theIndexLower : int,theIndexUpper : int,theToEvalMinMax : bool=True,theNbGroups : int=1) -> bool: 
         """
@@ -21349,23 +21021,23 @@ class AIS_ViewCubeSensitive(OCP.Select3D.Select3D_SensitivePrimitiveArray, OCP.S
         Returns inversed location transformation matrix if the shape corresponding to this entity has init location set. Otherwise, returns identity matrix.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LastDetectedEdgeNode1(self) -> int: 
         """
         Return the first node of last topmost detected edge or -1 if undefined (axis picking).
@@ -21998,23 +21670,23 @@ class AIS_XRTrackedDevice(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -22064,14 +21736,14 @@ class AIS_XRTrackedDevice(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -22169,14 +21841,14 @@ class AIS_XRTrackedDevice(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Set laser length.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -22202,14 +21874,14 @@ class AIS_XRTrackedDevice(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         Set device role.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -22331,6 +22003,10 @@ class AIS_XRTrackedDevice(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -22354,15 +22030,6 @@ class AIS_XRTrackedDevice(AIS_InteractiveObject, OCP.SelectMgr.SelectMgr_Selecta
         None
         """
     pass
-AIS_CM_All: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_All: 0>
-AIS_CM_Filters: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_Filters: 2>
-AIS_CM_Interactive: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_Interactive: 1>
-AIS_CM_StandardModes: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_StandardModes: 3>
-AIS_CM_TemporaryShapePrs: OCP.AIS.AIS_ClearMode # value = <AIS_ClearMode.AIS_CM_TemporaryShapePrs: 4>
-AIS_CS_Both: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_Both: 3>
-AIS_CS_Connection: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_Connection: 1>
-AIS_CS_None: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_None: 0>
-AIS_CS_Transform: OCP.AIS.AIS_ConnectStatus # value = <AIS_ConnectStatus.AIS_CS_Transform: 2>
 AIS_DragAction_Abort: OCP.AIS.AIS_DragAction # value = <AIS_DragAction.AIS_DragAction_Abort: 3>
 AIS_DragAction_Start: OCP.AIS.AIS_DragAction # value = <AIS_DragAction.AIS_DragAction_Start: 0>
 AIS_DragAction_Stop: OCP.AIS.AIS_DragAction # value = <AIS_DragAction.AIS_DragAction_Stop: 2>
@@ -22385,6 +22052,7 @@ AIS_MM_Rotation: OCP.AIS.AIS_ManipulatorMode # value = <AIS_ManipulatorMode.AIS_
 AIS_MM_Scaling: OCP.AIS.AIS_ManipulatorMode # value = <AIS_ManipulatorMode.AIS_MM_Scaling: 3>
 AIS_MM_Translation: OCP.AIS.AIS_ManipulatorMode # value = <AIS_ManipulatorMode.AIS_MM_Translation: 1>
 AIS_MM_TranslationPlane: OCP.AIS.AIS_ManipulatorMode # value = <AIS_ManipulatorMode.AIS_MM_TranslationPlane: 4>
+AIS_MouseGesture_Drag: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_Drag: 8>
 AIS_MouseGesture_NONE: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_NONE: 0>
 AIS_MouseGesture_Pan: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_Pan: 5>
 AIS_MouseGesture_RotateOrbit: OCP.AIS.AIS_MouseGesture # value = <AIS_MouseGesture.AIS_MouseGesture_RotateOrbit: 6>

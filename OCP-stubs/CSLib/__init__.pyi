@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import OCP.math
 import OCP.TColgp
 import OCP.TColStd
+import OCP.gp
 __all__  = [
 "CSLib",
 "CSLib_Class2d",
@@ -53,7 +53,7 @@ class CSLib():
         """
     @staticmethod
     @overload
-    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[bool]: 
+    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,MagTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> None: 
         """
         The following functions computes the normal to a surface inherits FunctionWithDerivative from math
 
@@ -68,7 +68,7 @@ class CSLib():
     def Normal_s(MaxOrder : int,DerNUV : OCP.TColgp.TColgp_Array2OfVec,MagTol : float,U : float,V : float,Umin : float,Umax : float,Vmin : float,Vmax : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[int, int]: ...
     @staticmethod
     @overload
-    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,MagTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> None: ...
+    def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,D2U : OCP.gp.gp_Vec,D2V : OCP.gp.gp_Vec,D2UV : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_NormalStatus,Normal : OCP.gp.gp_Dir) -> Tuple[bool]: ...
     @staticmethod
     @overload
     def Normal_s(D1U : OCP.gp.gp_Vec,D1V : OCP.gp.gp_Vec,SinTol : float,theStatus : CSLib_DerivativeStatus,Normal : OCP.gp.gp_Dir) -> None: ...

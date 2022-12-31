@@ -82,6 +82,7 @@ __all__  = [
 "ChFiDS",
 "Contap",
 "Convert",
+"DE",
 "Draft",
 "DsgPrs",
 "ElCLib",

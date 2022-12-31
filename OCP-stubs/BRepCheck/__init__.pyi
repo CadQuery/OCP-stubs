@@ -5,11 +5,11 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.Adaptor3d
-import OCP.TopTools
-import OCP.NCollection
-import io
-import OCP.Standard
 import OCP.TopoDS
+import OCP.NCollection
+import OCP.TopTools
+import OCP.Standard
+import io
 __all__  = [
 "BRepCheck",
 "BRepCheck_Analyzer",
@@ -95,24 +95,40 @@ class BRepCheck_Analyzer():
     """
     A framework to check the overall validity of a shape. For a shape to be valid in Open CASCADE, it - or its component subshapes - must respect certain criteria. These criteria are checked by the function IsValid. Once you have determined whether a shape is valid or not, you can diagnose its specific anomalies and correct them using the services of the ShapeAnalysis, ShapeUpgrade, and ShapeFix packages.
     """
-    def Init(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True,theIsParallel : bool=False) -> None: 
+    def Init(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True) -> None: 
         """
         <S> is the shape to control. <GeomControls> If False only topological informaions are checked. The geometricals controls are For a Vertex : BRepCheck_InvalidTolerance NYI For an Edge : BRepCheck_InvalidCurveOnClosedSurface, BRepCheck_InvalidCurveOnSurface, BRepCheck_InvalidSameParameterFlag, BRepCheck_InvalidTolerance NYI For a face : BRepCheck_UnorientableShape, BRepCheck_IntersectingWires, BRepCheck_InvalidTolerance NYI For a wire : BRepCheck_SelfIntersectingWire
         """
+    def IsExactMethod(self) -> bool: 
+        """
+        Returns true if exact method selected
+        """
+    def IsParallel(self) -> bool: 
+        """
+        Returns true if parallel flag is set
+        """
     @overload
-    def IsValid(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: 
+    def IsValid(self) -> bool: 
         """
         <S> is a subshape of the original shape. Returns <STandard_True> if no default has been detected on <S> and any of its subshape.
 
         Returns true if no defect is detected on the shape S or any of its subshapes. Returns true if the shape S is valid. This function checks whether a given shape is valid by checking that: - the topology is correct - parameterization of edges in particular is correct. For the topology to be correct, the following conditions must be satisfied: - edges should have at least two vertices if they are not degenerate edges. The vertices should be within the range of the bounding edges at the tolerance specified in the vertex, - edges should share at least one face. The representation of the edges should be within the tolerance criterion assigned to them. - wires defining a face should not self-intersect and should be closed, - there should be one wire which contains all other wires inside a face, - wires should be correctly oriented with respect to each of the edges, - faces should be correctly oriented, in particular with respect to adjacent faces if these faces define a solid, - shells defining a solid should be closed. There should be one enclosing shell if the shape is a solid; To check parameterization of edge, there are 2 approaches depending on the edge?s contextual situation. - if the edge is either single, or it is in the context of a wire or a compound, its parameterization is defined by the parameterization of its 3D curve and is considered as valid. - If the edge is in the context of a face, it should have SameParameter and SameRange flags set to Standard_True. To check these flags, you should call the function BRep_Tool::SameParameter and BRep_Tool::SameRange for an edge. If at least one of these flags is set to Standard_False, the edge is considered as invalid without any additional check. If the edge is contained by a face, and it has SameParameter and SameRange flags set to Standard_True, IsValid checks whether representation of the edge on face, in context of which the edge is considered, has the same parameterization up to the tolerance value coded on the edge. For a given parameter t on the edge having C as a 3D curve and one PCurve P on a surface S (base surface of the reference face), this checks that |C(t) - S(P(t))| is less than or equal to tolerance, where tolerance is the tolerance value coded on the edge.
         """
     @overload
-    def IsValid(self) -> bool: ...
+    def IsValid(self,S : OCP.TopoDS.TopoDS_Shape) -> bool: ...
     def Result(self,theSubS : OCP.TopoDS.TopoDS_Shape) -> BRepCheck_Result: 
         """
         None
         """
-    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True,theIsParallel : bool=False) -> None: ...
+    def SetExactMethod(self,theIsExact : bool) -> None: 
+        """
+        Sets method to calculate distance: Calculating in finite number of points (if theIsExact is false, faster, but possible not correct result) or exact calculating by using BRepLib_CheckCurveOnSurface class (if theIsExact is true, slowly, but more correctly). Exact method is used only when edge is SameParameter. Default method is calculating in finite number of points
+        """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        Sets parallel flag
+        """
+    def __init__(self,S : OCP.TopoDS.TopoDS_Shape,GeomControls : bool=True,theIsParallel : bool=False,theIsExact : bool=False) -> None: ...
     pass
 class BRepCheck_Result(OCP.Standard.Standard_Transient):
     def Blind(self) -> None: 
@@ -160,23 +176,23 @@ class BRepCheck_Result(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
@@ -259,14 +275,14 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GeometricControls(self,B : bool) -> None: 
+    def GeometricControls(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def GeometricControls(self) -> bool: ...
+    def GeometricControls(self,B : bool) -> None: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -296,23 +312,23 @@ class BRepCheck_Face(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
@@ -395,7 +411,7 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : BRepCheck_Status) -> BRepCheck_Status: 
+    def Append(self,theItem : BRepCheck_Status,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -404,7 +420,7 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : BRepCheck_Status,theIter : Any) -> None: ...
+    def Append(self,theItem : BRepCheck_Status) -> BRepCheck_Status: ...
     @overload
     def Append(self,theOther : BRepCheck_ListOfStatus) -> None: ...
     def Assign(self,theOther : BRepCheck_ListOfStatus) -> BRepCheck_ListOfStatus: 
@@ -454,14 +470,14 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : BRepCheck_Status) -> BRepCheck_Status: 
+    def Prepend(self,theOther : BRepCheck_ListOfStatus) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : BRepCheck_ListOfStatus) -> None: ...
+    def Prepend(self,theItem : BRepCheck_Status) -> BRepCheck_Status: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -479,9 +495,9 @@ class BRepCheck_ListOfStatus(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theOther : BRepCheck_ListOfStatus) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepCheck_ListOfStatus) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -512,14 +528,14 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def GeometricControls(self) -> bool: 
+    def GeometricControls(self,B : bool) -> None: 
         """
         None
 
         None
         """
     @overload
-    def GeometricControls(self,B : bool) -> None: ...
+    def GeometricControls(self) -> bool: ...
     def GetRefCount(self) -> int: 
         """
         Get the reference counter of this object
@@ -544,24 +560,28 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
         """
         None
         """
+    def IsExactMethod(self) -> bool: 
+        """
+        Returns true if exact method selected
+        """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
@@ -581,6 +601,10 @@ class BRepCheck_Edge(BRepCheck_Result, OCP.Standard.Standard_Transient):
     def NextShapeInContext(self) -> None: 
         """
         None
+        """
+    def SetExactMethod(self,theIsExact : bool) -> None: 
+        """
+        Sets method to calculate distance: Calculating in finite number of points (if theIsExact is false, faster, but possible not correct result) or exact calculating by using BRepLib_CheckCurveOnSurface class (if theIsExact is true, slowly, but more correctly). Exact method is used only when edge is SameParameter. Default method is calculating in finite number of points
         """
     def SetFailStatus(self,S : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
@@ -677,23 +701,23 @@ class BRepCheck_Shell(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
@@ -816,23 +840,23 @@ class BRepCheck_Solid(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
@@ -1075,23 +1099,23 @@ class BRepCheck_Vertex(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None
@@ -1216,23 +1240,23 @@ class BRepCheck_Wire(BRepCheck_Result, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMinimum(self) -> bool: 
         """
         None

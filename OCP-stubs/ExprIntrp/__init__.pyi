@@ -5,9 +5,9 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.TCollection
+import OCP.Expr
 import OCP.NCollection
 import OCP.Standard
-import OCP.Expr
 __all__  = [
 "ExprIntrp",
 "ExprIntrp_Analysis",
@@ -149,36 +149,36 @@ class ExprIntrp_Generator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -241,23 +241,23 @@ class ExprIntrp_GenFct(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Process(self,str : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         None
@@ -267,14 +267,14 @@ class ExprIntrp_GenFct(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -337,23 +337,23 @@ class ExprIntrp_GenRel(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns false if any syntax error has occurred during process.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Process(self,str : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Processes given string.
@@ -367,14 +367,14 @@ class ExprIntrp_GenRel(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -441,23 +441,23 @@ class ExprIntrp_GenExp(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns false if any syntax error has occurred during process.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Process(self,str : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Processes given string.
@@ -467,14 +467,14 @@ class ExprIntrp_GenExp(ExprIntrp_Generator, OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: 
+    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Use(self,named : OCP.Expr.Expr_NamedExpression) -> None: ...
+    def Use(self,func : OCP.Expr.Expr_NamedFunction) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -495,14 +495,14 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_NamedExpression) -> None: 
+    def Append(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: ...
+    def Append(self,theItem : OCP.Expr.Expr_NamedExpression) -> None: ...
     def Assign(self,theOther : ExprIntrp_SequenceOfNamedExpression) -> ExprIntrp_SequenceOfNamedExpression: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -541,14 +541,14 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
     @overload
     def InsertAfter(self,theIndex : int,theItem : OCP.Expr.Expr_NamedExpression) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : OCP.Expr.Expr_NamedExpression) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : OCP.Expr.Expr_NamedExpression) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -575,14 +575,14 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
     @overload
     def Prepend(self,theSeq : ExprIntrp_SequenceOfNamedExpression) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -608,9 +608,9 @@ class ExprIntrp_SequenceOfNamedExpression(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : ExprIntrp_SequenceOfNamedExpression) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -742,11 +742,11 @@ class ExprIntrp_SequenceOfNamedFunction(OCP.NCollection.NCollection_BaseSequence
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : ExprIntrp_SequenceOfNamedFunction) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -763,7 +763,7 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : ExprIntrp_StackOfGeneralExpression) -> None: 
+    def Append(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -774,7 +774,7 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : OCP.Expr.Expr_GeneralExpression) -> OCP.Expr.Expr_GeneralExpression: ...
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> None: ...
+    def Append(self,theOther : ExprIntrp_StackOfGeneralExpression) -> None: ...
     def Assign(self,theOther : ExprIntrp_StackOfGeneralExpression) -> ExprIntrp_StackOfGeneralExpression: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -794,14 +794,14 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> OCP.Expr.Expr_GeneralExpression: 
+    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralExpression,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralExpression,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> OCP.Expr.Expr_GeneralExpression: ...
     @overload
     def InsertBefore(self,theItem : OCP.Expr.Expr_GeneralExpression,theIter : Any) -> OCP.Expr.Expr_GeneralExpression: 
         """
@@ -847,9 +847,9 @@ class ExprIntrp_StackOfGeneralExpression(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : ExprIntrp_StackOfGeneralExpression) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -863,7 +863,7 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : ExprIntrp_StackOfGeneralFunction) -> None: 
+    def Append(self,theItem : OCP.Expr.Expr_GeneralFunction) -> OCP.Expr.Expr_GeneralFunction: 
         """
         Append one item at the end
 
@@ -872,9 +872,9 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> None: ...
+    def Append(self,theOther : ExprIntrp_StackOfGeneralFunction) -> None: ...
     @overload
-    def Append(self,theItem : OCP.Expr.Expr_GeneralFunction) -> OCP.Expr.Expr_GeneralFunction: ...
+    def Append(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> None: ...
     def Assign(self,theOther : ExprIntrp_StackOfGeneralFunction) -> ExprIntrp_StackOfGeneralFunction: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -894,14 +894,14 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralFunction,theIter : Any) -> None: 
+    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> OCP.Expr.Expr_GeneralFunction: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralFunction,theIter : Any) -> OCP.Expr.Expr_GeneralFunction: ...
+    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralFunction,theIter : Any) -> None: ...
     @overload
     def InsertBefore(self,theOther : ExprIntrp_StackOfGeneralFunction,theIter : Any) -> None: 
         """
@@ -949,9 +949,9 @@ class ExprIntrp_StackOfGeneralFunction(OCP.NCollection.NCollection_BaseList):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : ExprIntrp_StackOfGeneralFunction) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
@@ -994,14 +994,14 @@ class ExprIntrp_StackOfGeneralRelation(OCP.NCollection.NCollection_BaseList):
         First item (non-const)
         """
     @overload
-    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralRelation,theIter : Any) -> OCP.Expr.Expr_GeneralRelation: 
+    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralRelation,theIter : Any) -> None: 
         """
         InsertAfter
 
         InsertAfter
         """
     @overload
-    def InsertAfter(self,theOther : ExprIntrp_StackOfGeneralRelation,theIter : Any) -> None: ...
+    def InsertAfter(self,theItem : OCP.Expr.Expr_GeneralRelation,theIter : Any) -> OCP.Expr.Expr_GeneralRelation: ...
     @overload
     def InsertBefore(self,theItem : OCP.Expr.Expr_GeneralRelation,theIter : Any) -> OCP.Expr.Expr_GeneralRelation: 
         """

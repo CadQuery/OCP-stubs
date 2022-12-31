@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Interface
 import OCP.StepData
 import OCP.StepDimTol
-import OCP.Interface
 __all__  = [
 "RWStepDimTol_RWAngularityTolerance",
 "RWStepDimTol_RWCircularRunoutTolerance",

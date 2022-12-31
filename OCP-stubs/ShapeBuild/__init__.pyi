@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.BRepTools
-import OCP.TopLoc
-import OCP.Geom2d
-import OCP.gp
 import OCP.Geom
-import OCP.TopAbs
-import OCP.Standard
-import OCP.ShapeExtend
+import OCP.TopLoc
 import OCP.TopoDS
+import OCP.ShapeExtend
+import OCP.BRepTools
+import OCP.gp
+import OCP.TopAbs
+import OCP.Geom2d
+import OCP.Standard
 __all__  = [
 "ShapeBuild",
 "ShapeBuild_Edge",
@@ -55,7 +55,7 @@ class ShapeBuild_Edge():
         Copy edge and replace one or both its vertices to a given one(s). Vertex V1 replaces FORWARD vertex, and V2 - REVERSED, as they are found by TopoDS_Iterator. If V1 or V2 is NULL, the original vertex is taken
         """
     @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face) -> None: 
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face,p1 : float,p2 : float) -> None: 
         """
         Makes edge with curve and location
 
@@ -72,11 +72,11 @@ class ShapeBuild_Edge():
     @overload
     def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,curve : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face) -> None: ...
     @overload
     def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location) -> None: ...
     @overload
-    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,face : OCP.TopoDS.TopoDS_Face,p1 : float,p2 : float) -> None: ...
+    def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,pcurve : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
     @overload
     def MakeEdge(self,edge : OCP.TopoDS.TopoDS_Edge,curve : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,p1 : float,p2 : float) -> None: ...
     def ReassignPCurve(self,edge : OCP.TopoDS.TopoDS_Edge,old : OCP.TopoDS.TopoDS_Face,sub : OCP.TopoDS.TopoDS_Face) -> bool: 
@@ -165,23 +165,23 @@ class ShapeBuild_ReShape(OCP.BRepTools.BRepTools_ReShape, OCP.Standard.Standard_
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNewShape(self,theShape : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         None

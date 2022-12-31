@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
+import OCP.TCollection
+import OCP.Message
+import OCP.Interface
 import OCP.Standard
 import OCP.TColStd
-import OCP.Interface
-import OCP.Message
-import OCP.TCollection
 import OCP.Resource
+import io
 __all__  = [
 "StepData",
 "StepData_Array1OfField",
@@ -158,13 +158,13 @@ class StepData_Array1OfField():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepData_Field,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepData_Array1OfField) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepData_Field,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepData_GeneralModule(OCP.Interface.Interface_GeneralModule, OCP.Standard.Standard_Transient):
@@ -220,23 +220,23 @@ class StepData_GeneralModule(OCP.Interface.Interface_GeneralModule, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ListImplied(self,model : OCP.Interface.Interface_InterfaceModel,CN : int,ent : OCP.Standard.Standard_Transient,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         List the Implied References of <ent> considered in the context of a Model <model> : i.e. the Entities which are Referenced while not considered as Shared (not copied if <ent> is, references not renewed by CopyCase but by ImpliedCase, only if referenced Entities have been Copied too) FillShared + ListImplied give the complete list of References Default calls ListImpliedCase (i.e. ignores the model) Can be redefined to use the model for working
@@ -337,23 +337,23 @@ class StepData_Described(OCP.Standard.Standard_Transient):
         Tells if a described entity is complex
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,steptype : str) -> bool: 
         """
         Tells if a step type is matched by <me> For a Simple Entity : own type or super type For a Complex Entity : one of the members
@@ -406,23 +406,23 @@ class StepData_EDescr(OCP.Standard.Standard_Transient):
         Tells if a EDescr is complex (ECDescr) or simple (ESDescr)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,steptype : str) -> bool: 
         """
         Tells if a ESDescr matches a step type : exact or super type
@@ -479,23 +479,23 @@ class StepData_ECDescr(StepData_EDescr, OCP.Standard.Standard_Transient):
         Returns True
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,steptype : str) -> bool: 
         """
         Tells if a ESDescr matches a step type : exact or super type
@@ -569,23 +569,23 @@ class StepData_ESDescr(StepData_EDescr, OCP.Standard.Standard_Transient):
         Returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSub(self,other : StepData_ESDescr) -> bool: 
         """
         Tells if <me> is sub-type of (or equal to) another one
@@ -735,20 +735,20 @@ class StepData_Field():
         Sets an undetermined value : can be String, SelectMember, HArray(1-2) ... else, an Entity In case of an HArray, determines and records its size(s)
         """
     @overload
-    def SetBoolean(self,val : bool=False) -> None: 
+    def SetBoolean(self,num : int,val : bool) -> None: 
         """
         Sets a Boolean value (or predeclares a list as boolean)
 
         None
         """
     @overload
-    def SetBoolean(self,num : int,val : bool) -> None: ...
+    def SetBoolean(self,val : bool=False) -> None: ...
     def SetDerived(self) -> None: 
         """
         Codes a Field as derived (no proper value)
         """
     @overload
-    def SetEntity(self,val : OCP.Standard.Standard_Transient) -> None: 
+    def SetEntity(self) -> None: 
         """
         Sets an Entity Value
 
@@ -757,36 +757,36 @@ class StepData_Field():
         None
         """
     @overload
+    def SetEntity(self,val : OCP.Standard.Standard_Transient) -> None: ...
+    @overload
     def SetEntity(self,num : int,val : OCP.Standard.Standard_Transient) -> None: ...
     @overload
-    def SetEntity(self) -> None: ...
-    @overload
-    def SetEnum(self,val : int=-1,text : str='') -> None: 
+    def SetEnum(self,num : int,val : int,text : str='') -> None: 
         """
         Sets an Enum Value (as its integer counterpart) (or predeclares a list as Enum) If <text> is given , also sets its textual expression <val> negative means unknown (known values begin at 0)
 
         Sets an Enum Value (Integer counterpart), also its text expression if known (if list has been set as "any")
         """
     @overload
-    def SetEnum(self,num : int,val : int,text : str='') -> None: ...
+    def SetEnum(self,val : int=-1,text : str='') -> None: ...
     @overload
-    def SetInt(self,num : int,val : int,kind : int) -> None: 
+    def SetInt(self,val : int) -> None: 
         """
         Directly sets the Integer value, if its Kind matches Integer, Boolean, Logical, or Enum (does not change Kind)
 
         Internal access to an Integer Value for a list, plus its kind
         """
     @overload
-    def SetInt(self,val : int) -> None: ...
+    def SetInt(self,num : int,val : int,kind : int) -> None: ...
     @overload
-    def SetInteger(self,num : int,val : int) -> None: 
+    def SetInteger(self,val : int=0) -> None: 
         """
         Sets an Integer value (before SetList* declares it as Integer)
 
         Sets an Integer Value for a list (rank num) (recognizes a SelectMember)
         """
     @overload
-    def SetInteger(self,val : int=0) -> None: ...
+    def SetInteger(self,num : int,val : int) -> None: ...
     def SetList(self,size : int,first : int=1) -> None: 
         """
         Declares a field as a list, with an initial size Initial lower is defaulted as 1, can be defined The list starts empty, typed by the last Set* If no Set* before, sets it as "any" (transient/select)
@@ -835,9 +835,9 @@ class StepData_Field():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,other : StepData_Field,copy : bool=False) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class StepData_FieldList():
     """
@@ -1019,23 +1019,23 @@ class StepData_Protocol(OCP.Interface.Interface_Protocol, OCP.Standard.Standard_
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSuitableModel(self,model : OCP.Interface.Interface_InterfaceModel) -> bool: 
         """
         Returns True if <model> is a Model of Step Norm
@@ -1131,23 +1131,23 @@ class StepData_FileRecognizer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Result(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns result of last recognition (call of Evaluate)
@@ -1204,23 +1204,23 @@ class StepData_FreeFormEntity(OCP.Standard.Standard_Transient):
         Returns True if a FreeFormEntity is Complex (i.e. has Next)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbFields(self) -> int: 
         """
         Returns the count of fields
@@ -1326,23 +1326,23 @@ class StepData_DefaultGeneral(StepData_GeneralModule, OCP.Interface.Interface_Ge
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ListImplied(self,model : OCP.Interface.Interface_InterfaceModel,CN : int,ent : OCP.Standard.Standard_Transient,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         List the Implied References of <ent> considered in the context of a Model <model> : i.e. the Entities which are Referenced while not considered as Shared (not copied if <ent> is, references not renewed by CopyCase but by ImpliedCase, only if referenced Entities have been Copied too) FillShared + ListImplied give the complete list of References Default calls ListImpliedCase (i.e. ignores the model) Can be redefined to use the model for working
@@ -1459,23 +1459,23 @@ class StepData_GlobalNodeOfWriterLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Module(self) -> StepData_ReadWriteModule: 
         """
         Returns the Module stored in a given GlobalNode
@@ -1570,23 +1570,23 @@ class StepData_HArray1OfField(StepData_Array1OfField, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepData_Field: 
         """
         Returns last element
@@ -1628,13 +1628,13 @@ class StepData_HArray1OfField(StepData_Array1OfField, OCP.Standard.Standard_Tran
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepData_Array1OfField) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepData_Field) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1710,23 +1710,23 @@ class StepData_NodeOfWriterLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Module(self) -> StepData_ReadWriteModule: 
         """
         Returns the Module designated by a precise Node
@@ -1848,27 +1848,27 @@ class StepData_PDescr(OCP.Standard.Standard_Transient):
         Tells if <me> is a Field. Else it is a Type
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     def IsInteger(self) -> bool: 
         """
         Tells if <me> is for an Integer
         """
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLogical(self) -> bool: 
         """
         Tells if <me> is for a Logical value (false,true,unknown)
@@ -2050,23 +2050,23 @@ class StepData_Plex(StepData_Described, OCP.Standard.Standard_Transient):
         Returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,steptype : str) -> bool: 
         """
         Tells if a step type is matched by <me> For a Simple Entity : own type or super type For a Complex Entity : one of the members
@@ -2195,23 +2195,23 @@ class StepData_FileProtocol(StepData_Protocol, OCP.Interface.Interface_Protocol,
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSuitableModel(self,model : OCP.Interface.Interface_InterfaceModel) -> bool: 
         """
         Returns True if <model> is a Model of Step Norm
@@ -2286,14 +2286,14 @@ class StepData_ReadWriteModule(OCP.Interface.Interface_ReaderModule, OCP.Standar
         Translate the Type of record <num> in <data> to a positive Case Number, or 0 if failed. Works with a StepReaderData, in which the Type of an Entity is defined as a String : Reads the RecordType <num> then calls CaseNum (this type) Warning : The methods CaseStep, StepType and Recognize, must be in phase (triplets CaseNum-StepType-Type of Object)
         """
     @overload
-    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: 
+    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: 
         """
         Defines Case Numbers corresponding to the recognized Types Called by CaseNum (data,num) above for a Simple Type Entity Warning : CaseStep must give the same Value as Protocol does for the Entity type which corresponds to this Type given as a String
 
         Same a above but for a Complex Type Entity ("Plex") The provided Default recognizes nothing
         """
     @overload
-    def CaseStep(self,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> int: ...
+    def CaseStep(self,atype : OCP.TCollection.TCollection_AsciiString) -> int: ...
     def ComplexType(self,CN : int,types : OCP.TColStd.TColStd_SequenceOfAsciiString) -> bool: 
         """
         Function specific to STEP, which delivers the list of types which corresponds to a complex type. If <CN> is not for a complex type, this method returns False. Else it returns True and fills the list in alphabetic order. The default returns False. To be redefined as required.
@@ -2323,23 +2323,23 @@ class StepData_ReadWriteModule(OCP.Interface.Interface_ReaderModule, OCP.Standar
         Returns True if the Case Number corresponds to a Complex Type ("Plex"). Remember that all possible combinations must be aknowledged to be processed Default is False for all cases. For a Protocol which defines possible Plexes, this method must be redefined.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NewRead(self,casenum : int,data : OCP.Interface.Interface_FileReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.Standard.Standard_Transient) -> bool: 
         """
         Specific operator (create+read) defaulted to do nothing. It can be redefined when it is not possible to work in two steps (NewVoid then Read). This occurs when no default constructor is defined : hence the result <ent> must be created with an effective definition from the reader. Remark : if NewRead is defined, Copy has nothing to do.
@@ -2428,23 +2428,23 @@ class StepData_SelectMember(OCP.Standard.Standard_Transient):
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -2578,23 +2578,23 @@ class StepData_SelectInt(StepData_SelectMember, OCP.Standard.Standard_Transient)
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -2736,23 +2736,23 @@ class StepData_SelectNamed(StepData_SelectMember, OCP.Standard.Standard_Transien
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -2895,23 +2895,23 @@ class StepData_SelectArrReal(StepData_SelectNamed, StepData_SelectMember, OCP.St
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -3049,23 +3049,23 @@ class StepData_SelectReal(StepData_SelectMember, OCP.Standard.Standard_Transient
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -3324,23 +3324,23 @@ class StepData_Simple(StepData_Described, OCP.Standard.Standard_Transient):
         Returns False
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Matches(self,steptype : str) -> bool: 
         """
         Tells if a step type is matched by <me> For a Simple Entity : own type or super type For a Complex Entity : one of the members
@@ -3378,14 +3378,14 @@ class StepData_StepDumper():
     Provides a way to dump entities processed through STEP, with these features : - same form as for writing a STEP File (because it is clear and compact enough, even if the names of the fields do not appear) : thus, no additional resource is required - possibility to look for an entity itself (only its Type or with its content), an entity and it shared items (one level) or all the entities its refers to, directly or recursively.
     """
     @overload
-    def Dump(self,S : io.BytesIO,ent : OCP.Standard.Standard_Transient,level : int) -> bool: 
+    def Dump(self,S : io.BytesIO,num : int,level : int) -> bool: 
         """
         Dumps a Entity on an Messenger. Returns True if success, False, if the entity to dump has not been recognized by the Protocol. <level> can have one of these values : - 0 : prints the TYPE only, as known in STEP Files (StepType) If <ent> has not been regognized by the Protocol, or if its type is Complex, the StepType is replaced by the display of the cdl type. Complex Type are well processed by level 1. - 1 : dumps the entity, completely (whatever it has simple or complex type) but alone. - 2 : dumps the entity completely, plus the item its refers to at first level (a header message designates the starting entity of the dump) <Lists Shared and Implied> - 3 : dumps the entity and its referred items at any levels
 
         Works as Dump with a Transient, but directly takes the entity designated by its number in the Model Returns False, also if <num> is out of range
         """
     @overload
-    def Dump(self,S : io.BytesIO,num : int,level : int) -> bool: ...
+    def Dump(self,S : io.BytesIO,ent : OCP.Standard.Standard_Transient,level : int) -> bool: ...
     def StepWriter(self) -> StepData_StepWriter: 
         """
         Gives an access to the tool which is used to work : this allow to acts on some parameters : Floating Format, Scopes ...
@@ -3409,7 +3409,7 @@ class StepData_StepModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Adds a ReportEntity as such. Returns False if the concerned entity is not recorded in the Model Else, adds it into, either the main report list or the list for semantic checks, then returns True
         """
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,proto : OCP.Interface.Interface_Protocol,level : int=0,listall : bool=False) -> None: 
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,lib : OCP.Interface.Interface_GeneralLib,level : int=0,listall : bool=False) -> None: 
         """
         Adds to the Model, an Entity with all its References, as they are defined by General Services FillShared and ListImplied. Process is recursive (any sub-levels) if <level> = 0 (Default) Else, adds sub-entities until the required sub-level. Especially, if <level> = 1, adds immediate subs and that's all
 
@@ -3420,7 +3420,7 @@ class StepData_StepModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
     @overload
     def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,level : int=0,listall : bool=False) -> None: ...
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,lib : OCP.Interface.Interface_GeneralLib,level : int=0,listall : bool=False) -> None: ...
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,proto : OCP.Interface.Interface_Protocol,level : int=0,listall : bool=False) -> None: ...
     def CategoryNumber(self,num : int) -> int: 
         """
         Returns the recorded category number for a given entity number 0 if none was defined for this entity
@@ -3560,23 +3560,23 @@ class StepData_StepModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Returns the unit initialization flag True - the unit was initialized False - the unit value was not initialized, the default value is used
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRedefinedContent(self,num : int) -> bool: 
         """
         Returns True if <num> identifies an Entity which content is redefined through a ReportEntity (i.e. with literal data only) This happens when an entity is syntactically erroneous in the way that its basic content remains empty. For more details (such as content itself), see ReportEntity
@@ -3765,7 +3765,7 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
     Specific FileReaderData for Step Contains literal description of entities (for each one : type as a string, ident, parameter list) provides references evaluation, plus access to literal data and specific access methods (Boolean, XY, XYZ)Specific FileReaderData for Step Contains literal description of entities (for each one : type as a string, ident, parameter list) provides references evaluation, plus access to literal data and specific access methods (Boolean, XY, XYZ)Specific FileReaderData for Step Contains literal description of entities (for each one : type as a string, ident, parameter list) provides references evaluation, plus access to literal data and specific access methods (Boolean, XY, XYZ)
     """
     @overload
-    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
+    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
         """
         Adds a parameter to record no "num" and fills its fields (EntityNumber is optional) Warning : <aval> is assumed to be memory-managed elsewhere : it is NOT copied. This gives a best speed : strings remain stored in pages of characters
 
@@ -3776,7 +3776,7 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
     @overload
     def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: ...
     @overload
-    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
+    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
     def AddStepParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
         """
         Fills the fields of a parameter of a record. This is a variant of AddParam, Adapted to STEP (optimized for specific values)
@@ -3864,23 +3864,23 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         Returns True if the status "Error Load" has been set (to True or False)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsParamDefined(self,num : int,nump : int) -> bool: 
         """
         Returns True if parameter "nump" of record "num" is defined (it is not if its type is ParamVoid)
@@ -3951,14 +3951,14 @@ class StepData_StepReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         reads parameter <nump> of record <num> as a Boolean Return value and Check managed as by ReadReal (demands a Boolean enum, i.e. text ".T." for True or ".F." for False)
         """
     @overload
-    def ReadEntity(self,num : int,nump : int,mess : str,ach : OCP.Interface.Interface_Check,atype : OCP.Standard.Standard_Type,ent : OCP.Standard.Standard_Transient) -> bool: 
+    def ReadEntity(self,num : int,nump : int,mess : str,ach : OCP.Interface.Interface_Check,sel : StepData_SelectType) -> bool: 
         """
         Reads parameter <nump> of record <num> as a single Entity. Return value and Check managed as by ReadReal (demands a reference to an Entity). In Addition, demands read Entity to be Kind of a required Type <atype>. Remark that returned status is False and <ent> is Null if parameter is not an Entity, <ent> remains Not Null is parameter is an Entity but is not Kind of required type
 
         Same as above, but a SelectType checks Type Matching, and records the read Entity (see method Value from SelectType)
         """
     @overload
-    def ReadEntity(self,num : int,nump : int,mess : str,ach : OCP.Interface.Interface_Check,sel : StepData_SelectType) -> bool: ...
+    def ReadEntity(self,num : int,nump : int,mess : str,ach : OCP.Interface.Interface_Check,atype : OCP.Standard.Standard_Type,ent : OCP.Standard.Standard_Transient) -> bool: ...
     def ReadEnum(self,num : int,nump : int,mess : str,ach : OCP.Interface.Interface_Check,enumtool : StepData_EnumTool,val : int) -> bool: 
         """
         Reads parameter <nump> of record <num> as an Enumeration (text between dots) and converts it to an integer value, by an EnumTool. Returns True if OK, false if : this parameter is not enumeration, or is not recognized by the EnumTool (with fail)
@@ -4254,11 +4254,11 @@ class StepData_StepWriter():
         sends a reference to an entity (its identifier with '#') REMARK 1 : a Null <val> is interpreted as "Undefined" REMARK 2 : for an HAsciiString which is not recorded in the Model, it is send as its String Content, between quotes
         """
     @overload
-    def Send(self,val : int) -> None: ...
+    def Send(self,val : OCP.Standard.Standard_Transient) -> None: ...
     @overload
     def Send(self,val : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @overload
-    def Send(self,val : OCP.Standard.Standard_Transient) -> None: ...
+    def Send(self,val : int) -> None: ...
     def SendArrReal(self,anArr : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
         sends an array of real
@@ -4293,14 +4293,14 @@ class StepData_StepWriter():
         Send an Entity of the Data Section. If it corresponds to a Scope, also Sends the Scope information and contained Items
         """
     @overload
-    def SendEnum(self,val : OCP.TCollection.TCollection_AsciiString) -> None: 
+    def SendEnum(self,val : str) -> None: 
         """
         sends an enum given by String (literal expression) adds '.' around it if not done Remark : val can be computed by class EnumTool from StepData: StepWriter.SendEnum (myenum.Text(enumval));
 
         sends an enum given by String (literal expression) adds '.' around it if not done
         """
     @overload
-    def SendEnum(self,val : str) -> None: ...
+    def SendEnum(self,val : OCP.TCollection.TCollection_AsciiString) -> None: ...
     def SendField(self,fild : StepData_Field,descr : StepData_PDescr) -> None: 
         """
         Sends the content of a field, controlled by its descriptor If the descriptor is not defined, follows the description detained by the field itself
@@ -4334,14 +4334,14 @@ class StepData_StepWriter():
         Sends a SelectMember, which cab be named or not
         """
     @overload
-    def SendString(self,val : str) -> None: 
+    def SendString(self,val : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         sends a string exactly as it is given
 
         sends a string exactly as it is given
         """
     @overload
-    def SendString(self,val : OCP.TCollection.TCollection_AsciiString) -> None: ...
+    def SendString(self,val : str) -> None: ...
     def SendUndef(self) -> None: 
         """
         sends an undefined (optional absent) parameter (by '$')
@@ -4421,23 +4421,23 @@ class StepData_UndefinedEntity(OCP.Standard.Standard_Transient):
         Returns True if <me> defines a Multiple Type Entity (see ANDOR)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSub(self) -> bool: 
         """
         Returns True if an Unndefined Entity is SubPart of another one
@@ -4527,9 +4527,9 @@ class StepData_WriterLib():
         Starts Iteration on the Modules (sets it on the first one)
         """
     @overload
-    def __init__(self,aprotocol : StepData_Protocol) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aprotocol : StepData_Protocol) -> None: ...
     pass
 StepData_LFalse: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LFalse: 0>
 StepData_LTrue: OCP.StepData.StepData_Logical # value = <StepData_Logical.StepData_LTrue: 1>

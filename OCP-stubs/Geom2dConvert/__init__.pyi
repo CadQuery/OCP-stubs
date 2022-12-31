@@ -4,18 +4,23 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor2d
-import OCP.GeomAbs
-import OCP.TColGeom2d
-import io
+import OCP.NCollection
+import OCP.gp
 import OCP.Geom2d
+import OCP.GeomAbs
+import io
+import OCP.TColGeom2d
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "Geom2dConvert",
+"Geom2dConvert_ApproxArcsSegments",
 "Geom2dConvert_ApproxCurve",
 "Geom2dConvert_BSplineCurveKnotSplitting",
 "Geom2dConvert_BSplineCurveToBezierCurve",
-"Geom2dConvert_CompCurveToBSplineCurve"
+"Geom2dConvert_CompCurveToBSplineCurve",
+"Geom2dConvert_PPoint",
+"Geom2dConvert_SequenceOfPPoint"
 ]
 class Geom2dConvert():
     """
@@ -39,7 +44,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float,AngularTolerance : float) -> Tuple[bool]: 
+    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float) -> Tuple[bool]: 
         """
         This Method concatenates C1 the ArrayOfCurves as far as it is possible. ArrayOfCurves[0..N-1] ArrayOfToler contains the biggest tolerance of the two points shared by two consecutives curves. Its dimension: [0..N-2] ClosedFlag indicates if the ArrayOfCurves is closed. In this case ClosedTolerance contains the biggest tolerance of the two points which are at the closure. Otherwise its value is 0.0 ClosedFlag becomes False on the output if it is impossible to build closed curve.
 
@@ -47,7 +52,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float) -> Tuple[bool]: ...
+    def ConcatC1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfIndices : OCP.TColStd.TColStd_HArray1OfInteger,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float,AngularTolerance : float) -> Tuple[bool]: ...
     @staticmethod
     def ConcatG1_s(ArrayOfCurves : OCP.TColGeom2d.TColGeom2d_Array1OfBSplineCurve,ArrayOfToler : OCP.TColStd.TColStd_Array1OfReal,ArrayOfConcatenated : OCP.TColGeom2d.TColGeom2d_HArray1OfBSplineCurve,ClosedTolerance : float) -> Tuple[bool]: 
         """
@@ -60,7 +65,7 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         -- Convert a curve to BSpline by Approximation
 
@@ -68,8 +73,58 @@ class Geom2dConvert():
         """
     @staticmethod
     @overload
-    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromK1 : int,ToK2 : int,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
+    def SplitBSplineCurve_s(C : OCP.Geom2d.Geom2d_BSplineCurve,FromU1 : float,ToU2 : float,ParametricTolerance : float,SameOrientation : bool=True) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     def __init__(self) -> None: ...
+    pass
+class Geom2dConvert_ApproxArcsSegments():
+    """
+    Approximation of a free-form curve by a sequence of arcs+segments.
+    """
+    class Status_e():
+        """
+        None
+
+        Members:
+
+          StatusOK
+
+          StatusNotDone
+
+          StatusError
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        StatusError: OCP.Geom2dConvert.Status_e # value = <Status_e.StatusError: 2>
+        StatusNotDone: OCP.Geom2dConvert.Status_e # value = <Status_e.StatusNotDone: 1>
+        StatusOK: OCP.Geom2dConvert.Status_e # value = <Status_e.StatusOK: 0>
+        __entries: dict # value = {'StatusOK': (<Status_e.StatusOK: 0>, None), 'StatusNotDone': (<Status_e.StatusNotDone: 1>, None), 'StatusError': (<Status_e.StatusError: 2>, None)}
+        __members__: dict # value = {'StatusOK': <Status_e.StatusOK: 0>, 'StatusNotDone': <Status_e.StatusNotDone: 1>, 'StatusError': <Status_e.StatusError: 2>}
+        pass
+    def GetResult(self) -> OCP.TColGeom2d.TColGeom2d_SequenceOfCurve: 
+        """
+        Get the result curve after approximation.
+        """
+    def __init__(self,theCurve : OCP.Adaptor2d.Adaptor2d_Curve2d,theTolerance : float,theAngleTol : float) -> None: ...
+    StatusError: OCP.Geom2dConvert.Status_e # value = <Status_e.StatusError: 2>
+    StatusNotDone: OCP.Geom2dConvert.Status_e # value = <Status_e.StatusNotDone: 1>
+    StatusOK: OCP.Geom2dConvert.Status_e # value = <Status_e.StatusOK: 0>
     pass
 class Geom2dConvert_ApproxCurve():
     """
@@ -163,4 +218,169 @@ class Geom2dConvert_CompCurveToBSplineCurve():
     def __init__(self,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
     @overload
     def __init__(self,BasisCurve : OCP.Geom2d.Geom2d_BoundedCurve,Parameterisation : OCP.Convert.Convert_ParameterisationType=Convert_ParameterisationType.Convert_TgtThetaOver2) -> None: ...
+    pass
+class Geom2dConvert_PPoint():
+    """
+    Class representing a point on curve, with 2D coordinate and the tangent
+    """
+    def D1(self) -> OCP.gp.gp_XY: 
+        """
+        Query the first derivatives.
+        """
+    def Dist(self,theOth : Geom2dConvert_PPoint) -> float: 
+        """
+        Compute the distance betwwen two 2d points.
+        """
+    def Parameter(self) -> float: 
+        """
+        Query the parmeter value.
+        """
+    def Point(self) -> OCP.gp.gp_XY: 
+        """
+        Query the point location.
+        """
+    def SetD1(self,theD1 : OCP.gp.gp_XY) -> None: 
+        """
+        Change the value of the derivative at the point.
+        """
+    @overload
+    def __init__(self,theParameter : float,thePoint : OCP.gp.gp_XY,theD1 : OCP.gp.gp_XY) -> None: ...
+    @overload
+    def __init__(self,theParameter : float,theAdaptor : OCP.Adaptor2d.Adaptor2d_Curve2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    pass
+class Geom2dConvert_SequenceOfPPoint(OCP.NCollection.NCollection_BaseSequence):
+    """
+    Purpose: Definition of a sequence of elements indexed by an Integer in range of 1..n
+    """
+    def Allocator(self) -> OCP.NCollection.NCollection_BaseAllocator: 
+        """
+        Returns attached allocator
+        """
+    @overload
+    def Append(self,theItem : Geom2dConvert_PPoint) -> None: 
+        """
+        Append one item
+
+        Append another sequence (making it empty)
+        """
+    @overload
+    def Append(self,theSeq : Geom2dConvert_SequenceOfPPoint) -> None: ...
+    def Assign(self,theOther : Geom2dConvert_SequenceOfPPoint) -> Geom2dConvert_SequenceOfPPoint: 
+        """
+        Replace this sequence by the items of theOther. This method does not change the internal allocator.
+        """
+    def ChangeFirst(self) -> Geom2dConvert_PPoint: 
+        """
+        First item access
+        """
+    def ChangeLast(self) -> Geom2dConvert_PPoint: 
+        """
+        Last item access
+        """
+    def ChangeValue(self,theIndex : int) -> Geom2dConvert_PPoint: 
+        """
+        Variable item access by theIndex
+        """
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: 
+        """
+        Clear the items out, take a new allocator if non null
+        """
+    def Exchange(self,I : int,J : int) -> None: 
+        """
+        Exchange two members
+        """
+    def First(self) -> Geom2dConvert_PPoint: 
+        """
+        First item access
+        """
+    @overload
+    def InsertAfter(self,theIndex : int,theItem : Geom2dConvert_PPoint) -> None: 
+        """
+        InsertAfter theIndex another sequence (making it empty)
+
+        InsertAfter theIndex theItem
+        """
+    @overload
+    def InsertAfter(self,theIndex : int,theSeq : Geom2dConvert_SequenceOfPPoint) -> None: ...
+    @overload
+    def InsertBefore(self,theIndex : int,theSeq : Geom2dConvert_SequenceOfPPoint) -> None: 
+        """
+        InsertBefore theIndex theItem
+
+        InsertBefore theIndex another sequence (making it empty)
+        """
+    @overload
+    def InsertBefore(self,theIndex : int,theItem : Geom2dConvert_PPoint) -> None: ...
+    def IsEmpty(self) -> bool: 
+        """
+        Empty query
+        """
+    def Last(self) -> Geom2dConvert_PPoint: 
+        """
+        Last item access
+        """
+    def Length(self) -> int: 
+        """
+        Number of items
+        """
+    def Lower(self) -> int: 
+        """
+        Method for consistency with other collections.
+        """
+    @overload
+    def Prepend(self,theItem : Geom2dConvert_PPoint) -> None: 
+        """
+        Prepend one item
+
+        Prepend another sequence (making it empty)
+        """
+    @overload
+    def Prepend(self,theSeq : Geom2dConvert_SequenceOfPPoint) -> None: ...
+    @overload
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+        """
+        Remove one item
+
+        Remove range of items
+        """
+    @overload
+    def Remove(self,theIndex : int) -> None: ...
+    def Reverse(self) -> None: 
+        """
+        Reverse sequence
+        """
+    def SetValue(self,theIndex : int,theItem : Geom2dConvert_PPoint) -> None: 
+        """
+        Set item value by theIndex
+        """
+    def Size(self) -> int: 
+        """
+        Number of items
+        """
+    def Split(self,theIndex : int,theSeq : Geom2dConvert_SequenceOfPPoint) -> None: 
+        """
+        Split in two sequences
+        """
+    def Upper(self) -> int: 
+        """
+        Method for consistency with other collections.
+        """
+    def Value(self,theIndex : int) -> Geom2dConvert_PPoint: 
+        """
+        Constant item access by theIndex
+        """
+    @overload
+    def __init__(self,theOther : Geom2dConvert_SequenceOfPPoint) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    @staticmethod
+    def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+        """
+        Static deleter to be passed to BaseSequence
+        """
     pass

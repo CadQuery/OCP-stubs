@@ -5,8 +5,8 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import io
-import OCP.gp
 import OCP.NCollection
+import OCP.gp
 import OCP.Standard
 __all__  = [
 "TopLoc_Datum3D",
@@ -53,23 +53,23 @@ class TopLoc_Datum3D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ShallowDump(self,S : io.BytesIO) -> None: 
         """
         Writes the contents of this Datum3D to the stream S.
@@ -87,9 +87,9 @@ class TopLoc_Datum3D(OCP.Standard.Standard_Transient):
         Returns a gp_Trsf which, when applied to this datum, produces the default datum.
         """
     @overload
-    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -118,14 +118,14 @@ class TopLoc_IndexedMapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Contains(self,theKey1 : TopLoc_Location) -> bool: 
         """
         Contains
@@ -187,9 +187,9 @@ class TopLoc_IndexedMapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TopLoc_IndexedMapOfLocation) -> None: ...
     pass
@@ -291,11 +291,11 @@ class TopLoc_Location():
         Returns the transformation associated to the coordinate system.
         """
     @overload
-    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
-    @overload
     def __init__(self,D : TopLoc_Datum3D) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
     def __mul__(self,Other : TopLoc_Location) -> TopLoc_Location: 
         """
         None
@@ -345,14 +345,14 @@ class TopLoc_MapOfLocation(OCP.NCollection.NCollection_BaseMap):
         Assign. This method does not change the internal allocator.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def Contains(self,theOther : TopLoc_MapOfLocation) -> bool: 
         """
@@ -437,9 +437,9 @@ class TopLoc_MapOfLocation(OCP.NCollection.NCollection_BaseMap):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : TopLoc_MapOfLocation) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : TopLoc_MapOfLocation) -> None: ...
     pass
 class TopLoc_SListNodeOfItemLocation(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -463,23 +463,23 @@ class TopLoc_SListNodeOfItemLocation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Tail(self) -> TopLoc_SListOfItemLocation: 
         """
         None
@@ -549,9 +549,9 @@ class TopLoc_SListOfItemLocation():
         Returns the current value of the list. An error is raised if the list is empty.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,Other : TopLoc_SListOfItemLocation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,anItem : TopLoc_ItemLocation,aTail : TopLoc_SListOfItemLocation) -> None: ...
     pass

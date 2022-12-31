@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
 import OCP.TCollection
 import OCP.TColStd
+import io
 __all__  = [
 "Standard",
 "Standard_AbortiveTransaction",
@@ -50,10 +50,10 @@ __all__  = [
 "Standard_ReadBuffer",
 "Standard_ReadLineBuffer",
 "Standard_Static_Assert_true",
-"Standard_TooManyUsers",
 "Standard_Persistent",
 "Standard_Type",
 "Standard_TypeMismatch",
+"Standard_UUID",
 "Standard_Underflow",
 "ACos",
 "ACosApprox",
@@ -242,14 +242,14 @@ class Standard_Condition():
         Set event into signaling state.
         """
     @overload
-    def Wait(self,theTimeMilliseconds : int) -> bool: 
+    def Wait(self) -> None: 
         """
         Wait for Event (infinity).
 
         Wait for signal requested time.
         """
     @overload
-    def Wait(self) -> None: ...
+    def Wait(self,theTimeMilliseconds : int) -> bool: ...
     def __init__(self,theIsSet : bool) -> None: ...
     def getHandle(self) -> capsule: 
         """
@@ -334,7 +334,7 @@ class Standard_Dump():
         """
     @staticmethod
     @overload
-    def GetPointerInfo_s(thePointer : capsule,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
+    def GetPointerInfo_s(thePointer : Standard_Transient,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Convert handle pointer to address of the pointer. If the handle is NULL, the result is an empty string.
 
@@ -342,7 +342,7 @@ class Standard_Dump():
         """
     @staticmethod
     @overload
-    def GetPointerInfo_s(thePointer : Standard_Transient,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: ...
+    def GetPointerInfo_s(thePointer : capsule,isShortInfo : bool=True) -> OCP.TCollection.TCollection_AsciiString: ...
     @staticmethod
     def GetPointerPrefix_s() -> OCP.TCollection.TCollection_AsciiString: 
         """
@@ -472,14 +472,14 @@ class Standard_GUID():
     None
     """
     @overload
-    def Assign(self,uid : _GUID) -> None: 
+    def Assign(self,uid : Standard_GUID) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Assign(self,uid : Standard_GUID) -> None: ...
+    def Assign(self,uid : Standard_UUID) -> None: ...
     @staticmethod
     def CheckGUIDFormat_s(aGuid : str) -> bool: 
         """
@@ -519,20 +519,20 @@ class Standard_GUID():
         """
         translate the GUID into unicode string the aStrGuid is allocated by user. the guid have the following format:
         """
-    def ToUUID(self) -> _GUID: 
+    def ToUUID(self) -> Standard_UUID: 
         """
         None
         """
     @overload
-    def __init__(self,aGuid : _GUID) -> None: ...
+    def __init__(self,aGuid : str) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aGuid : Standard_UUID) -> None: ...
     @overload
     def __init__(self,a32b : int,a16b1 : str,a16b2 : str,a16b3 : str,a8b1 : int,a8b2 : int,a8b3 : int,a8b4 : int,a8b5 : int,a8b6 : int) -> None: ...
     @overload
     def __init__(self,aGuid : Standard_GUID) -> None: ...
-    @overload
-    def __init__(self,aGuid : str) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class Standard_HandlerStatus():
     """
@@ -938,9 +938,9 @@ class Standard_Transient():
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,arg1 : Standard_Transient) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> Standard_Type: 
         """
@@ -1020,17 +1020,6 @@ class Standard_Static_Assert_true():
         """
         None
         """
-    pass
-class Standard_TooManyUsers(Exception, BaseException):
-    class type():
-        pass
-    __cause__: getset_descriptor # value = <attribute '__cause__' of 'BaseException' objects>
-    __context__: getset_descriptor # value = <attribute '__context__' of 'BaseException' objects>
-    __dict__: mappingproxy # value = mappingproxy({'__module__': 'OCP.Standard', '__weakref__': <attribute '__weakref__' of 'Standard_TooManyUsers' objects>, '__doc__': None})
-    __suppress_context__: member_descriptor # value = <member '__suppress_context__' of 'BaseException' objects>
-    __traceback__: getset_descriptor # value = <attribute '__traceback__' of 'BaseException' objects>
-    __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Standard_TooManyUsers' objects>
-    args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
 class Standard_Persistent(Standard_Transient):
     """
@@ -1204,6 +1193,12 @@ class Standard_TypeMismatch(Exception, BaseException):
     __weakref__: getset_descriptor # value = <attribute '__weakref__' of 'Standard_TypeMismatch' objects>
     args: getset_descriptor # value = <attribute 'args' of 'BaseException' objects>
     pass
+class Standard_UUID():
+    """
+    None
+    """
+    def __init__(self) -> None: ...
+    pass
 class Standard_Underflow(Exception, BaseException):
     class type():
         pass
@@ -1248,7 +1243,7 @@ def ATanh(arg0 : float) -> float:
     None
     """
 @overload
-def Abs(Value : float) -> float:
+def Abs(Value : int) -> int:
     """
     None
 
@@ -1257,7 +1252,7 @@ def Abs(Value : float) -> float:
     None
     """
 @overload
-def Abs(Value : int) -> int:
+def Abs(Value : float) -> float:
     pass
 def Ceiling(Value : float) -> float:
     """
@@ -1328,30 +1323,28 @@ def IsDigit(me : str) -> bool:
     None
     """
 @overload
-def IsEqual(One : int,Two : int) -> bool:
+def IsEqual(Value1 : float,Value2 : float) -> bool:
     """
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
-    None
-
     Returns Standard_True if two strings are equal
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
+
+    None
 
     None
     """
 @overload
-def IsEqual(Value1 : float,Value2 : float) -> bool:
+def IsEqual(theOne : int,theTwo : int) -> bool:
     pass
 @overload
 def IsEqual(One : capsule,Two : capsule) -> bool:
@@ -1360,10 +1353,10 @@ def IsEqual(One : capsule,Two : capsule) -> bool:
 def IsEqual(One : str,Two : str) -> bool:
     pass
 @overload
-def IsEqual(theOne : int,theTwo : int) -> bool:
+def IsEqual(theOne : str,theTwo : str) -> bool:
     pass
 @overload
-def IsEqual(theOne : str,theTwo : str) -> bool:
+def IsEqual(One : int,Two : int) -> bool:
     pass
 def IsEven(Value : int) -> bool:
     """
@@ -1493,7 +1486,7 @@ def RealSmall() -> float:
     """
     None
     """
-def RealToInt(Value : float) -> int:
+def RealToInt(theValue : float) -> int:
     """
     None
     """

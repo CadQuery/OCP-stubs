@@ -4,19 +4,25 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Quantity
-import OCP.TColgp
-import io
-import OCP.gp
-import OCP.Standard
+import OCP.TopoDS
+import OCP.TDocStd
 import OCP.TCollection
+import OCP.NCollection
+import OCP.gp
+import OCP.TColgp
+import OCP.DE
+import OCP.Standard
+import OCP.XSControl
+import OCP.Quantity
 import OCP.TColStd
+import io
 __all__  = [
 "Vrml",
 "Vrml_AsciiText",
 "Vrml_AsciiTextJustification",
 "Vrml_Cone",
 "Vrml_ConeParts",
+"Vrml_ConfigurationNode",
 "Vrml_Coordinate3",
 "Vrml_Cube",
 "Vrml_Cylinder",
@@ -42,6 +48,7 @@ __all__  = [
 "Vrml_PerspectiveCamera",
 "Vrml_PointLight",
 "Vrml_PointSet",
+"Vrml_Provider",
 "Vrml_Rotation",
 "Vrml_SFImage",
 "Vrml_SFImageNumber",
@@ -150,23 +157,23 @@ class Vrml_AsciiText(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Justification(self) -> Vrml_AsciiTextJustification: 
         """
         None
@@ -330,6 +337,199 @@ class Vrml_ConeParts():
     __entries: dict # value = {'Vrml_ConeSIDES': (<Vrml_ConeParts.Vrml_ConeSIDES: 0>, None), 'Vrml_ConeBOTTOM': (<Vrml_ConeParts.Vrml_ConeBOTTOM: 1>, None), 'Vrml_ConeALL': (<Vrml_ConeParts.Vrml_ConeALL: 2>, None)}
     __members__: dict # value = {'Vrml_ConeSIDES': <Vrml_ConeParts.Vrml_ConeSIDES: 0>, 'Vrml_ConeBOTTOM': <Vrml_ConeParts.Vrml_ConeBOTTOM: 1>, 'Vrml_ConeALL': <Vrml_ConeParts.Vrml_ConeALL: 2>}
     pass
+class Vrml_ConfigurationNode(OCP.DE.DE_ConfigurationNode, OCP.Standard.Standard_Transient):
+    """
+    The purpose of this class is to configure the transfer process for VRML format Stores the necessary settings for Vrml_Provider. Configures and creates special provider to transfer VRML files.
+    """
+    class WriteMode_RepresentationType_e():
+        """
+        None
+
+        Members:
+
+          WriteMode_RepresentationType_Shaded
+
+          WriteMode_RepresentationType_Wireframe
+
+          WriteMode_RepresentationType_Both
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        WriteMode_RepresentationType_Both: OCP.Vrml.WriteMode_RepresentationType_e # value = <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Both: 2>
+        WriteMode_RepresentationType_Shaded: OCP.Vrml.WriteMode_RepresentationType_e # value = <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Shaded: 0>
+        WriteMode_RepresentationType_Wireframe: OCP.Vrml.WriteMode_RepresentationType_e # value = <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Wireframe: 1>
+        __entries: dict # value = {'WriteMode_RepresentationType_Shaded': (<WriteMode_RepresentationType_e.WriteMode_RepresentationType_Shaded: 0>, None), 'WriteMode_RepresentationType_Wireframe': (<WriteMode_RepresentationType_e.WriteMode_RepresentationType_Wireframe: 1>, None), 'WriteMode_RepresentationType_Both': (<WriteMode_RepresentationType_e.WriteMode_RepresentationType_Both: 2>, None)}
+        __members__: dict # value = {'WriteMode_RepresentationType_Shaded': <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Shaded: 0>, 'WriteMode_RepresentationType_Wireframe': <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Wireframe: 1>, 'WriteMode_RepresentationType_Both': <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Both: 2>}
+        pass
+    class WriteMode_WriterVersion_e():
+        """
+        None
+
+        Members:
+
+          WriteMode_WriterVersion_1
+
+          WriteMode_WriterVersion_2
+        """
+        def __eq__(self,other : object) -> bool: ...
+        def __getstate__(self) -> int: ...
+        def __hash__(self) -> int: ...
+        def __index__(self) -> int: ...
+        def __init__(self,value : int) -> None: ...
+        def __int__(self) -> int: ...
+        def __ne__(self,other : object) -> bool: ...
+        def __repr__(self) -> str: ...
+        def __setstate__(self,state : int) -> None: ...
+        @property
+        def name(self) -> None:
+            """
+            :type: None
+            """
+        @property
+        def value(self) -> int:
+            """
+            :type: int
+            """
+        WriteMode_WriterVersion_1: OCP.Vrml.WriteMode_WriterVersion_e # value = <WriteMode_WriterVersion_e.WriteMode_WriterVersion_1: 1>
+        WriteMode_WriterVersion_2: OCP.Vrml.WriteMode_WriterVersion_e # value = <WriteMode_WriterVersion_e.WriteMode_WriterVersion_2: 2>
+        __entries: dict # value = {'WriteMode_WriterVersion_1': (<WriteMode_WriterVersion_e.WriteMode_WriterVersion_1: 1>, None), 'WriteMode_WriterVersion_2': (<WriteMode_WriterVersion_e.WriteMode_WriterVersion_2: 2>, None)}
+        __members__: dict # value = {'WriteMode_WriterVersion_1': <WriteMode_WriterVersion_e.WriteMode_WriterVersion_1: 1>, 'WriteMode_WriterVersion_2': <WriteMode_WriterVersion_e.WriteMode_WriterVersion_2: 2>}
+        pass
+    def BuildProvider(self) -> OCP.DE.DE_Provider: 
+        """
+        Creates new provider for the own format
+        """
+    def CheckContent(self,theBuffer : OCP.NCollection.NCollection_Buffer) -> bool: 
+        """
+        Checks the file content to verify a format
+        """
+    def CheckExtension(self,theExtension : OCP.TCollection.TCollection_AsciiString) -> bool: 
+        """
+        Checks the file extension to verify a format
+        """
+    def Copy(self) -> OCP.DE.DE_ConfigurationNode: 
+        """
+        Copies values of all fields
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetExtensions(self) -> OCP.TColStd.TColStd_ListOfAsciiString: 
+        """
+        Gets list of supported file extensions
+        """
+    def GetFormat(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets CAD format name of associated provider
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetVendor(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets provider's vendor name of associated provider
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsEnabled(self) -> bool: 
+        """
+        Gets the provider loading status
+        """
+    def IsExportSupported(self) -> bool: 
+        """
+        Checks the export supporting
+        """
+    def IsImportSupported(self) -> bool: 
+        """
+        Checks the import supporting
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Load(self,theResource : OCP.DE.DE_ConfigurationContext) -> bool: 
+        """
+        Updates values according the resource
+        """
+    def Save(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Writes configuration to the string
+        """
+    def SetEnabled(self,theIsLoaded : bool) -> None: 
+        """
+        Sets the provider loading status
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def UpdateLoad(self) -> bool: 
+        """
+        Update loading status. Checking for the license.
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNode : Vrml_ConfigurationNode) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    WriteMode_RepresentationType_Both: OCP.Vrml.WriteMode_RepresentationType_e # value = <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Both: 2>
+    WriteMode_RepresentationType_Shaded: OCP.Vrml.WriteMode_RepresentationType_e # value = <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Shaded: 0>
+    WriteMode_RepresentationType_Wireframe: OCP.Vrml.WriteMode_RepresentationType_e # value = <WriteMode_RepresentationType_e.WriteMode_RepresentationType_Wireframe: 1>
+    WriteMode_WriterVersion_1: OCP.Vrml.WriteMode_WriterVersion_e # value = <WriteMode_WriterVersion_e.WriteMode_WriterVersion_1: 1>
+    WriteMode_WriterVersion_2: OCP.Vrml.WriteMode_WriterVersion_e # value = <WriteMode_WriterVersion_e.WriteMode_WriterVersion_2: 2>
+    pass
 class Vrml_Coordinate3(OCP.Standard.Standard_Transient):
     """
     defines a Coordinate3 node of VRML specifying properties of geometry and its appearance. This node defines a set of 3D coordinates to be used by a subsequent IndexedFaceSet, IndexedLineSet, or PointSet node. This node does not produce a visible result during rendering; it simply replaces the current coordinates in the rendering state for subsequent nodes to use.defines a Coordinate3 node of VRML specifying properties of geometry and its appearance. This node defines a set of 3D coordinates to be used by a subsequent IndexedFaceSet, IndexedLineSet, or PointSet node. This node does not produce a visible result during rendering; it simply replaces the current coordinates in the rendering state for subsequent nodes to use.defines a Coordinate3 node of VRML specifying properties of geometry and its appearance. This node defines a set of 3D coordinates to be used by a subsequent IndexedFaceSet, IndexedLineSet, or PointSet node. This node does not produce a visible result during rendering; it simply replaces the current coordinates in the rendering state for subsequent nodes to use.
@@ -355,23 +555,23 @@ class Vrml_Coordinate3(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Point(self) -> OCP.TColgp.TColgp_HArray1OfVec: 
         """
         None
@@ -737,23 +937,23 @@ class Vrml_IndexedFaceSet(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaterialIndex(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
         """
         None
@@ -834,23 +1034,23 @@ class Vrml_IndexedLineSet(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaterialIndex(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
         """
         None
@@ -888,9 +1088,9 @@ class Vrml_IndexedLineSet(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,aCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger,aMaterialIndex : OCP.TColStd.TColStd_HArray1OfInteger,aNormalIndex : OCP.TColStd.TColStd_HArray1OfInteger,aTextureCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger,aMaterialIndex : OCP.TColStd.TColStd_HArray1OfInteger,aNormalIndex : OCP.TColStd.TColStd_HArray1OfInteger,aTextureCoordIndex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -963,23 +1163,23 @@ class Vrml_LOD(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
@@ -1001,9 +1201,9 @@ class Vrml_LOD(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,aRange : OCP.TColStd.TColStd_HArray1OfReal,aCenter : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aRange : OCP.TColStd.TColStd_HArray1OfReal,aCenter : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1052,23 +1252,23 @@ class Vrml_Material(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
@@ -1114,9 +1314,9 @@ class Vrml_Material(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aAmbientColor : OCP.Quantity.Quantity_HArray1OfColor,aDiffuseColor : OCP.Quantity.Quantity_HArray1OfColor,aSpecularColor : OCP.Quantity.Quantity_HArray1OfColor,aEmissiveColor : OCP.Quantity.Quantity_HArray1OfColor,aShininess : OCP.TColStd.TColStd_HArray1OfReal,aTransparency : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1145,9 +1345,9 @@ class Vrml_MaterialBinding():
         None
         """
     @overload
-    def __init__(self,aValue : Vrml_MaterialBindingAndNormalBinding) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aValue : Vrml_MaterialBindingAndNormalBinding) -> None: ...
     pass
 class Vrml_MaterialBindingAndNormalBinding():
     """
@@ -1218,9 +1418,9 @@ class Vrml_MatrixTransform():
         None
         """
     @overload
-    def __init__(self,aMatrix : OCP.gp.gp_Trsf) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aMatrix : OCP.gp.gp_Trsf) -> None: ...
     pass
 class Vrml_Normal(OCP.Standard.Standard_Transient):
     """
@@ -1247,23 +1447,23 @@ class Vrml_Normal(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Print(self,anOStream : io.BytesIO) -> io.BytesIO: 
         """
         None
@@ -1312,9 +1512,9 @@ class Vrml_NormalBinding():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aValue : Vrml_MaterialBindingAndNormalBinding) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_OrthographicCamera():
     """
@@ -1357,9 +1557,9 @@ class Vrml_OrthographicCamera():
         None
         """
     @overload
-    def __init__(self,aPosition : OCP.gp.gp_Vec,aOrientation : Vrml_SFRotation,aFocalDistance : float,aHeight : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aPosition : OCP.gp.gp_Vec,aOrientation : Vrml_SFRotation,aFocalDistance : float,aHeight : float) -> None: ...
     pass
 class Vrml_PerspectiveCamera():
     """
@@ -1447,9 +1647,9 @@ class Vrml_PointLight():
         None
         """
     @overload
-    def __init__(self,aOnOff : bool,aIntensity : float,aColor : OCP.Quantity.Quantity_Color,aLocation : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aOnOff : bool,aIntensity : float,aColor : OCP.Quantity.Quantity_Color,aLocation : OCP.gp.gp_Vec) -> None: ...
     pass
 class Vrml_PointSet():
     """
@@ -1476,6 +1676,117 @@ class Vrml_PointSet():
         None
         """
     def __init__(self,aStartIndex : int=0,aNumPoints : int=-1) -> None: ...
+    pass
+class Vrml_Provider(OCP.DE.DE_Provider, OCP.Standard.Standard_Transient):
+    """
+    The class to transfer VRML files. Reads and Writes any VRML files into/from OCCT. Each operation needs configuration node.
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetFormat(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets CAD format name of associated provider
+        """
+    def GetNode(self) -> OCP.DE.DE_ConfigurationNode: 
+        """
+        Gets internal configuration node
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetVendor(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets provider's vendor name of associated provider
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
+        """
+        Reads a CAD file, according internal configuration
+
+        Reads a CAD file, according internal configuration
+
+        Reads a CAD file, according internal configuration
+
+        Reads a CAD file, according internal configuration
+        """
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    def SetNode(self,theNode : OCP.DE.DE_ConfigurationNode) -> None: 
+        """
+        Sets internal configuration node
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
+        """
+        Writes a CAD file, according internal configuration
+
+        Writes a CAD file, according internal configuration
+
+        Writes a CAD file, according internal configuration
+
+        Writes a CAD file, according internal configuration
+        """
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNode : OCP.DE.DE_ConfigurationNode) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class Vrml_Rotation():
     """
@@ -1535,23 +1846,23 @@ class Vrml_SFImage(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Number(self) -> Vrml_SFImageNumber: 
         """
         None
@@ -1581,9 +1892,9 @@ class Vrml_SFImage(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aWidth : int,aHeight : int,aNumber : Vrml_SFImageNumber,anArray : OCP.TColStd.TColStd_HArray1OfInteger) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1696,9 +2007,9 @@ class Vrml_Scale():
         None
         """
     @overload
-    def __init__(self,aScaleFactor : OCP.gp.gp_Vec) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aScaleFactor : OCP.gp.gp_Vec) -> None: ...
     pass
 class Vrml_Separator():
     """
@@ -1717,9 +2028,9 @@ class Vrml_Separator():
         None
         """
     @overload
-    def __init__(self,aRenderCulling : Vrml_SeparatorRenderCulling) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aRenderCulling : Vrml_SeparatorRenderCulling) -> None: ...
     pass
 class Vrml_SeparatorRenderCulling():
     """
@@ -1917,9 +2228,9 @@ class Vrml_SpotLight():
         None
         """
     @overload
-    def __init__(self,aOnOff : bool,aIntensity : float,aColor : OCP.Quantity.Quantity_Color,aLocation : OCP.gp.gp_Vec,aDirection : OCP.gp.gp_Vec,aDropOffRate : float,aCutOffAngle : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aOnOff : bool,aIntensity : float,aColor : OCP.Quantity.Quantity_Color,aLocation : OCP.gp.gp_Vec,aDirection : OCP.gp.gp_Vec,aDropOffRate : float,aCutOffAngle : float) -> None: ...
     pass
 class Vrml_Switch():
     """
@@ -2025,9 +2336,9 @@ class Vrml_Texture2Transform():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aTranslation : OCP.gp.gp_Vec2d,aRotation : float,aScaleFactor : OCP.gp.gp_Vec2d,aCenter : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_Texture2Wrap():
     """
@@ -2088,23 +2399,23 @@ class Vrml_TextureCoordinate2(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Point(self) -> OCP.TColgp.TColgp_HArray1OfVec2d: 
         """
         None
@@ -2122,9 +2433,9 @@ class Vrml_TextureCoordinate2(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,aPoint : OCP.TColgp.TColgp_HArray1OfVec2d) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,aPoint : OCP.TColgp.TColgp_HArray1OfVec2d) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2216,9 +2527,9 @@ class Vrml_Translation():
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aTranslation : OCP.gp.gp_Vec) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Vrml_VertexOrdering():
     """

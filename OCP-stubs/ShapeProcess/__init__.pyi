@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.ShapeBuild
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.BRepTools
-import OCP.Standard
-import OCP.ShapeExtend
-import OCP.TopAbs
-import OCP.Message
 import OCP.TopoDS
 import OCP.TCollection
+import OCP.ShapeExtend
+import OCP.BRepTools
+import OCP.Message
+import OCP.TopAbs
+import OCP.ShapeBuild
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.Standard
 import OCP.Resource
 __all__  = [
 "ShapeProcess",
@@ -97,23 +97,23 @@ class ShapeProcess_Context(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsParamSet(self,param : str) -> bool: 
         """
         Returns True if parameter is defined in the resource file
@@ -218,23 +218,23 @@ class ShapeProcess_Operator(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,context : ShapeProcess_Context,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Performs operation and eventually records changes in the context
@@ -323,23 +323,23 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNonManifold(self) -> bool: 
         """
         Get NonManifold flag
@@ -375,7 +375,7 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         None
         """
     @overload
-    def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator) -> None: 
+    def RecordModification(self,sh : OCP.TopoDS.TopoDS_Shape,repl : OCP.BRepTools.BRepTools_Modifier,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: 
         """
         None
 
@@ -386,9 +386,9 @@ class ShapeProcess_ShapeContext(ShapeProcess_Context, OCP.Standard.Standard_Tran
         Records modifications and resets result accordingly NOTE: modification of resulting shape should be explicitly defined in the maps along with modifications of subshapes
         """
     @overload
-    def RecordModification(self,sh : OCP.TopoDS.TopoDS_Shape,repl : OCP.BRepTools.BRepTools_Modifier,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: ...
-    @overload
     def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape) -> None: ...
+    @overload
+    def RecordModification(self,repl : OCP.ShapeBuild.ShapeBuild_ReShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator) -> None: ...
     @overload
     def RecordModification(self,repl : OCP.TopTools.TopTools_DataMapOfShapeShape,msg : OCP.ShapeExtend.ShapeExtend_MsgRegistrator=None) -> None: ...
     def ResourceManager(self) -> OCP.Resource.Resource_Manager: 
@@ -483,23 +483,23 @@ class ShapeProcess_UOperator(ShapeProcess_Operator, OCP.Standard.Standard_Transi
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,context : ShapeProcess_Context,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
         """
         Performs operation and records changes in the context

@@ -4,20 +4,20 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.IGESSolid
-import OCP.Transfer
-import OCP.IGESData
-import OCP.Interface
-import OCP.Geom2d
-import OCP.gp
-import OCP.Standard
-import OCP.ShapeExtend
 import OCP.IGESGeom
-import OCP.IGESBasic
 import OCP.Geom
+import OCP.IGESBasic
 import OCP.TopoDS
+import OCP.ShapeExtend
+import OCP.IGESData
 import OCP.Message
+import OCP.gp
+import OCP.Geom2d
+import OCP.Interface
+import OCP.Standard
+import OCP.Transfer
 import OCP.TColStd
+import OCP.IGESSolid
 __all__  = [
 "IGESToBRep",
 "IGESToBRep_Actor",
@@ -122,23 +122,23 @@ class IGESToBRep_Actor(OCP.Transfer.Transfer_ActorOfTransientProcess, OCP.Transf
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -229,23 +229,23 @@ class IGESToBRep_AlgoContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetToolContainer(self,TC : IGESToBRep_ToolContainer) -> None: 
         """
         Sets ToolContainer
@@ -782,11 +782,11 @@ class IGESToBRep_BasicCurve(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
+    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
+    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass
 class IGESToBRep_BasicSurface(IGESToBRep_CurveAndSurface):
     """
@@ -1300,9 +1300,9 @@ class IGESToBRep_BRepEntity(IGESToBRep_CurveAndSurface):
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
-    @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
+    @overload
+    def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     pass
 class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
     """
@@ -1337,23 +1337,23 @@ class IGESToBRep_IGESBoundary(OCP.Standard.Standard_Transient):
         Inits the object with parameters common for all types of IGES boundaries. <CS>: object to be used for retrieving translation parameters and sending messages, <entity>: boundary entity to be processed, <face>, <trans>, <uFact>: as for IGESToBRep_TopoCurve <filepreference>: preferred representation (2 or 3) given in the IGES file
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1492,23 +1492,23 @@ class IGESToBRep_ToolContainer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1837,11 +1837,11 @@ class IGESToBRep_TopoCurve(IGESToBRep_CurveAndSurface):
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
     @overload
     def __init__(self,CS : IGESToBRep_TopoCurve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
     """
@@ -2109,9 +2109,9 @@ class IGESToBRep_TopoSurface(IGESToBRep_CurveAndSurface):
         Sets values of "myMinTol" and "myMaxTol" as follows myMaxTol = Max ("read.maxprecision.val", myEpsGeom * myUnitFactor) myMinTol = Precision::Confusion() Remark: This method is automatically invoked each time the values of "myEpsGeom" or "myUnitFactor" are changed
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,eps : float,epsGeom : float,epsCoeff : float,mode : bool,modeapprox : bool,optimized : bool) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,CS : IGESToBRep_CurveAndSurface) -> None: ...
     pass

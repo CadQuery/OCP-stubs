@@ -4,17 +4,17 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.NCollection
-import OCP.BRepTools
-import io
-import OCP.gp
-import OCP.Standard
 import OCP.Geom
-import OCP.BRepBuilderAPI
-import OCP.Message
 import OCP.TopoDS
+import OCP.BRepTools
+import OCP.NCollection
+import OCP.Message
+import OCP.gp
+import OCP.BRepBuilderAPI
+import OCP.TopTools
+import OCP.Standard
 import OCP.BOPAlgo
+import io
 __all__  = [
 "BRepAlgoAPI_Algo",
 "BRepAlgoAPI_BuilderAlgo",
@@ -201,9 +201,9 @@ class BRepAlgoAPI_BuilderAlgo(BRepAlgoAPI_Algo, OCP.BRepBuilderAPI.BRepBuilderAP
         Simplification of the result shape is performed by the means of *ShapeUpgrade_UnifySameDomain* algorithm. The result of the operation will be overwritten with the simplified result.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,thePF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepAlgoAPI_BooleanOperation(BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -350,9 +350,9 @@ class BRepAlgoAPI_BooleanOperation(BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OC
         Returns the Tools arguments
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,thePF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class BRepAlgoAPI_Check(OCP.BOPAlgo.BOPAlgo_Options):
     """
@@ -432,14 +432,14 @@ class BRepAlgoAPI_Check(OCP.BOPAlgo.BOPAlgo_Options):
         Returns the flag of parallel processing
         """
     @overload
-    def SetData(self,theS1 : OCP.TopoDS.TopoDS_Shape,theS2 : OCP.TopoDS.TopoDS_Shape,theOp : OCP.BOPAlgo.BOPAlgo_Operation=BOPAlgo_Operation.BOPAlgo_UNKNOWN,bTestSE : bool=True,bTestSI : bool=True) -> None: 
+    def SetData(self,theS : OCP.TopoDS.TopoDS_Shape,bTestSE : bool=True,bTestSI : bool=True) -> None: 
         """
         Initializes the algorithm with single shape.
 
         Initializes the algorithm with couple of shapes. Additionally to the validity checks of each given shape, the types of the given shapes will be checked on validity for Boolean operation of given type.
         """
     @overload
-    def SetData(self,theS : OCP.TopoDS.TopoDS_Shape,bTestSE : bool=True,bTestSI : bool=True) -> None: ...
+    def SetData(self,theS1 : OCP.TopoDS.TopoDS_Shape,theS2 : OCP.TopoDS.TopoDS_Shape,theOp : OCP.BOPAlgo.BOPAlgo_Operation=BOPAlgo_Operation.BOPAlgo_UNKNOWN,bTestSE : bool=True,bTestSI : bool=True) -> None: ...
     def SetFuzzyValue(self,theFuzz : float) -> None: 
         """
         Sets the additional tolerance
@@ -462,11 +462,11 @@ class BRepAlgoAPI_Check(OCP.BOPAlgo.BOPAlgo_Options):
         Returns the flag defining usage of OBB
         """
     @overload
-    def __init__(self,theS : OCP.TopoDS.TopoDS_Shape,bTestSE : bool=True,bTestSI : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theS1 : OCP.TopoDS.TopoDS_Shape,theS2 : OCP.TopoDS.TopoDS_Shape,theOp : OCP.BOPAlgo.BOPAlgo_Operation=BOPAlgo_Operation.BOPAlgo_UNKNOWN,bTestSE : bool=True,bTestSI : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @overload
+    def __init__(self,theS : OCP.TopoDS.TopoDS_Shape,bTestSE : bool=True,bTestSI : bool=True,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     pass
 class BRepAlgoAPI_Common(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -613,13 +613,13 @@ class BRepAlgoAPI_Common(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo, 
         Returns the Tools arguments
         """
     @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
-    @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
-    @overload
     def __init__(self,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     pass
 class BRepAlgoAPI_Cut(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -1017,13 +1017,13 @@ class BRepAlgoAPI_Fuse(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo, BR
         Returns the Tools arguments
         """
     @overload
-    def __init__(self,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
-    @overload
     def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,aDSF : OCP.BOPAlgo.BOPAlgo_PaveFiller,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    @overload
+    def __init__(self,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
     pass
 class BRepAlgoAPI_Section(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -1102,7 +1102,7 @@ class BRepAlgoAPI_Section(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo,
         History tool
         """
     @overload
-    def Init1(self,Sf : OCP.Geom.Geom_Surface) -> None: 
+    def Init1(self,Pl : OCP.gp.gp_Pln) -> None: 
         """
         initialize the argument <S1> - argument Obsolete
 
@@ -1111,11 +1111,11 @@ class BRepAlgoAPI_Section(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo,
         initialize the argument <Sf> - argument Obsolete
         """
     @overload
-    def Init1(self,Pl : OCP.gp.gp_Pln) -> None: ...
-    @overload
     def Init1(self,S1 : OCP.TopoDS.TopoDS_Shape) -> None: ...
     @overload
-    def Init2(self,Sf : OCP.Geom.Geom_Surface) -> None: 
+    def Init1(self,Sf : OCP.Geom.Geom_Surface) -> None: ...
+    @overload
+    def Init2(self,Pl : OCP.gp.gp_Pln) -> None: 
         """
         initialize the tool <S2> - tool Obsolete
 
@@ -1124,9 +1124,9 @@ class BRepAlgoAPI_Section(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo,
         initialize the tool <Sf> - tool Obsolete
         """
     @overload
-    def Init2(self,S2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
+    def Init2(self,Sf : OCP.Geom.Geom_Surface) -> None: ...
     @overload
-    def Init2(self,Pl : OCP.gp.gp_Pln) -> None: ...
+    def Init2(self,S2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def IsDeleted(self,aS : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Checks if the shape <theS> has been completely removed from the result, i.e. the result does not contain the shape itself and any of its splits. Returns TRUE if the shape has been deleted.
@@ -1216,21 +1216,21 @@ class BRepAlgoAPI_Section(BRepAlgoAPI_BooleanOperation, BRepAlgoAPI_BuilderAlgo,
         Returns the Tools arguments
         """
     @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,Pl : OCP.gp.gp_Pln,PerformNow : bool=True) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,aDSF : OCP.BOPAlgo.BOPAlgo_PaveFiller,PerformNow : bool=True) -> None: ...
     @overload
     def __init__(self,Sf : OCP.Geom.Geom_Surface,S2 : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
     @overload
-    def __init__(self,Sf1 : OCP.Geom.Geom_Surface,Sf2 : OCP.Geom.Geom_Surface,PerformNow : bool=True) -> None: ...
-    @overload
-    def __init__(self,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
-    @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,aDSF : OCP.BOPAlgo.BOPAlgo_PaveFiller,PerformNow : bool=True) -> None: ...
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
     @overload
     def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,Sf : OCP.Geom.Geom_Surface,PerformNow : bool=True) -> None: ...
     @overload
-    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,S2 : OCP.TopoDS.TopoDS_Shape,PerformNow : bool=True) -> None: ...
+    def __init__(self,PF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Sf1 : OCP.Geom.Geom_Surface,Sf2 : OCP.Geom.Geom_Surface,PerformNow : bool=True) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.TopoDS.TopoDS_Shape,Pl : OCP.gp.gp_Pln,PerformNow : bool=True) -> None: ...
     pass
 class BRepAlgoAPI_Splitter(BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
     """
@@ -1361,7 +1361,7 @@ class BRepAlgoAPI_Splitter(BRepAlgoAPI_BuilderAlgo, BRepAlgoAPI_Algo, OCP.BRepBu
         Returns the Tool arguments
         """
     @overload
-    def __init__(self,thePF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,thePF : OCP.BOPAlgo.BOPAlgo_PaveFiller) -> None: ...
     pass

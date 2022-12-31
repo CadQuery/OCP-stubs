@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.WNT
-import OCP.Quantity
-import OCP.NCollection
-import io
-import Aspect_XRSession
 import OCP.Graphic3d
-import OCP.gp
-import OCP.Standard
-import OCP.Image
 import OCP.TCollection
+import OCP.NCollection
+import OCP.gp
+import OCP.Image
+import OCP.WNT
+import OCP.Standard
+import OCP.Quantity
+import Aspect_XRSession
+import io
 __all__  = [
 "Aspect_AspectFillAreaDefinitionError",
 "Aspect_AspectLineDefinitionError",
@@ -42,6 +42,7 @@ __all__  = [
 "Aspect_RectangularGrid",
 "Aspect_ScrollDelta",
 "Aspect_SequenceOfColor",
+"Aspect_SkydomeBackground",
 "Aspect_Touch",
 "Aspect_TouchMap",
 "Aspect_TrackedDevicePose",
@@ -403,9 +404,8 @@ __all__  = [
 class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
     class type():
         """
-        type(object_or_name, bases, dict)
         type(object) -> the object's type
-        type(name, bases, dict) -> a new type
+        type(name, bases, dict, **kwds) -> a new type
         """
         class object():
             """
@@ -424,9 +424,9 @@ class Aspect_AspectFillAreaDefinitionError(Exception, BaseException):
         __abstractmethods__: getset_descriptor # value = <attribute '__abstractmethods__' of 'type' objects>
         __bases__: tuple # value = (<class 'object'>,)
         __basicsize__ = 880
-        __dict__: mappingproxy # value = mappingproxy({'__repr__': <slot wrapper '__repr__' of 'type' objects>, '__call__': <slot wrapper '__call__' of 'type' objects>, '__getattribute__': <slot wrapper '__getattribute__' of 'type' objects>, '__setattr__': <slot wrapper '__setattr__' of 'type' objects>, '__delattr__': <slot wrapper '__delattr__' of 'type' objects>, '__init__': <slot wrapper '__init__' of 'type' objects>, '__new__': <built-in method __new__ of type object at 0x00007FFF4287BC90>, 'mro': <method 'mro' of 'type' objects>, '__subclasses__': <method '__subclasses__' of 'type' objects>, '__prepare__': <method '__prepare__' of 'type' objects>, '__instancecheck__': <method '__instancecheck__' of 'type' objects>, '__subclasscheck__': <method '__subclasscheck__' of 'type' objects>, '__dir__': <method '__dir__' of 'type' objects>, '__sizeof__': <method '__sizeof__' of 'type' objects>, '__basicsize__': <member '__basicsize__' of 'type' objects>, '__itemsize__': <member '__itemsize__' of 'type' objects>, '__flags__': <member '__flags__' of 'type' objects>, '__weakrefoffset__': <member '__weakrefoffset__' of 'type' objects>, '__base__': <member '__base__' of 'type' objects>, '__dictoffset__': <member '__dictoffset__' of 'type' objects>, '__mro__': <member '__mro__' of 'type' objects>, '__name__': <attribute '__name__' of 'type' objects>, '__qualname__': <attribute '__qualname__' of 'type' objects>, '__bases__': <attribute '__bases__' of 'type' objects>, '__module__': <attribute '__module__' of 'type' objects>, '__abstractmethods__': <attribute '__abstractmethods__' of 'type' objects>, '__dict__': <attribute '__dict__' of 'type' objects>, '__doc__': <attribute '__doc__' of 'type' objects>, '__text_signature__': <attribute '__text_signature__' of 'type' objects>})
+        __dict__: mappingproxy # value = mappingproxy({'__repr__': <slot wrapper '__repr__' of 'type' objects>, '__call__': <slot wrapper '__call__' of 'type' objects>, '__getattribute__': <slot wrapper '__getattribute__' of 'type' objects>, '__setattr__': <slot wrapper '__setattr__' of 'type' objects>, '__delattr__': <slot wrapper '__delattr__' of 'type' objects>, '__init__': <slot wrapper '__init__' of 'type' objects>, '__new__': <built-in method __new__ of type object at 0x00007FFCAEB4E640>, 'mro': <method 'mro' of 'type' objects>, '__subclasses__': <method '__subclasses__' of 'type' objects>, '__prepare__': <method '__prepare__' of 'type' objects>, '__instancecheck__': <method '__instancecheck__' of 'type' objects>, '__subclasscheck__': <method '__subclasscheck__' of 'type' objects>, '__dir__': <method '__dir__' of 'type' objects>, '__sizeof__': <method '__sizeof__' of 'type' objects>, '__basicsize__': <member '__basicsize__' of 'type' objects>, '__itemsize__': <member '__itemsize__' of 'type' objects>, '__flags__': <member '__flags__' of 'type' objects>, '__weakrefoffset__': <member '__weakrefoffset__' of 'type' objects>, '__base__': <member '__base__' of 'type' objects>, '__dictoffset__': <member '__dictoffset__' of 'type' objects>, '__mro__': <member '__mro__' of 'type' objects>, '__name__': <attribute '__name__' of 'type' objects>, '__qualname__': <attribute '__qualname__' of 'type' objects>, '__bases__': <attribute '__bases__' of 'type' objects>, '__module__': <attribute '__module__' of 'type' objects>, '__abstractmethods__': <attribute '__abstractmethods__' of 'type' objects>, '__dict__': <attribute '__dict__' of 'type' objects>, '__doc__': <attribute '__doc__' of 'type' objects>, '__text_signature__': <attribute '__text_signature__' of 'type' objects>})
         __dictoffset__ = 264
-        __flags__ = 2148291584
+        __flags__ = 2148293632
         __itemsize__ = 40
         __mro__: tuple # value = (<class 'type'>, <class 'object'>)
         __name__ = 'type'
@@ -554,23 +554,23 @@ class Aspect_Grid(OCP.Standard.Standard_Transient):
         Returns TRUE when the grid is displayed at screen.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Rotate(self,anAngle : float) -> None: 
         """
         Rotate the grid from a relative angle.
@@ -697,23 +697,23 @@ class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOwnDisplay(self) -> bool: 
         """
         Returns TRUE if X Display has been allocated by this class
@@ -727,9 +727,9 @@ class Aspect_DisplayConnection(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theDisplayName : OCP.TCollection.TCollection_AsciiString) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theDisplayName : OCP.TCollection.TCollection_AsciiString) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -856,22 +856,22 @@ class Aspect_GenId():
         Returns the lower identifier in range.
         """
     @overload
-    def Next(self) -> int: 
+    def Next(self,theId : int) -> bool: 
         """
         Returns the next available identifier. Warning: Raises IdentDefinitionError if all identifiers are busy.
 
         Generates the next available identifier.
         """
     @overload
-    def Next(self,theId : int) -> bool: ...
+    def Next(self) -> int: ...
     def Upper(self) -> int: 
         """
         Returns the upper identifier in range.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLow : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Aspect_GradientBackground(Aspect_Background):
     """
@@ -902,9 +902,9 @@ class Aspect_GradientBackground(Aspect_Background):
         Modifies the colours of the window gradient background.
         """
     @overload
-    def __init__(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color,theMethod : Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theColor1 : OCP.Quantity.Quantity_Color,theColor2 : OCP.Quantity.Quantity_Color,theMethod : Aspect_GradientFillMethod=Aspect_GradientFillMethod.Aspect_GradientFillMethod_Horizontal) -> None: ...
     pass
 class Aspect_GradientFillMethod():
     """
@@ -1110,23 +1110,23 @@ class Aspect_CircularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
         Returns TRUE when the grid is displayed at screen.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def RadiusStep(self) -> float: 
         """
         returns the x step of the grid.
@@ -1429,6 +1429,10 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         """
         Return device pixel ratio (logical to backing store scale factor).
         """
+    def Dimensions(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Returns window dimensions.
+        """
     def DisplayConnection(self) -> Aspect_DisplayConnection: 
         """
         Returns connection to Display or NULL.
@@ -1466,23 +1470,23 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         Invalidate entire window content.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMapped(self) -> bool: 
         """
         Returns True if the window <me> is opened and False if the window is closed.
@@ -1512,7 +1516,7 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         Returns The Window RATIO equal to the physical WIDTH/HEIGHT dimensions
         """
     @overload
-    def SetBackground(self,color : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBackground(self,theBackground : Aspect_GradientBackground) -> None: 
         """
         Modifies the window background.
 
@@ -1523,9 +1527,9 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
         Modifies the window gradient background.
         """
     @overload
-    def SetBackground(self,ABackground : Aspect_GradientBackground) -> None: ...
+    def SetBackground(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetBackground(self,ABack : Aspect_Background) -> None: ...
+    def SetBackground(self,theBack : Aspect_Background) -> None: ...
     @overload
     def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
     def SetTitle(self,theTitle : OCP.TCollection.TCollection_AsciiString) -> None: 
@@ -1543,6 +1547,10 @@ class Aspect_Window(OCP.Standard.Standard_Transient):
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TopLeft(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Returns window top-left corner.
         """
     def Unmap(self) -> None: 
         """
@@ -1652,23 +1660,23 @@ class Aspect_XRSession(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOpen(self) -> bool: 
         """
         Return TRUE if session is opened.
@@ -1678,14 +1686,14 @@ class Aspect_XRSession(OCP.Standard.Standard_Transient):
         Return left hand orientation.
         """
     @overload
-    def LoadRenderModel(self,theDevice : int,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+    def LoadRenderModel(self,theDevice : int,theToApplyUnitFactor : bool,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
         Load model for displaying device.
 
         Load model for displaying device.
         """
     @overload
-    def LoadRenderModel(self,theDevice : int,theToApplyUnitFactor : bool,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    def LoadRenderModel(self,theDevice : int,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
     def NamedTrackedDevice(self,theDevice : Aspect_XRTrackedDeviceRole) -> int: 
         """
         Return index of tracked device of known role, or -1 if undefined.
@@ -1890,23 +1898,23 @@ class Aspect_RectangularGrid(Aspect_Grid, OCP.Standard.Standard_Transient):
         Returns TRUE when the grid is displayed at screen.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Rotate(self,anAngle : float) -> None: 
         """
         Rotate the grid from a relative angle.
@@ -2004,11 +2012,11 @@ class Aspect_ScrollDelta():
         Reset at point.
         """
     @overload
+    def __init__(self,theValue : float,theFlags : int=0) -> None: ...
+    @overload
     def __init__(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2i,theValue : float,theFlags : int=0) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theValue : float,theFlags : int=0) -> None: ...
     @property
     def Delta(self) -> float:
         """
@@ -2106,23 +2114,23 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.Quantity.Quantity_Color) -> None: 
+    def Prepend(self,theSeq : Aspect_SequenceOfColor) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Aspect_SequenceOfColor) -> None: ...
+    def Prepend(self,theItem : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2148,17 +2156,70 @@ class Aspect_SequenceOfColor(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Aspect_SequenceOfColor) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : Aspect_SequenceOfColor) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Static deleter to be passed to BaseSequence
         """
+    pass
+class Aspect_SkydomeBackground():
+    """
+    This class allows the definition of a window skydome background.
+    """
+    def Cloudiness(self) -> float: 
+        """
+        Get cloud intensity. By default this value is 0.2 0.0 means no clouds at all and 1.0 - high clody.
+        """
+    def DumpJson(self,theOStream : io.BytesIO,theDepth : int=-1) -> None: 
+        """
+        Dumps the content of me into the stream
+        """
+    def Fogginess(self) -> float: 
+        """
+        Get fog intensity. By default this value is 0.0 0.0 means no fog and 1.0 - high fogginess
+        """
+    def SetCloudiness(self,theCloudiness : float) -> None: 
+        """
+        Set cloud intensity. By default this value is 0.2 0.0 means no clouds at all and 1.0 - high clody.
+        """
+    def SetFogginess(self,theFogginess : float) -> None: 
+        """
+        Set fog intensity. By default this value is 0.0 0.0 means no fog and 1.0 - high fogginess
+        """
+    def SetSize(self,theSize : int) -> None: 
+        """
+        Set size of cubemap. By default this value is 512
+        """
+    def SetSunDirection(self,theSunDirection : OCP.gp.gp_Dir) -> None: 
+        """
+        Set sun direction. By default this value is (0, 1, 0) Sun direction with negative Y component represents moon with (-X, -Y, -Z) direction.
+        """
+    def SetTimeParameter(self,theTime : float) -> None: 
+        """
+        Set time of cloud simulation. By default this value is 0.0 This value might be tweaked to slightly change appearance of clouds.
+        """
+    def Size(self) -> int: 
+        """
+        Get size of cubemap. By default this value is 512
+        """
+    def SunDirection(self) -> OCP.gp.gp_Dir: 
+        """
+        Get sun direction. By default this value is (0, 1, 0) Sun direction with negative Y component represents moon with (-X, -Y, -Z) direction.
+        """
+    def TimeParameter(self) -> float: 
+        """
+        Get time of cloud simulation. By default this value is 0.0 This value might be tweaked to slightly change appearance of clouds.
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theSunDirection : OCP.gp.gp_Dir,theCloudiness : float,theTime : float,theFogginess : float,theSize : int) -> None: ...
     pass
 class Aspect_Touch():
     """
@@ -2169,9 +2230,9 @@ class Aspect_Touch():
         Return values delta.
         """
     @overload
-    def __init__(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d,theIsPreciseDevice : bool) -> None: ...
-    @overload
     def __init__(self,theX : float,theY : float,theIsPreciseDevice : bool) -> None: ...
+    @overload
+    def __init__(self,thePnt : OCP.Graphic3d.Graphic3d_Vec2d,theIsPreciseDevice : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @property
@@ -2237,14 +2298,14 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : int) -> Aspect_Touch: 
+    def FindFromKey(self,theKey1 : int,theValue : Aspect_Touch) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : int,theValue : Aspect_Touch) -> bool: ...
+    def FindFromKey(self,theKey1 : int) -> Aspect_Touch: ...
     def FindIndex(self,theKey1 : int) -> int: 
         """
         FindIndex
@@ -2298,11 +2359,11 @@ class Aspect_TouchMap(OCP.NCollection.NCollection_BaseMap):
         Swaps two elements with the given indices.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : Aspect_TouchMap) -> None: ...
     @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     @overload
-    def __init__(self,theOther : Aspect_TouchMap) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Aspect_TrackedDevicePose():
@@ -2412,13 +2473,13 @@ class Aspect_TrackedDevicePoseArray():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : Aspect_TrackedDevicePose,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Aspect_TrackedDevicePoseArray) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : Aspect_TrackedDevicePose,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Aspect_TypeOfColorScaleData():
@@ -3484,6 +3545,10 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         """
         Return device pixel ratio (logical to backing store scale factor).
         """
+    def Dimensions(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Returns window dimensions.
+        """
     def DisplayConnection(self) -> Aspect_DisplayConnection: 
         """
         Returns connection to Display or NULL.
@@ -3521,23 +3586,23 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         Invalidate entire window content.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMapped(self) -> bool: 
         """
         Return true if window is not hidden.
@@ -3567,7 +3632,7 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         Returns window ratio equal to the physical width/height dimensions.
         """
     @overload
-    def SetBackground(self,color : OCP.Quantity.Quantity_Color) -> None: 
+    def SetBackground(self,theBackground : Aspect_GradientBackground) -> None: 
         """
         Modifies the window background.
 
@@ -3578,9 +3643,9 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         Modifies the window gradient background.
         """
     @overload
-    def SetBackground(self,ABackground : Aspect_GradientBackground) -> None: ...
+    def SetBackground(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     @overload
-    def SetBackground(self,ABack : Aspect_Background) -> None: ...
+    def SetBackground(self,theBack : Aspect_Background) -> None: ...
     @overload
     def SetBackground(self,theFirstColor : OCP.Quantity.Quantity_Color,theSecondColor : OCP.Quantity.Quantity_Color,theFillMethod : Aspect_GradientFillMethod) -> None: ...
     def SetNativeHandle(self,theWindow : capsule) -> bool: 
@@ -3588,14 +3653,14 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
         Set native handle.
         """
     @overload
-    def SetPosition(self,theX1 : int,theY1 : int) -> bool: 
+    def SetPosition(self,theX1 : int,theY1 : int,theX2 : int,theY2 : int) -> bool: 
         """
         Set the window position.
 
         Set the window position.
         """
     @overload
-    def SetPosition(self,theX1 : int,theY1 : int,theX2 : int,theY2 : int) -> bool: ...
+    def SetPosition(self,theX1 : int,theY1 : int) -> bool: ...
     def SetSize(self,theWidth : int,theHeight : int) -> bool: 
         """
         Set the window size.
@@ -3615,6 +3680,10 @@ class Aspect_NeutralWindow(Aspect_Window, OCP.Standard.Standard_Transient):
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TopLeft(self) -> OCP.Graphic3d.Graphic3d_Vec2i: 
+        """
+        Returns window top-left corner.
         """
     def Unmap(self) -> None: 
         """
@@ -3871,23 +3940,23 @@ class Aspect_XRAction(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         Return TRUE if action is defined.
@@ -3957,23 +4026,23 @@ class Aspect_XRActionSet(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def RawHandle(self) -> int: 
         """
         Return action handle.
@@ -4328,23 +4397,23 @@ class Aspect_OpenVRSession(Aspect_XRSession, OCP.Standard.Standard_Transient):
         Return TRUE if an HMD may be presented on the system (e.g. to show VR checkbox in application GUI). This is fast check, and even if it returns TRUE, opening session may fail.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOpen(self) -> bool: 
         """
         Return TRUE if session is opened.
@@ -4354,14 +4423,14 @@ class Aspect_OpenVRSession(Aspect_XRSession, OCP.Standard.Standard_Transient):
         Return left hand orientation.
         """
     @overload
-    def LoadRenderModel(self,theDevice : int,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
+    def LoadRenderModel(self,theDevice : int,theToApplyUnitFactor : bool,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: 
         """
         Load model for displaying device.
 
         Load model for displaying device.
         """
     @overload
-    def LoadRenderModel(self,theDevice : int,theToApplyUnitFactor : bool,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
+    def LoadRenderModel(self,theDevice : int,theTexture : OCP.Image.Image_Texture) -> OCP.Graphic3d.Graphic3d_ArrayOfTriangles: ...
     def NamedTrackedDevice(self,theDevice : Aspect_XRTrackedDeviceRole) -> int: 
         """
         Return index of tracked device of known role.

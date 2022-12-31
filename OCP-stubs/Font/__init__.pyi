@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import io
 import OCP.Graphic3d
+import OCP.TCollection
+import OCP.NCollection
 import OCP.Image
 import OCP.gp
 import OCP.Standard
-import OCP.TCollection
 import OCP.TColStd
+import io
 __all__  = [
 "Font_FTFont",
 "Font_FTFontParams",
@@ -56,23 +56,23 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
     Wrapper over FreeType font. Notice that this class uses internal buffers for loaded glyphs and it is absolutely UNSAFE to load/read glyph from concurrent threads!Wrapper over FreeType font. Notice that this class uses internal buffers for loaded glyphs and it is absolutely UNSAFE to load/read glyph from concurrent threads!
     """
     @overload
-    def AdvanceX(self,theUCharNext : str) -> float: 
+    def AdvanceX(self,theUChar : str,theUCharNext : str) -> float: 
         """
         Compute horizontal advance to the next character with kerning applied when applicable. Assuming text rendered horizontally.
 
         Compute horizontal advance to the next character with kerning applied when applicable. Assuming text rendered horizontally.
         """
     @overload
-    def AdvanceX(self,theUChar : str,theUCharNext : str) -> float: ...
+    def AdvanceX(self,theUCharNext : str) -> float: ...
     @overload
-    def AdvanceY(self,theUCharNext : str) -> float: 
+    def AdvanceY(self,theUChar : str,theUCharNext : str) -> float: 
         """
         Compute vertical advance to the next character with kerning applied when applicable. Assuming text rendered vertically.
 
         Compute vertical advance to the next character with kerning applied when applicable. Assuming text rendered vertically.
         """
     @overload
-    def AdvanceY(self,theUChar : str,theUCharNext : str) -> float: ...
+    def AdvanceY(self,theUCharNext : str) -> float: ...
     def Ascender(self) -> float: 
         """
         Returns vertical distance from the horizontal baseline to the highest character coordinate.
@@ -141,7 +141,7 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def Init(self,theFontPath : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams,theFaceId : int=0) -> bool: 
+    def Init(self,theData : OCP.NCollection.NCollection_Buffer,theFileName : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams,theFaceId : int=0) -> bool: 
         """
         Initialize the font from the given file path.
 
@@ -152,11 +152,11 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
         Initialize the font.
         """
     @overload
-    def Init(self,theFontName : OCP.NCollection.NCollection_Utf8String,theFontAspect : Font_FontAspect,thePointSize : int,theResolution : int) -> bool: ...
-    @overload
     def Init(self,theFontPath : OCP.NCollection.NCollection_Utf8String,thePointSize : int,theResolution : int) -> bool: ...
     @overload
-    def Init(self,theData : OCP.NCollection.NCollection_Buffer,theFileName : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams,theFaceId : int=0) -> bool: ...
+    def Init(self,theFontPath : OCP.TCollection.TCollection_AsciiString,theParams : Font_FTFontParams,theFaceId : int=0) -> bool: ...
+    @overload
+    def Init(self,theFontName : OCP.NCollection.NCollection_Utf8String,theFontAspect : Font_FontAspect,thePointSize : int,theResolution : int) -> bool: ...
     @staticmethod
     def IsCharFromArabic_s(theUChar : str) -> bool: 
         """
@@ -188,23 +188,23 @@ class Font_FTFont(OCP.Standard.Standard_Transient):
         Return TRUE if specified character should be displayed in Right-to-Left order.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSingleStrokeFont(self) -> bool: 
         """
         Return TRUE if this is single-stroke (one-line) font, FALSE by default. Such fonts define single-line glyphs instead of closed contours, so that they are rendered incorrectly by normal software.
@@ -315,23 +315,23 @@ class Font_FTLibrary(OCP.Standard.Standard_Transient):
         Access FT_Library instance.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsValid(self) -> bool: 
         """
         This method should always return true.
@@ -423,14 +423,14 @@ class Font_FontMgr(OCP.Standard.Standard_Transient):
         Return the list of available fonts.
         """
     @overload
-    def CheckFont(self,theFonts : Any,theFontPath : OCP.TCollection.TCollection_AsciiString) -> bool: 
+    def CheckFont(self,theFontPath : str) -> Font_SystemFont: 
         """
         Read font file and retrieve information from it (the list of font faces).
 
         Read font file and retrieve information from it.
         """
     @overload
-    def CheckFont(self,theFontPath : str) -> Font_SystemFont: ...
+    def CheckFont(self,theFonts : Any,theFontPath : OCP.TCollection.TCollection_AsciiString) -> bool: ...
     def ClearFontDataBase(self) -> None: 
         """
         Clear registry. Can be used for testing purposes.
@@ -457,14 +457,14 @@ class Font_FontMgr(OCP.Standard.Standard_Transient):
         Tries to find fallback font for specified Unicode subset. Returns NULL in case when fallback font is not found in the system.
         """
     @overload
-    def FindFont(self,theFontName : OCP.TCollection.TCollection_AsciiString,theFontAspect : Font_FontAspect) -> Font_SystemFont: 
+    def FindFont(self,theFontName : OCP.TCollection.TCollection_AsciiString,theStrictLevel : Font_StrictLevel,theFontAspect : Font_FontAspect,theDoFailMsg : bool=True) -> Font_SystemFont: 
         """
         Tries to find font by given parameters. If the specified font is not found tries to use font names mapping. If the requested family name not found -> search for any font family with given aspect and height. If the font is still not found, returns any font available in the system. Returns NULL in case when the fonts are not found in the system.
 
         Tries to find font by given parameters.
         """
     @overload
-    def FindFont(self,theFontName : OCP.TCollection.TCollection_AsciiString,theStrictLevel : Font_StrictLevel,theFontAspect : Font_FontAspect,theDoFailMsg : bool=True) -> Font_SystemFont: ...
+    def FindFont(self,theFontName : OCP.TCollection.TCollection_AsciiString,theFontAspect : Font_FontAspect) -> Font_SystemFont: ...
     @staticmethod
     def FontAspectToString_s(theAspect : Font_FontAspect) -> str: 
         """
@@ -483,14 +483,14 @@ class Font_FontMgr(OCP.Standard.Standard_Transient):
         Returns sequence of available fonts names
         """
     @overload
-    def GetFont(self,theFontName : OCP.TCollection.TCollection_AsciiString) -> Font_SystemFont: 
+    def GetFont(self,theFontName : OCP.TCollection.TCollection_HAsciiString,theFontAspect : Font_FontAspect,theFontSize : int) -> Font_SystemFont: 
         """
         Returns font that match given parameters. If theFontName is empty string returned font can have any FontName. If theFontAspect is Font_FA_Undefined returned font can have any FontAspect. If theFontSize is "-1" returned font can have any FontSize.
 
         Returns font that match given name or NULL if such font family is NOT registered. Note that unlike FindFont(), this method ignores font aliases and does not look for fall-back.
         """
     @overload
-    def GetFont(self,theFontName : OCP.TCollection.TCollection_HAsciiString,theFontAspect : Font_FontAspect,theFontSize : int) -> Font_SystemFont: ...
+    def GetFont(self,theFontName : OCP.TCollection.TCollection_AsciiString) -> Font_SystemFont: ...
     def GetFontAliases(self,theFontNames : OCP.TColStd.TColStd_SequenceOfHAsciiString,theAliasName : OCP.TCollection.TCollection_AsciiString) -> None: 
         """
         Return aliases to specified font name.
@@ -513,23 +513,23 @@ class Font_FontMgr(OCP.Standard.Standard_Transient):
         Collects available fonts paths.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def RegisterFont(self,theFont : Font_SystemFont,theToOverride : bool) -> bool: 
         """
         Register new font. If there is existing entity with the same name and properties but different path then font will be overridden or ignored depending on theToOverride flag.
@@ -622,7 +622,7 @@ class Font_NListOfSystemFont(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : Font_NListOfSystemFont) -> None: 
+    def Append(self,theItem : Font_SystemFont,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -633,7 +633,7 @@ class Font_NListOfSystemFont(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : Font_SystemFont) -> Font_SystemFont: ...
     @overload
-    def Append(self,theItem : Font_SystemFont,theIter : Any) -> None: ...
+    def Append(self,theOther : Font_NListOfSystemFont) -> None: ...
     def Assign(self,theOther : Font_NListOfSystemFont) -> Font_NListOfSystemFont: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -706,11 +706,11 @@ class Font_NListOfSystemFont(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Font_NListOfSystemFont) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Font_Rect():
@@ -852,23 +852,23 @@ class Font_SystemFont(OCP.Standard.Standard_Transient):
         Matching two instances, for Map interface.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSingleStrokeFont(self) -> bool: 
         """
         Return TRUE if this is single-stroke (one-line) font, FALSE by default. Such fonts define single-line glyphs instead of closed contours, so that they are rendered incorrectly by normal software.
@@ -998,26 +998,31 @@ class Font_TextFormatter(OCP.Standard.Standard_Transient):
         Returns true if the symbol is CR, BEL, FF, NP, BS or VT
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLFSymbol(self,theIndex : int) -> bool: 
         """
         Returns true if the symbol by the index is ''. The width of the symbol is zero.
+        """
+    @staticmethod
+    def IsSeparatorSymbol_s(theSymbol : str) -> bool: 
+        """
+        Returns true if the symbol separates words when wrapping is enabled
         """
     def LineHeight(self,theIndex : int) -> float: 
         """
@@ -1055,6 +1060,10 @@ class Font_TextFormatter(OCP.Standard.Standard_Transient):
         """
         Returns width of formatted text.
         """
+    def SetWordWrapping(self,theIsWordWrapping : bool) -> None: 
+        """
+        returns TRUE when trying not to break words when wrapping text
+        """
     def SetWrapping(self,theWidth : float) -> None: 
         """
         Sets text wrapping width, zero means that the text is not bounded by width
@@ -1082,6 +1091,10 @@ class Font_TextFormatter(OCP.Standard.Standard_Transient):
     def VerticalTextAlignment(self) -> OCP.Graphic3d.Graphic3d_VerticalTextAlignment: 
         """
         Returns vertical alignment style
+        """
+    def WordWrapping(self) -> bool: 
+        """
+        returns TRUE when trying not to break words when wrapping text
         """
     def Wrapping(self) -> float: 
         """

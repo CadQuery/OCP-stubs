@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepRepr
-import OCP.Transfer
-import io
-import OCP.gp
-import OCP.Standard
 import OCP.StepShape
-import OCP.IFSelect
-import OCP.Interface
-import OCP.StepData
-import OCP.StepGeom
-import OCP.TopoDS
 import OCP.XSControl
+import OCP.IFSelect
+import OCP.TopoDS
+import OCP.gp
+import OCP.Interface
+import OCP.Standard
+import OCP.StepGeom
 import OCP.TColStd
+import OCP.Transfer
+import OCP.StepRepr
+import OCP.StepData
+import io
 __all__  = [
 "STEPControl_ActorRead",
 "STEPControl_ActorWrite",
@@ -66,23 +66,23 @@ class STEPControl_ActorRead(OCP.Transfer.Transfer_ActorOfTransientProcess, OCP.T
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -184,23 +184,23 @@ class STEPControl_ActorWrite(OCP.Transfer.Transfer_ActorOfFinderProcess, OCP.Tra
         Customizable method to check whether shape S should be written as assembly or not Default implementation uses flag GroupMode and analyses the shape itself NOTE: this method can modify shape
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsLast(self) -> bool: 
         """
         Returns the Last status (see SetLast).
@@ -254,6 +254,10 @@ class STEPControl_ActorWrite(OCP.Transfer.Transfer_ActorOfFinderProcess, OCP.Tra
         None
         """
     def TransferShape(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,FP : OCP.Transfer.Transfer_FinderProcess,shapeGroup : OCP.TopTools.TopTools_HSequenceOfShape=None,isManifold : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
+        """
+        None
+        """
+    def TransferSubShape(self,start : OCP.Transfer.Transfer_Finder,SDR : OCP.StepShape.StepShape_ShapeDefinitionRepresentation,AX1 : OCP.StepGeom.StepGeom_Axis2Placement3d,FP : OCP.Transfer.Transfer_FinderProcess,shapeGroup : OCP.TopTools.TopTools_HSequenceOfShape=None,isManifold : bool=True,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> OCP.Transfer.Transfer_Binder: 
         """
         None
         """
@@ -347,23 +351,23 @@ class STEPControl_Controller(OCP.XSControl.XSControl_Controller, OCP.Standard.St
         Standard Initialisation. It creates a Controller for STEP and records it to various names, available to select it later Returns True when done, False if could not be done
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModeWrite(self,modetrans : int,shape : bool=True) -> bool: 
         """
         Tells if a value of <modetrans> is a good value(within bounds) Actually only for shapes
@@ -491,23 +495,23 @@ class STEPControl_Reader(OCP.XSControl.XSControl_Reader):
         Returns all of the results in a single shape which is: - a null shape if there are no results, - a shape if there is one result, - a compound containing the resulting shapes if there are more than one.
         """
     @overload
-    def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintCheckLoad(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Prints the check list attached to loaded data, on the Standard Trace File (starts at std::cout) All messages or fails only, according to <failsonly> mode = 0 : per entity, prints messages mode = 1 : per message, just gives count of entities per check mode = 2 : also gives entity numbers
 
         Prints the check list attached to loaded data.
         """
     @overload
-    def PrintCheckLoad(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    def PrintCheckLoad(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
     @overload
-    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
+    def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: 
         """
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities. Only fail messages are displayed if failsonly is true. All messages are displayed if failsonly is false. mode determines the contents and the order of the messages according to the terms of the IFSelect_PrintCount enumeration.
 
         Displays check results for the last translation of IGES or STEP entities to Open CASCADE entities.
         """
     @overload
-    def PrintCheckTransfer(self,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
+    def PrintCheckTransfer(self,theStream : io.BytesIO,failsonly : bool,mode : OCP.IFSelect.IFSelect_PrintCount) -> None: ...
     @overload
     def PrintStatsTransfer(self,theStream : io.BytesIO,what : int,mode : int=0) -> None: 
         """
@@ -582,9 +586,9 @@ class STEPControl_Reader(OCP.XSControl.XSControl_Reader):
         Returns the session used in <me>
         """
     @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
 class STEPControl_StepModelType():
     """
@@ -670,14 +674,18 @@ class STEPControl_Writer():
         """
         Returns the session used in <me>
         """
-    def Write(self,filename : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+    def Write(self,theFileName : str) -> OCP.IFSelect.IFSelect_ReturnStatus: 
         """
         Writes a STEP model in the file identified by filename.
         """
-    @overload
-    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
+    def WriteStream(self,theOStream : io.BytesIO) -> OCP.IFSelect.IFSelect_ReturnStatus: 
+        """
+        Writes a STEP model in the std::ostream.
+        """
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,WS : OCP.XSControl.XSControl_WorkSession,scratch : bool=True) -> None: ...
     pass
 STEPControl_AsIs: OCP.STEPControl.STEPControl_StepModelType # value = <STEPControl_StepModelType.STEPControl_AsIs: 0>
 STEPControl_BrepWithVoids: OCP.STEPControl.STEPControl_StepModelType # value = <STEPControl_StepModelType.STEPControl_BrepWithVoids: 2>

@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
-import OCP.gp
-import OCP.Standard
-import OCP.Interface
-import OCP.Message
 import OCP.TCollection
+import OCP.Message
+import OCP.gp
+import OCP.Interface
+import OCP.Standard
 import OCP.TColStd
+import io
 __all__  = [
 "IGESData",
 "IGESData_Array1OfDirPart",
@@ -173,13 +173,13 @@ class IGESData_Array1OfDirPart():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : IGESData_Array1OfDirPart) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : IGESData_DirPart,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IGESData_Array1OfIGESEntity():
@@ -259,13 +259,13 @@ class IGESData_Array1OfIGESEntity():
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : IGESData_IGESEntity,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IGESData_BasicEditor():
@@ -309,14 +309,14 @@ class IGESData_BasicEditor():
         From the flag of IGES version, returns name, "" if incorrect
         """
     @overload
-    def Init(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: 
+    def Init(self,protocol : IGESData_Protocol) -> None: 
         """
         Initialize a Basic Editor, with a new IGESModel, ready to run
 
         Initialize a Basic Editor for IGES Data, ready to run
         """
     @overload
-    def Init(self,protocol : IGESData_Protocol) -> None: ...
+    def Init(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: ...
     def Model(self) -> IGESData_IGESModel: 
         """
         Returns the designated model
@@ -349,11 +349,11 @@ class IGESData_BasicEditor():
         From the name of unit, computes flag number, 0 if incorrect (in this case, user defined entity remains possible)
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,protocol : IGESData_Protocol) -> None: ...
     @overload
     def __init__(self,model : IGESData_IGESModel,protocol : IGESData_Protocol) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class IGESData_IGESEntity(OCP.Standard.Standard_Transient):
     """
@@ -512,23 +512,23 @@ class IGESData_IGESEntity(OCP.Standard.Standard_Transient):
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -841,23 +841,23 @@ class IGESData_GeneralModule(OCP.Interface.Interface_GeneralModule, OCP.Standard
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ListImplied(self,model : OCP.Interface.Interface_InterfaceModel,CN : int,ent : OCP.Standard.Standard_Transient,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         List the Implied References of <ent> considered in the context of a Model <model> : i.e. the Entities which are Referenced while not considered as Shared (not copied if <ent> is, references not renewed by CopyCase but by ImpliedCase, only if referenced Entities have been Copied too) FillShared + ListImplied give the complete list of References Default calls ListImpliedCase (i.e. ignores the model) Can be redefined to use the model for working
@@ -954,23 +954,23 @@ class IGESData_SpecificModule(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def OwnCorrect(self,CN : int,ent : IGESData_IGESEntity) -> bool: 
         """
         Specific Automatic Correction on own Parameters of an Entity. It works by setting in accordance redundant data, if there are when there is no ambiguity (else, it does nothing). Remark that classic Corrections on Directory Entry (to set void data) are taken into account alsewhere.
@@ -1071,13 +1071,13 @@ class IGESData_DirChecker():
         Sets Blank Status to be required at a given value Give -1 to demand UseFlag not zero (but no precise value req.)
         """
     @overload
-    def __init__(self,atype : int,aform : int) -> None: ...
-    @overload
-    def __init__(self,atype : int) -> None: ...
-    @overload
     def __init__(self,atype : int,aform1 : int,aform2 : int) -> None: ...
     @overload
+    def __init__(self,atype : int,aform : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,atype : int) -> None: ...
     pass
 class IGESData_DirPart():
     """
@@ -1144,23 +1144,23 @@ class IGESData_Protocol(OCP.Interface.Interface_Protocol, OCP.Standard.Standard_
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSuitableModel(self,model : OCP.Interface.Interface_InterfaceModel) -> bool: 
         """
         Returns True if <model> is a Model of IGES Norm
@@ -1248,23 +1248,23 @@ class IGESData_FileRecognizer(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Result(self) -> IGESData_IGESEntity: 
         """
         Returns result of last recognition (call of Evaluate)
@@ -1449,23 +1449,23 @@ class IGESData_UndefinedEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transi
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsOKDirPart(self) -> bool: 
         """
         says if DirPart is OK or not (if not, it is erroneous) Note that if it is not, Def* methods can return Error status
@@ -1692,23 +1692,23 @@ class IGESData_DefaultGeneral(IGESData_GeneralModule, OCP.Interface.Interface_Ge
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ListImplied(self,model : OCP.Interface.Interface_InterfaceModel,CN : int,ent : OCP.Standard.Standard_Transient,iter : OCP.Interface.Interface_EntityIterator) -> None: 
         """
         List the Implied References of <ent> considered in the context of a Model <model> : i.e. the Entities which are Referenced while not considered as Shared (not copied if <ent> is, references not renewed by CopyCase but by ImpliedCase, only if referenced Entities have been Copied too) FillShared + ListImplied give the complete list of References Default calls ListImpliedCase (i.e. ignores the model) Can be redefined to use the model for working
@@ -1807,23 +1807,23 @@ class IGESData_GlobalNodeOfSpecificLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Module(self) -> IGESData_SpecificModule: 
         """
         Returns the Module stored in a given GlobalNode
@@ -1878,23 +1878,23 @@ class IGESData_GlobalNodeOfWriterLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Module(self) -> IGESData_ReadWriteModule: 
         """
         Returns the Module stored in a given GlobalNode
@@ -2267,23 +2267,23 @@ class IGESData_HArray1OfIGESEntity(IGESData_Array1OfIGESEntity, OCP.Standard.Sta
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> IGESData_IGESEntity: 
         """
         Returns last element
@@ -2325,13 +2325,13 @@ class IGESData_HArray1OfIGESEntity(IGESData_Array1OfIGESEntity, OCP.Standard.Sta
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : IGESData_IGESEntity) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : IGESData_IGESEntity) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : IGESData_Array1OfIGESEntity) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2523,23 +2523,23 @@ class IGESData_ColorEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient)
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -2701,7 +2701,7 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Adds a new string to the existing Start section at the end if atnum is 0 or not given, or before atnumth line.
         """
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,proto : OCP.Interface.Interface_Protocol,level : int=0,listall : bool=False) -> None: 
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,lib : OCP.Interface.Interface_GeneralLib,level : int=0,listall : bool=False) -> None: 
         """
         Adds to the Model, an Entity with all its References, as they are defined by General Services FillShared and ListImplied. Process is recursive (any sub-levels) if <level> = 0 (Default) Else, adds sub-entities until the required sub-level. Especially, if <level> = 1, adds immediate subs and that's all
 
@@ -2712,7 +2712,7 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
     @overload
     def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,level : int=0,listall : bool=False) -> None: ...
     @overload
-    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,lib : OCP.Interface.Interface_GeneralLib,level : int=0,listall : bool=False) -> None: ...
+    def AddWithRefs(self,anent : OCP.Standard.Standard_Transient,proto : OCP.Interface.Interface_Protocol,level : int=0,listall : bool=False) -> None: ...
     def ApplyStatic(self,param : str='') -> bool: 
         """
         Sets some of the Global section parameters with the values defined by the translation parameters. param may be: - receiver (value read in XSTEP.iges.header.receiver), - author (value read in XSTEP.iges.header.author), - company (value read in XSTEP.iges.header.company). The default value for param is an empty string. Returns True when done and if param is given, False if param is unknown or empty. Note: Set the unit in the IGES file Global section via IGESData_BasicEditor class.
@@ -2852,23 +2852,23 @@ class IGESData_IGESModel(OCP.Interface.Interface_InterfaceModel, OCP.Standard.St
         Returns True if <num> identifies an Error Entity : in this case, a ReportEntity brings Fail Messages and possibly an "undefined" Content, see IsRedefinedEntity
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRedefinedContent(self,num : int) -> bool: 
         """
         Returns True if <num> identifies an Entity which content is redefined through a ReportEntity (i.e. with literal data only) This happens when an entity is syntactically erroneous in the way that its basic content remains empty. For more details (such as content itself), see ReportEntity
@@ -3061,7 +3061,7 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         adds a parameter to global section's parameter list
         """
     @overload
-    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
+    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: 
         """
         Adds a parameter to record no "num" and fills its fields (EntityNumber is optional) Warning : <aval> is assumed to be memory-managed elsewhere : it is NOT copied. This gives a best speed : strings remain stored in pages of characters
 
@@ -3072,7 +3072,7 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
     @overload
     def AddParam(self,num : int,FP : OCP.Interface.Interface_FileParameter) -> None: ...
     @overload
-    def AddParam(self,num : int,aval : str,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
+    def AddParam(self,num : int,aval : OCP.TCollection.TCollection_AsciiString,atype : OCP.Interface.Interface_ParamType,nument : int=0) -> None: ...
     def AddStartLine(self,aval : str) -> None: 
         """
         adds a start line to start section
@@ -3148,23 +3148,23 @@ class IGESData_IGESReaderData(OCP.Interface.Interface_FileReaderData, OCP.Standa
         Returns True if the status "Error Load" has been set (to True or False)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsParamDefined(self,num : int,nump : int) -> bool: 
         """
         Returns True if parameter "nump" of record "num" is defined (it is not if its type is ParamVoid)
@@ -3392,9 +3392,9 @@ class IGESData_IGESType():
         returns "type" data
         """
     @overload
-    def __init__(self,atype : int,aform : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,atype : int,aform : int) -> None: ...
     pass
 class IGESData_IGESWriter():
     """
@@ -3449,7 +3449,7 @@ class IGESData_IGESWriter():
         prepares sending of list of entities, as Sections D (directory list) and P (Parameters lists, one per entity) Entities will be then processed, one after the other error if SectionG has not be called just before
         """
     @overload
-    def Send(self,val : float) -> None: 
+    def Send(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         sends an Integer parameter
 
@@ -3464,15 +3464,15 @@ class IGESData_IGESWriter():
         Sends a XYZ, interpreted as a couple of 2 Reals (X , Y & Z)
         """
     @overload
-    def Send(self,val : int) -> None: ...
-    @overload
-    def Send(self,val : OCP.TCollection.TCollection_HAsciiString) -> None: ...
-    @overload
-    def Send(self,val : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def Send(self,val : IGESData_IGESEntity,negative : bool=False) -> None: ...
     @overload
+    def Send(self,val : float) -> None: ...
+    @overload
+    def Send(self,val : int) -> None: ...
+    @overload
     def Send(self,val : OCP.gp.gp_XY) -> None: ...
+    @overload
+    def Send(self,val : OCP.gp.gp_XYZ) -> None: ...
     def SendBoolean(self,val : bool) -> None: 
         """
         sends a Boolean parameter as an Integer value 0(False)/1(True)
@@ -3494,11 +3494,11 @@ class IGESData_IGESWriter():
         sends a void parameter, that is null text
         """
     @overload
+    def __init__(self,amodel : IGESData_IGESModel) -> None: ...
+    @overload
     def __init__(self,other : IGESData_IGESWriter) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,amodel : IGESData_IGESModel) -> None: ...
     @property
     def WriteMode(self) -> int:
         """
@@ -3669,23 +3669,23 @@ class IGESData_LabelDisplayEntity(IGESData_IGESEntity, OCP.Standard.Standard_Tra
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -3991,23 +3991,23 @@ class IGESData_LevelListEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transi
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -4316,23 +4316,23 @@ class IGESData_LineFontEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transie
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -4634,23 +4634,23 @@ class IGESData_NameEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient):
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -4824,23 +4824,23 @@ class IGESData_NodeOfSpecificLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Module(self) -> IGESData_SpecificModule: 
         """
         Returns the Module designated by a precise Node
@@ -4895,23 +4895,23 @@ class IGESData_NodeOfWriterLib(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Module(self) -> IGESData_ReadWriteModule: 
         """
         Returns the Module designated by a precise Node
@@ -4997,9 +4997,9 @@ class IGESData_ParamCursor():
         Returns length of current term (count of parameters) in item
         """
     @overload
-    def __init__(self,num : int,nb : int,size : int=1) -> None: ...
-    @overload
     def __init__(self,num : int) -> None: ...
+    @overload
+    def __init__(self,num : int,nb : int,size : int=1) -> None: ...
     pass
 class IGESData_ParamReader():
     """
@@ -5015,14 +5015,14 @@ class IGESData_ParamReader():
     @overload
     def AddFail(self,af : OCP.TCollection.TCollection_HAsciiString,bf : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     @overload
-    def AddWarning(self,awarn : str,bwarn : str='') -> None: 
+    def AddWarning(self,aw : OCP.TCollection.TCollection_HAsciiString,bw : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
 
         feeds the Check with a new Warning message
         """
     @overload
-    def AddWarning(self,aw : OCP.TCollection.TCollection_HAsciiString,bw : OCP.TCollection.TCollection_HAsciiString) -> None: ...
+    def AddWarning(self,awarn : str,bwarn : str='') -> None: ...
     def CCheck(self) -> OCP.Interface.Interface_Check: 
         """
         returns the check in a way which allows to work on it directly (i.e. messages added to the Check are added to ParamReader too)
@@ -5104,25 +5104,25 @@ class IGESData_ParamReader():
         returns literal value of a parameter, as it was in file
         """
     @overload
-    def ReadBoolean(self,PC : IGESData_ParamCursor,mess : str,val : bool,exact : bool=True) -> bool: 
+    def ReadBoolean(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : bool,exact : bool=True) -> bool: 
         """
         None
 
         Reads a Boolean value from parameter "num" A Boolean is given as an Integer value 0 (False) or 1 (True) Anyway, an Integer is demanded (else, Check is filled) If exact is given True, those precise values are demanded Else, Correction is done, as False for 0 or <0, True for >0 (with a Warning error message, and return is True) In case of error (not an Integer, or not 0/1 and exact True), Check is filled with a Fail (using mess) and return is False
         """
     @overload
-    def ReadBoolean(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : bool,exact : bool=True) -> bool: ...
+    def ReadBoolean(self,PC : IGESData_ParamCursor,mess : str,val : bool,exact : bool=True) -> bool: ...
     @overload
-    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: 
+    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: 
         """
         None
 
         Reads a list of Entities defined by PC Same conditions as for ReadEnts, for PC The list is given as an EntityList (index has no meaning; the EntityList starts from clear) If "ord" is given True (default), entities will be added to the list in their original order Remark : Negative or Null Pointers are ignored Else ("ord" False), order is not guaranteed (faster mode) If all params cannot be read as Entities, same as above Warning Give "ord" to False ONLY if order is not significant
         """
     @overload
-    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: ...
+    def ReadEntList(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_EntityList,ord : bool=True) -> bool: ...
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: 
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: 
         """
         None
 
@@ -5133,11 +5133,11 @@ class IGESData_ParamReader():
         Works as ReadEntity without Type, but in addition checks the Type of the Entity, which must be "kind of" a given <type> Then, gives the same fail cases as ReadEntity without Type, plus the case "Incorrect Type" (in such a case, returns False and givel <val> = Null)
         """
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
-    @overload
     def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
     @overload
-    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,type : OCP.Standard.Standard_Type,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,aStatus : IGESData_Status,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
+    @overload
+    def ReadEntity(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_IGESEntity,canbenul : bool=False) -> bool: ...
     @overload
     def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: 
         """
@@ -5148,23 +5148,23 @@ class IGESData_ParamReader():
     @overload
     def ReadEnts(self,IR : IGESData_IGESReaderData,PC : IGESData_ParamCursor,mess : str,val : IGESData_HArray1OfIGESEntity,index : int=1) -> bool: ...
     @overload
-    def ReadInteger(self,PC : IGESData_ParamCursor,val : int) -> bool: 
+    def ReadInteger(self,PC : IGESData_ParamCursor,mess : str,val : int) -> bool: 
         """
         None
 
         Reads an Integer value designated by PC The method Current designates the current parameter and advances the Current Number by one after reading Note that if a count (not 1) is given, it is ignored If it is not an Integer, fills Check with a Fail (using mess) and returns False
         """
     @overload
-    def ReadInteger(self,PC : IGESData_ParamCursor,mess : str,val : int) -> bool: ...
+    def ReadInteger(self,PC : IGESData_ParamCursor,val : int) -> bool: ...
     @overload
-    def ReadInts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: 
+    def ReadInts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: 
         """
         None
 
         Reads a list of Integer values, defined by PC (with a count of parameters). PC can start from Current Number and command it to advance after reading (use method CurrentList to do this) The list is given as a HArray1, numered from "index" If all params are not Integer, Check is filled (using mess) and return value is False
         """
     @overload
-    def ReadInts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: ...
+    def ReadInts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TColStd.TColStd_HArray1OfInteger,index : int=1) -> bool: ...
     @overload
     def ReadReal(self,PC : IGESData_ParamCursor,mess : str,val : float) -> bool: 
         """
@@ -5184,32 +5184,32 @@ class IGESData_ParamReader():
     @overload
     def ReadReals(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TColStd.TColStd_HArray1OfReal,index : int=1) -> bool: ...
     @overload
-    def ReadText(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TCollection.TCollection_HAsciiString) -> bool: 
+    def ReadText(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TCollection.TCollection_HAsciiString) -> bool: 
         """
         None
 
         Reads a Text value from parameter "num", as a String from Collection, that is, Hollerith text without leading "nnnH" If it is not a String, fills Check with a Fail (using mess) and returns False
         """
     @overload
-    def ReadText(self,PC : IGESData_ParamCursor,mess : str,val : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
+    def ReadText(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.TCollection.TCollection_HAsciiString) -> bool: ...
     @overload
-    def ReadTexts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: 
+    def ReadTexts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: 
         """
         None
 
         Reads a list of Hollerith Texts, defined by PC Texts are read as Hollerith texts without leading "nnnH" Same conditions as for ReadInts, for PC and index If all params are not Text, Check is filled (using mess) and return value is False
         """
     @overload
-    def ReadTexts(self,PC : IGESData_ParamCursor,mess : str,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: ...
+    def ReadTexts(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.Interface.Interface_HArray1OfHAsciiString,index : int=1) -> bool: ...
     @overload
-    def ReadXY(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XY) -> bool: 
+    def ReadXY(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XY) -> bool: 
         """
         None
 
         Reads a couple of Real values (X,Y) from parameter "num" Integers are accepted (Check is filled with a Warning message) and cause return to be True (as normal case) In other cases, Check is filled with a Fail and return is False
         """
     @overload
-    def ReadXY(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XY) -> bool: ...
+    def ReadXY(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XY) -> bool: ...
     @overload
     def ReadXYZ(self,PC : IGESData_ParamCursor,amsg : OCP.Message.Message_Msg,val : OCP.gp.gp_XYZ) -> bool: 
         """
@@ -5220,23 +5220,23 @@ class IGESData_ParamReader():
     @overload
     def ReadXYZ(self,PC : IGESData_ParamCursor,mess : str,val : OCP.gp.gp_XYZ) -> bool: ...
     @overload
-    def ReadingEntityNumber(self,num : int,mess : str,val : int) -> bool: 
+    def ReadingEntityNumber(self,num : int,val : int) -> bool: 
         """
         None
 
         Routine which reads an Entity Number (which allows to read the Entity in the IGESReaderData by BoundEntity), given its number in the list of Parameters Same conditions as ReadEntity for mess, val, and return value In particular, returns True and val to zero means Null Entity, and val not zero means Entity read by BoundEntity
         """
     @overload
-    def ReadingEntityNumber(self,num : int,val : int) -> bool: ...
+    def ReadingEntityNumber(self,num : int,mess : str,val : int) -> bool: ...
     @overload
-    def ReadingReal(self,num : int,mess : str,val : float) -> bool: 
+    def ReadingReal(self,num : int,val : float) -> bool: 
         """
         None
 
         Routine which reads a Real parameter, given its number Same conditions as ReadReal for mess, val, and return value
         """
     @overload
-    def ReadingReal(self,num : int,val : float) -> bool: ...
+    def ReadingReal(self,num : int,mess : str,val : float) -> bool: ...
     def SendFail(self,amsg : OCP.Message.Message_Msg) -> None: 
         """
         None
@@ -5306,23 +5306,23 @@ class IGESData_FileProtocol(IGESData_Protocol, OCP.Interface.Interface_Protocol,
         Returns True if type of <obj> is that defined from CDL This is the default but it may change according implementation
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSuitableModel(self,model : OCP.Interface.Interface_InterfaceModel) -> bool: 
         """
         Returns True if <model> is a Model of IGES Norm
@@ -5456,23 +5456,23 @@ class IGESData_ReadWriteModule(OCP.Interface.Interface_ReaderModule, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NewRead(self,casenum : int,data : OCP.Interface.Interface_FileReaderData,num : int,ach : OCP.Interface.Interface_Check,ent : OCP.Standard.Standard_Transient) -> bool: 
         """
         Specific operator (create+read) defaulted to do nothing. It can be redefined when it is not possible to work in two steps (NewVoid then Read). This occurs when no default constructor is defined : hence the result <ent> must be created with an effective definition from the reader. Remark : if NewRead is defined, Copy has nothing to do.
@@ -5665,23 +5665,23 @@ class IGESData_SingleParentEntity(IGESData_IGESEntity, OCP.Standard.Standard_Tra
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -5879,9 +5879,9 @@ class IGESData_SpecificLib():
         Starts Iteration on the Modules (sets it on the first one)
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,aprotocol : IGESData_Protocol) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class IGESData_DefaultSpecific(IGESData_SpecificModule, OCP.Standard.Standard_Transient):
     """
@@ -5908,23 +5908,23 @@ class IGESData_DefaultSpecific(IGESData_SpecificModule, OCP.Standard.Standard_Tr
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def OwnCorrect(self,CN : int,ent : IGESData_IGESEntity) -> bool: 
         """
         Specific Automatic Correction on own Parameters of an Entity. It works by setting in accordance redundant data, if there are when there is no ambiguity (else, it does nothing). Remark that classic Corrections on Directory Entry (to set void data) are taken into account alsewhere.
@@ -6051,23 +6051,23 @@ class IGESData_ToolLocation(OCP.Standard.Standard_Transient):
         Returns True if <ent> is an Associativity (IGES Type 402). Then, Location does not apply.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsTransf(self,ent : IGESData_IGESEntity) -> bool: 
         """
         Returns True if <ent> is kind of TransfEntity. Then, it has no location, while it can be used to define a Location)
@@ -6277,23 +6277,23 @@ class IGESData_TransfEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transient
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LabelDisplay(self) -> IGESData_LabelDisplayEntity: 
         """
         Returns the Label Display Associativity Entity if there is one. Returns a null handle if there is none.
@@ -6454,14 +6454,14 @@ class IGESData_FreeFormatEntity(IGESData_UndefinedEntity, IGESData_IGESEntity, O
         Adds a Parameter which references an Entity. If the Entity is Null, the added parameter will define a "Null Pointer" (0) If <negative> is given True, this will command Sending to File (see IGESWriter) to produce a "Negative Pointer" (Default is False)
         """
     @overload
-    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : OCP.TCollection.TCollection_HAsciiString) -> None: 
+    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : str) -> None: 
         """
         Adds a literal Parameter to the list (as such)
 
         Adds a literal Parameter to the list (builds an HAsciiString)
         """
     @overload
-    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : str) -> None: ...
+    def AddLiteral(self,ptype : OCP.Interface.Interface_ParamType,val : OCP.TCollection.TCollection_HAsciiString) -> None: ...
     def AddNegativePointers(self,list : OCP.TColStd.TColStd_HSequenceOfInteger) -> None: 
         """
         Adds a list of Ranks of Parameters to be noted as Negative Pointers (this will be taken into account for Parameters which are Entities)
@@ -6631,23 +6631,23 @@ class IGESData_FreeFormatEntity(IGESData_UndefinedEntity, IGESData_IGESEntity, O
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNegativePointer(self,num : int) -> bool: 
         """
         Returns True if <num> is noted as for a "Negative Pointer" (see AddEntity for details). Senseful only if IsParamEntity answers True for <num>, else returns False.
@@ -7017,23 +7017,23 @@ class IGESData_ViewKindEntity(IGESData_IGESEntity, OCP.Standard.Standard_Transie
         Initializes View, or erases it if <ent> is given Null
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSingle(self) -> bool: 
         """
         says if "me" is a Single View (True) or a List of Views (False)

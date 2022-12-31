@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.Geom
+import OCP.TopoDS
 import OCP.BRep
 import OCP.gp
 import OCP.Geom2d
-import OCP.Geom
-import OCP.TopoDS
 __all__  = [
 "BRepPrim_Builder",
 "BRepPrim_OneAxis",
@@ -33,14 +33,14 @@ class BRepPrim_Builder():
     implements the abstract Builder with the BRep Builder
     """
     @overload
-    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P1 : float,P2 : float) -> None: 
+    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P : float,direct : bool) -> None: 
         """
         Adds the Vertex <V> in the Edge <E>. <P> is the parameter of the vertex on the edge. If direct is False the Vertex is reversed.
 
         Adds the Vertex <V> in the Edge <E>. <P1,P2> are the parameters of the vertex on the closed edge.
         """
     @overload
-    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P : float,direct : bool) -> None: ...
+    def AddEdgeVertex(self,E : OCP.TopoDS.TopoDS_Edge,V : OCP.TopoDS.TopoDS_Vertex,P1 : float,P2 : float) -> None: ...
     def AddFaceWire(self,F : OCP.TopoDS.TopoDS_Face,W : OCP.TopoDS.TopoDS_Wire) -> None: 
         """
         Adds the Wire <W> in the Face <F>.
@@ -80,14 +80,14 @@ class BRepPrim_Builder():
         Returns in <E> a degenerated edge.
         """
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,L : OCP.gp.gp_Lin) -> None: 
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.gp.gp_Circ) -> None: 
         """
         Returns in <E> an Edge built with the line equation <L>.
 
         Returns in <E> an Edge built with the circle equation <C>.
         """
     @overload
-    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.gp.gp_Circ) -> None: ...
+    def MakeEdge(self,E : OCP.TopoDS.TopoDS_Edge,L : OCP.gp.gp_Lin) -> None: ...
     def MakeFace(self,F : OCP.TopoDS.TopoDS_Face,P : OCP.gp.gp_Pln) -> None: 
         """
         Returns in <F> a Face built with the plane equation <P>. Used by all primitives.
@@ -621,11 +621,11 @@ class BRepPrim_FaceBuilder():
         Returns the vertex of index <I> 1 - Vertex UMin,VMin 2 - Vertex UMax,VMin 3 - Vertex UMax,VMax 4 - Vertex UMin,VMax
         """
     @overload
-    def __init__(self,B : OCP.BRep.BRep_Builder,S : OCP.Geom.Geom_Surface) -> None: ...
+    def __init__(self,B : OCP.BRep.BRep_Builder,S : OCP.Geom.Geom_Surface,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,B : OCP.BRep.BRep_Builder,S : OCP.Geom.Geom_Surface,UMin : float,UMax : float,VMin : float,VMax : float) -> None: ...
+    def __init__(self,B : OCP.BRep.BRep_Builder,S : OCP.Geom.Geom_Surface) -> None: ...
     pass
 class BRepPrim_GWedge():
     """
@@ -742,9 +742,9 @@ class BRepPrim_GWedge():
     @overload
     def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
     @overload
-    def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
-    @overload
     def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
+    @overload
+    def __init__(self,B : BRepPrim_Builder,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -959,17 +959,17 @@ class BRepPrim_Cone(BRepPrim_Revolution, BRepPrim_OneAxis):
     @overload
     def __init__(self,Angle : float,Axes : OCP.gp.gp_Ax2) -> None: ...
     @overload
-    def __init__(self,Center : OCP.gp.gp_Pnt,R1 : float,R2 : float,H : float) -> None: ...
-    @overload
-    def __init__(self,Angle : float,Position : OCP.gp.gp_Ax2,Height : float,Radius : float=0.0) -> None: ...
-    @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,R1 : float,R2 : float,H : float) -> None: ...
+    @overload
+    def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
     @overload
     def __init__(self,Angle : float) -> None: ...
     @overload
     def __init__(self,Angle : float,Apex : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,R1 : float,R2 : float,H : float) -> None: ...
+    def __init__(self,Center : OCP.gp.gp_Pnt,R1 : float,R2 : float,H : float) -> None: ...
+    @overload
+    def __init__(self,Angle : float,Position : OCP.gp.gp_Ax2,Height : float,Radius : float=0.0) -> None: ...
     pass
 class BRepPrim_Cylinder(BRepPrim_Revolution, BRepPrim_OneAxis):
     """
@@ -1182,15 +1182,15 @@ class BRepPrim_Cylinder(BRepPrim_Revolution, BRepPrim_OneAxis):
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,Radius : float) -> None: ...
     @overload
-    def __init__(self,R : float,H : float) -> None: ...
-    @overload
-    def __init__(self,Radius : float) -> None: ...
-    @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,Radius : float) -> None: ...
+    @overload
+    def __init__(self,R : float,H : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,R : float,H : float) -> None: ...
     @overload
     def __init__(self,Position : OCP.gp.gp_Ax2,Radius : float,Height : float) -> None: ...
+    @overload
+    def __init__(self,Radius : float) -> None: ...
     pass
 class BRepPrim_Sphere(BRepPrim_Revolution, BRepPrim_OneAxis):
     """
@@ -1616,9 +1616,9 @@ class BRepPrim_Torus(BRepPrim_Revolution, BRepPrim_OneAxis):
         Returns True if VMin is infinite. Default Precision::IsNegativeInfinite(VMax);
         """
     @overload
-    def __init__(self,Position : OCP.gp.gp_Ax2,Major : float,Minor : float) -> None: ...
-    @overload
     def __init__(self,Major : float,Minor : float) -> None: ...
+    @overload
+    def __init__(self,Position : OCP.gp.gp_Ax2,Major : float,Minor : float) -> None: ...
     @overload
     def __init__(self,Center : OCP.gp.gp_Pnt,Major : float,Minor : float) -> None: ...
     pass
@@ -1735,13 +1735,13 @@ class BRepPrim_Wedge(BRepPrim_GWedge):
         Returns the Wire of <me> located in <d1> direction.
         """
     @overload
-    def __init__(self,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float,ltx : float) -> None: ...
     @overload
     def __init__(self,Axes : OCP.gp.gp_Ax2,dx : float,dy : float,dz : float) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Axes : OCP.gp.gp_Ax2,xmin : float,ymin : float,zmin : float,z2min : float,x2min : float,xmax : float,ymax : float,zmax : float,z2max : float,x2max : float) -> None: ...
     pass
 BRepPrim_XMax: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_XMax: 1>
 BRepPrim_XMin: OCP.BRepPrim.BRepPrim_Direction # value = <BRepPrim_Direction.BRepPrim_XMin: 0>

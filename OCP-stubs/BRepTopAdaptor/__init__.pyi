@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.Adaptor2d
-import OCP.NCollection
 import OCP.BRepAdaptor
+import OCP.Adaptor3d
+import OCP.TopoDS
+import OCP.NCollection
 import OCP.gp
-import io
 import OCP.TopAbs
 import OCP.Standard
-import OCP.TopoDS
 import OCP.TColStd
+import OCP.Adaptor2d
+import io
 __all__  = [
 "BRepTopAdaptor_FClass2d",
 "BRepTopAdaptor_HVertex",
@@ -75,23 +75,23 @@ class BRepTopAdaptor_HVertex(OCP.Adaptor3d.Adaptor3d_HVertex, OCP.Standard.Stand
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsSame(self,Other : OCP.Adaptor3d.Adaptor3d_HVertex) -> bool: 
         """
         None
@@ -163,14 +163,14 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Exchange(self,theOther : BRepTopAdaptor_MapOfShapeTool) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -180,14 +180,14 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         Extent
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: 
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: 
         """
         Find returns the Item for Key. Raises if Key was not bound
 
         Find Item for key with copying.
         """
     @overload
-    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape) -> BRepTopAdaptor_Tool: ...
+    def Find(self,theKey : OCP.TopoDS.TopoDS_Shape,theValue : BRepTopAdaptor_Tool) -> bool: ...
     def IsBound(self,theKey : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         IsBound
@@ -221,9 +221,9 @@ class BRepTopAdaptor_MapOfShapeTool(OCP.NCollection.NCollection_BaseMap):
         UnBind removes Item Key pair from map
         """
     @overload
-    def __init__(self,theOther : BRepTopAdaptor_MapOfShapeTool) -> None: ...
-    @overload
     def __init__(self,theNbBuckets : int,theAllocator : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
+    @overload
+    def __init__(self,theOther : BRepTopAdaptor_MapOfShapeTool) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -245,24 +245,24 @@ class BRepTopAdaptor_Tool():
         None
         """
     @overload
-    def Init(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Tol2d : float) -> None: 
+    def Init(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Init(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
+    def Init(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Tol2d : float) -> None: ...
     def SetTopolTool(self,TT : BRepTopAdaptor_TopolTool) -> None: 
         """
         None
         """
     @overload
-    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Tol2d : float) -> None: ...
-    @overload
     def __init__(self,F : OCP.TopoDS.TopoDS_Face,Tol2d : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,Surface : OCP.Adaptor3d.Adaptor3d_Surface,Tol2d : float) -> None: ...
     pass
 class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.Standard_Transient):
     def BSplSamplePnts(self,theDefl : float,theNUmin : int,theNVmin : int) -> None: 
@@ -300,6 +300,11 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
     def Edge(self) -> capsule: 
         """
         None
+        """
+    @staticmethod
+    def GetConeApexParam_s(theC : OCP.gp.gp_Cone) -> Tuple[float, float]: 
+        """
+        Computes the cone's apex parameters.
         """
     def GetRefCount(self) -> int: 
         """
@@ -339,23 +344,23 @@ class BRepTopAdaptor_TopolTool(OCP.Adaptor3d.Adaptor3d_TopolTool, OCP.Standard.S
     @overload
     def Initialize(self) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsThePointOn(self,P2d : OCP.gp.gp_Pnt2d,Tol : float,RecadreOnPeriodic : bool=True) -> bool: 
         """
         see the code for specifications)

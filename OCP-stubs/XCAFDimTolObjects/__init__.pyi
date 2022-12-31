@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
+import OCP.TopoDS
 import OCP.TDocStd
-import io
+import OCP.TCollection
+import OCP.NCollection
 import OCP.gp
 import OCP.Standard
-import OCP.TopoDS
-import OCP.TCollection
 import OCP.TColStd
+import io
 __all__  = [
+"XCAFDimTolObjects_AngularQualifier",
 "XCAFDimTolObjects_DatumModifWithValue",
 "XCAFDimTolObjects_DatumModifiersSequence",
 "XCAFDimTolObjects_DatumObject",
@@ -37,6 +38,10 @@ __all__  = [
 "XCAFDimTolObjects_GeomToleranceZoneModif",
 "XCAFDimTolObjects_ToleranceZoneAffectedPlane",
 "XCAFDimTolObjects_Tool",
+"XCAFDimTolObjects_AngularQualifier_Equal",
+"XCAFDimTolObjects_AngularQualifier_Large",
+"XCAFDimTolObjects_AngularQualifier_None",
+"XCAFDimTolObjects_AngularQualifier_Small",
 "XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical",
 "XCAFDimTolObjects_DatumModifWithValue_Distance",
 "XCAFDimTolObjects_DatumModifWithValue_None",
@@ -225,6 +230,46 @@ __all__  = [
 "XCAFDimTolObjects_ToleranceZoneAffectedPlane_None",
 "XCAFDimTolObjects_ToleranceZoneAffectedPlane_Orientation"
 ]
+class XCAFDimTolObjects_AngularQualifier():
+    """
+    Defines types of qualifier for angular dimensions
+
+    Members:
+
+      XCAFDimTolObjects_AngularQualifier_None
+
+      XCAFDimTolObjects_AngularQualifier_Small
+
+      XCAFDimTolObjects_AngularQualifier_Large
+
+      XCAFDimTolObjects_AngularQualifier_Equal
+    """
+    def __eq__(self,other : object) -> bool: ...
+    def __getstate__(self) -> int: ...
+    def __hash__(self) -> int: ...
+    def __index__(self) -> int: ...
+    def __init__(self,value : int) -> None: ...
+    def __int__(self) -> int: ...
+    def __ne__(self,other : object) -> bool: ...
+    def __repr__(self) -> str: ...
+    def __setstate__(self,state : int) -> None: ...
+    @property
+    def name(self) -> None:
+        """
+        :type: None
+        """
+    @property
+    def value(self) -> int:
+        """
+        :type: int
+        """
+    XCAFDimTolObjects_AngularQualifier_Equal: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Equal: 3>
+    XCAFDimTolObjects_AngularQualifier_Large: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Large: 2>
+    XCAFDimTolObjects_AngularQualifier_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_None: 0>
+    XCAFDimTolObjects_AngularQualifier_Small: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Small: 1>
+    __entries: dict # value = {'XCAFDimTolObjects_AngularQualifier_None': (<XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_None: 0>, None), 'XCAFDimTolObjects_AngularQualifier_Small': (<XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Small: 1>, None), 'XCAFDimTolObjects_AngularQualifier_Large': (<XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Large: 2>, None), 'XCAFDimTolObjects_AngularQualifier_Equal': (<XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Equal: 3>, None)}
+    __members__: dict # value = {'XCAFDimTolObjects_AngularQualifier_None': <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_None: 0>, 'XCAFDimTolObjects_AngularQualifier_Small': <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Small: 1>, 'XCAFDimTolObjects_AngularQualifier_Large': <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Large: 2>, 'XCAFDimTolObjects_AngularQualifier_Equal': <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Equal: 3>}
+    pass
 class XCAFDimTolObjects_DatumModifWithValue():
     """
     Defines modifirs
@@ -314,14 +359,14 @@ class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseS
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumModifiersSequence) -> None: 
         """
@@ -357,14 +402,14 @@ class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseS
     @overload
     def Prepend(self,theItem : XCAFDimTolObjects_DatumSingleModif) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -390,11 +435,11 @@ class XCAFDimTolObjects_DatumModifiersSequence(OCP.NCollection.NCollection_BaseS
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : XCAFDimTolObjects_DatumModifiersSequence) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -515,32 +560,32 @@ class XCAFDimTolObjects_DatumObject(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsDatumTarget(self) -> bool: 
+    def IsDatumTarget(self,theIsDT : bool) -> None: 
         """
         Returns True if the datum target is specified.
 
         Sets or drops the datum target indicator.
         """
     @overload
-    def IsDatumTarget(self,theIsDT : bool) -> None: ...
+    def IsDatumTarget(self) -> bool: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetDatumTarget(self,theShape : OCP.TopoDS.TopoDS_Shape) -> None: 
         """
         Sets datum target shape.
@@ -606,9 +651,9 @@ class XCAFDimTolObjects_DatumObject(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theObj : XCAFDimTolObjects_DatumObject) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -629,14 +674,14 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : XCAFDimTolObjects_DatumObject) -> None: 
+    def Append(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
+    def Append(self,theItem : XCAFDimTolObjects_DatumObject) -> None: ...
     def Assign(self,theOther : XCAFDimTolObjects_DatumObjectSequence) -> XCAFDimTolObjects_DatumObjectSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -666,14 +711,14 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DatumObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DatumObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theItem : XCAFDimTolObjects_DatumObject) -> None: 
         """
@@ -700,14 +745,14 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_DatumObject) -> None: 
+    def Prepend(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
+    def Prepend(self,theItem : XCAFDimTolObjects_DatumObject) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -742,11 +787,11 @@ class XCAFDimTolObjects_DatumObjectSequence(OCP.NCollection.NCollection_BaseSequ
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : XCAFDimTolObjects_DatumObjectSequence) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1249,14 +1294,14 @@ class XCAFDimTolObjects_DimensionModifiersSequence(OCP.NCollection.NCollection_B
     @overload
     def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionModif) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionModif) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -1316,11 +1361,11 @@ class XCAFDimTolObjects_DimensionModifiersSequence(OCP.NCollection.NCollection_B
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theOther : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
-    def __init__(self,theOther : XCAFDimTolObjects_DimensionModifiersSequence) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1355,6 +1400,10 @@ class XCAFDimTolObjects_DimensionObject(OCP.Standard.Standard_Transient):
     def DynamicType(self) -> OCP.Standard.Standard_Type: 
         """
         None
+        """
+    def GetAngularQualifier(self) -> XCAFDimTolObjects_AngularQualifier: 
+        """
+        Returns angular qualifier.
         """
     def GetClassOfTolerance(self,theHole : bool,theFormVariance : XCAFDimTolObjects_DimensionFormVariance,theGrade : XCAFDimTolObjects_DimensionGrade) -> bool: 
         """
@@ -1448,6 +1497,10 @@ class XCAFDimTolObjects_DimensionObject(OCP.Standard.Standard_Transient):
         """
         Returns raw array of dimension values
         """
+    def HasAngularQualifier(self) -> bool: 
+        """
+        Returns True if the object has angular qualifier.
+        """
     def HasDescriptions(self) -> bool: 
         """
         Returns true, if the object has descriptions.
@@ -1489,23 +1542,23 @@ class XCAFDimTolObjects_DimensionObject(OCP.Standard.Standard_Transient):
         Returns True if the dimension is of range kind. Dimension is of range kind if its values array contains two elements defining lower and upper bounds.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbDescriptions(self) -> int: 
         """
         Returns number of descriptions.
@@ -1513,6 +1566,10 @@ class XCAFDimTolObjects_DimensionObject(OCP.Standard.Standard_Transient):
     def RemoveDescription(self,theNumber : int) -> None: 
         """
         Remove description with the given number.
+        """
+    def SetAngularQualifier(self,theAngularQualifier : XCAFDimTolObjects_AngularQualifier) -> None: 
+        """
+        Sets angular qualifier as small, large or equal.
         """
     def SetClassOfTolerance(self,theHole : bool,theFormVariance : XCAFDimTolObjects_DimensionFormVariance,theGrade : XCAFDimTolObjects_DimensionGrade) -> None: 
         """
@@ -1655,14 +1712,14 @@ class XCAFDimTolObjects_DimensionObjectSequence(OCP.NCollection.NCollection_Base
         First item access
         """
     @overload
-    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: 
+    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionObject) -> None: 
         """
         InsertAfter theIndex another sequence (making it empty)
 
         InsertAfter theIndex theItem
         """
     @overload
-    def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_DimensionObject) -> None: ...
+    def InsertAfter(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: ...
     @overload
     def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_DimensionObjectSequence) -> None: 
         """
@@ -2112,14 +2169,14 @@ class XCAFDimTolObjects_GeomToleranceModifiersSequence(OCP.NCollection.NCollecti
     @overload
     def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceModif) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -2145,11 +2202,11 @@ class XCAFDimTolObjects_GeomToleranceModifiersSequence(OCP.NCollection.NCollecti
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : XCAFDimTolObjects_GeomToleranceModifiersSequence) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2278,23 +2335,23 @@ class XCAFDimTolObjects_GeomToleranceObject(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @overload
     def SetAffectedPlane(self,thePlane : OCP.gp.gp_Pln,theType : XCAFDimTolObjects_ToleranceZoneAffectedPlane) -> None: 
         """
@@ -2369,9 +2426,9 @@ class XCAFDimTolObjects_GeomToleranceObject(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theObj : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theObj : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -2392,14 +2449,14 @@ class XCAFDimTolObjects_GeomToleranceObjectSequence(OCP.NCollection.NCollection_
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: 
+    def Append(self,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
+    def Append(self,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: ...
     def Assign(self,theOther : XCAFDimTolObjects_GeomToleranceObjectSequence) -> XCAFDimTolObjects_GeomToleranceObjectSequence: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -2438,14 +2495,14 @@ class XCAFDimTolObjects_GeomToleranceObjectSequence(OCP.NCollection.NCollection_
     @overload
     def InsertAfter(self,theIndex : int,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -2463,14 +2520,14 @@ class XCAFDimTolObjects_GeomToleranceObjectSequence(OCP.NCollection.NCollection_
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: 
+    def Prepend(self,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: ...
+    def Prepend(self,theItem : XCAFDimTolObjects_GeomToleranceObject) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -2505,11 +2562,11 @@ class XCAFDimTolObjects_GeomToleranceObjectSequence(OCP.NCollection.NCollection_
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : XCAFDimTolObjects_GeomToleranceObjectSequence) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -2715,6 +2772,10 @@ class XCAFDimTolObjects_Tool():
         """
         Returns a sequence of Dimensions currently stored in the GD&T table
         """
+    def GetGeomTolerances(self,theGeomToleranceObjectSequence : XCAFDimTolObjects_GeomToleranceObjectSequence,theDatumObjectSequence : XCAFDimTolObjects_DatumObjectSequence,theMap : Any) -> None: 
+        """
+        Returns a sequence of Tolerances currently stored in the GD&T table
+        """
     def GetRefDatum(self,theShape : OCP.TopoDS.TopoDS_Shape,theDatum : XCAFDimTolObjects_DatumObject) -> bool: 
         """
         Returns DatumObject defined for Shape
@@ -2723,8 +2784,16 @@ class XCAFDimTolObjects_Tool():
         """
         Returns all Dimensions defined for Shape
         """
+    def GetRefGeomTolerances(self,theShape : OCP.TopoDS.TopoDS_Shape,theGeomToleranceObjectSequence : XCAFDimTolObjects_GeomToleranceObjectSequence,theDatumObjectSequence : XCAFDimTolObjects_DatumObjectSequence,theMap : Any) -> bool: 
+        """
+        Returns all GeomTolerances defined for Shape
+        """
     def __init__(self,theDoc : OCP.TDocStd.TDocStd_Document) -> None: ...
     pass
+XCAFDimTolObjects_AngularQualifier_Equal: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Equal: 3>
+XCAFDimTolObjects_AngularQualifier_Large: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Large: 2>
+XCAFDimTolObjects_AngularQualifier_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_None: 0>
+XCAFDimTolObjects_AngularQualifier_Small: OCP.XCAFDimTolObjects.XCAFDimTolObjects_AngularQualifier # value = <XCAFDimTolObjects_AngularQualifier.XCAFDimTolObjects_AngularQualifier_Small: 1>
 XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_CircularOrCylindrical: 1>
 XCAFDimTolObjects_DatumModifWithValue_Distance: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_Distance: 2>
 XCAFDimTolObjects_DatumModifWithValue_None: OCP.XCAFDimTolObjects.XCAFDimTolObjects_DatumModifWithValue # value = <XCAFDimTolObjects_DatumModifWithValue.XCAFDimTolObjects_DatumModifWithValue_None: 0>

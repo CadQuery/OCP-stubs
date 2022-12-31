@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
-import OCP.TColgp
 import OCP.math
 import OCP.gp
+import OCP.TColgp
+import OCP.GeomAbs
 import OCP.Standard
 import OCP.TColStd
 __all__  = [
@@ -59,7 +59,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def BuildCache_s(theParameter : float,theSpanDomain : float,thePeriodicFlag : bool,theDegree : int,theSpanIndex : int,theFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array1OfPnt,theWeights : OCP.TColStd.TColStd_Array1OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: 
+    def BuildCache_s(theParameter : float,theSpanDomain : float,thePeriodicFlag : bool,theDegree : int,theSpanIndex : int,theFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array1OfPnt2d,theWeights : OCP.TColStd.TColStd_Array1OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: 
         """
         Perform the evaluation of the Taylor expansion of the Bspline normalized between 0 and 1. If rational computes the homogeneous Taylor expension for the numerator and stores it in CachePoles
 
@@ -69,18 +69,18 @@ class BSplCLib():
 
         Perform the evaluation of the Taylor expansion of the Bspline normalized between 0 and 1. Structure of result optimized for BSplCLib_Cache.
         """
-    @staticmethod
-    @overload
-    def BuildCache_s(U : float,InverseOfSpanDomain : float,PeriodicFlag : bool,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,CachePoles : OCP.TColgp.TColgp_Array1OfPnt2d,CacheWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def BuildCache_s(theParameter : float,theSpanDomain : float,thePeriodicFlag : bool,theDegree : int,theSpanIndex : int,theFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array1OfPnt2d,theWeights : OCP.TColStd.TColStd_Array1OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @staticmethod
     @overload
     def BuildCache_s(U : float,InverseOfSpanDomain : float,PeriodicFlag : bool,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,CachePoles : OCP.TColgp.TColgp_Array1OfPnt,CacheWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def BuildEval_s(Degree : int,Index : int,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: 
+    def BuildCache_s(U : float,InverseOfSpanDomain : float,PeriodicFlag : bool,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,CachePoles : OCP.TColgp.TColgp_Array1OfPnt2d,CacheWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def BuildCache_s(theParameter : float,theSpanDomain : float,thePeriodicFlag : bool,theDegree : int,theSpanIndex : int,theFlatKnots : OCP.TColStd.TColStd_Array1OfReal,thePoles : OCP.TColgp.TColgp_Array1OfPnt,theWeights : OCP.TColStd.TColStd_Array1OfReal,theCacheArray : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def BuildEval_s(Degree : int,Index : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: 
         """
         None
 
@@ -90,10 +90,10 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def BuildEval_s(Degree : int,Index : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: ...
+    def BuildEval_s(Degree : int,Index : int,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: ...
     @staticmethod
     @overload
-    def BuildEval_s(Degree : int,Index : int,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: ...
+    def BuildEval_s(Degree : int,Index : int,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float]: ...
     @staticmethod
     def BuildKnots_s(Degree : int,Index : int,Periodic : bool,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float]: 
         """
@@ -117,7 +117,7 @@ class BSplCLib():
     def CacheD0_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt) -> None: ...
     @staticmethod
     @overload
-    def CacheD1_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec : OCP.gp.gp_Vec2d) -> None: 
+    def CacheD1_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec : OCP.gp.gp_Vec) -> None: 
         """
         Perform the evaluation of the of the cache the parameter must be normalized between the 0 and 1 for the span. The Cache must be valid when calling this routine. Geom Package will insure that. and then multiplies by the weights this just evaluates the current point the CacheParameter is where the Cache was constructed the SpanLength is to normalize the polynomial in the cache to avoid bad conditioning effects
 
@@ -125,7 +125,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def CacheD1_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec : OCP.gp.gp_Vec) -> None: ...
+    def CacheD1_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec : OCP.gp.gp_Vec2d) -> None: ...
     @staticmethod
     @overload
     def CacheD2_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec1 : OCP.gp.gp_Vec,Vec2 : OCP.gp.gp_Vec) -> None: 
@@ -150,7 +150,7 @@ class BSplCLib():
     def CacheD3_s(U : float,Degree : int,CacheParameter : float,SpanLenght : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec1 : OCP.gp.gp_Vec,Vec2 : OCP.gp.gp_Vec,Vec3 : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def CoefsD0_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d) -> None: 
+    def CoefsD0_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt) -> None: 
         """
         Calls CacheD0 for Bezier Curves Arrays computed with the method PolesCoefficients. Warning: To be used for Beziercurves ONLY!!!
 
@@ -158,10 +158,10 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def CoefsD0_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt) -> None: ...
+    def CoefsD0_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d) -> None: ...
     @staticmethod
     @overload
-    def CoefsD1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec : OCP.gp.gp_Vec) -> None: 
+    def CoefsD1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec : OCP.gp.gp_Vec2d) -> None: 
         """
         Calls CacheD1 for Bezier Curves Arrays computed with the method PolesCoefficients. Warning: To be used for Beziercurves ONLY!!!
 
@@ -169,10 +169,10 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def CoefsD1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec : OCP.gp.gp_Vec2d) -> None: ...
+    def CoefsD1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def CoefsD2_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec1 : OCP.gp.gp_Vec,Vec2 : OCP.gp.gp_Vec) -> None: 
+    def CoefsD2_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec1 : OCP.gp.gp_Vec2d,Vec2 : OCP.gp.gp_Vec2d) -> None: 
         """
         Calls CacheD1 for Bezier Curves Arrays computed with the method PolesCoefficients. Warning: To be used for Beziercurves ONLY!!!
 
@@ -180,10 +180,10 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def CoefsD2_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec1 : OCP.gp.gp_Vec2d,Vec2 : OCP.gp.gp_Vec2d) -> None: ...
+    def CoefsD2_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec1 : OCP.gp.gp_Vec,Vec2 : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def CoefsD3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec1 : OCP.gp.gp_Vec,Vec2 : OCP.gp.gp_Vec,Vec3 : OCP.gp.gp_Vec) -> None: 
+    def CoefsD3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec1 : OCP.gp.gp_Vec2d,Vec2 : OCP.gp.gp_Vec2d,Vec3 : OCP.gp.gp_Vec2d) -> None: 
         """
         Calls CacheD1 for Bezier Curves Arrays computed with the method PolesCoefficients. Warning: To be used for Beziercurves ONLY!!!
 
@@ -191,7 +191,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def CoefsD3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d,Vec1 : OCP.gp.gp_Vec2d,Vec2 : OCP.gp.gp_Vec2d,Vec3 : OCP.gp.gp_Vec2d) -> None: ...
+    def CoefsD3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt,Vec1 : OCP.gp.gp_Vec,Vec2 : OCP.gp.gp_Vec,Vec3 : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
     def D0_s(U : float,UIndex : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt2d) -> None: 
@@ -220,7 +220,7 @@ class BSplCLib():
     def D0_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float]: ...
     @staticmethod
     @overload
-    def D1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: 
+    def D1_s(U : float,UIndex : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: 
         """
         None
 
@@ -234,13 +234,13 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def D1_s(U : float,UIndex : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: ...
-    @staticmethod
-    @overload
-    def D1_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float, float]: ...
+    def D1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
     def D1_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt,V : OCP.gp.gp_Vec) -> None: ...
+    @staticmethod
+    @overload
+    def D1_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float, float]: ...
     @staticmethod
     @overload
     def D1_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt2d,V : OCP.gp.gp_Vec2d) -> None: ...
@@ -266,13 +266,13 @@ class BSplCLib():
     def D2_s(U : float,UIndex : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d) -> None: ...
     @staticmethod
     @overload
-    def D2_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: ...
-    @staticmethod
-    @overload
     def D2_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float, float, float]: ...
     @staticmethod
     @overload
-    def D3_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float, float, float, float]: 
+    def D2_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec) -> None: ...
+    @staticmethod
+    @overload
+    def D3_s(U : float,UIndex : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: 
         """
         None
 
@@ -286,16 +286,16 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def D3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: ...
+    def D3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: ...
     @staticmethod
     @overload
-    def D3_s(U : float,UIndex : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: ...
+    def D3_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColStd.TColStd_Array1OfReal,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger) -> Tuple[float, float, float, float]: ...
     @staticmethod
     @overload
     def D3_s(U : float,Index : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     @overload
-    def D3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt2d,V1 : OCP.gp.gp_Vec2d,V2 : OCP.gp.gp_Vec2d,V3 : OCP.gp.gp_Vec2d) -> None: ...
+    def D3_s(U : float,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,P : OCP.gp.gp_Pnt,V1 : OCP.gp.gp_Vec,V2 : OCP.gp.gp_Vec,V3 : OCP.gp.gp_Vec) -> None: ...
     @staticmethod
     def Derivative_s(Degree : int,Dimension : int,Length : int,Order : int) -> Tuple[float, float]: 
         """
@@ -308,7 +308,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def Eval_s(U : float,Degree : int,Dimension : int) -> Tuple[float, float]: 
+    def Eval_s(U : float,PeriodicFlag : bool,HomogeneousFlag : bool,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d) -> Tuple[int, float]: 
         """
         Perform the Boor algorithm to evaluate a point at parameter <U>, with <Degree> and <Dimension>.
 
@@ -322,16 +322,16 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def Eval_s(U : float,PeriodicFlag : bool,HomogeneousFlag : bool,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt2d) -> Tuple[int, float]: ...
-    @staticmethod
-    @overload
-    def Eval_s(U : float,PeriodicFlag : bool,DerivativeRequest : int,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,ArrayDimension : int) -> Tuple[int, float, float, float, float]: ...
-    @staticmethod
-    @overload
     def Eval_s(U : float,PeriodicFlag : bool,DerivativeRequest : int,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,ArrayDimension : int) -> Tuple[int, float, float]: ...
     @staticmethod
     @overload
+    def Eval_s(U : float,Degree : int,Dimension : int) -> Tuple[float, float]: ...
+    @staticmethod
+    @overload
     def Eval_s(U : float,PeriodicFlag : bool,HomogeneousFlag : bool,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Point : OCP.gp.gp_Pnt) -> Tuple[int, float]: ...
+    @staticmethod
+    @overload
+    def Eval_s(U : float,PeriodicFlag : bool,DerivativeRequest : int,Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,ArrayDimension : int) -> Tuple[int, float, float, float, float]: ...
     @staticmethod
     def FactorBandedMatrix_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,PivotIndexProblem : int) -> int: 
         """
@@ -354,7 +354,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: 
+    def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColgp.TColgp_Array1OfPnt) -> Tuple[int]: 
         """
         this will multiply a given Vectorial BSpline F(t) defined by its BSplineDegree and BSplineFlatKnotsl, its Poles array which are coded as an array of Real of the form [1..NumPoles][1..PolesDimension] by a function a(t) which is assumed to satisfy the following : 1. a(t) * F(t) is a polynomial BSpline that can be expressed exactly as a BSpline of degree NewDegree on the knots FlatKnots 2. the range of a(t) is the same as the range of F(t) Warning: it is the caller's responsibility to insure that conditions 1. and 2. above are satisfied : no check whatsoever is made in this method theStatus will return 0 if OK else it will return the pivot index of the matrix that was inverted to compute the multiplied BSpline : the method used is interpolation at Schoenenberg points of a(t)*F(t)
 
@@ -366,16 +366,16 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColgp.TColgp_Array1OfPnt) -> Tuple[int]: ...
-    @staticmethod
-    @overload
-    def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,PolesDimension : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int) -> Tuple[float, float, int]: ...
+    def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: ...
     @staticmethod
     @overload
     def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> Tuple[int]: ...
     @staticmethod
     @overload
-    def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: 
+    def FunctionMultiply_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,PolesDimension : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int) -> Tuple[float, float, int]: ...
+    @staticmethod
+    @overload
+    def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColgp.TColgp_Array1OfPnt) -> Tuple[int]: 
         """
         This function will compose a given Vectorial BSpline F(t) defined by its BSplineDegree and BSplineFlatKnotsl, its Poles array which are coded as an array of Real of the form [1..NumPoles][1..PolesDimension] with a function a(t) which is assumed to satisfy the following:
 
@@ -387,13 +387,13 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColgp.TColgp_Array1OfPnt) -> Tuple[int]: ...
-    @staticmethod
-    @overload
-    def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,PolesDimension : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int) -> Tuple[float, float, int]: ...
+    def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: ...
     @staticmethod
     @overload
     def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> Tuple[int]: ...
+    @staticmethod
+    @overload
+    def FunctionReparameterise_s(Function : BSplCLib_EvaluatorFunction,BSplineDegree : int,BSplineFlatKnots : OCP.TColStd.TColStd_Array1OfReal,PolesDimension : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,NewDegree : int) -> Tuple[float, float, int]: ...
     @staticmethod
     def GetPole_s(Index : int,Length : int,Depth : int,Dimension : int,Pole : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[float, int]: 
         """
@@ -411,7 +411,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def IncreaseDegree_s(theNewDegree : int,thePoles : OCP.TColgp.TColgp_Array1OfPnt2d,theWeights : OCP.TColStd.TColStd_Array1OfReal,theNewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,theNewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def IncreaseDegree_s(Degree : int,NewDegree : int,Periodic : bool,Dimension : int,Poles : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
         None
 
@@ -425,16 +425,16 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def IncreaseDegree_s(NewDegree : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
-    def IncreaseDegree_s(Degree : int,NewDegree : int,Periodic : bool,Dimension : int,Poles : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
+    def IncreaseDegree_s(Degree : int,NewDegree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     @staticmethod
     @overload
     def IncreaseDegree_s(Degree : int,NewDegree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     @staticmethod
     @overload
-    def IncreaseDegree_s(Degree : int,NewDegree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
+    def IncreaseDegree_s(NewDegree : int,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def IncreaseDegree_s(theNewDegree : int,thePoles : OCP.TColgp.TColgp_Array1OfPnt2d,theWeights : OCP.TColStd.TColStd_Array1OfReal,theNewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,theNewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def InsertKnot_s(UIndex : int,U : float,UMult : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
@@ -464,7 +464,7 @@ class BSplCLib():
     def InsertKnots_s(Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,AddKnots : OCP.TColStd.TColStd_Array1OfReal,AddMults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Epsilon : float,Add : bool=True) -> None: ...
     @staticmethod
     @overload
-    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> Tuple[int]: 
+    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,ArrayDimension : int) -> Tuple[float, int]: 
         """
         Performs the interpolation of the data given in the Poles array according to the requests in ContactOrderArray that is : if ContactOrderArray(i) has value d it means that Poles(i) contains the dth derivative of the function to be interpolated. The length L of the following arrays must be the same : Parameters, ContactOrderArray, Poles, The length of FlatKnots is Degree + L + 1 Warning: the method used to do that interpolation is gauss elimination WITHOUT pivoting. Thus if the diagonal is not dominant there is no guarantee that the algorithm will work. Nevertheless for Cubic interpolation or interpolation at Scheonberg points the method will work The InversionProblem will report 0 if there was no problem else it will give the index of the faulty pivot
 
@@ -480,19 +480,19 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: ...
+    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,ArrayDimension : int) -> Tuple[float, float, int]: ...
     @staticmethod
     @overload
-    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: ...
+    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt2d) -> Tuple[int]: ...
     @staticmethod
     @overload
     def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt) -> Tuple[int]: ...
     @staticmethod
     @overload
-    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,ArrayDimension : int) -> Tuple[float, int]: ...
+    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: ...
     @staticmethod
     @overload
-    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,ArrayDimension : int) -> Tuple[float, float, int]: ...
+    def Interpolate_s(Degree : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Parameters : OCP.TColStd.TColStd_Array1OfReal,ContactOrderArray : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> Tuple[int]: ...
     @staticmethod
     def IsRational_s(Weights : OCP.TColStd.TColStd_Array1OfReal,I1 : int,I2 : int,Epsilon : float=0.0) -> bool: 
         """
@@ -541,7 +541,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def LocateParameter_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,U : float,IsPeriodic : bool,FromK1 : int,ToK2 : int) -> Tuple[int, float]: 
+    def LocateParameter_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,U : float,IsPeriodic : bool,FromK1 : int,ToK2 : int) -> Tuple[int, float]: 
         """
         Locates the parametric value U in the knots sequence between the knot K1 and the knot K2. The value return in Index verifies.
 
@@ -554,7 +554,7 @@ class BSplCLib():
     def LocateParameter_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,U : float,Periodic : bool) -> Tuple[int, float]: ...
     @staticmethod
     @overload
-    def LocateParameter_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,U : float,IsPeriodic : bool,FromK1 : int,ToK2 : int) -> Tuple[int, float]: ...
+    def LocateParameter_s(Degree : int,Knots : OCP.TColStd.TColStd_Array1OfReal,U : float,IsPeriodic : bool,FromK1 : int,ToK2 : int) -> Tuple[int, float]: ...
     @staticmethod
     def MaxDegree_s() -> int: 
         """
@@ -629,7 +629,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,CachePoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,CachePoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         None
 
@@ -641,10 +641,10 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,CachePoles : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,CachePoles : OCP.TColgp.TColgp_Array1OfPnt2d,CacheWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,CachePoles : OCP.TColgp.TColgp_Array1OfPnt2d,CacheWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,CachePoles : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     @overload
     def PolesCoefficients_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,CachePoles : OCP.TColgp.TColgp_Array1OfPnt,CacheWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
@@ -676,7 +676,7 @@ class BSplCLib():
     def RaiseMultiplicity_s(KnotIndex : int,Mult : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def RemoveKnot_s(Index : int,Mult : int,Degree : int,Periodic : bool,Dimension : int,Poles : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Tolerance : float) -> bool: 
+    def RemoveKnot_s(Index : int,Mult : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Tolerance : float) -> bool: 
         """
         None
 
@@ -686,10 +686,10 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def RemoveKnot_s(Index : int,Mult : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Tolerance : float) -> bool: ...
+    def RemoveKnot_s(Index : int,Mult : int,Degree : int,Periodic : bool,Dimension : int,Poles : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Tolerance : float) -> bool: ...
     @staticmethod
     @overload
-    def RemoveKnot_s(Index : int,Mult : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Tolerance : float) -> bool: ...
+    def RemoveKnot_s(Index : int,Mult : int,Degree : int,Periodic : bool,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,Tolerance : float) -> bool: ...
     @staticmethod
     def Reparametrize_s(U1 : float,U2 : float,Knots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
         """
@@ -697,7 +697,7 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def Resolution_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,NumPoles : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Degree : int,Tolerance3D : float) -> Tuple[float]: 
+    def Resolution_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,NumPoles : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Degree : int,Tolerance3D : float) -> Tuple[float]: 
         """
         given a tolerance in 3D space returns a tolerance in U parameter space such that all u1 and u0 in the domain of the curve f(u) | u1 - u0 | < UTolerance and we have |f (u1) - f (u0)| < Tolerance3D
 
@@ -710,10 +710,10 @@ class BSplCLib():
     def Resolution_s(ArrayDimension : int,NumPoles : int,Weights : OCP.TColStd.TColStd_Array1OfReal,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Degree : int,Tolerance3D : float) -> Tuple[float, float]: ...
     @staticmethod
     @overload
-    def Resolution_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,NumPoles : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Degree : int,Tolerance3D : float) -> Tuple[float]: ...
+    def Resolution_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,NumPoles : int,FlatKnots : OCP.TColStd.TColStd_Array1OfReal,Degree : int,Tolerance3D : float) -> Tuple[float]: ...
     @staticmethod
     @overload
-    def Reverse_s(Knots : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+    def Reverse_s(Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: 
         """
         Reverses the array knots to become the knots sequence of the reversed curve.
 
@@ -727,19 +727,19 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def Reverse_s(Mults : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
+    def Reverse_s(Weights : OCP.TColStd.TColStd_Array1OfReal,Last : int) -> None: ...
+    @staticmethod
+    @overload
+    def Reverse_s(Knots : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
     def Reverse_s(Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Last : int) -> None: ...
     @staticmethod
     @overload
-    def Reverse_s(Weights : OCP.TColStd.TColStd_Array1OfReal,Last : int) -> None: ...
-    @staticmethod
-    @overload
     def Reverse_s(Poles : OCP.TColgp.TColgp_Array1OfPnt,Last : int) -> None: ...
     @staticmethod
     @overload
-    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,ArrayDimension : int,Array : float) -> int: 
+    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,HomogenousFlag : bool,Array : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> int: 
         """
         This solves the system Matrix.X = B with when Matrix is factored in LU form The Array is an seen as an Array[1..N][1..ArrayDimension] with N = the rank of the matrix Matrix. The result is stored in Array when each coordinate is solved that is B is the array whose values are B[i] = Array[i][p] for each p in 1..ArrayDimension
 
@@ -755,19 +755,19 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,Array : OCP.TColgp.TColgp_Array1OfPnt2d) -> int: ...
-    @staticmethod
-    @overload
     def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,HomogeneousFlag : bool,Array : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal) -> int: ...
     @staticmethod
     @overload
-    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,HomogenousFlag : bool,Array : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal) -> int: ...
+    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,Array : OCP.TColgp.TColgp_Array1OfPnt) -> int: ...
+    @staticmethod
+    @overload
+    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,Array : OCP.TColgp.TColgp_Array1OfPnt2d) -> int: ...
+    @staticmethod
+    @overload
+    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,ArrayDimension : int,Array : float) -> int: ...
     @staticmethod
     @overload
     def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,HomogenousFlag : bool,ArrayDimension : int,Array : float,Weights : float) -> int: ...
-    @staticmethod
-    @overload
-    def SolveBandedSystem_s(Matrix : OCP.math.math_Matrix,UpperBandWidth : int,LowerBandWidth : int,Array : OCP.TColgp.TColgp_Array1OfPnt) -> int: ...
     @staticmethod
     def TangExtendToConstraint_s(FlatKnots : OCP.TColStd.TColStd_Array1OfReal,C1Coefficient : float,NumPoles : int,Dimension : int,Degree : int,ConstraintPoint : OCP.TColStd.TColStd_Array1OfReal,Continuity : int,After : bool) -> Tuple[float, int, int, float, float]: 
         """
@@ -785,26 +785,26 @@ class BSplCLib():
         """
     @staticmethod
     @overload
-    def Trimming_s(Degree : int,Periodic : bool,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,U1 : float,U2 : float,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @staticmethod
-    @overload
     def Trimming_s(Degree : int,Periodic : bool,Dimension : int,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColStd.TColStd_Array1OfReal,U1 : float,U2 : float,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Unperiodize_s(Degree : int,Mults : OCP.TColStd.TColStd_Array1OfInteger,Knots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
-        """
-        None
-
-        None
-
-        None
-        """
+    def Trimming_s(Degree : int,Periodic : bool,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,U1 : float,U2 : float,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     @overload
-    def Unperiodize_s(Degree : int,Mults : OCP.TColStd.TColStd_Array1OfInteger,Knots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def Unperiodize_s(Degree : int,Mults : OCP.TColStd.TColStd_Array1OfInteger,Knots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt,Weights : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array1OfPnt,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: 
+        """
+        None
+
+        None
+
+        None
+        """
     @staticmethod
     @overload
     def Unperiodize_s(Degree : int,Dimension : int,Mults : OCP.TColStd.TColStd_Array1OfInteger,Knots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @staticmethod
+    @overload
+    def Unperiodize_s(Degree : int,Mults : OCP.TColStd.TColStd_Array1OfInteger,Knots : OCP.TColStd.TColStd_Array1OfReal,Poles : OCP.TColgp.TColgp_Array1OfPnt2d,Weights : OCP.TColStd.TColStd_Array1OfReal,NewMults : OCP.TColStd.TColStd_Array1OfInteger,NewKnots : OCP.TColStd.TColStd_Array1OfReal,NewPoles : OCP.TColgp.TColgp_Array1OfPnt2d,NewWeights : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     def __init__(self) -> None: ...
     pass
 class BSplCLib_Cache(OCP.Standard.Standard_Transient):
@@ -830,32 +830,32 @@ class BSplCLib_Cache(OCP.Standard.Standard_Transient):
     @overload
     def D0(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d) -> None: ...
     @overload
-    def D1(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d,theTangent : OCP.gp.gp_Vec2d) -> None: 
+    def D1(self,theParameter : float,thePoint : OCP.gp.gp_Pnt,theTangent : OCP.gp.gp_Vec) -> None: 
         """
         Calculates the point on the curve and its first derivative in the specified parameter
 
         None
         """
     @overload
-    def D1(self,theParameter : float,thePoint : OCP.gp.gp_Pnt,theTangent : OCP.gp.gp_Vec) -> None: ...
+    def D1(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d,theTangent : OCP.gp.gp_Vec2d) -> None: ...
     @overload
-    def D2(self,theParameter : float,thePoint : OCP.gp.gp_Pnt,theTangent : OCP.gp.gp_Vec,theCurvature : OCP.gp.gp_Vec) -> None: 
+    def D2(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d,theTangent : OCP.gp.gp_Vec2d,theCurvature : OCP.gp.gp_Vec2d) -> None: 
         """
         Calculates the point on the curve and two derivatives in the specified parameter
 
         None
         """
     @overload
-    def D2(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d,theTangent : OCP.gp.gp_Vec2d,theCurvature : OCP.gp.gp_Vec2d) -> None: ...
+    def D2(self,theParameter : float,thePoint : OCP.gp.gp_Pnt,theTangent : OCP.gp.gp_Vec,theCurvature : OCP.gp.gp_Vec) -> None: ...
     @overload
-    def D3(self,theParameter : float,thePoint : OCP.gp.gp_Pnt,theTangent : OCP.gp.gp_Vec,theCurvature : OCP.gp.gp_Vec,theTorsion : OCP.gp.gp_Vec) -> None: 
+    def D3(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d,theTangent : OCP.gp.gp_Vec2d,theCurvature : OCP.gp.gp_Vec2d,theTorsion : OCP.gp.gp_Vec2d) -> None: 
         """
         Calculates the point on the curve and three derivatives in the specified parameter
 
         None
         """
     @overload
-    def D3(self,theParameter : float,thePoint : OCP.gp.gp_Pnt2d,theTangent : OCP.gp.gp_Vec2d,theCurvature : OCP.gp.gp_Vec2d,theTorsion : OCP.gp.gp_Vec2d) -> None: ...
+    def D3(self,theParameter : float,thePoint : OCP.gp.gp_Pnt,theTangent : OCP.gp.gp_Vec,theCurvature : OCP.gp.gp_Vec,theTorsion : OCP.gp.gp_Vec) -> None: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -881,23 +881,23 @@ class BSplCLib_Cache(OCP.Standard.Standard_Transient):
         Verifies validity of the cache using flat parameter of the point
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.

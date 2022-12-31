@@ -4,14 +4,14 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TShort
 import OCP.NCollection
-import OCP.TColgp
-import io
 import OCP.gp
-import OCP.Standard
-import OCP.TColStd
+import OCP.TColgp
 import OCP.Bnd
+import OCP.Standard
+import OCP.TShort
+import OCP.TColStd
+import io
 __all__  = [
 "Poly_Array1OfTriangle",
 "Poly_ArrayOfNodes",
@@ -119,13 +119,13 @@ class Poly_Array1OfTriangle():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : Poly_Triangle,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Poly_ArrayOfNodes():
@@ -161,15 +161,15 @@ class Poly_ArrayOfNodes():
         A generalized accessor to point.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLength : int) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_Pnt,theLength : int) -> None: ...
     @overload
     def __init__(self,theOther : Poly_ArrayOfNodes) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Pnt,theLength : int) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_Vec3f,theLength : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLength : int) -> None: ...
     pass
 class Poly_ArrayOfUVNodes():
     """
@@ -204,13 +204,13 @@ class Poly_ArrayOfUVNodes():
         A generalized accessor to point.
         """
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_Vec2f,theLength : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : OCP.gp.gp_Pnt2d,theLength : int) -> None: ...
     @overload
     def __init__(self,theLength : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Vec2f,theLength : int) -> None: ...
     @overload
     def __init__(self,theOther : Poly_ArrayOfUVNodes) -> None: ...
     pass
@@ -281,9 +281,9 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def Coord(self,theIndex : int) -> float: ...
     @overload
-    def Cross(self,theOther : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def Cross(self,theRight : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def Cross(self,theOther : OCP.gp.gp_XYZ) -> None: ...
     def CrossCross(self,theCoord1 : OCP.gp.gp_XYZ,theCoord2 : OCP.gp.gp_XYZ) -> None: 
         """
         Triple vector product Computes <me> = <me>.Cross(theCoord1.Cross(theCoord2))
@@ -374,12 +374,12 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         computes Sqrt (X*X + Y*Y + Z*Z) where X, Y and Z are the three coordinates of this XYZ object.
         """
     @overload
-    def Multiplied(self,theScalar : float) -> OCP.gp.gp_XYZ: 
+    def Multiplied(self,theMatrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: 
         """
         New = theMatrix * <me>
         """
     @overload
-    def Multiplied(self,theMatrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
+    def Multiplied(self,theScalar : float) -> OCP.gp.gp_XYZ: ...
     @overload
     def Multiplied(self,theOther : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: ...
     @overload
@@ -390,9 +390,9 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         <me> = theMatrix * <me>
         """
     @overload
-    def Multiply(self,theMatrix : OCP.gp.gp_Mat) -> None: ...
-    @overload
     def Multiply(self,theOther : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def Multiply(self,theMatrix : OCP.gp.gp_Mat) -> None: ...
     def Normalize(self) -> None: 
         """
         Raised if <me>.Modulus() <= Resolution from gp
@@ -410,14 +410,14 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     def Reverse(self) -> None: ...
     def Reversed(self) -> OCP.gp.gp_XYZ: ...
     @overload
-    def SetCoord(self,theX : float,theY : float,theZ : float) -> None: 
+    def SetCoord(self,theIndex : int,theXi : float) -> None: 
         """
         For this XYZ object, assigns the values theX, theY and theZ to its three coordinates
 
         modifies the coordinate of range theIndex theIndex = 1 => X is modified theIndex = 2 => Y is modified theIndex = 3 => Z is modified Raises OutOfRange if theIndex != {1, 2, 3}.
         """
     @overload
-    def SetCoord(self,theIndex : int,theXi : float) -> None: ...
+    def SetCoord(self,theX : float,theY : float,theZ : float) -> None: ...
     def SetIndex(self,theIndex : int) -> None: 
         """
         Set the value of node Index.
@@ -442,11 +442,11 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def SetLinearForm(self,theA1 : float,theXYZ1 : OCP.gp.gp_XYZ,theA2 : float,theXYZ2 : OCP.gp.gp_XYZ,theA3 : float,theXYZ3 : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def SetLinearForm(self,theA1 : float,theXYZ1 : OCP.gp.gp_XYZ,theA2 : float,theXYZ2 : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def SetLinearForm(self,theXYZ1 : OCP.gp.gp_XYZ,theXYZ2 : OCP.gp.gp_XYZ) -> None: ...
     @overload
     def SetLinearForm(self,theA1 : float,theXYZ1 : OCP.gp.gp_XYZ,theXYZ2 : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def SetLinearForm(self,theA1 : float,theXYZ1 : OCP.gp.gp_XYZ,theA2 : float,theXYZ2 : OCP.gp.gp_XYZ) -> None: ...
     def SetNormal(self,theVector : OCP.gp.gp_XYZ) -> None: 
         """
         Define the normal vector in the Node.
@@ -498,7 +498,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __imul__(self,theScalar : float) -> None: 
+    def __imul__(self,theOther : OCP.gp.gp_XYZ) -> None: 
         """
         None
 
@@ -509,11 +509,11 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
     @overload
     def __imul__(self,theMatrix : OCP.gp.gp_Mat) -> None: ...
     @overload
-    def __imul__(self,theOther : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __imul__(self,theScalar : float) -> None: ...
     @overload
     def __init__(self,thePnt : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __ipow__(self,theOther : OCP.gp.gp_XYZ) -> None: 
         """
         None
@@ -527,7 +527,7 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
         None
         """
     @overload
-    def __mul__(self,theOther : OCP.gp.gp_XYZ) -> float: 
+    def __mul__(self,theScalar : float) -> OCP.gp.gp_XYZ: 
         """
         None
 
@@ -535,10 +535,10 @@ class Poly_CoherentNode(OCP.gp.gp_XYZ):
 
         None
         """
+    @overload
+    def __mul__(self,theOther : OCP.gp.gp_XYZ) -> float: ...
     @overload
     def __mul__(self,theMatrix : OCP.gp.gp_Mat) -> OCP.gp.gp_XYZ: ...
-    @overload
-    def __mul__(self,theScalar : float) -> OCP.gp.gp_XYZ: ...
     def __pow__(self,theOther : OCP.gp.gp_XYZ) -> OCP.gp.gp_XYZ: 
         """
         None
@@ -598,14 +598,14 @@ class Poly_CoherentTriangle():
         Query the node index in the position given by the parameter 'ind'
         """
     @overload
-    def RemoveConnection(self,theTri : Poly_CoherentTriangle) -> bool: 
+    def RemoveConnection(self,iConn : int) -> None: 
         """
         Remove the connection with the given index.
 
         Remove the connection with the given Triangle.
         """
     @overload
-    def RemoveConnection(self,iConn : int) -> None: ...
+    def RemoveConnection(self,theTri : Poly_CoherentTriangle) -> bool: ...
     @overload
     def SetConnection(self,iConn : int,theTr : Poly_CoherentTriangle) -> bool: 
         """
@@ -622,7 +622,7 @@ class Poly_CoherentTriangle():
     pass
 class Poly_CoherentTriangulation(OCP.Standard.Standard_Transient):
     """
-    Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.
+    Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.Triangulation structure that allows to: Store the connectivity of each triangle with up to 3 neighbouring ones and with the corresponding 3rd nodes on them, Store the connectivity of each node with all triangles that share this node Add nodes and triangles to the structure, Find all triangles sharing a single or a couple of nodes Remove triangles from structure Optionally create Links between pairs of nodes according to the current triangulation. Convert from/to Poly_Triangulation structure.
     """
     def AddLink(self,theTri : Poly_CoherentTriangle,theConn : int) -> Poly_CoherentLink: 
         """
@@ -689,23 +689,23 @@ class Poly_CoherentTriangulation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxNode(self) -> int: 
         """
         Query the index of the last node in the triangulation
@@ -814,9 +814,9 @@ class Poly_Connect():
         Returns the index of the current triangle to which the iterator, defined with the function Initialize, points. This is an index in the triangles table specific to the triangulation analyzed by this tool
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theTriangulation : Poly_Triangulation) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transient):
     def Array1(self) -> Poly_Array1OfTriangle: 
@@ -884,23 +884,23 @@ class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Poly_Triangle: 
         """
         Returns last element
@@ -942,13 +942,13 @@ class Poly_HArray1OfTriangle(Poly_Array1OfTriangle, OCP.Standard.Standard_Transi
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : Poly_Triangle) -> None: ...
     @overload
     def __init__(self,theOther : Poly_Array1OfTriangle) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : Poly_Triangle) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -970,7 +970,7 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Poly_Triangulation) -> Poly_Triangulation: 
+    def Append(self,theOther : Poly_ListOfTriangulation) -> None: 
         """
         Append one item at the end
 
@@ -979,9 +979,9 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
         Append another list at the end. After this operation, theOther list will be cleared.
         """
     @overload
-    def Append(self,theOther : Poly_ListOfTriangulation) -> None: ...
-    @overload
     def Append(self,theItem : Poly_Triangulation,theIter : Any) -> None: ...
+    @overload
+    def Append(self,theItem : Poly_Triangulation) -> Poly_Triangulation: ...
     def Assign(self,theOther : Poly_ListOfTriangulation) -> Poly_ListOfTriangulation: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1010,14 +1010,14 @@ class Poly_ListOfTriangulation(OCP.NCollection.NCollection_BaseList):
     @overload
     def InsertAfter(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: ...
     @overload
-    def InsertBefore(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: 
+    def InsertBefore(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: 
         """
         InsertBefore
 
         InsertBefore
         """
     @overload
-    def InsertBefore(self,theItem : Poly_Triangulation,theIter : Any) -> Poly_Triangulation: ...
+    def InsertBefore(self,theOther : Poly_ListOfTriangulation,theIter : Any) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         None
@@ -1126,23 +1126,23 @@ class Poly_MergeNodesTool(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MergeAngle(self) -> float: 
         """
         Return merge angle in radians; 0.0 by default (normals with non-exact directions are not merged).
@@ -1257,14 +1257,14 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self,theDefl : float) -> None: 
+    def Deflection(self) -> float: 
         """
         Returns the deflection of this polygon. Deflection is used in cases where the polygon is an approximate representation of a curve. Deflection represents the maximum distance permitted between any point on the curve and the corresponding point on the polygon. By default the deflection value is equal to 0. An algorithm using this 2D polygon with a deflection value equal to 0 considers that it is working with a true polygon and not with an approximate representation of a curve. The Deflection function is used to modify the deflection value of this polygon. The deflection value can be used by any algorithm working with 2D polygons. For example: - An algorithm may use a unique deflection value for all its polygons. In this case it is not necessary to use the Deflection function. - Or an algorithm may want to attach a different deflection to each polygon. In this case, the Deflection function is used to set a value on each polygon, and later to fetch the value.
 
         Sets the deflection of this polygon.
         """
     @overload
-    def Deflection(self) -> float: ...
+    def Deflection(self,theDefl : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -1286,23 +1286,23 @@ class Poly_Polygon2D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbNodes(self) -> int: 
         """
         Returns the number of nodes in this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle, the function NbNodes returns 4.
@@ -1384,23 +1384,23 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbNodes(self) -> int: 
         """
         Returns the number of nodes in this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle the function NbNodes returns 4.
@@ -1418,11 +1418,11 @@ class Poly_Polygon3D(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,theNbNodes : int,theHasParams : bool) -> None: ...
-    @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,Parameters : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    @overload
+    def __init__(self,theNbNodes : int,theHasParams : bool) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1455,14 +1455,14 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self) -> float: 
+    def Deflection(self,theDefl : float) -> None: 
         """
         Returns the deflection of this polygon
 
         Sets the deflection of this polygon. See more on deflection in Poly_Polygones2D.
         """
     @overload
-    def Deflection(self,theDefl : float) -> None: ...
+    def Deflection(self) -> float: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -1488,23 +1488,23 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbNodes(self) -> int: 
         """
         Returns the number of nodes for this polygon. Note: If the polygon is closed, the point of closure is repeated at the end of its table of nodes. Thus, on a closed triangle, the function NbNodes returns 4.
@@ -1542,11 +1542,11 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,Nodes : OCP.TColStd.TColStd_Array1OfInteger,Parameters : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,theNbNodes : int,theHasParams : bool) -> None: ...
     @overload
     def __init__(self,Nodes : OCP.TColStd.TColStd_Array1OfInteger) -> None: ...
     @overload
-    def __init__(self,theNbNodes : int,theHasParams : bool) -> None: ...
+    def __init__(self,Nodes : OCP.TColStd.TColStd_Array1OfInteger,Parameters : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1560,7 +1560,7 @@ class Poly_PolygonOnTriangulation(OCP.Standard.Standard_Transient):
     pass
 class Poly_Triangle():
     """
-    Describes a component triangle of a triangulation (Poly_Triangulation object). A Triangle is defined by a triplet of nodes. Each node is an index in the table of nodes specific to an existing triangulation of a shape, and represents a point on the surface.
+    Describes a component triangle of a triangulation (Poly_Triangulation object). A Triangle is defined by a triplet of nodes within [1, Poly_Triangulation::NbNodes()] range. Each node is an index in the table of nodes specific to an existing triangulation of a shape, and represents a point on the surface.
     """
     def ChangeValue(self,theIndex : int) -> int: 
         """
@@ -1590,7 +1590,7 @@ class Poly_Triangle():
     pass
 class Poly_Triangulation(OCP.Standard.Standard_Transient):
     """
-    Provides a triangulation for a surface, a set of surfaces, or more generally a shape. A triangulation consists of an approximate representation of the actual shape, using a collection of points and triangles. The points are located on the surface. The edges of the triangles connect adjacent points with a straight line that approximates the true curve on the surface. A triangulation comprises: - A table of 3D nodes (3D points on the surface). - A table of triangles. Each triangle (Poly_Triangle object) comprises a triplet of indices in the table of 3D nodes specific to the triangulation. - A table of 2D nodes (2D points), parallel to the table of 3D nodes. This table is optional. If it exists, the coordinates of a 2D point are the (u, v) parameters of the corresponding 3D point on the surface approximated by the triangulation. - A deflection (optional), which maximizes the distance from a point on the surface to the corresponding point on its approximate triangulation. In many cases, algorithms do not need to work with the exact representation of a surface. A triangular representation induces simpler and more robust adjusting, faster performances, and the results are as good. This is a Transient class.Provides a triangulation for a surface, a set of surfaces, or more generally a shape. A triangulation consists of an approximate representation of the actual shape, using a collection of points and triangles. The points are located on the surface. The edges of the triangles connect adjacent points with a straight line that approximates the true curve on the surface. A triangulation comprises: - A table of 3D nodes (3D points on the surface). - A table of triangles. Each triangle (Poly_Triangle object) comprises a triplet of indices in the table of 3D nodes specific to the triangulation. - A table of 2D nodes (2D points), parallel to the table of 3D nodes. This table is optional. If it exists, the coordinates of a 2D point are the (u, v) parameters of the corresponding 3D point on the surface approximated by the triangulation. - A deflection (optional), which maximizes the distance from a point on the surface to the corresponding point on its approximate triangulation. In many cases, algorithms do not need to work with the exact representation of a surface. A triangular representation induces simpler and more robust adjusting, faster performances, and the results are as good. This is a Transient class.Provides a triangulation for a surface, a set of surfaces, or more generally a shape. A triangulation consists of an approximate representation of the actual shape, using a collection of points and triangles. The points are located on the surface. The edges of the triangles connect adjacent points with a straight line that approximates the true curve on the surface. A triangulation comprises: - A table of 3D nodes (3D points on the surface). - A table of triangles. Each triangle (Poly_Triangle object) comprises a triplet of indices in the table of 3D nodes specific to the triangulation. - A table of 2D nodes (2D points), parallel to the table of 3D nodes. This table is optional. If it exists, the coordinates of a 2D point are the (u, v) parameters of the corresponding 3D point on the surface approximated by the triangulation. - A deflection (optional), which maximizes the distance from a point on the surface to the corresponding point on its approximate triangulation. In many cases, algorithms do not need to work with the exact representation of a surface. A triangular representation induces simpler and more robust adjusting, faster performances, and the results are as good. This is a Transient class.
+    Provides a triangulation for a surface, a set of surfaces, or more generally a shape.Provides a triangulation for a surface, a set of surfaces, or more generally a shape.Provides a triangulation for a surface, a set of surfaces, or more generally a shape.
     """
     def AddNormals(self) -> None: 
         """
@@ -1629,14 +1629,14 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self,theDeflection : float) -> None: 
+    def Deflection(self) -> float: 
         """
         Returns the deflection of this triangulation.
 
         Sets the deflection of this triangulation to theDeflection. See more on deflection in Polygon2D
         """
     @overload
-    def Deflection(self) -> float: ...
+    def Deflection(self,theDeflection : float) -> None: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -1702,23 +1702,23 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Returns TRUE if node positions are defined with double precision; TRUE by default.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LoadDeferredData(self,theFileSystem : OCP.OSD.OSD_FileSystem=None) -> bool: 
         """
         Loads triangulation data into itself from some deferred storage using specified shared input file system.
@@ -1768,14 +1768,14 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Returns a node at the given index.
         """
     @overload
-    def Normal(self,theIndex : int) -> OCP.gp.gp_Dir: 
+    def Normal(self,theIndex : int,theVec3 : OCP.gp.gp_Vec3f) -> None: 
         """
         Returns normal at the given index.
 
         Returns normal at the given index.
         """
     @overload
-    def Normal(self,theIndex : int,theVec3 : OCP.gp.gp_Vec3f) -> None: ...
+    def Normal(self,theIndex : int) -> OCP.gp.gp_Dir: ...
     @overload
     def Parameters(self,theParams : Poly_TriangulationParameters) -> None: 
         """
@@ -1818,14 +1818,14 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
         Sets a node coordinates.
         """
     @overload
-    def SetNormal(self,theIndex : int,theNormal : OCP.gp.gp_Vec3f) -> None: 
+    def SetNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: 
         """
         Changes normal at the given index.
 
         Changes normal at the given index.
         """
     @overload
-    def SetNormal(self,theIndex : int,theNormal : OCP.gp.gp_Dir) -> None: ...
+    def SetNormal(self,theIndex : int,theNormal : OCP.gp.gp_Vec3f) -> None: ...
     def SetNormals(self,theNormals : OCP.TShort.TShort_HArray1OfShortReal) -> None: 
         """
         None
@@ -1867,11 +1867,11 @@ class Poly_Triangulation(OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,Nodes : OCP.TColgp.TColgp_Array1OfPnt,Triangles : Poly_Array1OfTriangle) -> None: ...
     @overload
-    def __init__(self,theTriangulation : Poly_Triangulation) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theNbNodes : int,theNbTriangles : int,theHasUVNodes : bool,theHasNormals : bool=False) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theTriangulation : Poly_Triangulation) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1928,23 +1928,23 @@ class Poly_TriangulationParameters(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MinSize(self) -> float: 
         """
         Returns minimum size or -1 if undefined.

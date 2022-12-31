@@ -10,14 +10,14 @@ __all__  = [
 "IGESFile_ReadFNES"
 ]
 @overload
-def IGESFile_Read(nomfic : str,amodel : OCP.IGESData.IGESData_IGESModel,protocol : OCP.IGESData.IGESData_Protocol,reco : OCP.IGESData.IGESData_FileRecognizer,modefnes : bool=False) -> int:
+def IGESFile_Read(nomfic : str,amodel : OCP.IGESData.IGESData_IGESModel,protocol : OCP.IGESData.IGESData_Protocol) -> int:
     """
     None
 
     None
     """
 @overload
-def IGESFile_Read(nomfic : str,amodel : OCP.IGESData.IGESData_IGESModel,protocol : OCP.IGESData.IGESData_Protocol) -> int:
+def IGESFile_Read(nomfic : str,amodel : OCP.IGESData.IGESData_IGESModel,protocol : OCP.IGESData.IGESData_Protocol,reco : OCP.IGESData.IGESData_FileRecognizer,modefnes : bool=False) -> int:
     pass
 def IGESFile_ReadFNES(nomfic : str,amodel : OCP.IGESData.IGESData_IGESModel,protocol : OCP.IGESData.IGESData_Protocol) -> int:
     """

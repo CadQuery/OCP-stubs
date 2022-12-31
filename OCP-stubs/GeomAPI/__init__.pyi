@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Approx
-import OCP.TColgp
-import OCP.Extrema
-import OCP.Geom2d
-import OCP.gp
 import OCP.Geom
+import OCP.gp
+import OCP.Geom2d
+import OCP.TColgp
+import OCP.Approx
 import OCP.TColStd
+import OCP.Extrema
 __all__  = [
 "GeomAPI",
 "GeomAPI_ExtremaCurveCurve",
@@ -104,11 +104,11 @@ class GeomAPI_ExtremaCurveCurve():
         set in <P1> and <P2> the couple solution points such a the distance [P1,P2] is the minimum. taking in account extremity points of curves.
         """
     @overload
+    def __init__(self,C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve,U1min : float,U1max : float,U2min : float,U2max : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def __init__(self,C1 : OCP.Geom.Geom_Curve,C2 : OCP.Geom.Geom_Curve,U1min : float,U1max : float,U2min : float,U2max : float) -> None: ...
     pass
 class GeomAPI_ExtremaCurveSurface():
     """
@@ -125,14 +125,14 @@ class GeomAPI_ExtremaCurveSurface():
         Returns the algorithmic object from Extrema
         """
     @overload
-    def Init(self,Curve : OCP.Geom.Geom_Curve,Surface : OCP.Geom.Geom_Surface,Wmin : float,Wmax : float,Umin : float,Umax : float,Vmin : float,Vmax : float) -> None: 
+    def Init(self,Curve : OCP.Geom.Geom_Curve,Surface : OCP.Geom.Geom_Surface) -> None: 
         """
         Computes the extrema distances between the curve <C> and the surface <S>.
 
         Computes the extrema distances between the curve <C> and the surface <S>. The solution point are computed in the domain [Wmin,Wmax] of the curve and in the domain [Umin,Umax] [Vmin,Vmax] of the surface. Warning Use the function NbExtrema to obtain the number of solutions. If this algorithm fails, NbExtrema returns 0.
         """
     @overload
-    def Init(self,Curve : OCP.Geom.Geom_Curve,Surface : OCP.Geom.Geom_Surface) -> None: ...
+    def Init(self,Curve : OCP.Geom.Geom_Curve,Surface : OCP.Geom.Geom_Surface,Wmin : float,Wmax : float,Umin : float,Umax : float,Vmin : float,Vmax : float) -> None: ...
     def IsParallel(self) -> bool: 
         """
         Returns True if the curve is on a parallel surface.
@@ -162,11 +162,11 @@ class GeomAPI_ExtremaCurveSurface():
         Returns the points P1 on the curve and P2 on the surface, which are the ends of the extremum of index Index computed by this algorithm. Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbExtrema ], where NbExtrema is the number of extrema computed by this algorithm.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,Curve : OCP.Geom.Geom_Curve,Surface : OCP.Geom.Geom_Surface,Wmin : float,Wmax : float,Umin : float,Umax : float,Vmin : float,Vmax : float) -> None: ...
     @overload
     def __init__(self,Curve : OCP.Geom.Geom_Curve,Surface : OCP.Geom.Geom_Surface) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class GeomAPI_ExtremaSurfaceSurface():
     """
@@ -220,11 +220,11 @@ class GeomAPI_ExtremaSurfaceSurface():
         Returns the points P1 on the first surface and P2 on the second surface, which are the ends of the extremum of index Index computed by this algorithm. Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbExtrema ], where NbExtrema is the number of extrema computed by this algorithm.
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,U1min : float,U1max : float,V1min : float,V1max : float,U2min : float,U2max : float,V2min : float,V2max : float) -> None: ...
     @overload
     def __init__(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     pass
 class GeomAPI_IntCS():
     """
@@ -279,14 +279,14 @@ class GeomAPI_IntSS():
         Returns True if the intersection was successful.
         """
     @overload
-    def Line(self,I : int) -> OCP.Geom.Geom_Curve: 
+    def Line(self,Index : int) -> OCP.Geom.Geom_Curve: 
         """
         Returns the computed intersection curve of index Index. Exceptions StdFail_NotDone if the computation fails. Standard_OutOfRange if Index is out of range [1, NbLines] where NbLines is the number of computed intersection curves.
 
         Returns the computed intersection curve of index Index. Exceptions StdFail_NotDone if the computation fails. Standard_OutOfRange if Index is out of range [1, NbLines] where NbLines is the number of computed intersection curves.
         """
     @overload
-    def Line(self,Index : int) -> OCP.Geom.Geom_Curve: ...
+    def Line(self,I : int) -> OCP.Geom.Geom_Curve: ...
     def NbLines(self) -> int: 
         """
         Returns the number of computed intersection curves. Exceptions StdFail_NotDone if the computation fails.
@@ -300,9 +300,9 @@ class GeomAPI_IntSS():
         Initializes an algorithm with the given arguments and computes the intersection curves between the two surfaces S1 and S2. Parameter Tol defines the precision of curves computation. For most cases the value 1.0e-7 is recommended to use. Warning Use function IsDone to verify that the intersections are successfully computed.
         """
     @overload
-    def __init__(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,S1 : OCP.Geom.Geom_Surface,S2 : OCP.Geom.Geom_Surface,Tol : float) -> None: ...
     pass
 class GeomAPI_Interpolate():
     """
@@ -343,7 +343,7 @@ class GeomAPI_PointsToBSpline():
         Returns the computed BSpline curve. Raises StdFail_NotDone if the curve is not built.
         """
     @overload
-    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: 
+    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: 
         """
         Approximate a BSpline Curve passing through an array of Point. The resulting BSpline will have the following properties: 1- his degree will be in the range [Degmin,Degmax] 2- his continuity will be at least <Continuity> 3- the distance from the point <Points> to the BSpline will be lower to Tol3D
 
@@ -354,11 +354,11 @@ class GeomAPI_PointsToBSpline():
         Approximate a BSpline Curve passing through an array of Point using variational smoothing algorithm, which tries to minimize additional criterium: Weight1*CurveLength + Weight2*Curvature + Weight3*Torsion
         """
     @overload
+    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,Parameters : OCP.TColStd.TColStd_Array1OfReal,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
+    @overload
     def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
-    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
-    @overload
-    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,Parameters : OCP.TColStd.TColStd_Array1OfReal,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
+    def Init(self,Points : OCP.TColgp.TColgp_Array1OfPnt,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     def IsDone(self) -> bool: 
         """
         None
@@ -368,9 +368,9 @@ class GeomAPI_PointsToBSpline():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
-    @overload
     def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt,Parameters : OCP.TColStd.TColStd_Array1OfReal,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
+    @overload
+    def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
     def __init__(self,Points : OCP.TColgp.TColgp_Array1OfPnt,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     pass
@@ -379,7 +379,7 @@ class GeomAPI_PointsToBSplineSurface():
     This class is used to approximate or interpolate a BSplineSurface passing through an Array2 of points, with a given continuity. Describes functions for building a BSpline surface which approximates or interpolates a set of points. A PointsToBSplineSurface object provides a framework for: - defining the data of the BSpline surface to be built, - implementing the approximation algorithm or the interpolation algorithm, and consulting the results. In fact, class contains 3 algorithms, 2 for approximation and 1 for interpolation. First approximation algorithm is based on usual least square criterium: minimization of square distance between samplimg points and result surface. Second approximation algorithm uses least square criterium and additional minimization of some local characteristic of surface (first, second and third partial derivative), which allows managing shape of surface. Interpolation algorithm produces surface, which passes through sampling points.
     """
     @overload
-    def Init(self,ZPoints : OCP.TColStd.TColStd_Array2OfReal,X0 : float,dX : float,Y0 : float,dY : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: 
+    def Init(self,Points : OCP.TColgp.TColgp_Array2OfPnt,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001,thePeriodic : bool=False) -> None: 
         """
         Approximates a BSpline Surface passing through an array of Point. The resulting BSpline will have the following properties: 1- his degree will be in the range [Degmin,Degmax] 2- his continuity will be at least <Continuity> 3- the distance from the point <Points> to the BSpline will be lower to Tol3D.
 
@@ -392,7 +392,7 @@ class GeomAPI_PointsToBSplineSurface():
     @overload
     def Init(self,Points : OCP.TColgp.TColgp_Array2OfPnt,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
-    def Init(self,Points : OCP.TColgp.TColgp_Array2OfPnt,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001,thePeriodic : bool=False) -> None: ...
+    def Init(self,ZPoints : OCP.TColStd.TColStd_Array2OfReal,X0 : float,dX : float,Y0 : float,dY : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
     def Init(self,Points : OCP.TColgp.TColgp_Array2OfPnt,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
@@ -417,15 +417,15 @@ class GeomAPI_PointsToBSplineSurface():
         Returns the approximate BSpline Surface
         """
     @overload
-    def __init__(self,Points : OCP.TColgp.TColgp_Array2OfPnt,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
-    @overload
-    def __init__(self,Points : OCP.TColgp.TColgp_Array2OfPnt,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,ZPoints : OCP.TColStd.TColStd_Array2OfReal,X0 : float,dX : float,Y0 : float,dY : float,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Points : OCP.TColgp.TColgp_Array2OfPnt,ParType : OCP.Approx.Approx_ParametrizationType,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     @overload
     def __init__(self,Points : OCP.TColgp.TColgp_Array2OfPnt,Weight1 : float,Weight2 : float,Weight3 : float,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
+    @overload
+    def __init__(self,Points : OCP.TColgp.TColgp_Array2OfPnt,DegMin : int=3,DegMax : int=8,Continuity : OCP.GeomAbs.GeomAbs_Shape=GeomAbs_Shape.GeomAbs_C2,Tol3D : float=0.001) -> None: ...
     pass
 class GeomAPI_ProjectPointOnCurve():
     """
@@ -442,7 +442,7 @@ class GeomAPI_ProjectPointOnCurve():
         return the algorithmic object from Extrema
         """
     @overload
-    def Init(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve,Umin : float,Usup : float) -> None: 
+    def Init(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve) -> None: 
         """
         Init the projection of a point <P> on a curve <Curve>
 
@@ -451,9 +451,9 @@ class GeomAPI_ProjectPointOnCurve():
         Init the projection of a point <P> on a curve <Curve> limited by the two points of parameter Umin and Usup.
         """
     @overload
-    def Init(self,Curve : OCP.Geom.Geom_Curve,Umin : float,Usup : float) -> None: ...
+    def Init(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve,Umin : float,Usup : float) -> None: ...
     @overload
-    def Init(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve) -> None: ...
+    def Init(self,Curve : OCP.Geom.Geom_Curve,Umin : float,Usup : float) -> None: ...
     def LowerDistance(self) -> float: 
         """
         Computes the distance between the point and its nearest orthogonal projection on the curve. Exceptions: StdFail_NotDone if this algorithm fails.
@@ -488,11 +488,11 @@ class GeomAPI_ProjectPointOnCurve():
         Returns the orthogonal projection on the curve. Index is a number of a computed point. Exceptions Standard_OutOfRange if Index is not in the range [ 1,NbPoints ], where NbPoints is the number of solution points.
         """
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve,Umin : float,Usup : float) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,Curve : OCP.Geom.Geom_Curve,Umin : float,Usup : float) -> None: ...
     pass
 class GeomAPI_ProjectPointOnSurf():
     """
@@ -509,7 +509,7 @@ class GeomAPI_ProjectPointOnSurf():
         return the algorithmic object from Extrema
         """
     @overload
-    def Init(self,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: 
+    def Init(self,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: 
         """
         None
 
@@ -524,15 +524,15 @@ class GeomAPI_ProjectPointOnSurf():
         None
         """
     @overload
-    def Init(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
-    @overload
     def Init(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
-    @overload
-    def Init(self,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
     def Init(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
+    def Init(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    @overload
     def Init(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    @overload
+    def Init(self,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     def IsDone(self) -> bool: 
         """
         None
@@ -574,13 +574,13 @@ class GeomAPI_ProjectPointOnSurf():
         Sets the Extrema search flag - MIN or MAX or MINMAX. By default the Extrema is set to search the MinMax solutions.
         """
     @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
     def __init__(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
-    @overload
-    def __init__(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Tolerance : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,P : OCP.gp.gp_Pnt,Surface : OCP.Geom.Geom_Surface,Umin : float,Usup : float,Vmin : float,Vsup : float,Algo : OCP.Extrema.Extrema_ExtAlgo=Extrema_ExtAlgo.Extrema_ExtAlgo_Grad) -> None: ...
     pass

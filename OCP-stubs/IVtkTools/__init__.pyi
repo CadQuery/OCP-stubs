@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.IVtk
 import OCP.IVtkOCC
+import OCP.IVtk
 __all__  = [
 "IVtkTools_SubPolyDataFilter",
 "IVtkTools_ShapeDataSource",
@@ -18,14 +18,14 @@ class IVtkTools_SubPolyDataFilter():
     Cells filter according to the given set of cells ids.
     """
     @overload
-    def AddData(self,theSet : OCP.IVtk.IVtk_IdTypeMap) -> None: 
+    def AddData(self,theIds : OCP.IVtk.IVtk_ShapeIdList) -> None: 
         """
         Add ids to be passed through this filter.
 
         Add ids to be passed through this filter.
         """
     @overload
-    def AddData(self,theIds : OCP.IVtk.IVtk_ShapeIdList) -> None: ...
+    def AddData(self,theSet : OCP.IVtk.IVtk_IdTypeMap) -> None: ...
     def Clear(self) -> None: 
         """
         Clear ids set to be passed through this filter.
@@ -201,7 +201,7 @@ class IVtkTools_ShapeObject():
         """
     @staticmethod
     @overload
-    def SetShapeSource_s(theDataSource : IVtkTools_ShapeDataSource,theActor : vtkActor) -> None: 
+    def SetShapeSource_s(theDataSource : IVtkTools_ShapeDataSource,theData : vtkDataSet) -> None: 
         """
         Static method to set OCC shape source to VTK dataset in information object with key.
 
@@ -209,7 +209,7 @@ class IVtkTools_ShapeObject():
         """
     @staticmethod
     @overload
-    def SetShapeSource_s(theDataSource : IVtkTools_ShapeDataSource,theData : vtkDataSet) -> None: ...
+    def SetShapeSource_s(theDataSource : IVtkTools_ShapeDataSource,theActor : vtkActor) -> None: ...
     @staticmethod
     def getKey_s() -> vtkInformationObjectBaseKey: 
         """
@@ -242,14 +242,14 @@ class IVtkTools_ShapePicker():
         Access to the list of sub-shapes ids picked.
         """
     @overload
-    def GetSelectionModes(self,theShapeActor : vtkActor) -> OCP.IVtk.IVtk_SelectionModeList: 
+    def GetSelectionModes(self,theShape : OCP.IVtk.IVtk_IShape) -> OCP.IVtk.IVtk_SelectionModeList: 
         """
         Get activated selection modes for a shape.
 
         Get activated selection modes for a shape actor.
         """
     @overload
-    def GetSelectionModes(self,theShape : OCP.IVtk.IVtk_IShape) -> OCP.IVtk.IVtk_SelectionModeList: ...
+    def GetSelectionModes(self,theShapeActor : vtkActor) -> OCP.IVtk.IVtk_SelectionModeList: ...
     def GetTolerance(self) -> float: 
         """
         Getter for tolerance of picking.
@@ -294,7 +294,7 @@ class IVtkTools_ShapePicker():
         Sets the renderer to be used by OCCT selection algorithm
         """
     @overload
-    def SetSelectionMode(self,theShape : OCP.IVtk.IVtk_IShape,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: 
+    def SetSelectionMode(self,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: 
         """
         Turn on/off a selection mode for a shape actor.
 
@@ -303,9 +303,9 @@ class IVtkTools_ShapePicker():
         Sets the current selection mode for all visible shape objects.
         """
     @overload
-    def SetSelectionMode(self,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: ...
-    @overload
     def SetSelectionMode(self,theShapeActor : vtkActor,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: ...
+    @overload
+    def SetSelectionMode(self,theShape : OCP.IVtk.IVtk_IShape,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: ...
     def SetTolerance(self,theTolerance : float) -> None: 
         """
         Setter for tolerance of picking.
@@ -316,14 +316,14 @@ class IVtkTools_DisplayModeFilter(IVtkTools_SubPolyDataFilter):
     Cells filter according to the selected display mode by mesh parts types. This filter is used to get parts of a shape according to different display modes.
     """
     @overload
-    def AddData(self,theSet : OCP.IVtk.IVtk_IdTypeMap) -> None: 
+    def AddData(self,theIds : OCP.IVtk.IVtk_ShapeIdList) -> None: 
         """
         Add ids to be passed through this filter.
 
         Add ids to be passed through this filter.
         """
     @overload
-    def AddData(self,theIds : OCP.IVtk.IVtk_ShapeIdList) -> None: ...
+    def AddData(self,theSet : OCP.IVtk.IVtk_IdTypeMap) -> None: ...
     def Clear(self) -> None: 
         """
         Clear ids set to be passed through this filter.

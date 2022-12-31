@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.gp
 import OCP.TColgp
 import OCP.TColStd
+import OCP.gp
 __all__  = [
 "GProp",
 "GProp_GProps",
@@ -181,13 +181,13 @@ class GProp_CelGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,C : OCP.gp.gp_Lin,U1 : float,U2 : float,CLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,C : OCP.gp.gp_Circ,U1 : float,U2 : float,CLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,C : OCP.gp.gp_Circ,CLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Lin,U1 : float,U2 : float,CLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,C : OCP.gp.gp_Circ,CLocation : OCP.gp.gp_Pnt) -> None: ...
     pass
 class GProp_PEquation():
     """
@@ -261,10 +261,10 @@ class GProp_PGProps(GProp_GProps):
     def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal,G : OCP.gp.gp_Pnt) -> Tuple[float]: ...
     @staticmethod
     @overload
-    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array1OfPnt) -> OCP.gp.gp_Pnt: ...
+    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> OCP.gp.gp_Pnt: ...
     @staticmethod
     @overload
-    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> OCP.gp.gp_Pnt: ...
+    def Barycentre_s(Pnts : OCP.TColgp.TColgp_Array1OfPnt) -> OCP.gp.gp_Pnt: ...
     def CentreOfMass(self) -> OCP.gp.gp_Pnt: 
         """
         Returns the center of mass of the current system. If the gravitational field is uniform, it is the center of gravity. The coordinates returned for the center of mass are expressed in the absolute Cartesian coordinate system.
@@ -294,15 +294,15 @@ class GProp_PGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
-    @overload
     def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
-    def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
+    def __init__(self,Pnts : OCP.TColgp.TColgp_Array2OfPnt) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,Pnts : OCP.TColgp.TColgp_Array2OfPnt,Density : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Pnts : OCP.TColgp.TColgp_Array1OfPnt,Density : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
 class GProp_PrincipalProps():
     """
@@ -322,14 +322,14 @@ class GProp_PrincipalProps():
     @overload
     def HasSymmetryAxis(self) -> bool: ...
     @overload
-    def HasSymmetryPoint(self) -> bool: 
+    def HasSymmetryPoint(self,aTol : float) -> bool: 
         """
         returns true if the geometric system has a point of symmetry. For comparing moments relative tolerance 1.e-10 is used. Usually it is enough for objects, restricted by faces with analitycal geometry.
 
         returns true if the geometric system has a point of symmetry. aTol is relative tolerance for checking equality of moments If aTol == 0, relative tolerance is ~ 1.e-16 (Epsilon(I))
         """
     @overload
-    def HasSymmetryPoint(self,aTol : float) -> bool: ...
+    def HasSymmetryPoint(self) -> bool: ...
     def Moments(self) -> Tuple[float, float, float]: 
         """
         Ixx, Iyy and Izz return the principal moments of inertia in the current system. Notes : - If the current system has an axis of symmetry, two of the three values Ixx, Iyy and Izz are equal. They indicate which eigen vectors define an infinity of axes of principal inertia. - If the current system has a center of symmetry, Ixx, Iyy and Izz are equal.
@@ -373,7 +373,7 @@ class GProp_SelGProps(GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: 
+    def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: 
         """
         None
 
@@ -383,12 +383,12 @@ class GProp_SelGProps(GProp_GProps):
 
         None
         """
-    @overload
-    def Perform(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
-    @overload
-    def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     @overload
     def Perform(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
+    @overload
+    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
+    @overload
+    def Perform(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
     def PrincipalProperties(self) -> GProp_PrincipalProps: 
         """
         Computes the principal properties of inertia of the current system. There is always a set of axes for which the products of inertia of a geometric system are equal to 0; i.e. the matrix of inertia of the system is diagonal. These axes are the principal axes of inertia. Their origin is coincident with the center of mass of the system. The associated moments are called the principal moments of inertia. This function computes the eigen values and the eigen vectors of the matrix of inertia of the system. Results are stored by using a presentation framework of principal properties of inertia (GProp_PrincipalProps object) which may be queried to access the value sought.
@@ -406,13 +406,13 @@ class GProp_SelGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
-    def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
     def __init__(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
-    def __init__(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
+    def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
+    def __init__(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,SLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self) -> None: ...
     pass
@@ -513,7 +513,7 @@ class GProp_VelGProps(GProp_GProps):
         computes the moment of inertia of the material system about the axis A.
         """
     @overload
-    def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: 
+    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: 
         """
         None
 
@@ -523,10 +523,10 @@ class GProp_VelGProps(GProp_GProps):
 
         None
         """
+    @overload
+    def Perform(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     @overload
     def Perform(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
-    @overload
-    def Perform(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float) -> None: ...
     @overload
     def Perform(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float) -> None: ...
     def PrincipalProperties(self) -> GProp_PrincipalProps: 
@@ -546,11 +546,11 @@ class GProp_VelGProps(GProp_GProps):
         Returns Ix, Iy, Iz, the static moments of inertia of the current system; i.e. the moments of inertia about the three axes of the Cartesian coordinate system.
         """
     @overload
+    def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
+    @overload
     def __init__(self,S : OCP.gp.gp_Torus,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Sphere,Teta1 : float,Teta2 : float,Alpha1 : float,Alpha2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
-    @overload
-    def __init__(self,S : OCP.gp.gp_Cylinder,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload
     def __init__(self,S : OCP.gp.gp_Cone,Alpha1 : float,Alpha2 : float,Z1 : float,Z2 : float,VLocation : OCP.gp.gp_Pnt) -> None: ...
     @overload

@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.Adaptor2d
-import OCP.GeomAbs
-import OCP.NCollection
-import OCP.TColgp
 import OCP.math
-import OCP.Geom2d
-import OCP.gp
-import OCP.Standard
 import OCP.Geom
-import OCP.GeomAdaptor
+import OCP.Adaptor3d
 import OCP.AppParCurves
+import OCP.NCollection
+import OCP.gp
+import OCP.GeomAdaptor
+import OCP.Geom2d
+import OCP.TColgp
+import OCP.GeomAbs
+import OCP.Standard
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "ProjLib",
 "ProjLib_CompProjectedCurve",
@@ -52,7 +52,7 @@ class ProjLib():
         """
     @staticmethod
     @overload
-    def Project_s(Sp : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: 
+    def Project_s(Co : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: 
         """
         None
 
@@ -86,51 +86,51 @@ class ProjLib():
 
         None
         """
-    @staticmethod
-    @overload
-    def Project_s(To : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Pl : OCP.gp.gp_Pln,E : OCP.gp.gp_Elips) -> OCP.gp.gp_Elips2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Sp : OCP.gp.gp_Sphere,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Cy : OCP.gp.gp_Cylinder,L : OCP.gp.gp_Lin) -> OCP.gp.gp_Lin2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Co : OCP.gp.gp_Cone,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Cy : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Pl : OCP.gp.gp_Pln,L : OCP.gp.gp_Lin) -> OCP.gp.gp_Lin2d: ...
-    @staticmethod
-    @overload
-    def Project_s(Co : OCP.gp.gp_Cone,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
     @staticmethod
     @overload
     def Project_s(Co : OCP.gp.gp_Cone,L : OCP.gp.gp_Lin) -> OCP.gp.gp_Lin2d: ...
     @staticmethod
     @overload
+    def Project_s(To : OCP.gp.gp_Torus,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
+    @staticmethod
+    @overload
     def Project_s(To : OCP.gp.gp_Torus,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
     @staticmethod
     @overload
-    def Project_s(Cy : OCP.gp.gp_Cylinder,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
+    def Project_s(Cy : OCP.gp.gp_Cylinder,L : OCP.gp.gp_Lin) -> OCP.gp.gp_Lin2d: ...
     @staticmethod
     @overload
-    def Project_s(Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
+    def Project_s(Pl : OCP.gp.gp_Pln,L : OCP.gp.gp_Lin) -> OCP.gp.gp_Lin2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Sp : OCP.gp.gp_Sphere,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Cy : OCP.gp.gp_Cylinder,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Sp : OCP.gp.gp_Sphere,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
     @staticmethod
     @overload
     def Project_s(Pl : OCP.gp.gp_Pln,H : OCP.gp.gp_Hypr) -> OCP.gp.gp_Hypr2d: ...
     @staticmethod
     @overload
-    def Project_s(Pl : OCP.gp.gp_Pln,C : OCP.gp.gp_Circ) -> OCP.gp.gp_Circ2d: ...
+    def Project_s(Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Pnt) -> OCP.gp.gp_Pnt2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Co : OCP.gp.gp_Cone,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Pl : OCP.gp.gp_Pln,E : OCP.gp.gp_Elips) -> OCP.gp.gp_Elips2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Cy : OCP.gp.gp_Cylinder,Ci : OCP.gp.gp_Circ) -> OCP.gp.gp_Lin2d: ...
     @staticmethod
     @overload
     def Project_s(Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Parab) -> OCP.gp.gp_Parab2d: ...
+    @staticmethod
+    @overload
+    def Project_s(Pl : OCP.gp.gp_Pln,C : OCP.gp.gp_Circ) -> OCP.gp.gp_Circ2d: ...
     def __init__(self) -> None: ...
     pass
 class ProjLib_CompProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.Standard_Transient):
@@ -152,7 +152,7 @@ class ProjLib_CompProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.S
         """
     def Continuity(self) -> OCP.GeomAbs.GeomAbs_Shape: 
         """
-        None
+        Returns the Continuity used in the approximation.
         """
     def D0(self,U : float,P : OCP.gp.gp_Pnt2d) -> None: 
         """
@@ -279,23 +279,23 @@ class ProjLib_CompProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.S
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -325,14 +325,14 @@ class ProjLib_CompProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.S
         None
         """
     @overload
-    def Load(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
+    def Load(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: 
         """
         Changes the surface.
 
         Changes the curve.
         """
     @overload
-    def Load(self,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    def Load(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     def MaxDistance(self,Index : int) -> float: 
         """
         returns the maximum distance between curve to project and surface
@@ -420,11 +420,11 @@ class ProjLib_CompProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.S
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,TolU : float,TolV : float,MaxDist : float) -> None: ...
     @overload
+    def __init__(self,Tol3d : float,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,MaxDist : float=-1.0) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,TolU : float,TolV : float) -> None: ...
-    @overload
-    def __init__(self,Tol3d : float,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,MaxDist : float=-1.0) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -473,9 +473,9 @@ class ProjLib_ComputeApprox():
         returns the reached Tolerance.
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     pass
 class ProjLib_ComputeApproxOnPolarSurface():
     """
@@ -535,13 +535,13 @@ class ProjLib_ComputeApproxOnPolarSurface():
         returns the reached Tolerance.
         """
     @overload
-    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float=0.0001) -> None: ...
+    def __init__(self,InitCurve2d : OCP.Adaptor2d.Adaptor2d_Curve2d,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,InitCurve2d : OCP.Adaptor2d.Adaptor2d_Curve2d,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
-    @overload
     def __init__(self,InitCurve2d : OCP.Adaptor2d.Adaptor2d_Curve2d,InitCurve2dBis : OCP.Adaptor2d.Adaptor2d_Curve2d,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float=0.0001) -> None: ...
     pass
 class ProjLib_Projector():
     """
@@ -592,7 +592,7 @@ class ProjLib_Projector():
         None
         """
     @overload
-    def Project(self,H : OCP.gp.gp_Hypr) -> None: 
+    def Project(self,L : OCP.gp.gp_Lin) -> None: 
         """
         None
 
@@ -604,14 +604,14 @@ class ProjLib_Projector():
 
         None
         """
+    @overload
+    def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     @overload
     def Project(self,P : OCP.gp.gp_Parab) -> None: ...
     @overload
-    def Project(self,L : OCP.gp.gp_Lin) -> None: ...
+    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
     @overload
     def Project(self,C : OCP.gp.gp_Circ) -> None: ...
-    @overload
-    def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     def SetBSpline(self,C : OCP.Geom2d.Geom2d_BSplineCurve) -> None: 
         """
         None
@@ -691,7 +691,7 @@ class ProjLib_Cylinder(ProjLib_Projector):
         None
         """
     @overload
-    def Project(self,H : OCP.gp.gp_Hypr) -> None: 
+    def Project(self,L : OCP.gp.gp_Lin) -> None: 
         """
         None
 
@@ -703,12 +703,12 @@ class ProjLib_Cylinder(ProjLib_Projector):
 
         None
         """
-    @overload
-    def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     @overload
     def Project(self,P : OCP.gp.gp_Parab) -> None: ...
     @overload
-    def Project(self,L : OCP.gp.gp_Lin) -> None: ...
+    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
+    @overload
+    def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     @overload
     def Project(self,C : OCP.gp.gp_Circ) -> None: ...
     def SetBSpline(self,C : OCP.Geom2d.Geom2d_BSplineCurve) -> None: 
@@ -736,15 +736,15 @@ class ProjLib_Cylinder(ProjLib_Projector):
         Translates the 2d curve to set the part of the curve [CFirst, CLast] in the range [ VFirst, VFirst + Period [
         """
     @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder,L : OCP.gp.gp_Lin) -> None: ...
+    @overload
+    def __init__(self,Cyl : OCP.gp.gp_Cylinder,E : OCP.gp.gp_Elips) -> None: ...
+    @overload
     def __init__(self,Cyl : OCP.gp.gp_Cylinder) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Cyl : OCP.gp.gp_Cylinder,C : OCP.gp.gp_Circ) -> None: ...
-    @overload
-    def __init__(self,Cyl : OCP.gp.gp_Cylinder,E : OCP.gp.gp_Elips) -> None: ...
-    @overload
-    def __init__(self,Cyl : OCP.gp.gp_Cylinder,L : OCP.gp.gp_Lin) -> None: ...
     pass
 class ProjLib_SequenceOfHSequenceOfPnt(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -868,11 +868,11 @@ class ProjLib_SequenceOfHSequenceOfPnt(OCP.NCollection.NCollection_BaseSequence)
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self,theOther : ProjLib_SequenceOfHSequenceOfPnt) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -933,7 +933,7 @@ class ProjLib_Plane(ProjLib_Projector):
         None
         """
     @overload
-    def Project(self,L : OCP.gp.gp_Lin) -> None: 
+    def Project(self,C : OCP.gp.gp_Circ) -> None: 
         """
         None
 
@@ -945,14 +945,14 @@ class ProjLib_Plane(ProjLib_Projector):
 
         None
         """
+    @overload
+    def Project(self,L : OCP.gp.gp_Lin) -> None: ...
     @overload
     def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
     @overload
     def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     @overload
     def Project(self,P : OCP.gp.gp_Parab) -> None: ...
-    @overload
-    def Project(self,C : OCP.gp.gp_Circ) -> None: ...
     def SetBSpline(self,C : OCP.Geom2d.Geom2d_BSplineCurve) -> None: 
         """
         None
@@ -978,17 +978,17 @@ class ProjLib_Plane(ProjLib_Projector):
         Translates the 2d curve to set the part of the curve [CFirst, CLast] in the range [ VFirst, VFirst + Period [
         """
     @overload
-    def __init__(self,Pl : OCP.gp.gp_Pln) -> None: ...
+    def __init__(self,Pl : OCP.gp.gp_Pln,H : OCP.gp.gp_Hypr) -> None: ...
+    @overload
+    def __init__(self,Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Parab) -> None: ...
+    @overload
+    def __init__(self,Pl : OCP.gp.gp_Pln,E : OCP.gp.gp_Elips) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Pl : OCP.gp.gp_Pln,C : OCP.gp.gp_Circ) -> None: ...
     @overload
-    def __init__(self,Pl : OCP.gp.gp_Pln,E : OCP.gp.gp_Elips) -> None: ...
-    @overload
-    def __init__(self,Pl : OCP.gp.gp_Pln,H : OCP.gp.gp_Hypr) -> None: ...
-    @overload
-    def __init__(self,Pl : OCP.gp.gp_Pln,P : OCP.gp.gp_Parab) -> None: ...
+    def __init__(self,Pl : OCP.gp.gp_Pln) -> None: ...
     @overload
     def __init__(self,Pl : OCP.gp.gp_Pln,L : OCP.gp.gp_Lin) -> None: ...
     pass
@@ -1149,23 +1149,23 @@ class ProjLib_ProjectOnPlane(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standar
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -1231,11 +1231,11 @@ class ProjLib_ProjectOnPlane(OCP.Adaptor3d.Adaptor3d_Curve, OCP.Standard.Standar
         Computes the point of parameter U on the curve.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,Pl : OCP.gp.gp_Ax3) -> None: ...
     @overload
     def __init__(self,Pl : OCP.gp.gp_Ax3,D : OCP.gp.gp_Dir) -> None: ...
     @overload
-    def __init__(self,Pl : OCP.gp.gp_Ax3) -> None: ...
+    def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -1260,14 +1260,14 @@ class ProjLib_ProjectOnSurface():
         None
         """
     @overload
-    def Load(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: 
+    def Load(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Tolerance : float) -> None: 
         """
         Set the Surface to <S>. To compute the projection, you have to Load the Curve.
 
         Compute the projection of the curve <C> on the Surface.
         """
     @overload
-    def Load(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Tolerance : float) -> None: ...
+    def Load(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
@@ -1374,23 +1374,23 @@ class ProjLib_ProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsPeriodic(self) -> bool: 
         """
         None
@@ -1483,9 +1483,9 @@ class ProjLib_ProjectedCurve(OCP.Adaptor2d.Adaptor2d_Curve2d, OCP.Standard.Stand
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,S : OCP.Adaptor3d.Adaptor3d_Surface,C : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> None: ...
     @staticmethod
@@ -1552,7 +1552,7 @@ class ProjLib_Cone(ProjLib_Projector):
         None
         """
     @overload
-    def Project(self,C : OCP.gp.gp_Circ) -> None: 
+    def Project(self,L : OCP.gp.gp_Lin) -> None: 
         """
         None
 
@@ -1567,11 +1567,11 @@ class ProjLib_Cone(ProjLib_Projector):
     @overload
     def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     @overload
-    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
-    @overload
     def Project(self,P : OCP.gp.gp_Parab) -> None: ...
     @overload
-    def Project(self,L : OCP.gp.gp_Lin) -> None: ...
+    def Project(self,C : OCP.gp.gp_Circ) -> None: ...
+    @overload
+    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
     def SetBSpline(self,C : OCP.Geom2d.Geom2d_BSplineCurve) -> None: 
         """
         None
@@ -1611,14 +1611,14 @@ class ProjLib_HSequenceOfHSequenceOfPnt(ProjLib_SequenceOfHSequenceOfPnt, OCP.NC
         Returns attached allocator
         """
     @overload
-    def Append(self,theSequence : ProjLib_SequenceOfHSequenceOfPnt) -> None: 
+    def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_HSequenceOfPnt) -> None: ...
+    def Append(self,theSequence : ProjLib_SequenceOfHSequenceOfPnt) -> None: ...
     def Assign(self,theOther : ProjLib_SequenceOfHSequenceOfPnt) -> ProjLib_SequenceOfHSequenceOfPnt: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -1694,23 +1694,23 @@ class ProjLib_HSequenceOfHSequenceOfPnt(ProjLib_SequenceOfHSequenceOfPnt, OCP.NC
         Empty query
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.TColgp.TColgp_HSequenceOfPnt: 
         """
         Last item access
@@ -1774,9 +1774,9 @@ class ProjLib_HSequenceOfHSequenceOfPnt(ProjLib_SequenceOfHSequenceOfPnt, OCP.NC
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : ProjLib_SequenceOfHSequenceOfPnt) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1860,13 +1860,13 @@ class ProjLib_Sphere(ProjLib_Projector):
         None
         """
     @overload
-    def Project(self,E : OCP.gp.gp_Elips) -> None: ...
-    @overload
-    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
-    @overload
     def Project(self,P : OCP.gp.gp_Parab) -> None: ...
     @overload
     def Project(self,C : OCP.gp.gp_Circ) -> None: ...
+    @overload
+    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
+    @overload
+    def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     def SetBSpline(self,C : OCP.Geom2d.Geom2d_BSplineCurve) -> None: 
         """
         None
@@ -1955,7 +1955,7 @@ class ProjLib_Torus(ProjLib_Projector):
         None
         """
     @overload
-    def Project(self,P : OCP.gp.gp_Parab) -> None: 
+    def Project(self,H : OCP.gp.gp_Hypr) -> None: 
         """
         None
 
@@ -1968,13 +1968,13 @@ class ProjLib_Torus(ProjLib_Projector):
         None
         """
     @overload
-    def Project(self,C : OCP.gp.gp_Circ) -> None: ...
+    def Project(self,P : OCP.gp.gp_Parab) -> None: ...
     @overload
-    def Project(self,H : OCP.gp.gp_Hypr) -> None: ...
+    def Project(self,L : OCP.gp.gp_Lin) -> None: ...
     @overload
     def Project(self,E : OCP.gp.gp_Elips) -> None: ...
     @overload
-    def Project(self,L : OCP.gp.gp_Lin) -> None: ...
+    def Project(self,C : OCP.gp.gp_Circ) -> None: ...
     def SetBSpline(self,C : OCP.Geom2d.Geom2d_BSplineCurve) -> None: 
         """
         None
@@ -2000,9 +2000,9 @@ class ProjLib_Torus(ProjLib_Projector):
         Translates the 2d curve to set the part of the curve [CFirst, CLast] in the range [ VFirst, VFirst + Period [
         """
     @overload
-    def __init__(self,To : OCP.gp.gp_Torus) -> None: ...
+    def __init__(self,To : OCP.gp.gp_Torus,C : OCP.gp.gp_Circ) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,To : OCP.gp.gp_Torus,C : OCP.gp.gp_Circ) -> None: ...
+    def __init__(self,To : OCP.gp.gp_Torus) -> None: ...
     pass

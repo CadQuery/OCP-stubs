@@ -4,18 +4,18 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.TColgp
-import OCP.Geom2d
-import OCP.gp
 import OCP.Geom
-import OCP.TopAbs
-import OCP.BRepBuilderAPI
-import OCP.Standard
-import OCP.ShapeExtend
 import OCP.TopoDS
+import OCP.ShapeExtend
+import OCP.TopAbs
+import OCP.gp
 import OCP.ShapeAnalysis
+import OCP.Geom2d
+import OCP.BRepBuilderAPI
+import OCP.TColgp
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.Standard
 import OCP.TColStd
 __all__  = [
 "ShapeConstruct",
@@ -29,7 +29,7 @@ class ShapeConstruct():
     """
     @staticmethod
     @overload
-    def ConvertCurveToBSpline_s(C2D : OCP.Geom2d.Geom2d_Curve,First : float,Last : float,Tol2d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def ConvertCurveToBSpline_s(C3D : OCP.Geom.Geom_Curve,First : float,Last : float,Tol3d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom.Geom_BSplineCurve: 
         """
         Tool for wire triangulation
 
@@ -37,7 +37,7 @@ class ShapeConstruct():
         """
     @staticmethod
     @overload
-    def ConvertCurveToBSpline_s(C3D : OCP.Geom.Geom_Curve,First : float,Last : float,Tol3d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom.Geom_BSplineCurve: ...
+    def ConvertCurveToBSpline_s(C2D : OCP.Geom2d.Geom2d_Curve,First : float,Last : float,Tol2d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     @staticmethod
     def ConvertSurfaceToBSpline_s(surf : OCP.Geom.Geom_Surface,UF : float,UL : float,VF : float,VL : float,Tol3d : float,Continuity : OCP.GeomAbs.GeomAbs_Shape,MaxSegments : int,MaxDegree : int) -> OCP.Geom.Geom_BSplineSurface: 
         """
@@ -88,7 +88,7 @@ class ShapeConstruct_Curve():
     def ConvertToBSpline(self,C : OCP.Geom2d.Geom2d_Curve,first : float,last : float,prec : float) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     @staticmethod
     @overload
-    def FixKnots_s(knots : OCP.TColStd.TColStd_HArray1OfReal) -> bool: 
+    def FixKnots_s(knots : OCP.TColStd.TColStd_Array1OfReal) -> bool: 
         """
         None
 
@@ -96,7 +96,7 @@ class ShapeConstruct_Curve():
         """
     @staticmethod
     @overload
-    def FixKnots_s(knots : OCP.TColStd.TColStd_Array1OfReal) -> bool: ...
+    def FixKnots_s(knots : OCP.TColStd.TColStd_HArray1OfReal) -> bool: ...
     def __init__(self) -> None: ...
     pass
 class ShapeConstruct_MakeTriangulation(OCP.BRepBuilderAPI.BRepBuilderAPI_MakeShape, OCP.BRepBuilderAPI.BRepBuilderAPI_Command):
@@ -170,23 +170,23 @@ class ShapeConstruct_ProjectCurveOnSurface(OCP.Standard.Standard_Transient):
     @overload
     def Init(self,surf : OCP.Geom.Geom_Surface,preci : float) -> None: ...
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Perform(self,c3d : OCP.Geom.Geom_Curve,First : float,Last : float,c2d : OCP.Geom2d.Geom2d_Curve,TolFirst : float=-1.0,TolLast : float=-1.0) -> bool: 
         """
         Computes the projection of 3d curve onto a surface using the specialized algorithm. Returns False if projector fails, otherwise, if pcurve computed successfully, returns True. The output curve 2D is guaranteed to be same-parameter with input curve 3D on the interval [First, Last]. If the output curve lies on a direct line the infinite line is returned, in the case same-parameter condition is satisfied. TolFirst and TolLast are the tolerances at the ends of input curve 3D.
@@ -200,14 +200,14 @@ class ShapeConstruct_ProjectCurveOnSurface(OCP.Standard.Standard_Transient):
         Sets value for current precision
         """
     @overload
-    def SetSurface(self,surf : OCP.Geom.Geom_Surface) -> None: 
+    def SetSurface(self,surf : OCP.ShapeAnalysis.ShapeAnalysis_Surface) -> None: 
         """
         Loads a surface (in the form of Geom_Surface) to project on
 
         Loads a surface (in the form of ShapeAnalysis_Surface) to project on
         """
     @overload
-    def SetSurface(self,surf : OCP.ShapeAnalysis.ShapeAnalysis_Surface) -> None: ...
+    def SetSurface(self,surf : OCP.Geom.Geom_Surface) -> None: ...
     def Status(self,theStatus : OCP.ShapeExtend.ShapeExtend_Status) -> bool: 
         """
         Returns the status of last Perform

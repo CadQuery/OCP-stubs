@@ -4,22 +4,27 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDF
-import OCP.TopTools
-import OCP.Quantity
-import OCP.Poly
+import OCP.TopoDS
 import OCP.TDocStd
-import OCP.XCAFPrs
-import OCP.Image
+import OCP.TCollection
 import OCP.Standard
 import OCP.TColStd
+import OCP.NCollection
+import OCP.Poly
 import OCP.Message
-import OCP.BRepExtrema
+import OCP.Image
+import OCP.TDF
 import OCP.XCAFDoc
-import OCP.TCollection
+import OCP.DE
+import OCP.TopTools
+import OCP.XCAFPrs
+import OCP.XSControl
+import OCP.Quantity
 __all__  = [
 "RWGltf_CafReader",
 "RWGltf_CafWriter",
+"RWGltf_ConfigurationNode",
+"RWGltf_DracoParameters",
 "RWGltf_GltfAccessor",
 "RWGltf_GltfAccessorCompType",
 "RWGltf_GltfAccessorLayout",
@@ -38,6 +43,7 @@ __all__  = [
 "RWGltf_GltfSceneNodeMap",
 "RWGltf_MaterialCommon",
 "RWGltf_MaterialMetallicRoughness",
+"RWGltf_Provider",
 "RWGltf_TriangulationReader",
 "RWGltf_WriterTrsfFormat",
 "RWGltf_GltfParseAccessorType",
@@ -201,6 +207,10 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         """
         Return transformation from OCCT to glTF coordinate system.
         """
+    def CompressionParameters(self) -> RWGltf_DracoParameters: 
+        """
+        Return Draco parameters
+        """
     def CoordinateSystemConverter(self) -> RWMesh_CoordinateSystemConverter: 
         """
         Return transformation from OCCT to glTF coordinate system.
@@ -238,23 +248,23 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         Return TRUE to export UV coordinates even if there are no mapped texture; FALSE by default.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MeshNameFormat(self) -> RWMesh_NameFormat: 
         """
         Return name format for exporting Meshes; RWMesh_NameFormat_Product by default.
@@ -272,6 +282,10 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         """
     @overload
     def Perform(self,theDocument : OCP.TDocStd.TDocStd_Document,theRootLabels : OCP.TDF.TDF_LabelSequence,theLabelFilter : OCP.TColStd.TColStd_MapOfAsciiString,theFileInfo : OCP.TColStd.TColStd_IndexedDataMapOfStringString,theProgress : OCP.Message.Message_ProgressRange) -> bool: ...
+    def SetCompressionParameters(self,theDracoParameters : RWGltf_DracoParameters) -> None: 
+        """
+        Set Draco parameters
+        """
     def SetCoordinateSystemConverter(self,theConverter : RWMesh_CoordinateSystemConverter) -> None: 
         """
         Set transformation from OCCT to glTF coordinate system.
@@ -295,6 +309,10 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
     def SetNodeNameFormat(self,theFormat : RWMesh_NameFormat) -> None: 
         """
         Set name format for exporting Nodes.
+        """
+    def SetParallel(self,theToParallel : bool) -> None: 
+        """
+        Setup multithreaded execution.
         """
     def SetSplitIndices16(self,theToSplit : bool) -> None: 
         """
@@ -320,6 +338,10 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         """
         Return flag to merge faces within a single part; FALSE by default.
         """
+    def ToParallel(self) -> bool: 
+        """
+        Return TRUE if multithreaded optimizations are allowed; FALSE by default.
+        """
     def ToSplitIndices16(self) -> bool: 
         """
         Return flag to prefer keeping 16-bit indexes while merging face; FALSE by default.
@@ -339,6 +361,129 @@ class RWGltf_CafWriter(OCP.Standard.Standard_Transient):
         """
         None
         """
+    pass
+class RWGltf_ConfigurationNode(OCP.DE.DE_ConfigurationNode, OCP.Standard.Standard_Transient):
+    """
+    The purpose of this class is to configure the transfer process for glTF format Stores the necessary settings for RWGltf_Provider. Configures and creates special provider to transfer glTF files.
+    """
+    def BuildProvider(self) -> OCP.DE.DE_Provider: 
+        """
+        Creates new provider for the own format
+        """
+    def CheckContent(self,theBuffer : OCP.NCollection.NCollection_Buffer) -> bool: 
+        """
+        Checks the file content to verify a format
+        """
+    def CheckExtension(self,theExtension : OCP.TCollection.TCollection_AsciiString) -> bool: 
+        """
+        Checks the file extension to verify a format
+        """
+    def Copy(self) -> OCP.DE.DE_ConfigurationNode: 
+        """
+        Copies values of all fields
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetExtensions(self) -> OCP.TColStd.TColStd_ListOfAsciiString: 
+        """
+        Gets list of supported file extensions
+        """
+    def GetFormat(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets CAD format name of associated provider
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetVendor(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets provider's vendor name of associated provider
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def IsEnabled(self) -> bool: 
+        """
+        Gets the provider loading status
+        """
+    def IsExportSupported(self) -> bool: 
+        """
+        Checks the export supporting
+        """
+    def IsImportSupported(self) -> bool: 
+        """
+        Checks the import supporting
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Load(self,theResource : OCP.DE.DE_ConfigurationContext) -> bool: 
+        """
+        Updates values according the resource
+        """
+    def Save(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Writes configuration to the string
+        """
+    def SetEnabled(self,theIsLoaded : bool) -> None: 
+        """
+        Sets the provider loading status
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def UpdateLoad(self) -> bool: 
+        """
+        Update loading status. Checking for the license.
+        """
+    @overload
+    def __init__(self,theNode : RWGltf_ConfigurationNode) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class RWGltf_DracoParameters():
+    """
+    Draco compression parameters
+    """
+    def __init__(self) -> None: ...
     pass
 class RWGltf_GltfAccessor():
     """
@@ -631,23 +776,23 @@ class RWGltf_GltfFace(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -732,7 +877,7 @@ class RWGltf_GltfJsonParser():
         """
         Return prefix for reporting issues.
         """
-    def FaceList(self) -> OCP.BRepExtrema.BRepExtrema_ShapeList: 
+    def FaceList(self) -> Any: 
         """
         Return face list for loading triangulation.
         """
@@ -779,6 +924,10 @@ class RWGltf_GltfJsonParser():
     def SetProbeHeader(self,theToProbe : bool) -> None: 
         """
         Set flag for probing file without complete reading.
+        """
+    def SetReadAssetExtras(self,theToRead : bool) -> None: 
+        """
+        Set flag to translate asset.extras into metadata.
         """
     def SetSkipEmptyNodes(self,theToSkip : bool) -> None: 
         """
@@ -930,9 +1079,9 @@ class RWGltf_GltfPrimArrayData():
     An element within primitive array - vertex attribute or element indexes.
     """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theType : RWGltf_GltfArrayType) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @property
     def Accessor(self) -> RWGltf_GltfAccessor:
         """
@@ -1136,23 +1285,23 @@ class RWGltf_MaterialCommon(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1258,23 +1407,23 @@ class RWGltf_MaterialMetallicRoughness(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1362,6 +1511,117 @@ class RWGltf_MaterialMetallicRoughness(OCP.Standard.Standard_Transient):
     @Roughness.setter
     def Roughness(self, arg0: float) -> None:
         pass
+    pass
+class RWGltf_Provider(OCP.DE.DE_Provider, OCP.Standard.Standard_Transient):
+    """
+    The class to transfer glTF files. Reads and Writes any glTF files into/from OCCT. Each operation needs configuration node.
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetFormat(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets CAD format name of associated provider
+        """
+    def GetNode(self) -> OCP.DE.DE_ConfigurationNode: 
+        """
+        Gets internal configuration node
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def GetVendor(self) -> OCP.TCollection.TCollection_AsciiString: 
+        """
+        Gets provider's vendor name of associated provider
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
+        """
+        Reads a CAD file, according internal configuration
+
+        Reads a CAD file, according internal configuration
+
+        Reads a CAD file, according internal configuration
+
+        Reads a CAD file, according internal configuration
+        """
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Read(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    def SetNode(self,theNode : OCP.DE.DE_ConfigurationNode) -> None: 
+        """
+        Sets internal configuration node
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: 
+        """
+        Writes a CAD file, according internal configuration
+
+        Writes a CAD file, according internal configuration
+
+        Writes a CAD file, according internal configuration
+
+        Writes a CAD file, according internal configuration
+        """
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theWS : OCP.XSControl.XSControl_WorkSession,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theShape : OCP.TopoDS.TopoDS_Shape,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def Write(self,thePath : OCP.TCollection.TCollection_AsciiString,theDocument : OCP.TDocStd.TDocStd_Document,theProgress : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theNode : OCP.DE.DE_ConfigurationNode) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class RWGltf_TriangulationReader():
     """

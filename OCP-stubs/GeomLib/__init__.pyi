@@ -4,15 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.Adaptor2d
 import OCP.math
-import OCP.TColgp
+import OCP.Geom
+import OCP.Adaptor3d
+import OCP.Geom2dAdaptor
 import OCP.gp
 import OCP.Geom2d
-import OCP.Geom
+import OCP.TColgp
 import OCP.AdvApprox
 import OCP.TColStd
+import OCP.Adaptor2d
 __all__  = [
 "GeomLib",
 "GeomLib_Array1OfMat",
@@ -122,9 +123,9 @@ class GeomLib():
         This method defines if opposite boundaries of surface coincide with given tolerance
         """
     @staticmethod
-    def NormEstim_s(S : OCP.Geom.Geom_Surface,UV : OCP.gp.gp_Pnt2d,Tol : float,N : OCP.gp.gp_Dir) -> int: 
+    def NormEstim_s(theSurf : OCP.Geom.Geom_Surface,theUV : OCP.gp.gp_Pnt2d,theTol : float,theNorm : OCP.gp.gp_Dir) -> int: 
         """
-        None
+        Estimate surface normal at the given (U, V) point.
         """
     @staticmethod
     def RemovePointsFromArray_s(NumPoints : int,InParameters : OCP.TColStd.TColStd_Array1OfReal,OutParameters : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
@@ -230,13 +231,13 @@ class GeomLib_Array1OfMat():
         Constant value access
         """
     @overload
+    def __init__(self) -> None: ...
+    @overload
     def __init__(self,theBegin : OCP.gp.gp_Mat,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : GeomLib_Array1OfMat) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class GeomLib_Check2dBSplineCurve():
@@ -296,17 +297,21 @@ class GeomLib_CheckCurveOnSurface():
         Returns error status The possible values are: 0 - OK; 1 - null curve or surface or 2d curve; 2 - invalid parametric range; 3 - error in calculations.
         """
     @overload
-    def Init(self) -> None: 
+    def Init(self,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theTolRange : float=9.999999999999999e-10) -> None: 
         """
         Sets the data for the algorithm
 
         Initializes all members by default values
         """
     @overload
-    def Init(self,theCurve : OCP.Adaptor3d.Adaptor3d_Curve,theTolRange : float=9.999999999999999e-10) -> None: ...
+    def Init(self) -> None: ...
     def IsDone(self) -> bool: 
         """
         Returns true if the max distance has been found
+        """
+    def IsParallel(self) -> bool: 
+        """
+        Returns true if parallel flag is set
         """
     def MaxDistance(self) -> float: 
         """
@@ -316,9 +321,13 @@ class GeomLib_CheckCurveOnSurface():
         """
         Returns parameter in which the distance is maximal
         """
-    def Perform(self,theCurveOnSurface : OCP.Adaptor3d.Adaptor3d_CurveOnSurface,isMultiThread : bool=False) -> None: 
+    def Perform(self,theCurveOnSurface : OCP.Adaptor3d.Adaptor3d_CurveOnSurface) -> None: 
         """
         Computes the max distance for the 3d curve <myCurve> and 2d curve <theCurveOnSurface> If isMultiThread == Standard_True then computation will be performed in parallel.
+        """
+    def SetParallel(self,theIsParallel : bool) -> None: 
+        """
+        Sets parallel flag
         """
     @overload
     def __init__(self) -> None: ...
@@ -443,14 +452,14 @@ class GeomLib_MakeCurvefromApprox():
     @overload
     def Curve(self,Index3d : int) -> OCP.Geom.Geom_BSplineCurve: ...
     @overload
-    def Curve2d(self,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
+    def Curve2d(self,Index1d : int,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         returns a polynomial curve whose poles correspond to the Index2d 2D space if Index2d not in the Range [1,Nb2dSpaces] if the Approx is not Done
 
         returns a rational curve whose poles correspond to the index2d of the 2D space and whose weights correspond to one dimensional space of index 1d if Index1d not in the Range [1,Nb1dSpaces] if Index2d not in the Range [1,Nb2dSpaces] if the Approx is not Done
         """
     @overload
-    def Curve2d(self,Index1d : int,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
+    def Curve2d(self,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: ...
     def Curve2dFromTwo1d(self,Index1d : int,Index2d : int) -> OCP.Geom2d.Geom2d_BSplineCurve: 
         """
         returns a 2D curve building it from the 1D curve in x at Index1d and y at Index2d amongst the 1D curves if Index1d not in the Range [1,Nb1dSpaces] if Index2d not in the Range [1,Nb1dSpaces] if the Approx is not Done
@@ -499,11 +508,22 @@ class GeomLib_PolyFunc(OCP.math.math_FunctionWithDerivative, OCP.math.math_Funct
     pass
 class GeomLib_Tool():
     """
-    Provides various methods with Geom2d and Geom curves and surfaces. The methods of this class compute the parameter(s) of a given point on a curve or a surface. To get the valid result the point must be located rather close to the curve (surface) or at least to allow getting unambiguous result (do not put point at center of circle...), but choice of "trust" distance between curve/surface and point is responcibility of user (parameter MaxDist). Return FALSE if the point is beyond the MaxDist limit or if computation fails.
+    Provides various methods with Geom2d and Geom curves and surfaces. The methods of this class compute the parameter(s) of a given point on a curve or a surface. To get the valid result the point must be located rather close to the curve (surface) or at least to allow getting unambiguous result (do not put point at center of circle...), but choice of "trust" distance between curve/surface and point is responsibility of user (parameter MaxDist). Return FALSE if the point is beyond the MaxDist limit or if computation fails.
     """
     @staticmethod
     @overload
-    def Parameter_s(Curve : OCP.Geom2d.Geom2d_Curve,Point : OCP.gp.gp_Pnt2d,MaxDist : float,U : float) -> bool: 
+    def ComputeDeviation_s(theCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,theFPar : float,theLPar : float,theStartParameter : float,theNbIters : int=100,thePrmOnCurve : float=None,thePtOnCurve : OCP.gp.gp_Pnt2d=None,theVecCurvLine : OCP.gp.gp_Vec2d=None,theLine : OCP.gp.gp_Lin2d=None) -> float: 
+        """
+        Computes parameter in theCurve (*thePrmOnCurve) where maximal deviation between theCurve and the linear segment joining its points with the parameters theFPar and theLPar is obtained. Returns the (positive) value of deviation. Returns negative value if the deviation cannot be computed. The returned parameter (in case of successful) will always be in the range [theFPar, theLPar]. Iterative method is used for computation. So, theStartParameter is needed to be set. Recommend value of theStartParameter can be found with the overloaded method. Additionally, following values can be returned (optionally):
+
+        Computes parameter in theCurve (*thePrmOnCurve) where maximal deviation between theCurve and the linear segment joining its points with the parameters theFPar and theLPar is obtained. Returns the (positive) value of deviation. Returns negative value if the deviation cannot be computed. The returned parameter (in case of successful) will always be in the range [theFPar, theLPar]. theNbSubIntervals defines discretization of the given interval [theFPar, theLPar] to provide better search condition. This value should be chosen taking into account complexity of the curve in considered interval. E.g. if there are many oscillations of the curve in the interval then theNbSubIntervals mus be great number. However, the greater value of theNbSubIntervals the slower the algorithm will compute. theNbIters sets number of iterations. ATTENTION!!! This algorithm cannot compute deviation precisely (so, there is no point in setting big value of theNbIters). But it can give some start point for the overloaded method.
+        """
+    @staticmethod
+    @overload
+    def ComputeDeviation_s(theCurve : OCP.Geom2dAdaptor.Geom2dAdaptor_Curve,theFPar : float,theLPar : float,theNbSubIntervals : int,theNbIters : int=10,thePrmOnCurve : float=None) -> float: ...
+    @staticmethod
+    @overload
+    def Parameter_s(Curve : OCP.Geom.Geom_Curve,Point : OCP.gp.gp_Pnt,MaxDist : float,U : float) -> bool: 
         """
         Extracts the parameter of a 3D point lying on a 3D curve or at a distance less than the MaxDist value.
 
@@ -511,7 +531,7 @@ class GeomLib_Tool():
         """
     @staticmethod
     @overload
-    def Parameter_s(Curve : OCP.Geom.Geom_Curve,Point : OCP.gp.gp_Pnt,MaxDist : float,U : float) -> bool: ...
+    def Parameter_s(Curve : OCP.Geom2d.Geom2d_Curve,Point : OCP.gp.gp_Pnt2d,MaxDist : float,U : float) -> bool: ...
     @staticmethod
     def Parameters_s(Surface : OCP.Geom.Geom_Surface,Point : OCP.gp.gp_Pnt,MaxDist : float,U : float,V : float) -> bool: 
         """

@@ -5,16 +5,16 @@ from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
 import OCP.StepRepr
-import OCP.StepBasic
-import OCP.TColgp
-import OCP.NCollection
-import OCP.Standard
-import OCP.StepShape
-import OCP.Interface
-import OCP.StepData
 import OCP.StepGeom
 import OCP.TCollection
+import OCP.NCollection
+import OCP.StepBasic
+import OCP.TColgp
+import OCP.Interface
+import OCP.Standard
+import OCP.StepShape
 import OCP.TColStd
+import OCP.StepData
 __all__  = [
 "StepVisual_StyledItem",
 "StepVisual_AnnotationOccurrence",
@@ -42,7 +42,9 @@ __all__  = [
 "StepVisual_Array1OfRenderingPropertiesSelect",
 "StepVisual_Array1OfStyleContextSelect",
 "StepVisual_Array1OfSurfaceStyleElementSelect",
+"StepVisual_Array1OfTessellatedEdgeOrVertex",
 "StepVisual_Array1OfTessellatedItem",
+"StepVisual_Array1OfTessellatedStructuredItem",
 "StepVisual_Array1OfTextOrCharacter",
 "StepVisual_Colour",
 "StepVisual_BoxCharacteristicSelect",
@@ -63,11 +65,15 @@ __all__  = [
 "StepVisual_BackgroundColour",
 "StepVisual_ColourSpecification",
 "StepVisual_ColourRgb",
+"StepVisual_TessellatedItem",
+"StepVisual_TessellatedSurfaceSet",
 "StepVisual_CompositeText",
 "StepVisual_CompositeTextWithExtent",
 "StepVisual_Invisibility",
 "StepVisual_OverRidingStyledItem",
-"StepVisual_TessellatedItem",
+"StepVisual_CoordinatesList",
+"StepVisual_TessellatedStructuredItem",
+"StepVisual_TessellatedFace",
 "StepVisual_CurveStyle",
 "StepVisual_CurveStyleFont",
 "StepVisual_CurveStyleFontPattern",
@@ -79,8 +85,10 @@ __all__  = [
 "StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel",
 "StepVisual_PreDefinedColour",
 "StepVisual_PreDefinedItem",
+"StepVisual_EdgeOrCurve",
 "StepVisual_ExternallyDefinedCurveFont",
 "StepVisual_ExternallyDefinedTextFont",
+"StepVisual_FaceOrSurface",
 "StepVisual_FillAreaStyle",
 "StepVisual_FillAreaStyleColour",
 "StepVisual_FillStyleSelect",
@@ -100,6 +108,8 @@ __all__  = [
 "StepVisual_HArray1OfRenderingPropertiesSelect",
 "StepVisual_HArray1OfStyleContextSelect",
 "StepVisual_HArray1OfSurfaceStyleElementSelect",
+"StepVisual_HArray1OfTessellatedEdgeOrVertex",
+"StepVisual_HArray1OfTessellatedStructuredItem",
 "StepVisual_HArray1OfTextOrCharacter",
 "StepVisual_ContextDependentInvisibility",
 "StepVisual_InvisibilityContext",
@@ -113,6 +123,7 @@ __all__  = [
 "StepVisual_NullStyle",
 "StepVisual_NullStyleMember",
 "StepVisual_ContextDependentOverRidingStyledItem",
+"StepVisual_PathOrCompositeCurve",
 "StepVisual_PlanarExtent",
 "StepVisual_PlanarBox",
 "StepVisual_PointStyle",
@@ -135,6 +146,8 @@ __all__  = [
 "StepVisual_PresentedItem",
 "StepVisual_PresentedItemRepresentation",
 "StepVisual_RenderingPropertiesSelect",
+"StepVisual_TessellatedGeometricSet",
+"StepVisual_RepositionedTessellatedItem",
 "StepVisual_ShadingSurfaceMethod",
 "StepVisual_StyleContextSelect",
 "StepVisual_AnnotationCurveOccurrenceAndGeomReprItem",
@@ -156,15 +169,29 @@ __all__  = [
 "StepVisual_Template",
 "StepVisual_TemplateInstance",
 "StepVisual_TessellatedAnnotationOccurrence",
+"StepVisual_TessellatedEdge",
 "StepVisual_TessellatedCurveSet",
-"StepVisual_TessellatedGeometricSet",
-"StepVisual_CoordinatesList",
+"StepVisual_CubicBezierTessellatedEdge",
+"StepVisual_TessellatedEdgeOrVertex",
+"StepVisual_ComplexTriangulatedFace",
+"StepVisual_RepositionedTessellatedGeometricSet",
+"StepVisual_CubicBezierTriangulatedFace",
+"StepVisual_TessellatedPointSet",
+"StepVisual_TessellatedShapeRepresentation",
+"StepVisual_TessellatedShapeRepresentationWithAccuracyParameters",
+"StepVisual_TessellatedShell",
+"StepVisual_TessellatedSolid",
+"StepVisual_TessellatedConnectingEdge",
+"StepVisual_ComplexTriangulatedSurfaceSet",
+"StepVisual_TessellatedVertex",
+"StepVisual_TessellatedWire",
 "StepVisual_TextLiteral",
 "StepVisual_TextOrCharacter",
 "StepVisual_TextPath",
 "StepVisual_TextStyle",
 "StepVisual_TextStyleForDefinedFont",
 "StepVisual_TextStyleWithBoxCharacteristics",
+"StepVisual_TriangulatedFace",
 "StepVisual_VectorOfHSequenceOfInteger",
 "StepVisual_ViewVolume",
 "StepVisual_Null",
@@ -215,23 +242,23 @@ class StepVisual_StyledItem(OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standa
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -315,23 +342,23 @@ class StepVisual_AnnotationOccurrence(StepVisual_StyledItem, OCP.StepRepr.StepRe
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -423,23 +450,23 @@ class StepVisual_AnnotationFillArea(OCP.StepShape.StepShape_GeometricCurveSet, O
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -502,23 +529,23 @@ class StepVisual_AnnotationFillAreaOccurrence(StepVisual_AnnotationOccurrence, S
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -606,23 +633,23 @@ class StepVisual_AnnotationCurveOccurrence(StepVisual_AnnotationOccurrence, Step
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -714,23 +741,23 @@ class StepVisual_AnnotationPlane(StepVisual_AnnotationOccurrence, StepVisual_Sty
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -936,23 +963,23 @@ class StepVisual_AnnotationText(OCP.StepRepr.StepRepr_MappedItem, OCP.StepRepr.S
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MappingSource(self) -> OCP.StepRepr.StepRepr_RepresentationMap: 
         """
         None
@@ -1019,23 +1046,23 @@ class StepVisual_AnnotationTextOccurrence(StepVisual_AnnotationOccurrence, StepV
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -1127,23 +1154,23 @@ class StepVisual_AreaInSet(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetArea(self,aArea : StepVisual_PresentationArea) -> None: 
         """
         None
@@ -1355,13 +1382,13 @@ class StepVisual_Array1OfAnnotationPlaneElement():
         Constant value access
         """
     @overload
-    def __init__(self,theBegin : StepVisual_AnnotationPlaneElement,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theBegin : StepVisual_AnnotationPlaneElement,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfBoxCharacteristicSelect():
@@ -1441,13 +1468,13 @@ class StepVisual_Array1OfBoxCharacteristicSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_BoxCharacteristicSelect,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfBoxCharacteristicSelect) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect():
@@ -1527,13 +1554,13 @@ class StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepVisual_CameraModelD3MultiClippingInterectionSelect,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect) -> None: ...
     @overload
-    def __init__(self,theBegin : StepVisual_CameraModelD3MultiClippingInterectionSelect,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect():
@@ -1613,13 +1640,13 @@ class StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_CameraModelD3MultiClippingUnionSelect,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfCurveStyleFontPattern():
@@ -1699,13 +1726,13 @@ class StepVisual_Array1OfCurveStyleFontPattern():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theBegin : StepVisual_CurveStyleFontPattern,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfCurveStyleFontPattern) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : StepVisual_CurveStyleFontPattern,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfDirectionCountSelect():
@@ -1785,9 +1812,9 @@ class StepVisual_Array1OfDirectionCountSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfDirectionCountSelect) -> None: ...
     @overload
@@ -1871,13 +1898,13 @@ class StepVisual_Array1OfDraughtingCalloutElement():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfDraughtingCalloutElement) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepVisual_DraughtingCalloutElement,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfDraughtingCalloutElement) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfFillStyleSelect():
@@ -1961,9 +1988,9 @@ class StepVisual_Array1OfFillStyleSelect():
     @overload
     def __init__(self,theBegin : StepVisual_FillStyleSelect,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfInvisibleItem():
@@ -2045,9 +2072,9 @@ class StepVisual_Array1OfInvisibleItem():
     @overload
     def __init__(self,theBegin : StepVisual_InvisibleItem,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfInvisibleItem) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2129,13 +2156,13 @@ class StepVisual_Array1OfLayeredItem():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepVisual_LayeredItem,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfLayeredItem) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepVisual_LayeredItem,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfPresentationStyleAssignment():
@@ -2215,11 +2242,11 @@ class StepVisual_Array1OfPresentationStyleAssignment():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_PresentationStyleAssignment,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2301,13 +2328,13 @@ class StepVisual_Array1OfPresentationStyleSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepVisual_PresentationStyleSelect,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : StepVisual_Array1OfPresentationStyleSelect) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepVisual_PresentationStyleSelect,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfRenderingPropertiesSelect():
@@ -2387,11 +2414,11 @@ class StepVisual_Array1OfRenderingPropertiesSelect():
         Constant value access
         """
     @overload
+    def __init__(self,theBegin : StepVisual_RenderingPropertiesSelect,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : StepVisual_RenderingPropertiesSelect,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2473,13 +2500,13 @@ class StepVisual_Array1OfStyleContextSelect():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theBegin : StepVisual_StyleContextSelect,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfSurfaceStyleElementSelect():
@@ -2559,11 +2586,97 @@ class StepVisual_Array1OfSurfaceStyleElementSelect():
         Constant value access
         """
     @overload
+    def __init__(self,theOther : StepVisual_Array1OfSurfaceStyleElementSelect) -> None: ...
+    @overload
     def __init__(self,theBegin : StepVisual_SurfaceStyleElementSelect,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfSurfaceStyleElementSelect) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    pass
+class StepVisual_Array1OfTessellatedEdgeOrVertex():
+    """
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    """
+    def Assign(self,theOther : StepVisual_Array1OfTessellatedEdgeOrVertex) -> StepVisual_Array1OfTessellatedEdgeOrVertex: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeFirst(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Variable value access
+        """
+    def First(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns first element
+        """
+    def Init(self,theValue : StepVisual_TessellatedEdgeOrVertex) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
+    def Last(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : StepVisual_Array1OfTessellatedEdgeOrVertex) -> StepVisual_Array1OfTessellatedEdgeOrVertex: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : StepVisual_TessellatedEdgeOrVertex) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Constant value access
+        """
+    @overload
+    def __init__(self,theBegin : StepVisual_TessellatedEdgeOrVertex,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfTessellatedEdgeOrVertex) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -2645,13 +2758,99 @@ class StepVisual_Array1OfTessellatedItem():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfTessellatedItem) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_TessellatedItem,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfTessellatedItem) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    pass
+class StepVisual_Array1OfTessellatedStructuredItem():
+    """
+    The class NCollection_Array1 represents unidimensional arrays of fixed size known at run time. The range of the index is user defined. An array1 can be constructed with a "C array". This functionality is useful to call methods expecting an Array1. It allows to carry the bounds inside the arrays.
+    """
+    def Assign(self,theOther : StepVisual_Array1OfTessellatedStructuredItem) -> StepVisual_Array1OfTessellatedStructuredItem: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeFirst(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Variable value access
+        """
+    def First(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns first element
+        """
+    def Init(self,theValue : StepVisual_TessellatedStructuredItem) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
+    def Last(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : StepVisual_Array1OfTessellatedStructuredItem) -> StepVisual_Array1OfTessellatedStructuredItem: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : StepVisual_TessellatedStructuredItem) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Constant value access
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theBegin : StepVisual_TessellatedStructuredItem,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfTessellatedStructuredItem) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Array1OfTextOrCharacter():
@@ -2731,13 +2930,13 @@ class StepVisual_Array1OfTextOrCharacter():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfTextOrCharacter) -> None: ...
     @overload
     def __init__(self,theBegin : StepVisual_TextOrCharacter,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_Colour(OCP.Standard.Standard_Transient):
@@ -2762,23 +2961,23 @@ class StepVisual_Colour(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -2843,23 +3042,23 @@ class StepVisual_CameraImage(OCP.StepRepr.StepRepr_MappedItem, OCP.StepRepr.Step
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MappingSource(self) -> OCP.StepRepr.StepRepr_RepresentationMap: 
         """
         None
@@ -2926,23 +3125,23 @@ class StepVisual_CameraImage2dWithScale(StepVisual_CameraImage, OCP.StepRepr.Ste
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MappingSource(self) -> OCP.StepRepr.StepRepr_RepresentationMap: 
         """
         None
@@ -3009,23 +3208,23 @@ class StepVisual_CameraImage3dWithScale(StepVisual_CameraImage, OCP.StepRepr.Ste
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MappingSource(self) -> OCP.StepRepr.StepRepr_RepresentationMap: 
         """
         None
@@ -3092,23 +3291,23 @@ class StepVisual_CameraModel(OCP.StepGeom.StepGeom_GeometricRepresentationItem, 
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3159,23 +3358,23 @@ class StepVisual_CameraModelD2(StepVisual_CameraModel, OCP.StepGeom.StepGeom_Geo
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3242,23 +3441,23 @@ class StepVisual_CameraModelD3(StepVisual_CameraModel, OCP.StepGeom.StepGeom_Geo
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3325,23 +3524,23 @@ class StepVisual_CameraModelD3MultiClipping(StepVisual_CameraModelD3, StepVisual
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3526,23 +3725,23 @@ class StepVisual_CameraModelD3MultiClippingIntersection(OCP.StepGeom.StepGeom_Ge
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3601,23 +3800,23 @@ class StepVisual_CameraModelD3MultiClippingUnion(OCP.StepGeom.StepGeom_Geometric
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -3786,23 +3985,23 @@ class StepVisual_CameraUsage(OCP.StepRepr.StepRepr_RepresentationMap, OCP.Standa
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MappedRepresentation(self) -> OCP.StepRepr.StepRepr_Representation: 
         """
         None
@@ -3902,23 +4101,23 @@ class StepVisual_DraughtingModel(OCP.StepRepr.StepRepr_Representation, OCP.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -3989,23 +4188,23 @@ class StepVisual_BackgroundColour(StepVisual_Colour, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Presentation(self) -> StepVisual_AreaOrView: 
         """
         None
@@ -4056,23 +4255,23 @@ class StepVisual_ColourSpecification(StepVisual_Colour, OCP.Standard.Standard_Tr
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4131,23 +4330,23 @@ class StepVisual_ColourRgb(StepVisual_ColourSpecification, StepVisual_Colour, OC
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4171,6 +4370,171 @@ class StepVisual_ColourRgb(StepVisual_ColourSpecification, StepVisual_Colour, OC
     def SetRed(self,aRed : float) -> None: 
         """
         None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedItem(OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedSurfaceSet(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedSurfaceSetRepresentation of STEP entity TessellatedSurfaceSet
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theCoordinates : StepVisual_CoordinatesList,thePnmax : int,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbNormals(self) -> int: 
+        """
+        Returns number of Normals
+        """
+    def Normals(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+        """
+        Returns field Normals
+        """
+    def Pnmax(self) -> int: 
+        """
+        Returns field Pnmax
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetNormals(self,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Sets field Normals
+        """
+    def SetPnmax(self,thePnmax : int) -> None: 
+        """
+        Sets field Pnmax
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -4222,23 +4586,23 @@ class StepVisual_CompositeText(OCP.StepGeom.StepGeom_GeometricRepresentationItem
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4309,23 +4673,23 @@ class StepVisual_CompositeTextWithExtent(StepVisual_CompositeText, OCP.StepGeom.
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4396,23 +4760,23 @@ class StepVisual_Invisibility(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbInvisibleItems(self) -> int: 
         """
         None
@@ -4463,23 +4827,23 @@ class StepVisual_OverRidingStyledItem(StepVisual_StyledItem, OCP.StepRepr.StepRe
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -4545,7 +4909,81 @@ class StepVisual_OverRidingStyledItem(StepVisual_StyledItem, OCP.StepRepr.StepRe
         None
         """
     pass
-class StepVisual_TessellatedItem(OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+class StepVisual_CoordinatesList(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ) -> None: 
+        """
+        None
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def Points(self) -> OCP.TColgp.TColgp_HArray1OfXYZ: 
+        """
+        None
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedStructuredItem(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedStructuredItemRepresentation of STEP entity TessellatedStructuredItem
+    """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -4571,23 +5009,23 @@ class StepVisual_TessellatedItem(OCP.StepGeom.StepGeom_GeometricRepresentationIt
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4595,6 +5033,116 @@ class StepVisual_TessellatedItem(OCP.StepGeom.StepGeom_GeometricRepresentationIt
     def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
         None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedFace(StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedFaceRepresentation of STEP entity TessellatedFace
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> StepVisual_FaceOrSurface: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theCoordinates : StepVisual_CoordinatesList,thePnmax : int,theNormals : OCP.TColStd.TColStd_HArray2OfReal,theHasGeometricLink : bool,theGeometricLink : StepVisual_FaceOrSurface) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbNormals(self) -> int: 
+        """
+        Returns number of Normals
+        """
+    def Normals(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+        """
+        Returns field Normals
+        """
+    def Pnmax(self) -> int: 
+        """
+        Returns field Pnmax
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_FaceOrSurface) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetNormals(self,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Sets field Normals
+        """
+    def SetPnmax(self,thePnmax : int) -> None: 
+        """
+        Sets field Pnmax
         """
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
@@ -4650,23 +5198,23 @@ class StepVisual_CurveStyle(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4729,23 +5277,23 @@ class StepVisual_CurveStyleFont(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -4816,23 +5364,23 @@ class StepVisual_CurveStyleFontPattern(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetInvisibleSegmentLength(self,aInvisibleSegmentLength : float) -> None: 
         """
         None
@@ -5031,23 +5579,23 @@ class StepVisual_DraughtingAnnotationOccurrence(StepVisual_AnnotationOccurrence,
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -5139,23 +5687,23 @@ class StepVisual_DraughtingCallout(OCP.StepGeom.StepGeom_GeometricRepresentation
         Init
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -5343,23 +5891,23 @@ class StepVisual_CharacterizedObjAndRepresentationAndDraughtingModel(StepVisual_
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -5430,23 +5978,23 @@ class StepVisual_PreDefinedColour(StepVisual_Colour, OCP.Standard.Standard_Trans
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetPreDefinedItem(self,item : StepVisual_PreDefinedItem) -> None: 
         """
         set a pre_defined_item part
@@ -5493,23 +6041,23 @@ class StepVisual_PreDefinedItem(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -5533,6 +6081,116 @@ class StepVisual_PreDefinedItem(OCP.Standard.Standard_Transient):
         """
         None
         """
+    pass
+class StepVisual_EdgeOrCurve(OCP.StepData.StepData_SelectType):
+    """
+    Representation of STEP SELECT type EdgeOrCurve
+    """
+    def Boolean(self) -> bool: 
+        """
+        None
+        """
+    def CaseMem(self,ent : OCP.StepData.StepData_SelectMember) -> int: 
+        """
+        Recognize a SelectMember (kind, name). Returns a positive value which identifies the case in the List of immediate cases (distinct from the List of Entity Types). Zero if not recognizes Default returns 0, saying that no immediate value is allowed
+        """
+    def CaseMember(self) -> int: 
+        """
+        Returns the Type of the stored SelectMember, or zero if it is Null or Entity. Calls the method CaseMem on Value
+        """
+    def CaseNum(self,ent : OCP.Standard.Standard_Transient) -> int: 
+        """
+        Recognizes a kind of EdgeOrCurve select type -- 1 -> Curve -- 2 -> Edge
+        """
+    def CaseNumber(self) -> int: 
+        """
+        Recognizes the Type of the stored Entity, or zero if it is Null or SelectMember. Calls the first method CaseNum on Value
+        """
+    def Curve(self) -> OCP.StepGeom.StepGeom_Curve: 
+        """
+        Returns Value as Curve (or Null if another type)
+        """
+    def Description(self) -> OCP.StepData.StepData_PDescr: 
+        """
+        Returns the Description which corresponds to <me> Null if no specific description to give. This description is used to control reading an check validity. Default returns a Null Handle, i.e. undefined description It can suffice if CaseNum and CaseMem give enough control
+        """
+    def Edge(self) -> OCP.StepShape.StepShape_Edge: 
+        """
+        Returns Value as Edge (or Null if another type)
+        """
+    def Int(self) -> int: 
+        """
+        This internal method gives access to a value implemented by an Integer (to read it)
+        """
+    def Integer(self) -> int: 
+        """
+        Gets the value as an Integer
+        """
+    def IsNull(self) -> bool: 
+        """
+        Returns True if there is no Stored Entity (i.e. it is Null)
+        """
+    def Logical(self) -> OCP.StepData.StepData_Logical: 
+        """
+        None
+        """
+    def Matches(self,ent : OCP.Standard.Standard_Transient) -> bool: 
+        """
+        Returns True if the Type of an Entity complies with the definition list of the SelectType. Also checks for a SelectMember Default Implementation looks for CaseNum or CaseMem positive
+        """
+    def Member(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns Value as a SelectMember. Null if not a SelectMember
+        """
+    def NewMember(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns a preferred SelectMember. Default returns a Null By default, a SelectMember can be set according to data type and Name : it is a SelectNamed if Name is defined
+        """
+    def Nullify(self) -> None: 
+        """
+        Nullifies the Stored Entity
+        """
+    def Real(self) -> float: 
+        """
+        None
+        """
+    def SelectName(self) -> str: 
+        """
+        Returns the type name of SelectMember. If no SelectMember or with no type name, returns an empty string To change it, pass through the SelectMember itself
+        """
+    def SetBoolean(self,val : bool,name : str='') -> None: 
+        """
+        None
+        """
+    def SetInt(self,val : int) -> None: 
+        """
+        This internal method gives access to a value implemented by an Integer (to set it) : a SelectMember MUST ALREADY BE THERE !
+        """
+    def SetInteger(self,val : int,name : str='') -> None: 
+        """
+        Sets a new Integer value, with an optional type name Warning : If a SelectMember is already set, works on it : value and name must then be accepted by this SelectMember
+        """
+    def SetLogical(self,val : OCP.StepData.StepData_Logical,name : str='') -> None: 
+        """
+        None
+        """
+    def SetReal(self,val : float,name : str='') -> None: 
+        """
+        None
+        """
+    def SetValue(self,ent : OCP.Standard.Standard_Transient) -> None: 
+        """
+        Stores an Entity. This allows to define a specific SelectType class with one read method per member Type, which returns the Value casted with the good Type.
+        """
+    def Type(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns the Effective (Dynamic) Type of the Stored Entity If it is Null, returns TYPE(Transient)
+        """
+    def Value(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns the Stored Entity. Can be used to define specific read methods (see above)
+        """
+    def __init__(self) -> None: ...
     pass
 class StepVisual_ExternallyDefinedCurveFont(OCP.StepBasic.StepBasic_ExternallyDefinedItem, OCP.Standard.Standard_Transient):
     """
@@ -5563,23 +6221,23 @@ class StepVisual_ExternallyDefinedCurveFont(OCP.StepBasic.StepBasic_ExternallyDe
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ItemId(self) -> OCP.StepBasic.StepBasic_SourceItem: 
         """
         Returns field ItemId
@@ -5641,23 +6299,23 @@ class StepVisual_ExternallyDefinedTextFont(OCP.StepBasic.StepBasic_ExternallyDef
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ItemId(self) -> OCP.StepBasic.StepBasic_SourceItem: 
         """
         Returns field ItemId
@@ -5689,6 +6347,116 @@ class StepVisual_ExternallyDefinedTextFont(OCP.StepBasic.StepBasic_ExternallyDef
         """
         None
         """
+    pass
+class StepVisual_FaceOrSurface(OCP.StepData.StepData_SelectType):
+    """
+    Representation of STEP SELECT type FaceOrSurface
+    """
+    def Boolean(self) -> bool: 
+        """
+        None
+        """
+    def CaseMem(self,ent : OCP.StepData.StepData_SelectMember) -> int: 
+        """
+        Recognize a SelectMember (kind, name). Returns a positive value which identifies the case in the List of immediate cases (distinct from the List of Entity Types). Zero if not recognizes Default returns 0, saying that no immediate value is allowed
+        """
+    def CaseMember(self) -> int: 
+        """
+        Returns the Type of the stored SelectMember, or zero if it is Null or Entity. Calls the method CaseMem on Value
+        """
+    def CaseNum(self,ent : OCP.Standard.Standard_Transient) -> int: 
+        """
+        Recognizes a kind of FaceOrSurface select type -- 1 -> Face -- 2 -> Surface
+        """
+    def CaseNumber(self) -> int: 
+        """
+        Recognizes the Type of the stored Entity, or zero if it is Null or SelectMember. Calls the first method CaseNum on Value
+        """
+    def Description(self) -> OCP.StepData.StepData_PDescr: 
+        """
+        Returns the Description which corresponds to <me> Null if no specific description to give. This description is used to control reading an check validity. Default returns a Null Handle, i.e. undefined description It can suffice if CaseNum and CaseMem give enough control
+        """
+    def Face(self) -> OCP.StepShape.StepShape_Face: 
+        """
+        Returns Value as Face (or Null if another type)
+        """
+    def Int(self) -> int: 
+        """
+        This internal method gives access to a value implemented by an Integer (to read it)
+        """
+    def Integer(self) -> int: 
+        """
+        Gets the value as an Integer
+        """
+    def IsNull(self) -> bool: 
+        """
+        Returns True if there is no Stored Entity (i.e. it is Null)
+        """
+    def Logical(self) -> OCP.StepData.StepData_Logical: 
+        """
+        None
+        """
+    def Matches(self,ent : OCP.Standard.Standard_Transient) -> bool: 
+        """
+        Returns True if the Type of an Entity complies with the definition list of the SelectType. Also checks for a SelectMember Default Implementation looks for CaseNum or CaseMem positive
+        """
+    def Member(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns Value as a SelectMember. Null if not a SelectMember
+        """
+    def NewMember(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns a preferred SelectMember. Default returns a Null By default, a SelectMember can be set according to data type and Name : it is a SelectNamed if Name is defined
+        """
+    def Nullify(self) -> None: 
+        """
+        Nullifies the Stored Entity
+        """
+    def Real(self) -> float: 
+        """
+        None
+        """
+    def SelectName(self) -> str: 
+        """
+        Returns the type name of SelectMember. If no SelectMember or with no type name, returns an empty string To change it, pass through the SelectMember itself
+        """
+    def SetBoolean(self,val : bool,name : str='') -> None: 
+        """
+        None
+        """
+    def SetInt(self,val : int) -> None: 
+        """
+        This internal method gives access to a value implemented by an Integer (to set it) : a SelectMember MUST ALREADY BE THERE !
+        """
+    def SetInteger(self,val : int,name : str='') -> None: 
+        """
+        Sets a new Integer value, with an optional type name Warning : If a SelectMember is already set, works on it : value and name must then be accepted by this SelectMember
+        """
+    def SetLogical(self,val : OCP.StepData.StepData_Logical,name : str='') -> None: 
+        """
+        None
+        """
+    def SetReal(self,val : float,name : str='') -> None: 
+        """
+        None
+        """
+    def SetValue(self,ent : OCP.Standard.Standard_Transient) -> None: 
+        """
+        Stores an Entity. This allows to define a specific SelectType class with one read method per member Type, which returns the Value casted with the good Type.
+        """
+    def Surface(self) -> OCP.StepGeom.StepGeom_Surface: 
+        """
+        Returns Value as Surface (or Null if another type)
+        """
+    def Type(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns the Effective (Dynamic) Type of the Stored Entity If it is Null, returns TYPE(Transient)
+        """
+    def Value(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns the Stored Entity. Can be used to define specific read methods (see above)
+        """
+    def __init__(self) -> None: ...
     pass
 class StepVisual_FillAreaStyle(OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
@@ -5724,23 +6492,23 @@ class StepVisual_FillAreaStyle(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -5803,23 +6571,23 @@ class StepVisual_FillAreaStyleColour(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -6130,23 +6898,23 @@ class StepVisual_HArray1OfAnnotationPlaneElement(StepVisual_Array1OfAnnotationPl
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_AnnotationPlaneElement: 
         """
         Returns last element
@@ -6188,13 +6956,13 @@ class StepVisual_HArray1OfAnnotationPlaneElement(StepVisual_Array1OfAnnotationPl
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_AnnotationPlaneElement) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfAnnotationPlaneElement) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_AnnotationPlaneElement) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6273,23 +7041,23 @@ class StepVisual_HArray1OfBoxCharacteristicSelect(StepVisual_Array1OfBoxCharacte
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_BoxCharacteristicSelect: 
         """
         Returns last element
@@ -6333,11 +7101,11 @@ class StepVisual_HArray1OfBoxCharacteristicSelect(StepVisual_Array1OfBoxCharacte
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_BoxCharacteristicSelect) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfBoxCharacteristicSelect) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfBoxCharacteristicSelect) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6416,23 +7184,23 @@ class StepVisual_HArray1OfCameraModelD3MultiClippingInterectionSelect(StepVisual
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_CameraModelD3MultiClippingInterectionSelect: 
         """
         Returns last element
@@ -6474,13 +7242,13 @@ class StepVisual_HArray1OfCameraModelD3MultiClippingInterectionSelect(StepVisual
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingInterectionSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingInterectionSelect) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingInterectionSelect) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6559,23 +7327,23 @@ class StepVisual_HArray1OfCameraModelD3MultiClippingUnionSelect(StepVisual_Array
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_CameraModelD3MultiClippingUnionSelect: 
         """
         Returns last element
@@ -6617,13 +7385,13 @@ class StepVisual_HArray1OfCameraModelD3MultiClippingUnionSelect(StepVisual_Array
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : StepVisual_Array1OfCameraModelD3MultiClippingUnionSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CameraModelD3MultiClippingUnionSelect) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6702,23 +7470,23 @@ class StepVisual_HArray1OfCurveStyleFontPattern(StepVisual_Array1OfCurveStyleFon
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_CurveStyleFontPattern: 
         """
         Returns last element
@@ -6760,11 +7528,11 @@ class StepVisual_HArray1OfCurveStyleFontPattern(StepVisual_Array1OfCurveStyleFon
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfCurveStyleFontPattern) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_CurveStyleFontPattern) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -6845,23 +7613,23 @@ class StepVisual_HArray1OfDirectionCountSelect(StepVisual_Array1OfDirectionCount
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_DirectionCountSelect: 
         """
         Returns last element
@@ -6903,13 +7671,13 @@ class StepVisual_HArray1OfDirectionCountSelect(StepVisual_Array1OfDirectionCount
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DirectionCountSelect) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfDirectionCountSelect) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DirectionCountSelect) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -6988,23 +7756,23 @@ class StepVisual_HArray1OfDraughtingCalloutElement(StepVisual_Array1OfDraughting
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_DraughtingCalloutElement: 
         """
         Returns last element
@@ -7046,9 +7814,9 @@ class StepVisual_HArray1OfDraughtingCalloutElement(StepVisual_Array1OfDraughting
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_DraughtingCalloutElement) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
@@ -7131,23 +7899,23 @@ class StepVisual_HArray1OfFillStyleSelect(StepVisual_Array1OfFillStyleSelect, OC
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_FillStyleSelect: 
         """
         Returns last element
@@ -7191,11 +7959,11 @@ class StepVisual_HArray1OfFillStyleSelect(StepVisual_Array1OfFillStyleSelect, OC
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfFillStyleSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_FillStyleSelect) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -7274,23 +8042,23 @@ class StepVisual_HArray1OfInvisibleItem(StepVisual_Array1OfInvisibleItem, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_InvisibleItem: 
         """
         Returns last element
@@ -7332,13 +8100,13 @@ class StepVisual_HArray1OfInvisibleItem(StepVisual_Array1OfInvisibleItem, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_InvisibleItem) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_Array1OfInvisibleItem) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_InvisibleItem) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -7417,23 +8185,23 @@ class StepVisual_HArray1OfLayeredItem(StepVisual_Array1OfLayeredItem, OCP.Standa
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_LayeredItem: 
         """
         Returns last element
@@ -7475,13 +8243,13 @@ class StepVisual_HArray1OfLayeredItem(StepVisual_Array1OfLayeredItem, OCP.Standa
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfLayeredItem) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_LayeredItem) -> None: ...
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_LayeredItem) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfLayeredItem) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -7560,23 +8328,23 @@ class StepVisual_HArray1OfPresentationStyleAssignment(StepVisual_Array1OfPresent
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_PresentationStyleAssignment: 
         """
         Returns last element
@@ -7618,13 +8386,13 @@ class StepVisual_HArray1OfPresentationStyleAssignment(StepVisual_Array1OfPresent
         Constant value access
         """
     @overload
+    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
+    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_PresentationStyleAssignment) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleAssignment) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -7703,23 +8471,23 @@ class StepVisual_HArray1OfPresentationStyleSelect(StepVisual_Array1OfPresentatio
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_PresentationStyleSelect: 
         """
         Returns last element
@@ -7761,13 +8529,13 @@ class StepVisual_HArray1OfPresentationStyleSelect(StepVisual_Array1OfPresentatio
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_PresentationStyleSelect) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_PresentationStyleSelect) -> None: ...
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfPresentationStyleSelect) -> None: ...
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -7846,23 +8614,23 @@ class StepVisual_HArray1OfRenderingPropertiesSelect(StepVisual_Array1OfRendering
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_RenderingPropertiesSelect: 
         """
         Returns last element
@@ -7904,13 +8672,13 @@ class StepVisual_HArray1OfRenderingPropertiesSelect(StepVisual_Array1OfRendering
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> None: ...
-    @overload
-    def __init__(self) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_RenderingPropertiesSelect) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfRenderingPropertiesSelect) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -7989,23 +8757,23 @@ class StepVisual_HArray1OfStyleContextSelect(StepVisual_Array1OfStyleContextSele
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_StyleContextSelect: 
         """
         Returns last element
@@ -8047,13 +8815,13 @@ class StepVisual_HArray1OfStyleContextSelect(StepVisual_Array1OfStyleContextSele
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_StyleContextSelect) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfStyleContextSelect) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -8132,23 +8900,23 @@ class StepVisual_HArray1OfSurfaceStyleElementSelect(StepVisual_Array1OfSurfaceSt
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_SurfaceStyleElementSelect: 
         """
         Returns last element
@@ -8192,11 +8960,297 @@ class StepVisual_HArray1OfSurfaceStyleElementSelect(StepVisual_Array1OfSurfaceSt
     @overload
     def __init__(self) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_SurfaceStyleElementSelect) -> None: ...
+    @overload
     def __init__(self,theOther : StepVisual_Array1OfSurfaceStyleElementSelect) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_HArray1OfTessellatedEdgeOrVertex(StepVisual_Array1OfTessellatedEdgeOrVertex, OCP.Standard.Standard_Transient):
+    def Array1(self) -> StepVisual_Array1OfTessellatedEdgeOrVertex: 
+        """
+        None
+        """
+    def Assign(self,theOther : StepVisual_Array1OfTessellatedEdgeOrVertex) -> StepVisual_Array1OfTessellatedEdgeOrVertex: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeArray1(self) -> StepVisual_Array1OfTessellatedEdgeOrVertex: 
+        """
+        None
+        """
+    def ChangeFirst(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Variable value access
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def First(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns first element
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theValue : StepVisual_TessellatedEdgeOrVertex) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_SurfaceStyleElementSelect) -> None: ...
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Last(self) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : StepVisual_Array1OfTessellatedEdgeOrVertex) -> StepVisual_Array1OfTessellatedEdgeOrVertex: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : StepVisual_TessellatedEdgeOrVertex) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Constant value access
+        """
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfTessellatedEdgeOrVertex) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_TessellatedEdgeOrVertex) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __iter__(self) -> Iterator: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_HArray1OfTessellatedStructuredItem(StepVisual_Array1OfTessellatedStructuredItem, OCP.Standard.Standard_Transient):
+    def Array1(self) -> StepVisual_Array1OfTessellatedStructuredItem: 
+        """
+        None
+        """
+    def Assign(self,theOther : StepVisual_Array1OfTessellatedStructuredItem) -> StepVisual_Array1OfTessellatedStructuredItem: 
+        """
+        Copies data of theOther array to this. This array should be pre-allocated and have the same length as theOther; otherwise exception Standard_DimensionMismatch is thrown.
+        """
+    def ChangeArray1(self) -> StepVisual_Array1OfTessellatedStructuredItem: 
+        """
+        None
+        """
+    def ChangeFirst(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns first element
+        """
+    def ChangeLast(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns last element
+        """
+    def ChangeValue(self,theIndex : int) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Variable value access
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def First(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns first element
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theValue : StepVisual_TessellatedStructuredItem) -> None: 
+        """
+        Initialise the items with theValue
+        """
+    def IsAllocated(self) -> bool: 
+        """
+        IsAllocated flag - for naming compatibility
+        """
+    def IsDeletable(self) -> bool: 
+        """
+        myDeletable flag
+        """
+    def IsEmpty(self) -> bool: 
+        """
+        Return TRUE if array has zero length.
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Last(self) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns last element
+        """
+    def Length(self) -> int: 
+        """
+        Length query (the same)
+        """
+    def Lower(self) -> int: 
+        """
+        Lower bound
+        """
+    def Move(self,theOther : StepVisual_Array1OfTessellatedStructuredItem) -> StepVisual_Array1OfTessellatedStructuredItem: 
+        """
+        Move assignment. This array will borrow all the data from theOther. The moved object will keep pointer to the memory buffer and range, but it will not free the buffer on destruction.
+        """
+    def Resize(self,theLower : int,theUpper : int,theToCopyData : bool) -> None: 
+        """
+        Resizes the array to specified bounds. No re-allocation will be done if length of array does not change, but existing values will not be discarded if theToCopyData set to FALSE.
+        """
+    def SetValue(self,theIndex : int,theItem : StepVisual_TessellatedStructuredItem) -> None: 
+        """
+        Set value
+        """
+    def Size(self) -> int: 
+        """
+        Size query
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Upper(self) -> int: 
+        """
+        Upper bound
+        """
+    def Value(self,theIndex : int) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Constant value access
+        """
+    @overload
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : StepVisual_Array1OfTessellatedStructuredItem) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_TessellatedStructuredItem) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -8275,23 +9329,23 @@ class StepVisual_HArray1OfTextOrCharacter(StepVisual_Array1OfTextOrCharacter, OC
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> StepVisual_TextOrCharacter: 
         """
         Returns last element
@@ -8333,13 +9387,13 @@ class StepVisual_HArray1OfTextOrCharacter(StepVisual_Array1OfTextOrCharacter, OC
         Constant value access
         """
     @overload
-    def __init__(self,theOther : StepVisual_Array1OfTextOrCharacter) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : StepVisual_TextOrCharacter) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : StepVisual_Array1OfTextOrCharacter) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -8386,23 +9440,23 @@ class StepVisual_ContextDependentInvisibility(StepVisual_Invisibility, OCP.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbInvisibleItems(self) -> int: 
         """
         None
@@ -8822,23 +9876,23 @@ class StepVisual_MarkerMember(OCP.StepData.StepData_SelectInt, OCP.StepData.Step
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -9116,23 +10170,23 @@ class StepVisual_PresentationRepresentation(OCP.StepRepr.StepRepr_Representation
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -9207,23 +10261,23 @@ class StepVisual_MechanicalDesignGeometricPresentationRepresentation(StepVisual_
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -9348,23 +10402,23 @@ class StepVisual_NullStyleMember(OCP.StepData.StepData_SelectInt, OCP.StepData.S
         Gets the value as an Integer
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Kind(self) -> int: 
         """
         None
@@ -9478,28 +10532,28 @@ class StepVisual_ContextDependentOverRidingStyledItem(StepVisual_OverRidingStyle
         """
         Increments the reference counter of this object
         """
-    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aStyles : StepVisual_HArray1OfPresentationStyleAssignment,aItem : OCP.Standard.Standard_Transient,aOverRiddenStyle : StepVisual_StyledItem) -> None: 
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aStyles : StepVisual_HArray1OfPresentationStyleAssignment,aItem : OCP.Standard.Standard_Transient,aOverRiddenStyle : StepVisual_StyledItem,aStyleContext : StepVisual_HArray1OfStyleContextSelect) -> None: 
         """
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -9581,6 +10635,116 @@ class StepVisual_ContextDependentOverRidingStyledItem(StepVisual_OverRidingStyle
         None
         """
     pass
+class StepVisual_PathOrCompositeCurve(OCP.StepData.StepData_SelectType):
+    """
+    Representation of STEP SELECT type PathOrCompositeCurve
+    """
+    def Boolean(self) -> bool: 
+        """
+        None
+        """
+    def CaseMem(self,ent : OCP.StepData.StepData_SelectMember) -> int: 
+        """
+        Recognize a SelectMember (kind, name). Returns a positive value which identifies the case in the List of immediate cases (distinct from the List of Entity Types). Zero if not recognizes Default returns 0, saying that no immediate value is allowed
+        """
+    def CaseMember(self) -> int: 
+        """
+        Returns the Type of the stored SelectMember, or zero if it is Null or Entity. Calls the method CaseMem on Value
+        """
+    def CaseNum(self,ent : OCP.Standard.Standard_Transient) -> int: 
+        """
+        Recognizes a kind of PathOrCompositeCurve select type -- 1 -> CompositeCurve -- 2 -> Path
+        """
+    def CaseNumber(self) -> int: 
+        """
+        Recognizes the Type of the stored Entity, or zero if it is Null or SelectMember. Calls the first method CaseNum on Value
+        """
+    def CompositeCurve(self) -> OCP.StepGeom.StepGeom_CompositeCurve: 
+        """
+        Returns Value as CompositeCurve (or Null if another type)
+        """
+    def Description(self) -> OCP.StepData.StepData_PDescr: 
+        """
+        Returns the Description which corresponds to <me> Null if no specific description to give. This description is used to control reading an check validity. Default returns a Null Handle, i.e. undefined description It can suffice if CaseNum and CaseMem give enough control
+        """
+    def Int(self) -> int: 
+        """
+        This internal method gives access to a value implemented by an Integer (to read it)
+        """
+    def Integer(self) -> int: 
+        """
+        Gets the value as an Integer
+        """
+    def IsNull(self) -> bool: 
+        """
+        Returns True if there is no Stored Entity (i.e. it is Null)
+        """
+    def Logical(self) -> OCP.StepData.StepData_Logical: 
+        """
+        None
+        """
+    def Matches(self,ent : OCP.Standard.Standard_Transient) -> bool: 
+        """
+        Returns True if the Type of an Entity complies with the definition list of the SelectType. Also checks for a SelectMember Default Implementation looks for CaseNum or CaseMem positive
+        """
+    def Member(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns Value as a SelectMember. Null if not a SelectMember
+        """
+    def NewMember(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns a preferred SelectMember. Default returns a Null By default, a SelectMember can be set according to data type and Name : it is a SelectNamed if Name is defined
+        """
+    def Nullify(self) -> None: 
+        """
+        Nullifies the Stored Entity
+        """
+    def Path(self) -> OCP.StepShape.StepShape_Path: 
+        """
+        Returns Value as Path (or Null if another type)
+        """
+    def Real(self) -> float: 
+        """
+        None
+        """
+    def SelectName(self) -> str: 
+        """
+        Returns the type name of SelectMember. If no SelectMember or with no type name, returns an empty string To change it, pass through the SelectMember itself
+        """
+    def SetBoolean(self,val : bool,name : str='') -> None: 
+        """
+        None
+        """
+    def SetInt(self,val : int) -> None: 
+        """
+        This internal method gives access to a value implemented by an Integer (to set it) : a SelectMember MUST ALREADY BE THERE !
+        """
+    def SetInteger(self,val : int,name : str='') -> None: 
+        """
+        Sets a new Integer value, with an optional type name Warning : If a SelectMember is already set, works on it : value and name must then be accepted by this SelectMember
+        """
+    def SetLogical(self,val : OCP.StepData.StepData_Logical,name : str='') -> None: 
+        """
+        None
+        """
+    def SetReal(self,val : float,name : str='') -> None: 
+        """
+        None
+        """
+    def SetValue(self,ent : OCP.Standard.Standard_Transient) -> None: 
+        """
+        Stores an Entity. This allows to define a specific SelectType class with one read method per member Type, which returns the Value casted with the good Type.
+        """
+    def Type(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns the Effective (Dynamic) Type of the Stored Entity If it is Null, returns TYPE(Transient)
+        """
+    def Value(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns the Stored Entity. Can be used to define specific read methods (see above)
+        """
+    def __init__(self) -> None: ...
+    pass
 class StepVisual_PlanarExtent(OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def DecrementRefCounter(self) -> int: 
         """
@@ -9607,23 +10771,23 @@ class StepVisual_PlanarExtent(OCP.StepGeom.StepGeom_GeometricRepresentationItem,
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9690,23 +10854,23 @@ class StepVisual_PlanarBox(StepVisual_PlanarExtent, OCP.StepGeom.StepGeom_Geomet
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -9781,23 +10945,23 @@ class StepVisual_PointStyle(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Marker(self) -> StepVisual_MarkerSelect: 
         """
         None
@@ -9872,23 +11036,23 @@ class StepVisual_DraughtingPreDefinedColour(StepVisual_PreDefinedColour, StepVis
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetPreDefinedItem(self,item : StepVisual_PreDefinedItem) -> None: 
         """
         set a pre_defined_item part
@@ -9935,23 +11099,23 @@ class StepVisual_PreDefinedCurveFont(StepVisual_PreDefinedItem, OCP.Standard.Sta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10002,23 +11166,23 @@ class StepVisual_DraughtingPreDefinedCurveFont(StepVisual_PreDefinedCurveFont, S
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10069,23 +11233,23 @@ class StepVisual_PreDefinedTextFont(StepVisual_PreDefinedItem, OCP.Standard.Stan
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10140,23 +11304,23 @@ class StepVisual_PresentationArea(StepVisual_PresentationRepresentation, OCP.Ste
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -10239,23 +11403,23 @@ class StepVisual_PresentationLayerAssignment(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -10325,23 +11489,23 @@ class StepVisual_PresentationLayerUsage(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Presentation(self) -> StepVisual_PresentationRepresentation: 
         """
         None
@@ -10400,23 +11564,23 @@ class StepVisual_MechanicalDesignGeometricPresentationArea(StepVisual_Presentati
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -10593,23 +11757,23 @@ class StepVisual_PresentationSet(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -10652,23 +11816,23 @@ class StepVisual_PresentationSize(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetSize(self,aSize : StepVisual_PlanarBox) -> None: 
         """
         None
@@ -10841,23 +12005,23 @@ class StepVisual_PresentationStyleAssignment(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbStyles(self) -> int: 
         """
         None
@@ -10916,23 +12080,23 @@ class StepVisual_PresentationStyleByContext(StepVisual_PresentationStyleAssignme
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbStyles(self) -> int: 
         """
         None
@@ -11121,23 +12285,23 @@ class StepVisual_PresentationView(StepVisual_PresentationRepresentation, OCP.Ste
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -11204,23 +12368,23 @@ class StepVisual_PresentedItem(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -11266,23 +12430,23 @@ class StepVisual_PresentedItemRepresentation(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> StepVisual_PresentedItem: 
         """
         None
@@ -11424,6 +12588,155 @@ class StepVisual_RenderingPropertiesSelect(OCP.StepData.StepData_SelectType):
         Returns the Stored Entity. Can be used to define specific read methods (see above)
         """
     def __init__(self) -> None: ...
+    pass
+class StepVisual_TessellatedGeometricSet(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theItems : Any) -> None: 
+        """
+        None
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Items(self) -> Any: 
+        """
+        None
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_RepositionedTessellatedItem(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity RepositionedTessellatedItemRepresentation of STEP entity RepositionedTessellatedItem
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theLocation : OCP.StepGeom.StepGeom_Axis2Placement3d) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Location(self) -> OCP.StepGeom.StepGeom_Axis2Placement3d: 
+        """
+        Returns location
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def SetLocation(self,theLocation : OCP.StepGeom.StepGeom_Axis2Placement3d) -> None: 
+        """
+        Sets location
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
     pass
 class StepVisual_ShadingSurfaceMethod():
     """
@@ -11608,23 +12921,23 @@ class StepVisual_AnnotationCurveOccurrenceAndGeomReprItem(StepVisual_AnnotationC
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -11863,23 +13176,23 @@ class StepVisual_SurfaceSideStyle(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -11946,23 +13259,23 @@ class StepVisual_SurfaceStyleBoundary(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetStyleOfBoundary(self,aStyleOfBoundary : StepVisual_CurveStyle) -> None: 
         """
         None
@@ -12013,23 +13326,23 @@ class StepVisual_SurfaceStyleControlGrid(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetStyleOfControlGrid(self,aStyleOfControlGrid : StepVisual_CurveStyle) -> None: 
         """
         None
@@ -12202,23 +13515,23 @@ class StepVisual_SurfaceStyleFillArea(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetFillArea(self,aFillArea : StepVisual_FillAreaStyle) -> None: 
         """
         None
@@ -12273,23 +13586,23 @@ class StepVisual_SurfaceStyleParameterLine(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NbDirectionCounts(self) -> int: 
         """
         None
@@ -12355,23 +13668,23 @@ class StepVisual_SurfaceStyleReflectanceAmbient(OCP.Standard.Standard_Transient)
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetAmbientReflectance(self,theAmbientReflectance : float) -> None: 
         """
         Sets field AmbientReflectance
@@ -12421,23 +13734,23 @@ class StepVisual_SurfaceStyleRendering(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def RenderingMethod(self) -> StepVisual_ShadingSurfaceMethod: 
         """
         Returns field RenderingMethod
@@ -12499,23 +13812,23 @@ class StepVisual_SurfaceStyleRenderingWithProperties(StepVisual_SurfaceStyleRend
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Properties(self) -> StepVisual_HArray1OfRenderingPropertiesSelect: 
         """
         Returns field Properties
@@ -12582,23 +13895,23 @@ class StepVisual_SurfaceStyleSegmentationCurve(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetStyleOfSegmentationCurve(self,aStyleOfSegmentationCurve : StepVisual_CurveStyle) -> None: 
         """
         None
@@ -12649,23 +13962,23 @@ class StepVisual_SurfaceStyleSilhouette(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetStyleOfSilhouette(self,aStyleOfSilhouette : StepVisual_CurveStyle) -> None: 
         """
         None
@@ -12719,23 +14032,23 @@ class StepVisual_SurfaceStyleTransparent(OCP.Standard.Standard_Transient):
         Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetTransparency(self,theTransparency : float) -> None: 
         """
         Sets field Transparency
@@ -12786,23 +14099,23 @@ class StepVisual_SurfaceStyleUsage(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetSide(self,aSide : StepVisual_SurfaceSide) -> None: 
         """
         None
@@ -12865,23 +14178,23 @@ class StepVisual_Template(OCP.StepRepr.StepRepr_Representation, OCP.Standard.Sta
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
         """
         None
@@ -12952,23 +14265,23 @@ class StepVisual_TemplateInstance(OCP.StepRepr.StepRepr_MappedItem, OCP.StepRepr
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MappingSource(self) -> OCP.StepRepr.StepRepr_RepresentationMap: 
         """
         None
@@ -13035,23 +14348,23 @@ class StepVisual_TessellatedAnnotationOccurrence(StepVisual_StyledItem, OCP.Step
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Item(self) -> OCP.StepRepr.StepRepr_RepresentationItem: 
         """
         None
@@ -13109,6 +14422,112 @@ class StepVisual_TessellatedAnnotationOccurrence(StepVisual_StyledItem, OCP.Step
         None
         """
     pass
+class StepVisual_TessellatedEdge(StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedEdgeRepresentation of STEP entity TessellatedEdge
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> StepVisual_EdgeOrCurve: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theCoordinates : StepVisual_CoordinatesList,theHasGeometricLink : bool,theGeometricLink : StepVisual_EdgeOrCurve,theLineStrip : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LineStrip(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field LineStrip
+        """
+    def LineStripValue(self,theNum : int) -> int: 
+        """
+        Returns value of LineStrip by its num
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbLineStrip(self) -> int: 
+        """
+        Returns number of LineStrip
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_EdgeOrCurve) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetLineStrip(self,theLineStrip : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field LineStrip
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
 class StepVisual_TessellatedCurveSet(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
     def CoordList(self) -> StepVisual_CoordinatesList: 
         """
@@ -13143,23 +14562,23 @@ class StepVisual_TessellatedCurveSet(StepVisual_TessellatedItem, OCP.StepGeom.St
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -13184,7 +14603,376 @@ class StepVisual_TessellatedCurveSet(StepVisual_TessellatedItem, OCP.StepGeom.St
         None
         """
     pass
-class StepVisual_TessellatedGeometricSet(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+class StepVisual_CubicBezierTessellatedEdge(StepVisual_TessellatedEdge, StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity CubicBezierTessellatedEdgeRepresentation of STEP entity CubicBezierTessellatedEdge
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> StepVisual_EdgeOrCurve: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theCoordinates : StepVisual_CoordinatesList,theHasGeometricLink : bool,theGeometricLink : StepVisual_EdgeOrCurve,theLineStrip : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LineStrip(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field LineStrip
+        """
+    def LineStripValue(self,theNum : int) -> int: 
+        """
+        Returns value of LineStrip by its num
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbLineStrip(self) -> int: 
+        """
+        Returns number of LineStrip
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_EdgeOrCurve) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetLineStrip(self,theLineStrip : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field LineStrip
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedEdgeOrVertex(OCP.StepData.StepData_SelectType):
+    """
+    Representation of STEP SELECT type TessellatedEdgeOrVertex
+    """
+    def Boolean(self) -> bool: 
+        """
+        None
+        """
+    def CaseMem(self,ent : OCP.StepData.StepData_SelectMember) -> int: 
+        """
+        Recognize a SelectMember (kind, name). Returns a positive value which identifies the case in the List of immediate cases (distinct from the List of Entity Types). Zero if not recognizes Default returns 0, saying that no immediate value is allowed
+        """
+    def CaseMember(self) -> int: 
+        """
+        Returns the Type of the stored SelectMember, or zero if it is Null or Entity. Calls the method CaseMem on Value
+        """
+    def CaseNum(self,ent : OCP.Standard.Standard_Transient) -> int: 
+        """
+        Recognizes a kind of TessellatedEdgeOrVertex select type -- 1 -> TessellatedEdge -- 2 -> TessellatedVertex
+        """
+    def CaseNumber(self) -> int: 
+        """
+        Recognizes the Type of the stored Entity, or zero if it is Null or SelectMember. Calls the first method CaseNum on Value
+        """
+    def Description(self) -> OCP.StepData.StepData_PDescr: 
+        """
+        Returns the Description which corresponds to <me> Null if no specific description to give. This description is used to control reading an check validity. Default returns a Null Handle, i.e. undefined description It can suffice if CaseNum and CaseMem give enough control
+        """
+    def Int(self) -> int: 
+        """
+        This internal method gives access to a value implemented by an Integer (to read it)
+        """
+    def Integer(self) -> int: 
+        """
+        Gets the value as an Integer
+        """
+    def IsNull(self) -> bool: 
+        """
+        Returns True if there is no Stored Entity (i.e. it is Null)
+        """
+    def Logical(self) -> OCP.StepData.StepData_Logical: 
+        """
+        None
+        """
+    def Matches(self,ent : OCP.Standard.Standard_Transient) -> bool: 
+        """
+        Returns True if the Type of an Entity complies with the definition list of the SelectType. Also checks for a SelectMember Default Implementation looks for CaseNum or CaseMem positive
+        """
+    def Member(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns Value as a SelectMember. Null if not a SelectMember
+        """
+    def NewMember(self) -> OCP.StepData.StepData_SelectMember: 
+        """
+        Returns a preferred SelectMember. Default returns a Null By default, a SelectMember can be set according to data type and Name : it is a SelectNamed if Name is defined
+        """
+    def Nullify(self) -> None: 
+        """
+        Nullifies the Stored Entity
+        """
+    def Real(self) -> float: 
+        """
+        None
+        """
+    def SelectName(self) -> str: 
+        """
+        Returns the type name of SelectMember. If no SelectMember or with no type name, returns an empty string To change it, pass through the SelectMember itself
+        """
+    def SetBoolean(self,val : bool,name : str='') -> None: 
+        """
+        None
+        """
+    def SetInt(self,val : int) -> None: 
+        """
+        This internal method gives access to a value implemented by an Integer (to set it) : a SelectMember MUST ALREADY BE THERE !
+        """
+    def SetInteger(self,val : int,name : str='') -> None: 
+        """
+        Sets a new Integer value, with an optional type name Warning : If a SelectMember is already set, works on it : value and name must then be accepted by this SelectMember
+        """
+    def SetLogical(self,val : OCP.StepData.StepData_Logical,name : str='') -> None: 
+        """
+        None
+        """
+    def SetReal(self,val : float,name : str='') -> None: 
+        """
+        None
+        """
+    def SetValue(self,ent : OCP.Standard.Standard_Transient) -> None: 
+        """
+        Stores an Entity. This allows to define a specific SelectType class with one read method per member Type, which returns the Value casted with the good Type.
+        """
+    def TessellatedEdge(self) -> StepVisual_TessellatedEdge: 
+        """
+        Returns Value as TessellatedEdge (or Null if another type)
+        """
+    def TessellatedVertex(self) -> StepVisual_TessellatedVertex: 
+        """
+        Returns Value as TessellatedVertex (or Null if another type)
+        """
+    def Type(self) -> OCP.Standard.Standard_Type: 
+        """
+        Returns the Effective (Dynamic) Type of the Stored Entity If it is Null, returns TYPE(Transient)
+        """
+    def Value(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns the Stored Entity. Can be used to define specific read methods (see above)
+        """
+    def __init__(self) -> None: ...
+    pass
+class StepVisual_ComplexTriangulatedFace(StepVisual_TessellatedFace, StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity ComplexTriangulatedFaceRepresentation of STEP entity ComplexTriangulatedFace
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> StepVisual_FaceOrSurface: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theTessellatedFace_Coordinates : StepVisual_CoordinatesList,theTessellatedFace_Pnmax : int,theTessellatedFace_Normals : OCP.TColStd.TColStd_HArray2OfReal,theHasTessellatedFace_GeometricLink : bool,theTessellatedFace_GeometricLink : StepVisual_FaceOrSurface,thePnindex : OCP.TColStd.TColStd_HArray1OfInteger,theTriangleStrips : OCP.TColStd.TColStd_HArray2OfInteger,theTriangleFans : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbNormals(self) -> int: 
+        """
+        Returns number of Normals
+        """
+    def NbPnindex(self) -> int: 
+        """
+        Returns number of Pnindex
+        """
+    def NbTriangleFans(self) -> int: 
+        """
+        Returns number of TriangleFans
+        """
+    def NbTriangleStrips(self) -> int: 
+        """
+        Returns number of TriangleStrips
+        """
+    def Normals(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+        """
+        Returns field Normals
+        """
+    def Pnindex(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field Pnindex
+        """
+    def PnindexValue(self,theNum : int) -> int: 
+        """
+        Returns value of Pnindex by its num
+        """
+    def Pnmax(self) -> int: 
+        """
+        Returns field Pnmax
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_FaceOrSurface) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetNormals(self,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Sets field Normals
+        """
+    def SetPnindex(self,thePnindex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field Pnindex
+        """
+    def SetPnmax(self,thePnmax : int) -> None: 
+        """
+        Sets field Pnmax
+        """
+    def SetTriangleFans(self,theTriangleFans : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Sets field TriangleFans
+        """
+    def SetTriangleStrips(self,theTriangleStrips : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Sets field TriangleStrips
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TriangleFans(self) -> OCP.TColStd.TColStd_HArray2OfInteger: 
+        """
+        Returns field TriangleFans
+        """
+    def TriangleStrips(self) -> OCP.TColStd.TColStd_HArray2OfInteger: 
+        """
+        Returns field TriangleStrips
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_RepositionedTessellatedGeometricSet(StepVisual_TessellatedGeometricSet, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of complex STEP entity RepositionedTessellatedGeometricSetRepresentation of complex STEP entity RepositionedTessellatedGeometricSet
+    """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -13205,33 +14993,351 @@ class StepVisual_TessellatedGeometricSet(StepVisual_TessellatedItem, OCP.StepGeo
         """
         Increments the reference counter of this object
         """
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theItems : Any) -> None: 
+    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,theItems : Any,theLocation : OCP.StepGeom.StepGeom_Axis2Placement3d) -> None: 
         """
-        None
+        Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Items(self) -> Any: 
         """
         None
         """
+    def Location(self) -> OCP.StepGeom.StepGeom_Axis2Placement3d: 
+        """
+        Returns location
+        """
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def SetLocation(self,theLocation : OCP.StepGeom.StepGeom_Axis2Placement3d) -> None: 
+        """
+        Sets location
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_CubicBezierTriangulatedFace(StepVisual_TessellatedFace, StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity CubicBezierTriangulatedFaceRepresentation of STEP entity CubicBezierTriangulatedFace
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def Ctriangles(self) -> OCP.TColStd.TColStd_HArray2OfInteger: 
+        """
+        Returns field Ctriangles
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> StepVisual_FaceOrSurface: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theTessellatedFace_Coordinates : StepVisual_CoordinatesList,theTessellatedFace_Pnmax : int,theTessellatedFace_Normals : OCP.TColStd.TColStd_HArray2OfReal,theHasTessellatedFace_GeometricLink : bool,theTessellatedFace_GeometricLink : StepVisual_FaceOrSurface,theCtriangles : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbCtriangles(self) -> int: 
+        """
+        Returns number of Ctriangles
+        """
+    def NbNormals(self) -> int: 
+        """
+        Returns number of Normals
+        """
+    def Normals(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+        """
+        Returns field Normals
+        """
+    def Pnmax(self) -> int: 
+        """
+        Returns field Pnmax
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetCtriangles(self,theCtriangles : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Sets field Ctriangles
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_FaceOrSurface) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetNormals(self,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Sets field Normals
+        """
+    def SetPnmax(self,thePnmax : int) -> None: 
+        """
+        Sets field Pnmax
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedPointSet(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedPointSetRepresentation of STEP entity TessellatedPointSet
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theCoordinates : StepVisual_CoordinatesList,thePointList : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbPointList(self) -> int: 
+        """
+        Returns number of PointList
+        """
+    def PointList(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field PointList
+        """
+    def PointListValue(self,theNum : int) -> int: 
+        """
+        Returns value of PointList by its num
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetPointList(self,thePointList : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field PointList
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedShapeRepresentation(OCP.StepShape.StepShape_ShapeRepresentation, OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedShapeRepresentationRepresentation of STEP entity TessellatedShapeRepresentation
+    """
+    def ContextOfItems(self) -> OCP.StepRepr.StepRepr_RepresentationContext: 
+        """
+        None
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,aName : OCP.TCollection.TCollection_HAsciiString,aItems : OCP.StepRepr.StepRepr_HArray1OfRepresentationItem,aContextOfItems : OCP.StepRepr.StepRepr_RepresentationContext) -> None: 
+        """
+        None
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
+        """
+        None
+        """
+    def ItemsValue(self,num : int) -> OCP.StepRepr.StepRepr_RepresentationItem: 
+        """
+        None
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbItems(self) -> int: 
+        """
+        None
+        """
+    def SetContextOfItems(self,aContextOfItems : OCP.StepRepr.StepRepr_RepresentationContext) -> None: 
+        """
+        None
+        """
+    def SetItems(self,aItems : OCP.StepRepr.StepRepr_HArray1OfRepresentationItem) -> None: 
         """
         None
         """
@@ -13255,7 +15361,14 @@ class StepVisual_TessellatedGeometricSet(StepVisual_TessellatedItem, OCP.StepGeo
         None
         """
     pass
-class StepVisual_CoordinatesList(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+class StepVisual_TessellatedShapeRepresentationWithAccuracyParameters(StepVisual_TessellatedShapeRepresentation, OCP.StepShape.StepShape_ShapeRepresentation, OCP.StepRepr.StepRepr_Representation, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedShapeRepresentationWithAccuracyParametersRepresentation of STEP entity TessellatedShapeRepresentationWithAccuracyParameters
+    """
+    def ContextOfItems(self) -> OCP.StepRepr.StepRepr_RepresentationContext: 
+        """
+        None
+        """
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -13276,35 +15389,759 @@ class StepVisual_CoordinatesList(StepVisual_TessellatedItem, OCP.StepGeom.StepGe
         """
         Increments the reference counter of this object
         """
-    def Init(self,theName : OCP.TCollection.TCollection_HAsciiString,thePoints : OCP.TColgp.TColgp_HArray1OfXYZ) -> None: 
+    def Init(self,theRepresentation_Name : OCP.TCollection.TCollection_HAsciiString,theRepresentation_Items : OCP.StepRepr.StepRepr_HArray1OfRepresentationItem,theRepresentation_ContextOfItems : OCP.StepRepr.StepRepr_RepresentationContext,theTessellationAccuracyParameters : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
         """
-        None
+        Initialize all fields (own and inherited)
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Items(self) -> OCP.StepRepr.StepRepr_HArray1OfRepresentationItem: 
+        """
+        None
+        """
+    def ItemsValue(self,num : int) -> OCP.StepRepr.StepRepr_RepresentationItem: 
+        """
+        None
+        """
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
         """
-    def Points(self) -> OCP.TColgp.TColgp_HArray1OfXYZ: 
+    def NbItems(self) -> int: 
         """
         None
+        """
+    def NbTessellationAccuracyParameters(self) -> int: 
+        """
+        Returns number of TessellationAccuracyParameters
+        """
+    def SetContextOfItems(self,aContextOfItems : OCP.StepRepr.StepRepr_RepresentationContext) -> None: 
+        """
+        None
+        """
+    def SetItems(self,aItems : OCP.StepRepr.StepRepr_HArray1OfRepresentationItem) -> None: 
+        """
+        None
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetTessellationAccuracyParameters(self,theTessellationAccuracyParameters : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+        """
+        Sets field TessellationAccuracyParameters
+        """
+    def TessellationAccuracyParameters(self) -> OCP.TColStd.TColStd_HArray1OfReal: 
+        """
+        Returns field TessellationAccuracyParameters
+        """
+    def TessellationAccuracyParametersValue(self,theNum : int) -> float: 
+        """
+        Returns value of TessellationAccuracyParameters by its num
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedShell(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedShellRepresentation of STEP entity TessellatedShell
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasTopologicalLink(self) -> bool: 
+        """
+        Returns True if optional field TopologicalLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theItems : StepVisual_HArray1OfTessellatedStructuredItem,theHasTopologicalLink : bool,theTopologicalLink : OCP.StepShape.StepShape_ConnectedFaceSet) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Items(self) -> StepVisual_HArray1OfTessellatedStructuredItem: 
+        """
+        Returns field Items
+        """
+    def ItemsValue(self,theNum : int) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns value of Items by its num
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbItems(self) -> int: 
+        """
+        Returns number of Items
+        """
+    def SetItems(self,theItems : StepVisual_HArray1OfTessellatedStructuredItem) -> None: 
+        """
+        Sets field Items
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetTopologicalLink(self,theTopologicalLink : OCP.StepShape.StepShape_ConnectedFaceSet) -> None: 
+        """
+        Sets field TopologicalLink
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TopologicalLink(self) -> OCP.StepShape.StepShape_ConnectedFaceSet: 
+        """
+        Returns field TopologicalLink
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedSolid(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedSolidRepresentation of STEP entity TessellatedSolid
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> OCP.StepShape.StepShape_ManifoldSolidBrep: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theItems : StepVisual_HArray1OfTessellatedStructuredItem,theHasGeometricLink : bool,theGeometricLink : OCP.StepShape.StepShape_ManifoldSolidBrep) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Items(self) -> StepVisual_HArray1OfTessellatedStructuredItem: 
+        """
+        Returns field Items
+        """
+    def ItemsValue(self,theNum : int) -> StepVisual_TessellatedStructuredItem: 
+        """
+        Returns value of Items by its num
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbItems(self) -> int: 
+        """
+        Returns number of Items
+        """
+    def SetGeometricLink(self,theGeometricLink : OCP.StepShape.StepShape_ManifoldSolidBrep) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetItems(self,theItems : StepVisual_HArray1OfTessellatedStructuredItem) -> None: 
+        """
+        Sets field Items
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedConnectingEdge(StepVisual_TessellatedEdge, StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedConnectingEdgeRepresentation of STEP entity TessellatedConnectingEdge
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def Face1(self) -> StepVisual_TessellatedFace: 
+        """
+        Returns field Face1
+        """
+    def Face2(self) -> StepVisual_TessellatedFace: 
+        """
+        Returns field Face2
+        """
+    def GeometricLink(self) -> StepVisual_EdgeOrCurve: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theTessellatedEdge_Coordinates : StepVisual_CoordinatesList,theHasTessellatedEdge_GeometricLink : bool,theTessellatedEdge_GeometricLink : StepVisual_EdgeOrCurve,theTessellatedEdge_LineStrip : OCP.TColStd.TColStd_HArray1OfInteger,theSmooth : OCP.StepData.StepData_Logical,theFace1 : StepVisual_TessellatedFace,theFace2 : StepVisual_TessellatedFace,theLineStripFace1 : OCP.TColStd.TColStd_HArray1OfInteger,theLineStripFace2 : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def LineStrip(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field LineStrip
+        """
+    def LineStripFace1(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field LineStripFace1
+        """
+    def LineStripFace1Value(self,theNum : int) -> int: 
+        """
+        Returns value of LineStripFace1 by its num
+        """
+    def LineStripFace2(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field LineStripFace2
+        """
+    def LineStripFace2Value(self,theNum : int) -> int: 
+        """
+        Returns value of LineStripFace2 by its num
+        """
+    def LineStripValue(self,theNum : int) -> int: 
+        """
+        Returns value of LineStrip by its num
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbLineStrip(self) -> int: 
+        """
+        Returns number of LineStrip
+        """
+    def NbLineStripFace1(self) -> int: 
+        """
+        Returns number of LineStripFace1
+        """
+    def NbLineStripFace2(self) -> int: 
+        """
+        Returns number of LineStripFace2
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetFace1(self,theFace1 : StepVisual_TessellatedFace) -> None: 
+        """
+        Sets field Face1
+        """
+    def SetFace2(self,theFace2 : StepVisual_TessellatedFace) -> None: 
+        """
+        Sets field Face2
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_EdgeOrCurve) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetLineStrip(self,theLineStrip : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field LineStrip
+        """
+    def SetLineStripFace1(self,theLineStripFace1 : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field LineStripFace1
+        """
+    def SetLineStripFace2(self,theLineStripFace2 : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field LineStripFace2
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetSmooth(self,theSmooth : OCP.StepData.StepData_Logical) -> None: 
+        """
+        Sets field Smooth
+        """
+    def Smooth(self) -> OCP.StepData.StepData_Logical: 
+        """
+        Returns field Smooth
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_ComplexTriangulatedSurfaceSet(StepVisual_TessellatedSurfaceSet, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity ComplexTriangulatedSurfaceSetRepresentation of STEP entity ComplexTriangulatedSurfaceSet
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theTessellatedSurfaceSet_Coordinates : StepVisual_CoordinatesList,theTessellatedSurfaceSet_Pnmax : int,theTessellatedSurfaceSet_Normals : OCP.TColStd.TColStd_HArray2OfReal,thePnindex : OCP.TColStd.TColStd_HArray1OfInteger,theTriangleStrips : OCP.TColStd.TColStd_HArray2OfInteger,theTriangleFans : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbNormals(self) -> int: 
+        """
+        Returns number of Normals
+        """
+    def NbPnindex(self) -> int: 
+        """
+        Returns number of Pnindex
+        """
+    def NbTriangleFans(self) -> int: 
+        """
+        Returns number of TriangleFans
+        """
+    def NbTriangleStrips(self) -> int: 
+        """
+        Returns number of TriangleStrips
+        """
+    def Normals(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+        """
+        Returns field Normals
+        """
+    def Pnindex(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field Pnindex
+        """
+    def PnindexValue(self,theNum : int) -> int: 
+        """
+        Returns value of Pnindex by its num
+        """
+    def Pnmax(self) -> int: 
+        """
+        Returns field Pnmax
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetNormals(self,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Sets field Normals
+        """
+    def SetPnindex(self,thePnindex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field Pnindex
+        """
+    def SetPnmax(self,thePnmax : int) -> None: 
+        """
+        Sets field Pnmax
+        """
+    def SetTriangleFans(self,theTriangleFans : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Sets field TriangleFans
+        """
+    def SetTriangleStrips(self,theTriangleStrips : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Sets field TriangleStrips
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TriangleFans(self) -> OCP.TColStd.TColStd_HArray2OfInteger: 
+        """
+        Returns field TriangleFans
+        """
+    def TriangleStrips(self) -> OCP.TColStd.TColStd_HArray2OfInteger: 
+        """
+        Returns field TriangleStrips
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedVertex(StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedVertexRepresentation of STEP entity TessellatedVertex
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasTopologicalLink(self) -> bool: 
+        """
+        Returns True if optional field TopologicalLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theCoordinates : StepVisual_CoordinatesList,theHasTopologicalLink : bool,theTopologicalLink : OCP.StepShape.StepShape_VertexPoint,thePointIndex : int) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def PointIndex(self) -> int: 
+        """
+        Returns field PointIndex
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetPointIndex(self,thePointIndex : int) -> None: 
+        """
+        Sets field PointIndex
+        """
+    def SetTopologicalLink(self,theTopologicalLink : OCP.StepShape.StepShape_VertexPoint) -> None: 
+        """
+        Sets field TopologicalLink
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def TopologicalLink(self) -> OCP.StepShape.StepShape_VertexPoint: 
+        """
+        Returns field TopologicalLink
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TessellatedWire(StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TessellatedWireRepresentation of STEP entity TessellatedWire
+    """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricModelLink(self) -> StepVisual_PathOrCompositeCurve: 
+        """
+        Returns field GeometricModelLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricModelLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricModelLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theItems : StepVisual_HArray1OfTessellatedEdgeOrVertex,theHasGeometricModelLink : bool,theGeometricModelLink : StepVisual_PathOrCompositeCurve) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Items(self) -> StepVisual_HArray1OfTessellatedEdgeOrVertex: 
+        """
+        Returns field Items
+        """
+    def ItemsValue(self,theNum : int) -> StepVisual_TessellatedEdgeOrVertex: 
+        """
+        Returns value of Items by its num
+        """
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbItems(self) -> int: 
+        """
+        Returns number of Items
+        """
+    def SetGeometricModelLink(self,theGeometricModelLink : StepVisual_PathOrCompositeCurve) -> None: 
+        """
+        Sets field GeometricModelLink
+        """
+    def SetItems(self,theItems : StepVisual_HArray1OfTessellatedEdgeOrVertex) -> None: 
+        """
+        Sets field Items
         """
     def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
         """
@@ -13360,23 +16197,23 @@ class StepVisual_TextLiteral(OCP.StepGeom.StepGeom_GeometricRepresentationItem, 
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Literal(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -13617,23 +16454,23 @@ class StepVisual_TextStyle(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -13688,23 +16525,23 @@ class StepVisual_TextStyleForDefinedFont(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetTextColour(self,aTextColour : StepVisual_Colour) -> None: 
         """
         None
@@ -13767,23 +16604,23 @@ class StepVisual_TextStyleWithBoxCharacteristics(StepVisual_TextStyle, OCP.Stand
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
         """
         None
@@ -13807,6 +16644,144 @@ class StepVisual_TextStyleWithBoxCharacteristics(StepVisual_TextStyle, OCP.Stand
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def __init__(self) -> None: ...
+    @staticmethod
+    def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    @staticmethod
+    def get_type_name_s() -> str: 
+        """
+        None
+        """
+    pass
+class StepVisual_TriangulatedFace(StepVisual_TessellatedFace, StepVisual_TessellatedStructuredItem, StepVisual_TessellatedItem, OCP.StepGeom.StepGeom_GeometricRepresentationItem, OCP.StepRepr.StepRepr_RepresentationItem, OCP.Standard.Standard_Transient):
+    """
+    Representation of STEP entity TriangulatedFaceRepresentation of STEP entity TriangulatedFace
+    """
+    def Coordinates(self) -> StepVisual_CoordinatesList: 
+        """
+        Returns field Coordinates
+        """
+    def DecrementRefCounter(self) -> int: 
+        """
+        Decrements the reference counter of this object; returns the decremented value
+        """
+    def Delete(self) -> None: 
+        """
+        Memory deallocator for transient classes
+        """
+    def DynamicType(self) -> OCP.Standard.Standard_Type: 
+        """
+        None
+        """
+    def GeometricLink(self) -> StepVisual_FaceOrSurface: 
+        """
+        Returns field GeometricLink
+        """
+    def GetRefCount(self) -> int: 
+        """
+        Get the reference counter of this object
+        """
+    def HasGeometricLink(self) -> bool: 
+        """
+        Returns True if optional field GeometricLink is defined
+        """
+    def IncrementRefCounter(self) -> None: 
+        """
+        Increments the reference counter of this object
+        """
+    def Init(self,theRepresentationItem_Name : OCP.TCollection.TCollection_HAsciiString,theTessellatedFace_Coordinates : StepVisual_CoordinatesList,theTessellatedFace_Pnmax : int,theTessellatedFace_Normals : OCP.TColStd.TColStd_HArray2OfReal,theHasTessellatedFace_GeometricLink : bool,theTessellatedFace_GeometricLink : StepVisual_FaceOrSurface,thePnindex : OCP.TColStd.TColStd_HArray1OfInteger,theTriangles : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Initialize all fields (own and inherited)
+        """
+    @overload
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns a true value if this is an instance of Type.
+
+        Returns a true value if this is an instance of TypeName.
+        """
+    @overload
+    def IsInstance(self,theTypeName : str) -> bool: ...
+    @overload
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
+        """
+        Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+
+        Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
+        """
+    @overload
+    def IsKind(self,theTypeName : str) -> bool: ...
+    def Name(self) -> OCP.TCollection.TCollection_HAsciiString: 
+        """
+        None
+        """
+    def NbNormals(self) -> int: 
+        """
+        Returns number of Normals
+        """
+    def NbPnindex(self) -> int: 
+        """
+        Returns number of Pnindex
+        """
+    def NbTriangles(self) -> int: 
+        """
+        Returns number of Triangles
+        """
+    def Normals(self) -> OCP.TColStd.TColStd_HArray2OfReal: 
+        """
+        Returns field Normals
+        """
+    def Pnindex(self) -> OCP.TColStd.TColStd_HArray1OfInteger: 
+        """
+        Returns field Pnindex
+        """
+    def PnindexValue(self,theNum : int) -> int: 
+        """
+        Returns value of Pnindex by its num
+        """
+    def Pnmax(self) -> int: 
+        """
+        Returns field Pnmax
+        """
+    def SetCoordinates(self,theCoordinates : StepVisual_CoordinatesList) -> None: 
+        """
+        Sets field Coordinates
+        """
+    def SetGeometricLink(self,theGeometricLink : StepVisual_FaceOrSurface) -> None: 
+        """
+        Sets field GeometricLink
+        """
+    def SetName(self,aName : OCP.TCollection.TCollection_HAsciiString) -> None: 
+        """
+        None
+        """
+    def SetNormals(self,theNormals : OCP.TColStd.TColStd_HArray2OfReal) -> None: 
+        """
+        Sets field Normals
+        """
+    def SetPnindex(self,thePnindex : OCP.TColStd.TColStd_HArray1OfInteger) -> None: 
+        """
+        Sets field Pnindex
+        """
+    def SetPnmax(self,thePnmax : int) -> None: 
+        """
+        Sets field Pnmax
+        """
+    def SetTriangles(self,theTriangles : OCP.TColStd.TColStd_HArray2OfInteger) -> None: 
+        """
+        Sets field Triangles
+        """
+    def This(self) -> OCP.Standard.Standard_Transient: 
+        """
+        Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
+        """
+    def Triangles(self) -> OCP.TColStd.TColStd_HArray2OfInteger: 
+        """
+        Returns field Triangles
         """
     def __init__(self) -> None: ...
     @staticmethod
@@ -13894,9 +16869,9 @@ class StepVisual_VectorOfHSequenceOfInteger(OCP.NCollection.NCollection_BaseVect
         None
         """
     @overload
-    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
-    @overload
     def __init__(self,theOther : StepVisual_VectorOfHSequenceOfInteger) -> None: ...
+    @overload
+    def __init__(self,theIncrement : int=256,theAlloc : OCP.NCollection.NCollection_BaseAllocator=None) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class StepVisual_ViewVolume(OCP.Standard.Standard_Transient):
@@ -13941,23 +16916,23 @@ class StepVisual_ViewVolume(OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def ProjectionPoint(self) -> OCP.StepGeom.StepGeom_CartesianPoint: 
         """
         None

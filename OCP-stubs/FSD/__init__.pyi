@@ -4,12 +4,12 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.NCollection
-import io
-import OCP.Storage
-import OCP.Standard
 import OCP.TCollection
+import OCP.NCollection
+import OCP.Standard
+import OCP.Storage
 import OCP.TColStd
+import io
 __all__  = [
 "FSD_Base64",
 "FSD_BinaryFile",
@@ -34,7 +34,7 @@ class FSD_Base64():
     def Decode_s(theDecodedData : int,theDataLen : int,theEncodedStr : str,theStrLen : int) -> int: ...
     @staticmethod
     @overload
-    def Encode_s(theEncodedStr : str,theStrLen : int,theData : int,theDataLen : int) -> int: 
+    def Encode_s(theData : int,theDataLen : int) -> OCP.TCollection.TCollection_AsciiString: 
         """
         Function encoding a buffer to base64 string.
 
@@ -42,7 +42,7 @@ class FSD_Base64():
         """
     @staticmethod
     @overload
-    def Encode_s(theData : int,theDataLen : int) -> OCP.TCollection.TCollection_AsciiString: ...
+    def Encode_s(theEncodedStr : str,theStrLen : int,theData : int,theDataLen : int) -> int: ...
     def __init__(self) -> None: ...
     pass
 class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver, OCP.Standard.Standard_Transient):
@@ -295,23 +295,23 @@ class FSD_BinaryFile(OCP.Storage.Storage_BaseDriver, OCP.Standard.Standard_Trans
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def MagicNumber_s() -> str: 
         """
@@ -735,23 +735,23 @@ class FSD_File(OCP.Storage.Storage_BaseDriver, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def MagicNumber_s() -> str: 
         """
@@ -1097,23 +1097,23 @@ class FSD_CmpFile(FSD_File, OCP.Storage.Storage_BaseDriver, OCP.Standard.Standar
         None
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     @staticmethod
     def MagicNumber_s() -> str: 
         """

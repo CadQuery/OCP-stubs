@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.NCollection
+import OCP.GeomAbs
 __all__  = [
 "LProp_AnalyticCurInf",
 "LProp_BadContinuity",
@@ -205,14 +205,14 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : LProp_SequenceOfCIType) -> None: 
+    def Prepend(self,theItem : LProp_CIType) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : LProp_CIType) -> None: ...
+    def Prepend(self,theSeq : LProp_SequenceOfCIType) -> None: ...
     @overload
     def Remove(self,theIndex : int) -> None: 
         """
@@ -247,9 +247,9 @@ class LProp_SequenceOfCIType(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : LProp_SequenceOfCIType) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...

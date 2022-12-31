@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.Adaptor3d
-import OCP.Adaptor2d
-import OCP.GeomAbs
-import OCP.NCollection
-import OCP.TColgp
-import io
-import OCP.Geom2d
-import OCP.gp
-import OCP.Standard
 import OCP.Geom
-import OCP.TColStd
-import OCP.AppCont
+import OCP.Adaptor3d
 import OCP.AppParCurves
+import OCP.NCollection
+import OCP.gp
+import OCP.AppCont
+import OCP.Geom2d
+import OCP.TColgp
+import OCP.GeomAbs
+import OCP.Standard
+import OCP.TColStd
+import OCP.Adaptor2d
+import io
 __all__  = [
 "Approx_Array1OfAdHSurface",
 "Approx_Array1OfGTrsf2d",
@@ -120,13 +120,13 @@ class Approx_Array1OfAdHSurface():
         Constant value access
         """
     @overload
-    def __init__(self,theOther : Approx_Array1OfAdHSurface) -> None: ...
-    @overload
-    def __init__(self,theBegin : OCP.Adaptor3d.Adaptor3d_Surface,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : Approx_Array1OfAdHSurface) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.Adaptor3d.Adaptor3d_Surface,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Approx_Array1OfGTrsf2d():
@@ -208,11 +208,11 @@ class Approx_Array1OfGTrsf2d():
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self,theBegin : OCP.gp.gp_GTrsf2d,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : Approx_Array1OfGTrsf2d) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : Approx_Array1OfGTrsf2d) -> None: ...
+    def __init__(self,theBegin : OCP.gp.gp_GTrsf2d,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class Approx_Curve2d():
@@ -351,9 +351,9 @@ class Approx_CurvilinearParameter():
     @overload
     def __init__(self,C2D1 : OCP.Adaptor2d.Adaptor2d_Curve2d,Surf1 : OCP.Adaptor3d.Adaptor3d_Surface,C2D2 : OCP.Adaptor2d.Adaptor2d_Curve2d,Surf2 : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
     @overload
-    def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
-    @overload
     def __init__(self,C2D : OCP.Adaptor2d.Adaptor2d_Curve2d,Surf : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
+    @overload
+    def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float,Order : OCP.GeomAbs.GeomAbs_Shape,MaxDegree : int,MaxSegments : int) -> None: ...
     pass
 class Approx_CurvlinFunc(OCP.Standard.Standard_Transient):
     """
@@ -412,36 +412,36 @@ class Approx_CurvlinFunc(OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def LastParameter(self) -> float: 
         """
         None
         """
     @overload
-    def Length(self,C : OCP.Adaptor3d.Adaptor3d_Curve,FirstU : float,LasrU : float) -> float: 
+    def Length(self) -> None: 
         """
         Computes length of the curve.
 
         Computes length of the curve segment.
         """
     @overload
-    def Length(self) -> None: ...
+    def Length(self,C : OCP.Adaptor3d.Adaptor3d_Curve,FirstU : float,LasrU : float) -> float: ...
     def NbIntervals(self,S : OCP.GeomAbs.GeomAbs_Shape) -> int: 
         """
         Returns the number of intervals for continuity <S>. May be one if Continuity(me) >= <S>
@@ -461,9 +461,9 @@ class Approx_CurvlinFunc(OCP.Standard.Standard_Transient):
     @overload
     def __init__(self,C2D : OCP.Adaptor2d.Adaptor2d_Curve2d,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
     @overload
-    def __init__(self,C2D1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2D2 : OCP.Adaptor2d.Adaptor2d_Curve2d,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.Adaptor3d.Adaptor3d_Curve,Tol : float) -> None: ...
+    @overload
+    def __init__(self,C2D1 : OCP.Adaptor2d.Adaptor2d_Curve2d,C2D2 : OCP.Adaptor2d.Adaptor2d_Curve2d,S1 : OCP.Adaptor3d.Adaptor3d_Surface,S2 : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -593,9 +593,9 @@ class Approx_FitAndDivide2d():
         returns the approximation MultiCurve of range <Index>.
         """
     @overload
-    def __init__(self,degreemin : int=3,degreemax : int=8,Tolerance3d : float=1e-05,Tolerance2d : float=1e-05,cutting : bool=False,FirstC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint,LastC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint) -> None: ...
-    @overload
     def __init__(self,Line : OCP.AppCont.AppCont_Function,degreemin : int=3,degreemax : int=8,Tolerance3d : float=1e-05,Tolerance2d : float=1e-05,cutting : bool=False,FirstC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint,LastC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint) -> None: ...
+    @overload
+    def __init__(self,degreemin : int=3,degreemax : int=8,Tolerance3d : float=1e-05,Tolerance2d : float=1e-05,cutting : bool=False,FirstC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint,LastC : OCP.AppParCurves.AppParCurves_Constraint=AppParCurves_Constraint.AppParCurves_TangencyPoint) -> None: ...
     pass
 class Approx_HArray1OfAdHSurface(Approx_Array1OfAdHSurface, OCP.Standard.Standard_Transient):
     def Array1(self) -> Approx_Array1OfAdHSurface: 
@@ -663,23 +663,23 @@ class Approx_HArray1OfAdHSurface(Approx_Array1OfAdHSurface, OCP.Standard.Standar
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.Adaptor3d.Adaptor3d_Surface: 
         """
         Returns last element
@@ -721,11 +721,11 @@ class Approx_HArray1OfAdHSurface(Approx_Array1OfAdHSurface, OCP.Standard.Standar
         Constant value access
         """
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self,theOther : Approx_Array1OfAdHSurface) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.Adaptor3d.Adaptor3d_Surface) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -806,23 +806,23 @@ class Approx_HArray1OfGTrsf2d(Approx_Array1OfGTrsf2d, OCP.Standard.Standard_Tran
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.gp.gp_GTrsf2d: 
         """
         Returns last element
@@ -868,9 +868,9 @@ class Approx_HArray1OfGTrsf2d(Approx_Array1OfGTrsf2d, OCP.Standard.Standard_Tran
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_GTrsf2d) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -896,14 +896,14 @@ class Approx_MCurvesToBSpCurve():
         return the composite MultiCurves as a MultiBSpCurve.
         """
     @overload
-    def Perform(self) -> None: 
+    def Perform(self,TheSeq : OCP.AppParCurves.AppParCurves_SequenceOfMultiCurve) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Perform(self,TheSeq : OCP.AppParCurves.AppParCurves_SequenceOfMultiCurve) -> None: ...
+    def Perform(self) -> None: ...
     def Reset(self) -> None: 
         """
         None
@@ -959,6 +959,14 @@ class Approx_SameParameter():
         """
         Returns the 2D curve that has the same parameter as the 3D curve once evaluated on the surface up to the specified tolerance.
         """
+    def Curve3d(self) -> OCP.Adaptor3d.Adaptor3d_Curve: 
+        """
+        Returns the 3D curve that has the same parameter as the 3D curve once evaluated on the surface up to the specified tolerance.
+        """
+    def CurveOnSurface(self) -> OCP.Adaptor3d.Adaptor3d_CurveOnSurface: 
+        """
+        Returns the 3D curve on surface that has the same parameter as the 3D curve up to the specified tolerance.
+        """
     def IsDone(self) -> bool: 
         """
         Returns .false. if calculations failed, .true. if calculations succeed
@@ -972,11 +980,11 @@ class Approx_SameParameter():
         Returns tolerance (maximal distance) between 3d curve and curve on surface, generated by 2d curve and surface.
         """
     @overload
-    def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,C2D : OCP.Geom2d.Geom2d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
+    def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,C2D : OCP.Adaptor2d.Adaptor2d_Curve2d,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
     @overload
     def __init__(self,C3D : OCP.Geom.Geom_Curve,C2D : OCP.Geom2d.Geom2d_Curve,S : OCP.Geom.Geom_Surface,Tol : float) -> None: ...
     @overload
-    def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,C2D : OCP.Adaptor2d.Adaptor2d_Curve2d,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
+    def __init__(self,C3D : OCP.Adaptor3d.Adaptor3d_Curve,C2D : OCP.Geom2d.Geom2d_Curve,S : OCP.Adaptor3d.Adaptor3d_Surface,Tol : float) -> None: ...
     pass
 class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
     """
@@ -1058,23 +1066,23 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: 
+    def Prepend(self,theSeq : Approx_SequenceOfHArray1OfReal) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Approx_SequenceOfHArray1OfReal) -> None: ...
+    def Prepend(self,theItem : OCP.TColStd.TColStd_HArray1OfReal) -> None: ...
     @overload
-    def Remove(self,theIndex : int) -> None: 
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
+    def Remove(self,theIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1102,9 +1110,9 @@ class Approx_SequenceOfHArray1OfReal(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def __init__(self,theOther : Approx_SequenceOfHArray1OfReal) -> None: ...
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -1340,23 +1348,23 @@ class Approx_SweepFunction(OCP.Standard.Standard_Transient):
         Stores in <T> the parameters bounding the intervals of continuity <S>.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsRational(self) -> bool: 
         """
         Returns if the sections are rationnal or not

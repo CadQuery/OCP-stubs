@@ -4,10 +4,10 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColgp
+import OCP.Geom
 import OCP.gp
 import OCP.Geom2d
-import OCP.Geom
+import OCP.TColgp
 import OCP.StepGeom
 __all__  = [
 "GeomToStep_Root",
@@ -66,9 +66,9 @@ class GeomToStep_MakeAxis2Placement2d(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,A : OCP.gp.gp_Ax22d) -> None: ...
-    @overload
     def __init__(self,A : OCP.gp.gp_Ax2) -> None: ...
+    @overload
+    def __init__(self,A : OCP.gp.gp_Ax22d) -> None: ...
     pass
 class GeomToStep_MakeAxis2Placement3d(GeomToStep_Root):
     """
@@ -83,15 +83,15 @@ class GeomToStep_MakeAxis2Placement3d(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,A : OCP.Geom.Geom_Axis2Placement) -> None: ...
+    def __init__(self,A : OCP.gp.gp_Ax3) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,A : OCP.Geom.Geom_Axis2Placement) -> None: ...
     @overload
     def __init__(self,A : OCP.gp.gp_Ax2) -> None: ...
     @overload
     def __init__(self,T : OCP.gp.gp_Trsf) -> None: ...
     @overload
-    def __init__(self,A : OCP.gp.gp_Ax3) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class GeomToStep_MakeBSplineCurveWithKnots(GeomToStep_Root):
     """
@@ -123,9 +123,9 @@ class GeomToStep_MakeBSplineCurveWithKnotsAndRationalBSplineCurve(GeomToStep_Roo
         None
         """
     @overload
-    def __init__(self,Bsplin : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
-    @overload
     def __init__(self,Bsplin : OCP.Geom.Geom_BSplineCurve) -> None: ...
+    @overload
+    def __init__(self,Bsplin : OCP.Geom2d.Geom2d_BSplineCurve) -> None: ...
     pass
 class GeomToStep_MakeBSplineSurfaceWithKnots(GeomToStep_Root):
     """
@@ -199,13 +199,13 @@ class GeomToStep_MakeCartesianPoint(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,P : OCP.Geom.Geom_CartesianPoint) -> None: ...
-    @overload
-    def __init__(self,P : OCP.Geom2d.Geom2d_CartesianPoint) -> None: ...
-    @overload
     def __init__(self,P : OCP.gp.gp_Pnt) -> None: ...
     @overload
+    def __init__(self,P : OCP.Geom.Geom_CartesianPoint) -> None: ...
+    @overload
     def __init__(self,P : OCP.gp.gp_Pnt2d) -> None: ...
+    @overload
+    def __init__(self,P : OCP.Geom2d.Geom2d_CartesianPoint) -> None: ...
     pass
 class GeomToStep_MakeCircle(GeomToStep_Root):
     """
@@ -220,9 +220,9 @@ class GeomToStep_MakeCircle(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Circle) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Circle) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Circle) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Circ) -> None: ...
     pass
@@ -239,9 +239,9 @@ class GeomToStep_MakeConic(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Conic) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Conic) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Conic) -> None: ...
     pass
 class GeomToStep_MakeConicalSurface(GeomToStep_Root):
     """
@@ -270,9 +270,9 @@ class GeomToStep_MakeCurve(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom.Geom_Curve) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom2d.Geom2d_Curve) -> None: ...
     pass
 class GeomToStep_MakeCylindricalSurface(GeomToStep_Root):
     """
@@ -301,13 +301,13 @@ class GeomToStep_MakeDirection(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,D : OCP.Geom.Geom_Direction) -> None: ...
+    def __init__(self,D : OCP.gp.gp_Dir) -> None: ...
     @overload
     def __init__(self,D : OCP.Geom2d.Geom2d_Direction) -> None: ...
     @overload
-    def __init__(self,D : OCP.gp.gp_Dir) -> None: ...
-    @overload
     def __init__(self,D : OCP.gp.gp_Dir2d) -> None: ...
+    @overload
+    def __init__(self,D : OCP.Geom.Geom_Direction) -> None: ...
     pass
 class GeomToStep_MakeElementarySurface(GeomToStep_Root):
     """
@@ -336,11 +336,11 @@ class GeomToStep_MakeEllipse(GeomToStep_Root):
         None
         """
     @overload
+    def __init__(self,C : OCP.Geom2d.Geom2d_Ellipse) -> None: ...
+    @overload
     def __init__(self,C : OCP.Geom.Geom_Ellipse) -> None: ...
     @overload
     def __init__(self,C : OCP.gp.gp_Elips) -> None: ...
-    @overload
-    def __init__(self,C : OCP.Geom2d.Geom2d_Ellipse) -> None: ...
     pass
 class GeomToStep_MakeHyperbola(GeomToStep_Root):
     """
@@ -372,11 +372,11 @@ class GeomToStep_MakeLine(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,L : OCP.gp.gp_Lin) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Line) -> None: ...
     @overload
     def __init__(self,L : OCP.gp.gp_Lin2d) -> None: ...
+    @overload
+    def __init__(self,L : OCP.gp.gp_Lin) -> None: ...
     @overload
     def __init__(self,C : OCP.Geom.Geom_Line) -> None: ...
     pass
@@ -393,9 +393,9 @@ class GeomToStep_MakeParabola(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,C : OCP.Geom.Geom_Parabola) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom2d.Geom2d_Parabola) -> None: ...
+    @overload
+    def __init__(self,C : OCP.Geom.Geom_Parabola) -> None: ...
     pass
 class GeomToStep_MakePlane(GeomToStep_Root):
     """
@@ -427,9 +427,9 @@ class GeomToStep_MakePolyline(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
-    @overload
     def __init__(self,P : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    @overload
+    def __init__(self,P : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     pass
 class GeomToStep_MakeRectangularTrimmedSurface(GeomToStep_Root):
     """
@@ -542,9 +542,9 @@ class GeomToStep_MakeVector(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,V : OCP.Geom2d.Geom2d_Vector) -> None: ...
-    @overload
     def __init__(self,V : OCP.gp.gp_Vec2d) -> None: ...
+    @overload
+    def __init__(self,V : OCP.Geom2d.Geom2d_Vector) -> None: ...
     @overload
     def __init__(self,V : OCP.gp.gp_Vec) -> None: ...
     @overload
@@ -563,11 +563,11 @@ class GeomToStep_MakeAxis1Placement(GeomToStep_Root):
         None
         """
     @overload
-    def __init__(self,A : OCP.gp.gp_Ax1) -> None: ...
-    @overload
     def __init__(self,A : OCP.gp.gp_Ax2d) -> None: ...
     @overload
     def __init__(self,A : OCP.Geom.Geom_Axis1Placement) -> None: ...
     @overload
     def __init__(self,A : OCP.Geom2d.Geom2d_AxisPlacement) -> None: ...
+    @overload
+    def __init__(self,A : OCP.gp.gp_Ax1) -> None: ...
     pass

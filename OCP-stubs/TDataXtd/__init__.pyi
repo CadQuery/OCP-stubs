@@ -4,15 +4,15 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TDF
-import OCP.Quantity
 import OCP.TNaming
-import OCP.Poly
-import io
-import OCP.gp
-import OCP.Standard
-import OCP.TDataStd
 import OCP.TopoDS
+import OCP.TDataStd
+import OCP.Poly
+import OCP.gp
+import OCP.TDF
+import OCP.Standard
+import OCP.Quantity
+import io
 __all__  = [
 "TDataXtd",
 "TDataXtd_Array1OfTrsf",
@@ -165,13 +165,13 @@ class TDataXtd_Array1OfTrsf():
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theBegin : OCP.gp.gp_Trsf,theLower : int,theUpper : int) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
+    @overload
+    def __init__(self,theBegin : OCP.gp.gp_Trsf,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class TDataXtd_Axis(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
@@ -321,23 +321,23 @@ class TDataXtd_Axis(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, O
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -371,17 +371,17 @@ class TDataXtd_Axis(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, O
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label,L : OCP.gp.gp_Lin) -> TDataXtd_Axis: 
+    def Set_s(label : OCP.TDF.TDF_Label) -> TDataXtd_Axis: 
         """
         Finds or creates an axis attribute defined by the label. In the case of a creation of an axis, a compatible named shape should already be associated with label. Exceptions Standard_NullObject if no compatible named shape is associated with the label.
 
@@ -389,7 +389,7 @@ class TDataXtd_Axis(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, O
         """
     @staticmethod
     @overload
-    def Set_s(label : OCP.TDF.TDF_Label) -> TDataXtd_Axis: ...
+    def Set_s(label : OCP.TDF.TDF_Label,L : OCP.gp.gp_Lin) -> TDataXtd_Axis: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -601,23 +601,23 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -659,16 +659,16 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         None
         """
     @overload
-    def Reversed(self,status : bool) -> None: 
+    def Reversed(self) -> bool: 
         """
         None
 
         None
         """
     @overload
-    def Reversed(self) -> bool: ...
+    def Reversed(self,status : bool) -> None: ...
     @overload
-    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape) -> None: 
+    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape,G4 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the constraint attribute defined by the topological attribute G1 and the constraint type type.
 
@@ -681,22 +681,22 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
     @overload
     def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     @overload
-    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape,G4 : OCP.TNaming.TNaming_NamedShape) -> None: ...
-    @overload
     def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape,G2 : OCP.TNaming.TNaming_NamedShape,G3 : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    @overload
+    def Set(self,type : TDataXtd_ConstraintEnum,G1 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     def SetGeometry(self,Index : int,G : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the underlying geometry of the constraint defined by the topological attribute G and the integer index Index.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def SetPlane(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         Finds or creates the plane of the 2D constraint attribute, defined by the planar topological attribute plane.
@@ -729,14 +729,14 @@ class TDataXtd_Constraint(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
         """
     @overload
-    def Verified(self) -> bool: 
+    def Verified(self,status : bool) -> None: 
         """
         Returns true if this constraint attribute is valid. By default, true is returned. When the value of a dimension is changed or when a geometry is moved, false is returned until the solver sets it back to true.
 
         Returns true if this constraint attribute defined by status is valid. By default, true is returned. When the value of a dimension is changed or when a geometry is moved, false is returned until the solver sets it back to true. If status is false, Verified is set to false.
         """
     @overload
-    def Verified(self,status : bool) -> None: ...
+    def Verified(self) -> bool: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -916,7 +916,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Circle_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Circ) -> bool: 
+    def Circle_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Circ) -> bool: 
         """
         Returns the circle attribute defined by the label L and the circle G.
 
@@ -924,10 +924,10 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Circle_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Circ) -> bool: ...
+    def Circle_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Circ) -> bool: ...
     @staticmethod
     @overload
-    def Cylinder_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Cylinder) -> bool: 
+    def Cylinder_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Cylinder) -> bool: 
         """
         Returns the cylinder attribute defined by the label L and the cylinder G.
 
@@ -935,7 +935,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Cylinder_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Cylinder) -> bool: ...
+    def Cylinder_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Cylinder) -> bool: ...
     def DecrementRefCounter(self) -> int: 
         """
         Decrements the reference counter of this object; returns the decremented value
@@ -983,7 +983,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Ellipse_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Elips) -> bool: 
+    def Ellipse_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Elips) -> bool: 
         """
         Returns the ellipse attribute defined by the label L and the ellipse G.
 
@@ -991,7 +991,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Ellipse_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Elips) -> bool: ...
+    def Ellipse_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Elips) -> bool: ...
     def ExtendedDump(self,anOS : io.BytesIO,aFilter : OCP.TDF.TDF_IDFilter,aMap : OCP.TDF.TDF_AttributeIndexedMap) -> None: 
         """
         Dumps the attribute content on <aStream>, using <aMap> like this: if an attribute is not in the map, first put add it to the map and then dump it. Use the map rank instead of dumping each attribute field.
@@ -1050,23 +1050,23 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1104,7 +1104,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Plane_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pln) -> bool: 
+    def Plane_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pln) -> bool: 
         """
         Returns the plane attribute defined by the label L and the plane G.
 
@@ -1112,7 +1112,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Plane_s(L : OCP.TDF.TDF_Label,G : OCP.gp.gp_Pln) -> bool: ...
+    def Plane_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pln) -> bool: ...
     @staticmethod
     @overload
     def Point_s(S : OCP.TNaming.TNaming_NamedShape,G : OCP.gp.gp_Pnt) -> bool: 
@@ -1133,14 +1133,14 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def SetType(self,T : TDataXtd_GeometryEnum) -> None: 
         """
         Returns the type of geometric construction T of this attribute. T will be a value of the enumeration TDataXtd_GeometryEnum.
@@ -1162,7 +1162,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Type_s(S : OCP.TNaming.TNaming_NamedShape) -> TDataXtd_GeometryEnum: 
+    def Type_s(L : OCP.TDF.TDF_Label) -> TDataXtd_GeometryEnum: 
         """
         Returns the label L used to define the type of geometric construction for the geometry attribute.
 
@@ -1170,7 +1170,7 @@ class TDataXtd_Geometry(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Type_s(L : OCP.TDF.TDF_Label) -> TDataXtd_GeometryEnum: ...
+    def Type_s(S : OCP.TNaming.TNaming_NamedShape) -> TDataXtd_GeometryEnum: ...
     def UntilTransaction(self) -> int: 
         """
         Returns the upper transaction index until which the attribute is/was valid. This number may vary. A removed attribute validity range is reduced to its transaction index.
@@ -1305,23 +1305,23 @@ class TDataXtd_HArray1OfTrsf(TDataXtd_Array1OfTrsf, OCP.Standard.Standard_Transi
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> OCP.gp.gp_Trsf: 
         """
         Returns last element
@@ -1367,9 +1367,9 @@ class TDataXtd_HArray1OfTrsf(TDataXtd_Array1OfTrsf, OCP.Standard.Standard_Transi
     @overload
     def __init__(self,theOther : TDataXtd_Array1OfTrsf) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Trsf) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theLower : int,theUpper : int,theValue : OCP.gp.gp_Trsf) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -1533,23 +1533,23 @@ class TDataXtd_Pattern(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1591,14 +1591,14 @@ class TDataXtd_Pattern(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Restores the backuped contents from <anAttribute> into this one. It is used when aborting a transaction.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1660,7 +1660,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
     @overload
     def Axis1(self,Axis1 : OCP.TNaming.TNaming_NamedShape) -> None: ...
     @overload
-    def Axis1Reversed(self,Axis1Reversed : bool) -> None: 
+    def Axis1Reversed(self) -> bool: 
         """
         None
 
@@ -1669,9 +1669,9 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Axis1Reversed(self) -> bool: ...
+    def Axis1Reversed(self,Axis1Reversed : bool) -> None: ...
     @overload
-    def Axis2(self) -> OCP.TNaming.TNaming_NamedShape: 
+    def Axis2(self,Axis2 : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         None
 
@@ -1680,7 +1680,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Axis2(self,Axis2 : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    def Axis2(self) -> OCP.TNaming.TNaming_NamedShape: ...
     @overload
     def Axis2Reversed(self) -> bool: 
         """
@@ -1824,23 +1824,23 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -1858,7 +1858,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         Returns the label to which the attribute is attached. If the label is not included in a DF, the label is null. See Label. Warning If the label is not included in a data framework, it is null. This function should not be redefined inline.
         """
     @overload
-    def Mirror(self) -> OCP.TNaming.TNaming_NamedShape: 
+    def Mirror(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: 
         """
         None
 
@@ -1867,7 +1867,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Mirror(self,plane : OCP.TNaming.TNaming_NamedShape) -> None: ...
+    def Mirror(self) -> OCP.TNaming.TNaming_NamedShape: ...
     @overload
     def NbInstances1(self) -> OCP.TDataStd.TDataStd_Integer: 
         """
@@ -1880,7 +1880,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
     @overload
     def NbInstances1(self,NbInstances1 : OCP.TDataStd.TDataStd_Integer) -> None: ...
     @overload
-    def NbInstances2(self,NbInstances2 : OCP.TDataStd.TDataStd_Integer) -> None: 
+    def NbInstances2(self) -> OCP.TDataStd.TDataStd_Integer: 
         """
         None
 
@@ -1889,7 +1889,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def NbInstances2(self) -> OCP.TDataStd.TDataStd_Integer: ...
+    def NbInstances2(self,NbInstances2 : OCP.TDataStd.TDataStd_Integer) -> None: ...
     def NbTrsfs(self) -> int: 
         """
         None
@@ -1915,21 +1915,21 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     def Set_s(label : OCP.TDF.TDF_Label) -> TDataXtd_PatternStd: 
         """
         Find, or create, a PatternStd attribute
         """
     @overload
-    def Signature(self,signature : int) -> None: 
+    def Signature(self) -> int: 
         """
         None
 
@@ -1938,7 +1938,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Signature(self) -> int: ...
+    def Signature(self,signature : int) -> None: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1965,7 +1965,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
     @overload
     def Value1(self,value : OCP.TDataStd.TDataStd_Real) -> None: ...
     @overload
-    def Value2(self,value : OCP.TDataStd.TDataStd_Real) -> None: 
+    def Value2(self) -> OCP.TDataStd.TDataStd_Real: 
         """
         None
 
@@ -1974,7 +1974,7 @@ class TDataXtd_PatternStd(TDataXtd_Pattern, OCP.TDF.TDF_Attribute, OCP.Standard.
         None
         """
     @overload
-    def Value2(self) -> OCP.TDataStd.TDataStd_Real: ...
+    def Value2(self,value : OCP.TDataStd.TDataStd_Real) -> None: ...
     def __init__(self) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -2131,23 +2131,23 @@ class TDataXtd_Placement(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribu
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -2181,14 +2181,14 @@ class TDataXtd_Placement(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribu
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     def Set_s(label : OCP.TDF.TDF_Label) -> TDataXtd_Placement: 
         """
@@ -2367,23 +2367,23 @@ class TDataXtd_Plane(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, 
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -2417,14 +2417,14 @@ class TDataXtd_Plane(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, 
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label) -> TDataXtd_Plane: 
@@ -2609,23 +2609,23 @@ class TDataXtd_Point(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, 
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -2659,14 +2659,14 @@ class TDataXtd_Point(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, 
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     @overload
     def Set_s(label : OCP.TDF.TDF_Label) -> TDataXtd_Point: 
@@ -2860,23 +2860,23 @@ class TDataXtd_Position(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -2910,21 +2910,21 @@ class TDataXtd_Position(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         Restores the contents from <anAttribute> into this one. It is used when aborting a transaction.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def SetPosition(self,aPos : OCP.gp.gp_Pnt) -> None: 
         """
         None
         """
     @staticmethod
     @overload
-    def Set_s(aLabel : OCP.TDF.TDF_Label) -> TDataXtd_Position: 
+    def Set_s(aLabel : OCP.TDF.TDF_Label,aPos : OCP.gp.gp_Pnt) -> None: 
         """
         Create if not found the TDataXtd_Position attribute set its position to <aPos>
 
@@ -2932,7 +2932,7 @@ class TDataXtd_Position(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transient):
         """
     @staticmethod
     @overload
-    def Set_s(aLabel : OCP.TDF.TDF_Label,aPos : OCP.gp.gp_Pnt) -> None: ...
+    def Set_s(aLabel : OCP.TDF.TDF_Label) -> TDataXtd_Position: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -3150,23 +3150,23 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3224,14 +3224,14 @@ class TDataXtd_Presentation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transie
         Sets the GUID of the driver managing display of associated AIS object
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def SetMaterialIndex(self,theMaterialIndex : int) -> None: 
         """
         None
@@ -3487,23 +3487,23 @@ class TDataXtd_Shape(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, 
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3542,14 +3542,14 @@ class TDataXtd_Shape(OCP.TDataStd.TDataStd_GenericEmpty, OCP.TDF.TDF_Attribute, 
         None
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     @staticmethod
     def Set_s(label : OCP.TDF.TDF_Label,shape : OCP.TopoDS.TopoDS_Shape) -> TDataXtd_Shape: 
         """
@@ -3634,14 +3634,14 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Decrements the reference counter of this object; returns the decremented value
         """
     @overload
-    def Deflection(self) -> float: 
+    def Deflection(self,theDeflection : float) -> None: 
         """
         Returns the deflection of this triangulation.
 
         Sets the deflection of this triangulation to theDeflection. See more on deflection in Polygon2D
         """
     @overload
-    def Deflection(self,theDeflection : float) -> None: ...
+    def Deflection(self) -> float: ...
     def Delete(self) -> None: 
         """
         Memory deallocator for transient classes
@@ -3749,23 +3749,23 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Returns true if the attribute forgotten status is set.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsNew(self) -> bool: 
         """
         Returns true if the attribute has no backup
@@ -3823,14 +3823,14 @@ class TDataXtd_Triangulation(OCP.TDF.TDF_Attribute, OCP.Standard.Standard_Transi
         Sets the triangulation.
         """
     @overload
-    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: 
+    def SetID(self) -> None: 
         """
         Sets specific ID of the attribute (supports several attributes of one type at the same label feature).
 
         Sets default ID defined in nested class (to be used for attributes having User ID feature).
         """
     @overload
-    def SetID(self) -> None: ...
+    def SetID(self,arg1 : OCP.Standard.Standard_GUID) -> None: ...
     def SetNode(self,theIndex : int,theNode : OCP.gp.gp_Pnt) -> None: 
         """
         The method differs from Poly_Triangulation! Sets a node at the given index. Raises Standard_OutOfRange exception if theIndex is less than 1 or greater than NbNodes.

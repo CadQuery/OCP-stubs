@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TColgp
 import OCP.NCollection
 import OCP.gp
+import OCP.TColgp
 import OCP.Standard
 import OCP.TColStd
 __all__  = [
@@ -106,11 +106,11 @@ class Plate_Array1OfPinpointConstraint():
         Constant value access
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : Plate_Array1OfPinpointConstraint) -> None: ...
     @overload
     def __init__(self,theBegin : Plate_PinpointConstraint,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -132,27 +132,27 @@ class Plate_D1():
         None
         """
     @overload
-    def __init__(self,du : OCP.gp.gp_XYZ,dv : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def __init__(self,ref : Plate_D1) -> None: ...
+    @overload
+    def __init__(self,du : OCP.gp.gp_XYZ,dv : OCP.gp.gp_XYZ) -> None: ...
     pass
 class Plate_D2():
     """
     define an order 2 derivatives of a 3d valued function of a 2d variable
     """
     @overload
-    def __init__(self,duu : OCP.gp.gp_XYZ,duv : OCP.gp.gp_XYZ,dvv : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def __init__(self,ref : Plate_D2) -> None: ...
+    @overload
+    def __init__(self,duu : OCP.gp.gp_XYZ,duv : OCP.gp.gp_XYZ,dvv : OCP.gp.gp_XYZ) -> None: ...
     pass
 class Plate_D3():
     """
     define an order 3 derivatives of a 3d valued function of a 2d variable
     """
     @overload
-    def __init__(self,duuu : OCP.gp.gp_XYZ,duuv : OCP.gp.gp_XYZ,duvv : OCP.gp.gp_XYZ,dvvv : OCP.gp.gp_XYZ) -> None: ...
-    @overload
     def __init__(self,ref : Plate_D3) -> None: ...
+    @overload
+    def __init__(self,duuu : OCP.gp.gp_XYZ,duuv : OCP.gp.gp_XYZ,duvv : OCP.gp.gp_XYZ,dvvv : OCP.gp.gp_XYZ) -> None: ...
     pass
 class Plate_FreeGtoCConstraint():
     """
@@ -218,19 +218,19 @@ class Plate_GtoCConstraint():
         None
         """
     @overload
-    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2,nP : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,nP : OCP.gp.gp_XYZ) -> None: ...
-    @overload
-    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2) -> None: ...
-    @overload
     def __init__(self,ref : Plate_GtoCConstraint) -> None: ...
     @overload
-    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1) -> None: ...
+    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2,D3S : Plate_D3,D3T : Plate_D3,nP : OCP.gp.gp_XYZ) -> None: ...
     @overload
     def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2,D3S : Plate_D3,D3T : Plate_D3) -> None: ...
     @overload
-    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2,D3S : Plate_D3,D3T : Plate_D3,nP : OCP.gp.gp_XYZ) -> None: ...
+    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1) -> None: ...
+    @overload
+    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2,nP : OCP.gp.gp_XYZ) -> None: ...
+    @overload
+    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,D2S : Plate_D2,D2T : Plate_D2) -> None: ...
+    @overload
+    def __init__(self,point2d : OCP.gp.gp_XY,D1S : Plate_D1,D1T : Plate_D1,nP : OCP.gp.gp_XYZ) -> None: ...
     def nb_PPC(self) -> int: 
         """
         None
@@ -304,23 +304,23 @@ class Plate_HArray1OfPinpointConstraint(Plate_Array1OfPinpointConstraint, OCP.St
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> Plate_PinpointConstraint: 
         """
         Returns last element
@@ -362,13 +362,13 @@ class Plate_HArray1OfPinpointConstraint(Plate_Array1OfPinpointConstraint, OCP.St
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
-    @overload
-    def __init__(self,theOther : Plate_Array1OfPinpointConstraint) -> None: ...
-    @overload
     def __init__(self,theLower : int,theUpper : int,theValue : Plate_PinpointConstraint) -> None: ...
     @overload
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Plate_Array1OfPinpointConstraint) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -420,13 +420,13 @@ class Plate_LinearScalarConstraint():
     @overload
     def __init__(self,thePPC : Plate_Array1OfPinpointConstraint,theCoeff : OCP.TColgp.TColgp_Array1OfXYZ) -> None: ...
     @overload
-    def __init__(self) -> None: ...
-    @overload
-    def __init__(self,ColLen : int,RowLen : int) -> None: ...
+    def __init__(self,thePPC : Plate_Array1OfPinpointConstraint,theCoeff : OCP.TColgp.TColgp_Array2OfXYZ) -> None: ...
     @overload
     def __init__(self,thePPC1 : Plate_PinpointConstraint,theCoeff : OCP.gp.gp_XYZ) -> None: ...
     @overload
-    def __init__(self,thePPC : Plate_Array1OfPinpointConstraint,theCoeff : OCP.TColgp.TColgp_Array2OfXYZ) -> None: ...
+    def __init__(self) -> None: ...
+    @overload
+    def __init__(self,ColLen : int,RowLen : int) -> None: ...
     pass
 class Plate_LinearXYZConstraint():
     """
@@ -453,13 +453,13 @@ class Plate_LinearXYZConstraint():
         Sets the PinPointConstraint of index Index to Value raise if Index is greater than the length of PPC or the Row length of coeff or lower than 1
         """
     @overload
-    def __init__(self,thePPC : Plate_Array1OfPinpointConstraint,theCoeff : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
-    @overload
     def __init__(self,ColLen : int,RowLen : int) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,thePPC : Plate_Array1OfPinpointConstraint,theCoeff : OCP.TColStd.TColStd_Array2OfReal) -> None: ...
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,thePPC : Plate_Array1OfPinpointConstraint,theCoeff : OCP.TColStd.TColStd_Array1OfReal) -> None: ...
     pass
 class Plate_PinpointConstraint():
     """
@@ -539,7 +539,7 @@ class Plate_Plate():
         returns True if all has been correctly done.
         """
     @overload
-    def Load(self,LXYZConst : Plate_LinearXYZConstraint) -> None: 
+    def Load(self,PConst : Plate_PinpointConstraint) -> None: 
         """
         None
 
@@ -559,20 +559,20 @@ class Plate_Plate():
 
         None
         """
-    @overload
-    def Load(self,GtoCConst : Plate_GtoCConstraint) -> None: ...
-    @overload
-    def Load(self,GTConst : Plate_GlobalTranslationConstraint) -> None: ...
     @overload
     def Load(self,FGtoCConst : Plate_FreeGtoCConstraint) -> None: ...
     @overload
-    def Load(self,LScalarConst : Plate_LinearScalarConstraint) -> None: ...
-    @overload
-    def Load(self,PConst : Plate_PlaneConstraint) -> None: ...
-    @overload
-    def Load(self,PConst : Plate_PinpointConstraint) -> None: ...
+    def Load(self,LXYZConst : Plate_LinearXYZConstraint) -> None: ...
     @overload
     def Load(self,LConst : Plate_LineConstraint) -> None: ...
+    @overload
+    def Load(self,LScalarConst : Plate_LinearScalarConstraint) -> None: ...
+    @overload
+    def Load(self,GTConst : Plate_GlobalTranslationConstraint) -> None: ...
+    @overload
+    def Load(self,GtoCConst : Plate_GtoCConstraint) -> None: ...
+    @overload
+    def Load(self,PConst : Plate_PlaneConstraint) -> None: ...
     @overload
     def Load(self,SCConst : Plate_SampledCurveConstraint) -> None: ...
     def SetPolynomialPartOnly(self,PPOnly : bool=True) -> None: 
@@ -621,14 +621,14 @@ class Plate_SequenceOfLinearScalarConstraint(OCP.NCollection.NCollection_BaseSeq
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Plate_SequenceOfLinearScalarConstraint) -> None: 
+    def Append(self,theItem : Plate_LinearScalarConstraint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Plate_LinearScalarConstraint) -> None: ...
+    def Append(self,theSeq : Plate_SequenceOfLinearScalarConstraint) -> None: ...
     def Assign(self,theOther : Plate_SequenceOfLinearScalarConstraint) -> Plate_SequenceOfLinearScalarConstraint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -667,14 +667,14 @@ class Plate_SequenceOfLinearScalarConstraint(OCP.NCollection.NCollection_BaseSeq
     @overload
     def InsertAfter(self,theIndex : int,theItem : Plate_LinearScalarConstraint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Plate_LinearScalarConstraint) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Plate_SequenceOfLinearScalarConstraint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Plate_SequenceOfLinearScalarConstraint) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Plate_LinearScalarConstraint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -734,9 +734,9 @@ class Plate_SequenceOfLinearScalarConstraint(OCP.NCollection.NCollection_BaseSeq
         Constant item access by theIndex
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     @overload
     def __init__(self,theOther : Plate_SequenceOfLinearScalarConstraint) -> None: ...
     def __iter__(self) -> Iterator: ...
@@ -755,14 +755,14 @@ class Plate_SequenceOfLinearXYZConstraint(OCP.NCollection.NCollection_BaseSequen
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Plate_SequenceOfLinearXYZConstraint) -> None: 
+    def Append(self,theItem : Plate_LinearXYZConstraint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Plate_LinearXYZConstraint) -> None: ...
+    def Append(self,theSeq : Plate_SequenceOfLinearXYZConstraint) -> None: ...
     def Assign(self,theOther : Plate_SequenceOfLinearXYZConstraint) -> Plate_SequenceOfLinearXYZConstraint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -801,14 +801,14 @@ class Plate_SequenceOfLinearXYZConstraint(OCP.NCollection.NCollection_BaseSequen
     @overload
     def InsertAfter(self,theIndex : int,theItem : Plate_LinearXYZConstraint) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Plate_SequenceOfLinearXYZConstraint) -> None: 
+    def InsertBefore(self,theIndex : int,theItem : Plate_LinearXYZConstraint) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Plate_LinearXYZConstraint) -> None: ...
+    def InsertBefore(self,theIndex : int,theSeq : Plate_SequenceOfLinearXYZConstraint) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -826,14 +826,14 @@ class Plate_SequenceOfLinearXYZConstraint(OCP.NCollection.NCollection_BaseSequen
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theSeq : Plate_SequenceOfLinearXYZConstraint) -> None: 
+    def Prepend(self,theItem : Plate_LinearXYZConstraint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theItem : Plate_LinearXYZConstraint) -> None: ...
+    def Prepend(self,theSeq : Plate_SequenceOfLinearXYZConstraint) -> None: ...
     @overload
     def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
         """
@@ -868,11 +868,11 @@ class Plate_SequenceOfLinearXYZConstraint(OCP.NCollection.NCollection_BaseSequen
         Constant item access by theIndex
         """
     @overload
-    def __init__(self,theOther : Plate_SequenceOfLinearXYZConstraint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
+    def __init__(self,theOther : Plate_SequenceOfLinearXYZConstraint) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 
@@ -889,14 +889,14 @@ class Plate_SequenceOfPinpointConstraint(OCP.NCollection.NCollection_BaseSequenc
         Returns attached allocator
         """
     @overload
-    def Append(self,theItem : Plate_PinpointConstraint) -> None: 
+    def Append(self,theSeq : Plate_SequenceOfPinpointConstraint) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theSeq : Plate_SequenceOfPinpointConstraint) -> None: ...
+    def Append(self,theItem : Plate_PinpointConstraint) -> None: ...
     def Assign(self,theOther : Plate_SequenceOfPinpointConstraint) -> Plate_SequenceOfPinpointConstraint: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -960,23 +960,23 @@ class Plate_SequenceOfPinpointConstraint(OCP.NCollection.NCollection_BaseSequenc
         Method for consistency with other collections.
         """
     @overload
-    def Prepend(self,theItem : Plate_PinpointConstraint) -> None: 
+    def Prepend(self,theSeq : Plate_SequenceOfPinpointConstraint) -> None: 
         """
         Prepend one item
 
         Prepend another sequence (making it empty)
         """
     @overload
-    def Prepend(self,theSeq : Plate_SequenceOfPinpointConstraint) -> None: ...
+    def Prepend(self,theItem : Plate_PinpointConstraint) -> None: ...
     @overload
-    def Remove(self,theFromIndex : int,theToIndex : int) -> None: 
+    def Remove(self,theIndex : int) -> None: 
         """
         Remove one item
 
         Remove range of items
         """
     @overload
-    def Remove(self,theIndex : int) -> None: ...
+    def Remove(self,theFromIndex : int,theToIndex : int) -> None: ...
     def Reverse(self) -> None: 
         """
         Reverse sequence
@@ -1004,9 +1004,9 @@ class Plate_SequenceOfPinpointConstraint(OCP.NCollection.NCollection_BaseSequenc
     @overload
     def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     @overload
-    def __init__(self,theOther : Plate_SequenceOfPinpointConstraint) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : Plate_SequenceOfPinpointConstraint) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

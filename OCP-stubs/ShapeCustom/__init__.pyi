@@ -4,19 +4,19 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.TopTools
-import OCP.GeomAbs
-import OCP.Poly
-import OCP.BRepTools
-import OCP.TColgp
-import OCP.TopLoc
-import OCP.Geom2d
-import OCP.gp
-import OCP.Standard
-import OCP.ShapeExtend
 import OCP.Geom
-import OCP.Message
+import OCP.TopLoc
 import OCP.TopoDS
+import OCP.ShapeExtend
+import OCP.BRepTools
+import OCP.Poly
+import OCP.gp
+import OCP.Message
+import OCP.Geom2d
+import OCP.TColgp
+import OCP.GeomAbs
+import OCP.TopTools
+import OCP.Standard
 __all__  = [
 "ShapeCustom",
 "ShapeCustom_Modification",
@@ -101,23 +101,23 @@ class ShapeCustom_Modification(OCP.BRepTools.BRepTools_Modification, OCP.Standar
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -206,23 +206,23 @@ class ShapeCustom_ConvertToBSpline(ShapeCustom_Modification, OCP.BRepTools.BRepT
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -328,23 +328,23 @@ class ShapeCustom_ConvertToRevolution(ShapeCustom_Modification, OCP.BRepTools.BR
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -472,23 +472,23 @@ class ShapeCustom_DirectModification(ShapeCustom_Modification, OCP.BRepTools.BRe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -608,23 +608,23 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MaxErrors(self,aCurve3dErr : float,aCurve2dErr : float) -> float: 
         """
         Returns error for approximation surface, curve3d and curve2d.
@@ -742,11 +742,11 @@ class ShapeCustom_BSplineRestriction(ShapeCustom_Modification, OCP.BRepTools.BRe
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
         """
     @overload
-    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
+    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool) -> None: ...
+    def __init__(self,anApproxSurfaceFlag : bool,anApproxCurve3dFlag : bool,anApproxCurve2dFlag : bool,aTol3d : float,aTol2d : float,aContinuity3d : OCP.GeomAbs.GeomAbs_Shape,aContinuity2d : OCP.GeomAbs.GeomAbs_Shape,aMaxDegree : int,aNbMaxSeg : int,Degree : bool,Rational : bool,aModes : ShapeCustom_RestrictionParameters) -> None: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
         """
@@ -807,23 +807,23 @@ class ShapeCustom_RestrictionParameters(OCP.Standard.Standard_Transient):
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1072,23 +1072,23 @@ class ShapeCustom_SweptToElementary(ShapeCustom_Modification, OCP.BRepTools.BRep
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def MsgRegistrator(self) -> OCP.ShapeExtend.ShapeExtend_BasicMsgRegistrator: 
         """
         Returns message registrator
@@ -1178,23 +1178,23 @@ class ShapeCustom_TrsfModification(OCP.BRepTools.BRepTools_TrsfModification, OCP
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def NewCurve(self,E : OCP.TopoDS.TopoDS_Edge,C : OCP.Geom.Geom_Curve,L : OCP.TopLoc.TopLoc_Location,Tol : float) -> bool: 
         """
         Calls inherited method. Sets <Tol> as actual tolerance of <E> multiplied with scale factor.
@@ -1245,5 +1245,17 @@ class ShapeCustom_TrsfModification(OCP.BRepTools.BRepTools_TrsfModification, OCP
     def get_type_name_s() -> str: 
         """
         None
+        """
+    @property
+    def IsCopyMesh(self) -> bool:
+        """
+        Sets a flag to indicate the need to copy mesh.
+
+        :type: bool
+        """
+    @IsCopyMesh.setter
+    def IsCopyMesh(self, arg1: bool) -> None:
+        """
+        Sets a flag to indicate the need to copy mesh.
         """
     pass

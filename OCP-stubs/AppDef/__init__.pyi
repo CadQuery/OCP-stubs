@@ -4,16 +4,16 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
+import OCP.math
+import OCP.AppParCurves
+import OCP.gp
+import OCP.FEmTool
+import OCP.TColgp
 import OCP.Approx
 import OCP.GeomAbs
-import OCP.math
-import OCP.TColgp
-import io
-import OCP.FEmTool
-import OCP.gp
 import OCP.Standard
-import OCP.AppParCurves
 import OCP.TColStd
+import io
 __all__  = [
 "AppDef_Array1OfMultiPointConstraint",
 "AppDef_BSpGradient_BFGSOfMyBSplGradientOfBSplineCompute",
@@ -127,11 +127,11 @@ class AppDef_Array1OfMultiPointConstraint():
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : AppDef_Array1OfMultiPointConstraint) -> None: ...
-    @overload
     def __init__(self,theBegin : AppDef_MultiPointConstraint,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self,theLower : int,theUpper : int) -> None: ...
+    @overload
+    def __init__(self,theOther : AppDef_Array1OfMultiPointConstraint) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class AppDef_BSpGradient_BFGSOfMyBSplGradientOfBSplineCompute(OCP.math.math_BFGS):
@@ -166,7 +166,7 @@ class AppDef_BSpGradient_BFGSOfMyBSplGradientOfBSplineCompute(OCP.math.math_BFGS
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -177,7 +177,7 @@ class AppDef_BSpGradient_BFGSOfMyBSplGradientOfBSplineCompute(OCP.math.math_BFGS
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -323,7 +323,7 @@ class AppDef_BSpParLeastSquareOfMyBSplGradientOfBSplineCompute():
         returns the value (PN - PN-1)/ VN if the last point was a tangency point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: 
         """
         Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
 
@@ -338,7 +338,7 @@ class AppDef_BSpParLeastSquareOfMyBSplGradientOfBSplineCompute():
     @overload
     def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -348,13 +348,13 @@ class AppDef_BSpParLeastSquareOfMyBSplGradientOfBSplineCompute():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     pass
 class AppDef_BSplineCompute():
     """
@@ -429,9 +429,9 @@ class AppDef_BSplineCompute():
         returns the result of the approximation.
         """
     @overload
-    def __init__(self,Line : AppDef_MultiLine,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
-    @overload
     def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
+    @overload
+    def __init__(self,Line : AppDef_MultiLine,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     @overload
     def __init__(self,Line : AppDef_MultiLine,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     @overload
@@ -498,13 +498,13 @@ class AppDef_Compute():
         returns the result of the approximation.
         """
     @overload
-    def __init__(self,Line : AppDef_MultiLine,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
-    @overload
     def __init__(self,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     @overload
-    def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
+    def __init__(self,Line : AppDef_MultiLine,Parameters : OCP.math.math_Vector,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,Squares : bool=False) -> None: ...
     @overload
     def __init__(self,Line : AppDef_MultiLine,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
+    @overload
+    def __init__(self,degreemin : int=4,degreemax : int=8,Tolerance3d : float=0.001,Tolerance2d : float=1e-06,NbIterations : int=5,cutting : bool=True,parametrization : OCP.Approx.Approx_ParametrizationType=Approx_ParametrizationType.Approx_ChordLength,Squares : bool=False) -> None: ...
     pass
 class AppDef_Gradient_BFGSOfMyGradientOfCompute(OCP.math.math_BFGS):
     """
@@ -538,7 +538,7 @@ class AppDef_Gradient_BFGSOfMyGradientOfCompute(OCP.math.math_BFGS):
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -549,7 +549,7 @@ class AppDef_Gradient_BFGSOfMyGradientOfCompute(OCP.math.math_BFGS):
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -604,7 +604,7 @@ class AppDef_Gradient_BFGSOfMyGradientbisOfBSplineCompute(OCP.math.math_BFGS):
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -615,7 +615,7 @@ class AppDef_Gradient_BFGSOfMyGradientbisOfBSplineCompute(OCP.math.math_BFGS):
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -670,7 +670,7 @@ class AppDef_Gradient_BFGSOfTheGradient(OCP.math.math_BFGS):
         None
         """
     @overload
-    def Location(self) -> OCP.math.math_Vector: 
+    def Location(self,Loc : OCP.math.math_Vector) -> None: 
         """
         outputs the location vector of the minimum in Loc. Exception NotDone is raised if the minimum was not found. Exception DimensionError is raised if the range of Loc is not equal to the range of the StartingPoint.
 
@@ -681,7 +681,7 @@ class AppDef_Gradient_BFGSOfTheGradient(OCP.math.math_BFGS):
         returns the location vector of the minimum. Exception NotDone is raised if the minimum was not found.
         """
     @overload
-    def Location(self,Loc : OCP.math.math_Vector) -> None: ...
+    def Location(self) -> OCP.math.math_Vector: ...
     def Minimum(self) -> float: 
         """
         returns the value of the minimum. Exception NotDone is raised if the minimum was not found.
@@ -770,23 +770,23 @@ class AppDef_HArray1OfMultiPointConstraint(AppDef_Array1OfMultiPointConstraint, 
         Return TRUE if array has zero length.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Last(self) -> AppDef_MultiPointConstraint: 
         """
         Returns last element
@@ -828,13 +828,13 @@ class AppDef_HArray1OfMultiPointConstraint(AppDef_Array1OfMultiPointConstraint, 
         Constant value access
         """
     @overload
-    def __init__(self,theLower : int,theUpper : int) -> None: ...
+    def __init__(self,theOther : AppDef_Array1OfMultiPointConstraint) -> None: ...
     @overload
-    def __init__(self,theLower : int,theUpper : int,theValue : AppDef_MultiPointConstraint) -> None: ...
+    def __init__(self,theLower : int,theUpper : int) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : AppDef_Array1OfMultiPointConstraint) -> None: ...
+    def __init__(self,theLower : int,theUpper : int,theValue : AppDef_MultiPointConstraint) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def get_type_descriptor_s() -> OCP.Standard.Standard_Type: 
@@ -912,23 +912,23 @@ class AppDef_SmoothCriterion(OCP.Standard.Standard_Transient):
         Convert the assembly Vector in an Curve;
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def QualityValues(self,J1min : float,J2min : float,J3min : float,J1 : float,J2 : float,J3 : float) -> int: 
         """
         None
@@ -994,15 +994,15 @@ class AppDef_MultiLine():
         returns the MultiPointConstraint of range Index An exception is raised if Index<0 or Index>MPoint.
         """
     @overload
-    def __init__(self,NbMult : int) -> None: ...
-    @overload
-    def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
-    @overload
-    def __init__(self,tabMultiP : AppDef_Array1OfMultiPointConstraint) -> None: ...
+    def __init__(self,tabP3d : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,tabP3d : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    @overload
+    def __init__(self,NbMult : int) -> None: ...
+    @overload
+    def __init__(self,tabMultiP : AppDef_Array1OfMultiPointConstraint) -> None: ...
     pass
 class AppDef_MultiPointConstraint(OCP.AppParCurves.AppParCurves_MultiPoint):
     """
@@ -1095,27 +1095,27 @@ class AppDef_MultiPointConstraint(OCP.AppParCurves.AppParCurves_MultiPoint):
         Applies a transformation to the Curve of range <CuIndex>. newx = x + dx*oldx newy = y + dy*oldy for all points of the curve.
         """
     @overload
-    def __init__(self) -> None: ...
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
-    def __init__(self,NbPoints : int,NbPoints2d : int) -> None: ...
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d,tabVec : OCP.TColgp.TColgp_Array1OfVec,tabVec2d : OCP.TColgp.TColgp_Array1OfVec2d,tabCur : OCP.TColgp.TColgp_Array1OfVec,tabCur2d : OCP.TColgp.TColgp_Array1OfVec2d) -> None: ...
     @overload
     def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d,tabVec2d : OCP.TColgp.TColgp_Array1OfVec2d,tabCur2d : OCP.TColgp.TColgp_Array1OfVec2d) -> None: ...
     @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d,tabVec : OCP.TColgp.TColgp_Array1OfVec,tabVec2d : OCP.TColgp.TColgp_Array1OfVec2d) -> None: ...
-    @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @overload
     def __init__(self,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d,tabVec2d : OCP.TColgp.TColgp_Array1OfVec2d) -> None: ...
     @overload
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
+    @overload
+    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d,tabVec : OCP.TColgp.TColgp_Array1OfVec,tabVec2d : OCP.TColgp.TColgp_Array1OfVec2d) -> None: ...
+    @overload
     def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabVec : OCP.TColgp.TColgp_Array1OfVec,tabCur : OCP.TColgp.TColgp_Array1OfVec) -> None: ...
     @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
-    @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def __init__(self,NbPoints : int,NbPoints2d : int) -> None: ...
     @overload
     def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabVec : OCP.TColgp.TColgp_Array1OfVec) -> None: ...
     @overload
-    def __init__(self,tabP : OCP.TColgp.TColgp_Array1OfPnt,tabP2d : OCP.TColgp.TColgp_Array1OfPnt2d,tabVec : OCP.TColgp.TColgp_Array1OfVec,tabVec2d : OCP.TColgp.TColgp_Array1OfVec2d,tabCur : OCP.TColgp.TColgp_Array1OfVec,tabCur2d : OCP.TColgp.TColgp_Array1OfVec2d) -> None: ...
+    def __init__(self) -> None: ...
     pass
 class AppDef_MyBSplGradientOfBSplineCompute():
     """
@@ -1262,7 +1262,7 @@ class AppDef_MyLineTool():
         """
     @staticmethod
     @overload
-    def Tangency_s(ML : AppDef_MultiLine,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: 
+    def Tangency_s(ML : AppDef_MultiLine,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: 
         """
         returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1272,13 +1272,13 @@ class AppDef_MyLineTool():
         """
     @staticmethod
     @overload
-    def Tangency_s(ML : AppDef_MultiLine,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
+    def Tangency_s(ML : AppDef_MultiLine,MPointIndex : int,tabV : OCP.TColgp.TColgp_Array1OfVec) -> bool: ...
     @staticmethod
     @overload
     def Tangency_s(ML : AppDef_MultiLine,MPointIndex : int,tabV2d : OCP.TColgp.TColgp_Array1OfVec2d) -> bool: ...
     @staticmethod
     @overload
-    def Value_s(ML : AppDef_MultiLine,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: 
+    def Value_s(ML : AppDef_MultiLine,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: 
         """
         returns the 3d points of the multipoint <MPointIndex> when only 3d points exist.
 
@@ -1291,7 +1291,7 @@ class AppDef_MyLineTool():
     def Value_s(ML : AppDef_MultiLine,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
     @staticmethod
     @overload
-    def Value_s(ML : AppDef_MultiLine,MPointIndex : int,tabPt2d : OCP.TColgp.TColgp_Array1OfPnt2d) -> None: ...
+    def Value_s(ML : AppDef_MultiLine,MPointIndex : int,tabPt : OCP.TColgp.TColgp_Array1OfPnt) -> None: ...
     @staticmethod
     def WhatStatus_s(ML : AppDef_MultiLine,I1 : int,I2 : int) -> OCP.Approx.Approx_Status: 
         """
@@ -1535,15 +1535,97 @@ class AppDef_ParLeastSquareOfMyGradientOfCompute():
         returns the matrix of resulting control points value.
         """
     @overload
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
+    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    pass
+class AppDef_ParLeastSquareOfMyGradientbisOfBSplineCompute():
+    """
+    None
+    """
+    def BSplineValue(self) -> OCP.AppParCurves.AppParCurves_MultiBSpCurve: 
+        """
+        returns the result of the approximation, i.e. all the Curves. An exception is raised if NotDone.
+        """
+    def BezierValue(self) -> OCP.AppParCurves.AppParCurves_MultiCurve: 
+        """
+        returns the result of the approximation, i.e. all the Curves. An exception is raised if NotDone.
+        """
+    def DerivativeFunctionMatrix(self) -> OCP.math.math_Matrix: 
+        """
+        returns the derivative function matrix used to approximate the set.
+        """
+    def Distance(self) -> OCP.math.math_Matrix: 
+        """
+        returns the distances between the points of the multiline and the approximation curves.
+        """
+    def Error(self) -> Tuple[float, float, float]: 
+        """
+        returns the maximum errors between the MultiLine and the approximation curves. F is the sum of the square distances.
+        """
+    def ErrorGradient(self,Grad : OCP.math.math_Vector) -> Tuple[float, float, float]: 
+        """
+        returns the maximum errors between the MultiLine and the approximation curves. F is the sum of the square distances. Grad is the derivative vector of the function F.
+        """
+    def FirstLambda(self) -> float: 
+        """
+        returns the value (P2 - P1)/ V1 if the first point was a tangency point.
+        """
+    def FunctionMatrix(self) -> OCP.math.math_Matrix: 
+        """
+        returns the function matrix used to approximate the set.
+        """
+    def IsDone(self) -> bool: 
+        """
+        returns True if all has been correctly done.
+        """
+    def KIndex(self) -> OCP.math.math_IntegerVector: 
+        """
+        Returns the indexes of the first non null values of A and DA. The values are non null from Index(ieme point) +1 to Index(ieme point) + degree +1.
+        """
+    def LastLambda(self) -> float: 
+        """
+        returns the value (PN - PN-1)/ VN if the last point was a tangency point.
+        """
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
+        """
+        Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
+
+        Is used after having initialized the fields.
+
+        Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point.
+
+        Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
+        """
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    def Points(self) -> OCP.math.math_Matrix: 
+        """
+        returns the matrix of points value.
+        """
+    def Poles(self) -> OCP.math.math_Matrix: 
+        """
+        returns the matrix of resulting control points value.
+        """
+    @overload
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    @overload
     def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     pass
-class AppDef_ParLeastSquareOfMyGradientbisOfBSplineCompute():
+class AppDef_ParLeastSquareOfTheGradient():
     """
     None
     """
@@ -1617,95 +1699,13 @@ class AppDef_ParLeastSquareOfMyGradientbisOfBSplineCompute():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
-    pass
-class AppDef_ParLeastSquareOfTheGradient():
-    """
-    None
-    """
-    def BSplineValue(self) -> OCP.AppParCurves.AppParCurves_MultiBSpCurve: 
-        """
-        returns the result of the approximation, i.e. all the Curves. An exception is raised if NotDone.
-        """
-    def BezierValue(self) -> OCP.AppParCurves.AppParCurves_MultiCurve: 
-        """
-        returns the result of the approximation, i.e. all the Curves. An exception is raised if NotDone.
-        """
-    def DerivativeFunctionMatrix(self) -> OCP.math.math_Matrix: 
-        """
-        returns the derivative function matrix used to approximate the set.
-        """
-    def Distance(self) -> OCP.math.math_Matrix: 
-        """
-        returns the distances between the points of the multiline and the approximation curves.
-        """
-    def Error(self) -> Tuple[float, float, float]: 
-        """
-        returns the maximum errors between the MultiLine and the approximation curves. F is the sum of the square distances.
-        """
-    def ErrorGradient(self,Grad : OCP.math.math_Vector) -> Tuple[float, float, float]: 
-        """
-        returns the maximum errors between the MultiLine and the approximation curves. F is the sum of the square distances. Grad is the derivative vector of the function F.
-        """
-    def FirstLambda(self) -> float: 
-        """
-        returns the value (P2 - P1)/ V1 if the first point was a tangency point.
-        """
-    def FunctionMatrix(self) -> OCP.math.math_Matrix: 
-        """
-        returns the function matrix used to approximate the set.
-        """
-    def IsDone(self) -> bool: 
-        """
-        returns True if all has been correctly done.
-        """
-    def KIndex(self) -> OCP.math.math_IntegerVector: 
-        """
-        Returns the indexes of the first non null values of A and DA. The values are non null from Index(ieme point) +1 to Index(ieme point) + degree +1.
-        """
-    def LastLambda(self) -> float: 
-        """
-        returns the value (PN - PN-1)/ VN if the last point was a tangency point.
-        """
-    @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
-        """
-        Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
-
-        Is used after having initialized the fields.
-
-        Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point.
-
-        Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
-        """
-    @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
-    @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
-    @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
-    def Points(self) -> OCP.math.math_Matrix: 
-        """
-        returns the matrix of points value.
-        """
-    def Poles(self) -> OCP.math.math_Matrix: 
-        """
-        returns the matrix of resulting control points value.
-        """
-    @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
-    @overload
     def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
-    @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     pass
 class AppDef_ResConstraintOfMyGradientOfCompute():
     """
@@ -1846,23 +1846,23 @@ class AppDef_LinearCriteria(AppDef_SmoothCriterion, OCP.Standard.Standard_Transi
         Convert the assembly Vector in an Curve;
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def QualityValues(self,J1min : float,J2min : float,J3min : float,J1 : float,J2 : float,J3 : float) -> int: 
         """
         None
@@ -2049,7 +2049,7 @@ class AppDef_TheLeastSquares():
         returns the value (PN - PN-1)/ VN if the last point was a tangency point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector) -> None: 
+    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: 
         """
         Is used after having initialized the fields. The case "CurvaturePoint" is not treated in this method.
 
@@ -2060,11 +2060,11 @@ class AppDef_TheLeastSquares():
         Is used after having initialized the fields. <V1t> is the tangent vector at the first point. <V2t> is the tangent vector at the last point. <V1c> is the tangent vector at the first point. <V2c> is the tangent vector at the last point.
         """
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
-    @overload
     def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,V1c : OCP.math.math_Vector,V2c : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     @overload
-    def Perform(self,Parameters : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
+    def Perform(self,Parameters : OCP.math.math_Vector) -> None: ...
+    @overload
+    def Perform(self,Parameters : OCP.math.math_Vector,V1t : OCP.math.math_Vector,V2t : OCP.math.math_Vector,l1 : float,l2 : float) -> None: ...
     def Points(self) -> OCP.math.math_Matrix: 
         """
         returns the matrix of points value.
@@ -2074,13 +2074,13 @@ class AppDef_TheLeastSquares():
         returns the matrix of resulting control points value.
         """
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
     def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
+    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     @overload
-    def __init__(self,SSP : AppDef_MultiLine,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,NbPol : int) -> None: ...
+    def __init__(self,SSP : AppDef_MultiLine,Knots : OCP.TColStd.TColStd_Array1OfReal,Mults : OCP.TColStd.TColStd_Array1OfInteger,FirstPoint : int,LastPoint : int,FirstCons : OCP.AppParCurves.AppParCurves_Constraint,LastCons : OCP.AppParCurves.AppParCurves_Constraint,Parameters : OCP.math.math_Vector,NbPol : int) -> None: ...
     pass
 class AppDef_TheResol():
     """
@@ -2193,14 +2193,14 @@ class AppDef_Variational():
         Define the Continuity used in the approximation If this value is incompatible with the others fields this method modify nothing and returns false
         """
     @overload
-    def SetCriteriumWeight(self,Percent1 : float,Percent2 : float,Percent3 : float) -> None: 
+    def SetCriteriumWeight(self,Order : int,Percent : float) -> None: 
         """
         define the Weights (as percent) associed to the criterium used in the optimization.
 
         define the Weight (as percent) associed to the criterium Order used in the optimization : Others weights are updated. if Percent < 0 if Order < 1 or Order > 3
         """
     @overload
-    def SetCriteriumWeight(self,Order : int,Percent : float) -> None: ...
+    def SetCriteriumWeight(self,Percent1 : float,Percent2 : float,Percent3 : float) -> None: ...
     def SetKnots(self,knots : OCP.TColStd.TColStd_HArray1OfReal) -> bool: 
         """
         Defines the knots used by the approximations If this value is incompatible with the others fields this method modify nothing and returns false

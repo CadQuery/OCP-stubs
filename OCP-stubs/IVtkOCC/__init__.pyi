@@ -4,28 +4,28 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.AIS
-import OCP.PrsMgr
-import OCP.NCollection
-import OCP.IVtk
-import io
-import OCP.SelectMgr
-import OCP.Standard
-import OCP.V3d
-import OCP.StdSelect
-import OCP.TopoDS
-import OCP.Prs3d
-import OCP.Select3D
-import OCP.Quantity
-import OCP.TColgp
-import OCP.Bnd
-import OCP.TopLoc
 import OCP.Graphic3d
+import OCP.AIS
+import OCP.Aspect
+import OCP.TopLoc
+import OCP.TopoDS
+import OCP.TCollection
+import OCP.PrsMgr
+import OCP.Standard
+import OCP.TColStd
+import OCP.IVtk
+import OCP.SelectMgr
+import OCP.Prs3d
+import OCP.V3d
+import OCP.Select3D
+import OCP.NCollection
 import OCP.gp
 import OCP.Image
-import OCP.Aspect
-import OCP.TCollection
-import OCP.TColStd
+import OCP.TColgp
+import OCP.Bnd
+import io
+import OCP.Quantity
+import OCP.StdSelect
 __all__  = [
 "IVtkOCC_SelectableObject",
 "IVtkOCC_Shape",
@@ -244,23 +244,23 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -294,14 +294,14 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         Return presentations.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def RemoveChild(self,theObject : OCP.PrsMgr.PrsMgr_PresentableObject) -> None: 
         """
         Removes theObject from children of current object in scene hierarchy.
@@ -375,14 +375,14 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         Enables or disables on-triangulation build of isolines according to the flag given.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,aName : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aMat defining this display attribute for the interactive object. Material aspect determines shading aspect, color and transparency of visible entities.
@@ -404,14 +404,14 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         Sets the selectable shape
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -517,6 +517,10 @@ class IVtkOCC_SelectableObject(OCP.SelectMgr.SelectMgr_SelectableObject, OCP.Prs
         """
         Updates locations in all sensitive entities from <aSelection> and in corresponding entity owners.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -589,23 +593,23 @@ class IVtkOCC_Shape(OCP.IVtk.IVtk_IShape, OCP.IVtk.IVtk_Interface, OCP.Standard.
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def SetAttributes(self,theDrawer : OCP.Prs3d.Prs3d_Drawer) -> None: 
         """
         Set presentation attributes.
@@ -675,23 +679,23 @@ class IVtkOCC_ShapeMesher(OCP.IVtk.IVtk_IShapeMesher, OCP.IVtk.IVtk_Interface, O
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -729,14 +733,14 @@ class IVtkOCC_ShapePickerAlgo():
         Remove selectable object from the picker (from internal maps).
         """
     @overload
-    def SetSelectionMode(self,theShapes : OCP.IVtk.IVtk_ShapePtrList,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: 
+    def SetSelectionMode(self,theShape : OCP.IVtk.IVtk_IShape,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: 
         """
         Activates/deactivates the given selection mode for the shape. If mode == SM_None, the shape becomes non-selectable and is removed from the internal selection data.
 
         Activates/deactivates the given selection mode for the shape. If mode == SM_None, the shape becomes non-selectable and is removed from the internal selection data.
         """
     @overload
-    def SetSelectionMode(self,theShape : OCP.IVtk.IVtk_IShape,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: ...
+    def SetSelectionMode(self,theShapes : OCP.IVtk.IVtk_ShapePtrList,theMode : OCP.IVtk.IVtk_SelectionMode,theIsTurnOn : bool=True) -> None: ...
     def SetView(self,theView : OCP.IVtk.IVtk_IView) -> None: 
         """
         Sets the picker's view interface. The picker uses the view to obtain parameters of the 3D view projection.
@@ -860,23 +864,23 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
         Returns true if the selectable object aSelectableObject having the selection mode aMode is in this selector.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def Modes(self,theSelectableObject : OCP.SelectMgr.SelectMgr_SelectableObject,theModeList : OCP.TColStd.TColStd_ListOfInteger,theWantedState : OCP.SelectMgr.SelectMgr_StateOfSelection=SelectMgr_StateOfSelection.SelectMgr_SOS_Any) -> bool: 
         """
         Returns the list of selection modes ModeList found in this selector for the selectable object aSelectableObject. Returns true if aSelectableObject is referenced inside this selector; returns false if the object is not present in this selector.
@@ -907,9 +911,9 @@ class IVtkOCC_ViewerSelector(OCP.SelectMgr.SelectMgr_ViewerSelector, OCP.Standar
     @overload
     def Pick(self,theAxis : OCP.gp.gp_Ax1,theView : OCP.V3d.V3d_View) -> None: ...
     @overload
-    def Pick(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View) -> None: ...
-    @overload
     def Pick(self,thePolyline : OCP.TColgp.TColgp_Array1OfPnt2d,theView : OCP.V3d.V3d_View) -> None: ...
+    @overload
+    def Pick(self,theXPix : int,theYPix : int,theView : OCP.V3d.V3d_View) -> None: ...
     def Picked(self,theRank : int) -> OCP.SelectMgr.SelectMgr_EntityOwner: 
         """
         Returns the entity Owner for the object picked at specified position.
@@ -1039,7 +1043,7 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
         Returns attached allocator
         """
     @overload
-    def Append(self,theOther : IVtk_PolylineList) -> None: 
+    def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt,theIter : Any) -> None: 
         """
         Append one item at the end
 
@@ -1050,7 +1054,7 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
     @overload
     def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt) -> OCP.TColgp.TColgp_SequenceOfPnt: ...
     @overload
-    def Append(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt,theIter : Any) -> None: ...
+    def Append(self,theOther : IVtk_PolylineList) -> None: ...
     def Assign(self,theOther : IVtk_PolylineList) -> IVtk_PolylineList: 
         """
         Replace this list by the items of another list (theOther parameter). This method does not change the internal allocator.
@@ -1098,14 +1102,14 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
         Last item (non-const)
         """
     @overload
-    def Prepend(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt) -> OCP.TColgp.TColgp_SequenceOfPnt: 
+    def Prepend(self,theOther : IVtk_PolylineList) -> None: 
         """
         Prepend one item at the beginning
 
         Prepend another list at the beginning
         """
     @overload
-    def Prepend(self,theOther : IVtk_PolylineList) -> None: ...
+    def Prepend(self,theItem : OCP.TColgp.TColgp_SequenceOfPnt) -> OCP.TColgp.TColgp_SequenceOfPnt: ...
     def Remove(self,theIter : Any) -> None: 
         """
         Remove item pointed by iterator theIter; theIter is then set to the next item
@@ -1123,11 +1127,11 @@ class IVtk_PolylineList(OCP.NCollection.NCollection_BaseList):
         Size - Number of items
         """
     @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def __init__(self,theOther : IVtk_PolylineList) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theOther : IVtk_PolylineList) -> None: ...
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     pass
 class IVtk_ShapeTypeMap(OCP.NCollection.NCollection_BaseMap):

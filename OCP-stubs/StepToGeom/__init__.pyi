@@ -4,11 +4,11 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.StepRepr
-import OCP.Geom2d
-import OCP.gp
 import OCP.Geom
+import OCP.gp
+import OCP.Geom2d
 import OCP.StepGeom
+import OCP.StepRepr
 import OCP.TColStd
 __all__  = [
 "StepToGeom"
@@ -24,7 +24,7 @@ class StepToGeom():
         """
     @staticmethod
     @overload
-    def MakeAxis2Placement_s(SP : OCP.StepGeom.StepGeom_SuParameters) -> OCP.Geom.Geom_Axis2Placement: 
+    def MakeAxis2Placement_s(SA : OCP.StepGeom.StepGeom_Axis2Placement3d) -> OCP.Geom.Geom_Axis2Placement: 
         """
         None
 
@@ -32,7 +32,7 @@ class StepToGeom():
         """
     @staticmethod
     @overload
-    def MakeAxis2Placement_s(SA : OCP.StepGeom.StepGeom_Axis2Placement3d) -> OCP.Geom.Geom_Axis2Placement: ...
+    def MakeAxis2Placement_s(SP : OCP.StepGeom.StepGeom_SuParameters) -> OCP.Geom.Geom_Axis2Placement: ...
     @staticmethod
     def MakeAxisPlacement_s(SA : OCP.StepGeom.StepGeom_Axis2Placement2d) -> OCP.Geom2d.Geom2d_AxisPlacement: 
         """

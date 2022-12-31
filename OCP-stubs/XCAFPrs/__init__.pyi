@@ -4,30 +4,30 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.AIS
-import OCP.PrsMgr
-import OCP.TPrsStd
-import OCP.NCollection
-import io
-import OCP.SelectMgr
-import OCP.OSD
-import OCP.Standard
-import OCP.V3d
-import OCP.TopoDS
-import OCP.Prs3d
-import OCP.XCAFDoc
-import OCP.TDF
-import OCP.Quantity
-import OCP.Bnd
-import OCP.TDocStd
-import OCP.TopLoc
 import OCP.Graphic3d
-import OCP.gp
-import OCP.Image
-import OCP.TopAbs
+import OCP.AIS
 import OCP.Aspect
+import OCP.TopLoc
+import OCP.TopoDS
+import OCP.TDocStd
 import OCP.TCollection
+import OCP.PrsMgr
+import OCP.Standard
 import OCP.TColStd
+import OCP.SelectMgr
+import OCP.Prs3d
+import OCP.V3d
+import OCP.NCollection
+import OCP.OSD
+import OCP.gp
+import OCP.TopAbs
+import OCP.TDF
+import OCP.XCAFDoc
+import OCP.Image
+import OCP.Bnd
+import OCP.TPrsStd
+import io
+import OCP.Quantity
 __all__  = [
 "XCAFPrs",
 "XCAFPrs_AISObject",
@@ -321,23 +321,23 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Returns true if the interactive object is infinite; FALSE by default. This flag affects various operations operating on bounding box of graphic presentations of this object. For instance, infinite objects are not taken in account for View FitAll. This does not necessarily means that object is actually infinite, auxiliary objects might be also marked with this flag to achieve desired behavior.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsMutable(self) -> bool: 
         """
         Returns true if object has mutable nature (content or location are be changed regularly). Mutable object will be managed in different way than static onces (another optimizations).
@@ -387,14 +387,14 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Drag object in the viewer.
         """
     @overload
-    def RecomputePrimitives(self,theMode : int) -> None: 
+    def RecomputePrimitives(self) -> None: 
         """
         Re-computes the sensitive primitives for all modes. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
 
         Re-computes the sensitive primitives which correspond to the <theMode>th selection mode. IMPORTANT: Do not use this method to update selection primitives except implementing custom selection manager! selection manager! This method does not take into account necessary BVH updates, but may invalidate the pointers it refers to. TO UPDATE SELECTION properly from outside classes, use method UpdateSelection.
         """
     @overload
-    def RecomputePrimitives(self) -> None: ...
+    def RecomputePrimitives(self,theMode : int) -> None: ...
     def Redisplay(self,AllModes : bool=False) -> None: 
         """
         Updates the active presentation; if <AllModes> = Standard_True all the presentations inside are recomputed. IMPORTANT: It is preferable to call Redisplay method of corresponding AIS_InteractiveContext instance for cases when it is accessible. This method just redirects call to myCTXPtr, so this class field must be up to date for proper result.
@@ -514,14 +514,14 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Assign the label to this presentation (but does not mark it outdated with SetToUpdate()).
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: 
+    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: 
         """
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
 
         Sets local transformation to theTransformation. Note that the local transformation of the object having Transformation Persistence is applied within Local Coordinate system defined by this Persistence.
         """
     @overload
-    def SetLocalTransformation(self,theTrsf : OCP.gp.gp_Trsf) -> None: ...
+    def SetLocalTransformation(self,theTrsf : OCP.TopLoc.TopLoc_Datum3D) -> None: ...
     def SetMaterial(self,theMaterial : OCP.Graphic3d.Graphic3d_MaterialAspect) -> None: 
         """
         Sets the material aspect. This method assigns the new default material without overriding XDE styles. Re-computation of existing presentation is not required after calling this method.
@@ -540,14 +540,14 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
     @overload
     def SetOwnDeviationAngle(self,anAngle : float) -> None: ...
     @overload
-    def SetOwnDeviationCoefficient(self) -> bool: 
+    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: 
         """
         Sets a local value for deviation coefficient for this specific shape.
 
         Sets a local value for deviation coefficient for this specific shape.
         """
     @overload
-    def SetOwnDeviationCoefficient(self,aCoefficient : float) -> None: ...
+    def SetOwnDeviationCoefficient(self) -> bool: ...
     def SetOwner(self,theApplicativeEntity : OCP.Standard.Standard_Transient) -> None: 
         """
         Allows you to attribute the owner theApplicativeEntity to an Interactive Object. This can be a shape for a set of sub-shapes or a sub-shape for sub-shapes which it is composed of. The owner takes the form of a transient.
@@ -577,14 +577,14 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         Use this method to scale the texture (percent of the face). You can specify a scale factor for both U and V. Example: if you set ScaleU and ScaleV to 0.5 and you enable texture repeat, the texture will appear twice on the face in each direction.
         """
     @overload
-    def SetToUpdate(self,theMode : int) -> None: 
+    def SetToUpdate(self) -> None: 
         """
         Flags presentation to be updated; UpdatePresentations() will recompute these presentations.
 
         flags all the Presentations to be Updated.
         """
     @overload
-    def SetToUpdate(self) -> None: ...
+    def SetToUpdate(self,theMode : int) -> None: ...
     def SetTransformPersistence(self,theTrsfPers : OCP.Graphic3d.Graphic3d_TransformPers) -> None: 
         """
         Sets up Transform Persistence defining a special Local Coordinate system where this object should be located. Note that management of Transform Persistence object is more expensive than of the normal one, because it requires its position being recomputed basing on camera position within each draw call / traverse.
@@ -730,6 +730,10 @@ class XCAFPrs_AISObject(OCP.AIS.AIS_ColoredShape, OCP.AIS.AIS_Shape, OCP.AIS.AIS
         """
         gives back the angle initial value put by the User.
         """
+    def ViewAffinity(self) -> OCP.Graphic3d.Graphic3d_ViewAffinity: 
+        """
+        Return view affinity mask.
+        """
     def Width(self) -> float: 
         """
         Returns the width setting of the Interactive Object.
@@ -784,14 +788,14 @@ class XCAFPrs_DataMapOfStyleShape(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL is Key was not bound.
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: 
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    def Clear(self,doReleaseMemory : bool=True) -> None: ...
     def Exchange(self,theOther : XCAFPrs_DataMapOfStyleShape) -> None: 
         """
         Exchange the content of two maps without re-allocations. Notice that allocators will be swapped as well!
@@ -881,7 +885,7 @@ class XCAFPrs_DocumentExplorer():
         """
     @staticmethod
     @overload
-    def FindLabelFromPathId_s(theDocument : OCP.TDocStd.TDocStd_Document,theId : OCP.TCollection.TCollection_AsciiString,theParentLocation : OCP.TopLoc.TopLoc_Location,theLocation : OCP.TopLoc.TopLoc_Location) -> OCP.TDF.TDF_Label: 
+    def FindLabelFromPathId_s(theDocument : OCP.TDocStd.TDocStd_Document,theId : OCP.TCollection.TCollection_AsciiString,theLocation : OCP.TopLoc.TopLoc_Location) -> OCP.TDF.TDF_Label: 
         """
         Find a shape entity based on a text identifier constructed from OCAF labels defining full path.
 
@@ -889,7 +893,7 @@ class XCAFPrs_DocumentExplorer():
         """
     @staticmethod
     @overload
-    def FindLabelFromPathId_s(theDocument : OCP.TDocStd.TDocStd_Document,theId : OCP.TCollection.TCollection_AsciiString,theLocation : OCP.TopLoc.TopLoc_Location) -> OCP.TDF.TDF_Label: ...
+    def FindLabelFromPathId_s(theDocument : OCP.TDocStd.TDocStd_Document,theId : OCP.TCollection.TCollection_AsciiString,theParentLocation : OCP.TopLoc.TopLoc_Location,theLocation : OCP.TopLoc.TopLoc_Location) -> OCP.TDF.TDF_Label: ...
     @staticmethod
     def FindShapeFromPathId_s(theDocument : OCP.TDocStd.TDocStd_Document,theId : OCP.TCollection.TCollection_AsciiString) -> OCP.TopoDS.TopoDS_Shape: 
         """
@@ -917,11 +921,11 @@ class XCAFPrs_DocumentExplorer():
         Return material tool.
         """
     @overload
-    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
+    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
-    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theRoots : OCP.TDF.TDF_LabelSequence,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
+    def __init__(self,theDocument : OCP.TDocStd.TDocStd_Document,theFlags : int,theDefStyle : XCAFPrs_Style=XCAFPrs_Style) -> None: ...
     pass
 class XCAFPrs_DocumentIdIterator():
     """
@@ -1053,23 +1057,23 @@ class XCAFPrs_Driver(OCP.TPrsStd.TPrsStd_Driver, OCP.Standard.Standard_Transient
         Increments the reference counter of this object
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def This(self) -> OCP.Standard.Standard_Transient: 
         """
         Returns non-const pointer to this object (like const_cast). For protection against creating handle to objects allocated in stack or call from constructor, it will raise exception Standard_ProgramError if reference counter is zero.
@@ -1119,14 +1123,14 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
         ChangeSeek returns modifiable pointer to Item by Key. Returns NULL if Key was not found.
         """
     @overload
-    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: 
+    def Clear(self,doReleaseMemory : bool=True) -> None: 
         """
         Clear data. If doReleaseMemory is false then the table of buckets is not released and will be reused.
 
         Clear data and reset allocator
         """
     @overload
-    def Clear(self,doReleaseMemory : bool=True) -> None: ...
+    def Clear(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def Contains(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> bool: 
         """
         Contains
@@ -1144,14 +1148,14 @@ class XCAFPrs_IndexedDataMapOfShapeStyle(OCP.NCollection.NCollection_BaseMap):
         FindFromIndex
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> XCAFPrs_Style: 
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : XCAFPrs_Style) -> bool: 
         """
         FindFromKey
 
         Find value for key with copying.
         """
     @overload
-    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape,theValue : XCAFPrs_Style) -> bool: ...
+    def FindFromKey(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> XCAFPrs_Style: ...
     def FindIndex(self,theKey1 : OCP.TopoDS.TopoDS_Shape) -> int: 
         """
         FindIndex
@@ -1275,14 +1279,14 @@ class XCAFPrs_Style():
         Set curve color.
         """
     @overload
-    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_Color) -> None: 
+    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: 
         """
         Set surface color.
 
         Set surface color.
         """
     @overload
-    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_ColorRGBA) -> None: ...
+    def SetColorSurf(self,theColor : OCP.Quantity.Quantity_Color) -> None: ...
     def SetMaterial(self,theMaterial : OCP.XCAFDoc.XCAFDoc_VisMaterial) -> None: 
         """
         Set material.
@@ -1301,7 +1305,7 @@ class XCAFPrs_Style():
         """
     def __init__(self) -> None: ...
     pass
-class XCAFPrs_Texture(OCP.Graphic3d.Graphic3d_Texture2Dmanual, OCP.Graphic3d.Graphic3d_Texture2D, OCP.Graphic3d.Graphic3d_TextureMap, OCP.Graphic3d.Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
+class XCAFPrs_Texture(OCP.Graphic3d.Graphic3d_Texture2D, OCP.Graphic3d.Graphic3d_TextureMap, OCP.Graphic3d.Graphic3d_TextureRoot, OCP.Standard.Standard_Transient):
     """
     Texture holder.
     """
@@ -1369,9 +1373,9 @@ class XCAFPrs_Texture(OCP.Graphic3d.Graphic3d_Texture2Dmanual, OCP.Graphic3d.Gra
         """
         Get the reference counter of this object
         """
-    def HasMipMaps(self) -> bool: 
+    def HasMipmaps(self) -> bool: 
         """
-        Return true if mip-maps should be used.
+        Returns whether mipmaps should be generated or not.
         """
     def IncrementRefCounter(self) -> None: 
         """
@@ -1386,23 +1390,23 @@ class XCAFPrs_Texture(OCP.Graphic3d.Graphic3d_Texture2Dmanual, OCP.Graphic3d.Gra
         Checks if a texture class is valid or not.
         """
     @overload
-    def IsInstance(self,theTypeName : str) -> bool: 
+    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns a true value if this is an instance of Type.
 
         Returns a true value if this is an instance of TypeName.
         """
     @overload
-    def IsInstance(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsInstance(self,theTypeName : str) -> bool: ...
     @overload
-    def IsKind(self,theTypeName : str) -> bool: 
+    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: 
         """
         Returns true if this is an instance of Type or an instance of any class that inherits from Type. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
 
         Returns true if this is an instance of TypeName or an instance of any class that inherits from TypeName. Note that multiple inheritance is not supported by OCCT RTTI mechanism.
         """
     @overload
-    def IsKind(self,theType : OCP.Standard.Standard_Type) -> bool: ...
+    def IsKind(self,theTypeName : str) -> bool: ...
     def IsModulate(self) -> bool: 
         """
         Returns TRUE if the texture is modulate.
@@ -1445,9 +1449,9 @@ class XCAFPrs_Texture(OCP.Graphic3d.Graphic3d_Texture2Dmanual, OCP.Graphic3d.Gra
         """
         Assign new image to the texture. Note that this method does not invalidate already uploaded resources - consider calling ::UpdateRevision() if needed.
         """
-    def SetMipMaps(self,theToUse : bool) -> None: 
+    def SetMipmapsGeneration(self,theToGenerateMipmaps : bool) -> None: 
         """
-        Set if mip-maps should be used (generated if needed). Note that this method should be called before loading / using the texture.
+        Sets whether to generate mipmaps or not.
         """
     @staticmethod
     def TextureName_s(theRank : int) -> OCP.TCollection.TCollection_AsciiString: 

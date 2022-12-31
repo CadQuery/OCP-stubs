@@ -4,13 +4,13 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
-import OCP.Geom2d
-import OCP.TopLoc
-import OCP.gp
 import OCP.Geom
-import OCP.TopAbs
+import OCP.TopLoc
 import OCP.TopoDS
+import OCP.gp
+import OCP.TopAbs
+import OCP.Geom2d
+import io
 __all__  = [
 "BinTools",
 "BinTools_Curve2dSet",
@@ -139,10 +139,10 @@ class BinTools():
     def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theStream : io.BytesIO,theWithTriangles : bool,theWithNormals : bool,theVersion : BinTools_FormatVersion,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
     @staticmethod
     @overload
-    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theWithTriangles : bool,theWithNormals : bool,theVersion : BinTools_FormatVersion,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     @staticmethod
     @overload
-    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
+    def Write_s(theShape : OCP.TopoDS.TopoDS_Shape,theFile : str,theWithTriangles : bool,theWithNormals : bool,theVersion : BinTools_FormatVersion,theRange : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> bool: ...
     def __init__(self) -> None: ...
     pass
 class BinTools_Curve2dSet():
@@ -390,14 +390,14 @@ class BinTools_OStream():
         Returns the current position of the stream
         """
     @overload
-    def PutBools(self,theValue1 : bool,theValue2 : bool,theValue3 : bool) -> None: 
+    def PutBools(self,theValue1 : bool,theValue2 : bool,theValue3 : bool,theValue4 : bool,theValue5 : bool,theValue6 : bool,theValue7 : bool) -> None: 
         """
         Writes 3 booleans as one byte to the stream.
 
         Writes 7 booleans as one byte to the stream.
         """
     @overload
-    def PutBools(self,theValue1 : bool,theValue2 : bool,theValue3 : bool,theValue4 : bool,theValue5 : bool,theValue6 : bool,theValue7 : bool) -> None: ...
+    def PutBools(self,theValue1 : bool,theValue2 : bool,theValue3 : bool) -> None: ...
     def WriteReference(self,thePosition : int) -> None: 
         """
         Writes the reference to the given position (an offset between the current and the given one).
@@ -526,14 +526,14 @@ class BinTools_ShapeSetBase():
         Return true if shape should be stored with triangles.
         """
     @overload
-    def Read(self,arg1 : io.BytesIO,arg2 : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Read(self,arg1 : io.BytesIO,arg2 : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the binary stream <IS>. me is first cleared.
 
         An empty virtual method for redefinition in shape-reader.
         """
     @overload
-    def Read(self,arg1 : io.BytesIO,arg2 : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read(self,arg1 : io.BytesIO,arg2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def SetFormatNb(self,theFormatNb : int) -> None: 
         """
         Sets the BinTools_FormatVersion.
@@ -761,14 +761,14 @@ class BinTools_ShapeWriter(BinTools_ShapeSetBase):
         Return true if shape should be stored with triangles.
         """
     @overload
-    def Read(self,arg1 : io.BytesIO,arg2 : OCP.TopoDS.TopoDS_Shape) -> None: 
+    def Read(self,arg1 : io.BytesIO,arg2 : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: 
         """
         Reads the content of me from the binary stream <IS>. me is first cleared.
 
         An empty virtual method for redefinition in shape-reader.
         """
     @overload
-    def Read(self,arg1 : io.BytesIO,arg2 : OCP.Message.Message_ProgressRange=OCP.Message.Message_ProgressRange) -> None: ...
+    def Read(self,arg1 : io.BytesIO,arg2 : OCP.TopoDS.TopoDS_Shape) -> None: ...
     def SetFormatNb(self,theFormatNb : int) -> None: 
         """
         Sets the BinTools_FormatVersion.

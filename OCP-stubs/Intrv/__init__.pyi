@@ -184,11 +184,11 @@ class Intrv_Interval():
         None
         """
     @overload
-    def __init__(self,Start : float,End : float) -> None: ...
-    @overload
     def __init__(self) -> None: ...
     @overload
     def __init__(self,Start : float,TolStart : float,End : float,TolEnd : float) -> None: ...
+    @overload
+    def __init__(self,Start : float,End : float) -> None: ...
     pass
 class Intrv_Intervals():
     """
@@ -234,14 +234,14 @@ class Intrv_Intervals():
         None
         """
     @overload
-    def XUnite(self,Tool : Intrv_Interval) -> None: 
+    def XUnite(self,Tool : Intrv_Intervals) -> None: 
         """
         None
 
         None
         """
     @overload
-    def XUnite(self,Tool : Intrv_Intervals) -> None: ...
+    def XUnite(self,Tool : Intrv_Interval) -> None: ...
     @overload
     def __init__(self) -> None: ...
     @overload
@@ -323,14 +323,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         Returns attached allocator
         """
     @overload
-    def Append(self,theSeq : Intrv_SequenceOfInterval) -> None: 
+    def Append(self,theItem : Intrv_Interval) -> None: 
         """
         Append one item
 
         Append another sequence (making it empty)
         """
     @overload
-    def Append(self,theItem : Intrv_Interval) -> None: ...
+    def Append(self,theSeq : Intrv_SequenceOfInterval) -> None: ...
     def Assign(self,theOther : Intrv_SequenceOfInterval) -> Intrv_SequenceOfInterval: 
         """
         Replace this sequence by the items of theOther. This method does not change the internal allocator.
@@ -369,14 +369,14 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
     @overload
     def InsertAfter(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: ...
     @overload
-    def InsertBefore(self,theIndex : int,theItem : Intrv_Interval) -> None: 
+    def InsertBefore(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: 
         """
         InsertBefore theIndex theItem
 
         InsertBefore theIndex another sequence (making it empty)
         """
     @overload
-    def InsertBefore(self,theIndex : int,theSeq : Intrv_SequenceOfInterval) -> None: ...
+    def InsertBefore(self,theIndex : int,theItem : Intrv_Interval) -> None: ...
     def IsEmpty(self) -> bool: 
         """
         Empty query
@@ -436,11 +436,11 @@ class Intrv_SequenceOfInterval(OCP.NCollection.NCollection_BaseSequence):
         Constant item access by theIndex
         """
     @overload
+    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
+    @overload
     def __init__(self,theOther : Intrv_SequenceOfInterval) -> None: ...
     @overload
     def __init__(self) -> None: ...
-    @overload
-    def __init__(self,theAllocator : OCP.NCollection.NCollection_BaseAllocator) -> None: ...
     def __iter__(self) -> Iterator: ...
     @staticmethod
     def delNode_s(theNode : NCollection_SeqNode,theAl : OCP.NCollection.NCollection_BaseAllocator) -> None: 

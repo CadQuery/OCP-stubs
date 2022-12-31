@@ -4,9 +4,9 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import io
-import LDOM_Node
 import LDOM_OSStream
+import LDOM_Node
+import io
 __all__  = [
 "LDOM_Node",
 "LDOM_BasicNode",
@@ -39,9 +39,9 @@ class LDOM_Node():
         None
         """
     @overload
-    def __init__(self,anOther : LDOM_Node) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,anOther : LDOM_Node) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -181,9 +181,9 @@ class LDOM_CharacterData(LDOM_Node):
         None
         """
     @overload
-    def __init__(self,theOther : LDOM_CharacterData) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,theOther : LDOM_CharacterData) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -482,9 +482,9 @@ class LDOM_Element(LDOM_Node):
         None
         """
     @overload
-    def __init__(self,anOther : LDOM_Element) -> None: ...
-    @overload
     def __init__(self) -> None: ...
+    @overload
+    def __init__(self,anOther : LDOM_Element) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -630,9 +630,9 @@ class LDOM_Attr(LDOM_Node):
         None
         """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,anOther : LDOM_Attr) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def appendChild(self,aChild : LDOM_Node) -> None: 
         """
         None
@@ -701,9 +701,9 @@ class LDOM_NodeList():
     None
     """
     @overload
-    def __init__(self) -> None: ...
-    @overload
     def __init__(self,theOther : LDOM_NodeList) -> None: ...
+    @overload
+    def __init__(self) -> None: ...
     def getLength(self) -> int: 
         """
         None
@@ -1004,13 +1004,13 @@ class LDOM_XmlWriter():
         None
         """
     @overload
-    def Write(self,theOStream : io.BytesIO,theNode : LDOM_Node) -> None: 
+    def Write(self,theOStream : io.BytesIO,theDoc : LDOM_Document) -> None: 
         """
         None
 
         None
         """
     @overload
-    def Write(self,theOStream : io.BytesIO,theDoc : LDOM_Document) -> None: ...
+    def Write(self,theOStream : io.BytesIO,theNode : LDOM_Node) -> None: ...
     def __init__(self,theEncoding : str=None) -> None: ...
     pass

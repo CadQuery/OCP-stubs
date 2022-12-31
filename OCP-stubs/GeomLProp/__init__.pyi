@@ -4,8 +4,8 @@ from typing import Iterable as iterable
 from typing import Iterator as iterator
 from numpy import float64
 _Shape = Tuple[int, ...]
-import OCP.GeomAbs
 import OCP.Geom
+import OCP.GeomAbs
 import OCP.gp
 __all__  = [
 "GeomLProp",
@@ -80,9 +80,9 @@ class GeomLProp_CLProps():
         Returns the Point.
         """
     @overload
-    def __init__(self,N : int,Resolution : float) -> None: ...
-    @overload
     def __init__(self,C : OCP.Geom.Geom_Curve,U : float,N : int,Resolution : float) -> None: ...
+    @overload
+    def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,C : OCP.Geom.Geom_Curve,N : int,Resolution : float) -> None: ...
     pass
@@ -216,11 +216,11 @@ class GeomLProp_SLProps():
         Returns the point.
         """
     @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
+    def __init__(self,S : OCP.Geom.Geom_Surface,N : int,Resolution : float) -> None: ...
     @overload
     def __init__(self,N : int,Resolution : float) -> None: ...
     @overload
-    def __init__(self,S : OCP.Geom.Geom_Surface,N : int,Resolution : float) -> None: ...
+    def __init__(self,S : OCP.Geom.Geom_Surface,U : float,V : float,N : int,Resolution : float) -> None: ...
     pass
 class GeomLProp_SurfaceTool():
     """
